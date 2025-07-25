@@ -217,6 +217,7 @@ export type Database = {
           duration_minutes: number | null
           helper_id: string
           id: string
+          image_url: string | null
           is_active: boolean | null
           price_per_hour: number | null
           title: string
@@ -229,6 +230,7 @@ export type Database = {
           duration_minutes?: number | null
           helper_id: string
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
           price_per_hour?: number | null
           title: string
@@ -241,6 +243,7 @@ export type Database = {
           duration_minutes?: number | null
           helper_id?: string
           id?: string
+          image_url?: string | null
           is_active?: boolean | null
           price_per_hour?: number | null
           title?: string

@@ -11,6 +11,7 @@ export interface Service {
   category: string | null;
   duration_minutes: number;
   is_active: boolean;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
 }
