@@ -1,11 +1,13 @@
-import { Plus, DollarSign, Share2, Settings, BookOpen, MessageCircle } from "lucide-react";
+import { Plus, DollarSign, Share2, Settings, BookOpen, MessageCircle, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateServiceDialog } from "@/components/dashboard/CreateServiceDialog";
 import { useToast } from "@/hooks/use-toast";
+import { useServices } from "@/hooks/useServices";
 
 export const QuickActions = () => {
   const { toast } = useToast();
+  const { services } = useServices();
   
   const handleShareProfile = () => {
     const profileUrl = `${window.location.origin}/profile/helper`;
@@ -16,6 +18,13 @@ export const QuickActions = () => {
     });
   };
 
+  const scrollToServices = () => {
+    const servicesElement = document.getElementById('my-services');
+    if (servicesElement) {
+      servicesElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const actions = [
     {
       icon: Plus,
@@ -24,10 +33,10 @@ export const QuickActions = () => {
       component: true // This will be handled specially
     },
     {
-      icon: DollarSign,
-      label: 'Edit Pricing',
-      description: 'Update your rates',
-      onClick: () => console.log('Edit pricing')
+      icon: Package,
+      label: 'Manage Services',
+      description: `${services.length} service${services.length === 1 ? '' : 's'}`,
+      onClick: scrollToServices
     },
     {
       icon: Share2,
@@ -36,10 +45,10 @@ export const QuickActions = () => {
       onClick: handleShareProfile
     },
     {
-      icon: BookOpen,
-      label: 'Resources',
-      description: 'Helper guides & tips',
-      onClick: () => console.log('Resources')
+      icon: DollarSign,
+      label: 'Edit Pricing',
+      description: 'Update your rates',
+      onClick: () => console.log('Edit pricing')
     },
     {
       icon: MessageCircle,

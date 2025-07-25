@@ -9,6 +9,7 @@ import { ProfileStatus } from "@/components/dashboard/ProfileStatus";
 import { EarningsSummary } from "@/components/dashboard/EarningsSummary";
 import { CalendarSlotManager } from "@/components/dashboard/CalendarSlotManager";
 import { QuickActions } from "@/components/dashboard/QuickActions";
+import { MyServices } from "@/components/dashboard/MyServices";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -56,6 +57,9 @@ const Index = () => {
           {/* Main content area */}
           <div className="lg:col-span-8 space-y-6">
             <TodaysSessions />
+            <div id="my-services">
+              <MyServices />
+            </div>
             <UpcomingBookings />
           </div>
           
