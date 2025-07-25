@@ -116,12 +116,6 @@ const PublicProfile = () => {
           helperId={userId!} 
           onServiceBook={handleServiceBook}
         />
-        <AvailabilitySection 
-          availability={data.availability} 
-          helperId={userId!} 
-          selectedService={selectedService}
-          helperName={data.profile.display_name || 'Helper'}
-        />
       </div>
 
       {/* Service Booking Dialog */}

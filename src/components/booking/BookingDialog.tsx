@@ -59,17 +59,12 @@ export const BookingDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to book a session",
-        variant: "destructive"
-      });
-      return;
-    }
-
+    
     setLoading(true);
     try {
+      // Create a guest user ID if not authenticated
+      const bookingUserId = user?.id || `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
       // Convert time strings to proper format for database
       const formatTimeForDB = (timeStr: string) => {
         const cleanTime = timeStr.replace(/[^\d:]/g, '');
@@ -79,7 +74,7 @@ export const BookingDialog = ({
       const bookingData = {
         service_id: service.id,
         helper_id: helperId,
-        seeker_id: user.id,
+        seeker_id: bookingUserId,
         seeker_name: formData.fullName,
         seeker_email: formData.email,
         booking_date: format(selectedDate, 'yyyy-MM-dd'),
