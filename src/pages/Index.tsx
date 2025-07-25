@@ -11,11 +11,9 @@ import { CalendarSlotManager } from "@/components/dashboard/CalendarSlotManager"
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { MyServices } from "@/components/dashboard/MyServices";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const { user, signOut } = useAuth();
   const { user, loading: authLoading, signOut } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const navigate = useNavigate();
