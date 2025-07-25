@@ -7,9 +7,10 @@ import { Service } from "@/hooks/useServices";
 interface ServicesSectionProps {
   services: Service[];
   helperId: string;
+  onServiceSelect: (service: Service) => void;
 }
 
-export const ServicesSection = ({ services, helperId }: ServicesSectionProps) => {
+export const ServicesSection = ({ services, helperId, onServiceSelect }: ServicesSectionProps) => {
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -86,7 +87,11 @@ export const ServicesSection = ({ services, helperId }: ServicesSectionProps) =>
               </CardContent>
               
               <CardFooter>
-                <Button className="w-full" size="lg">
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => onServiceSelect(service)}
+                >
                   Book this service
                 </Button>
               </CardFooter>

@@ -5,26 +5,28 @@ import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar as CalendarIcon } from "lucide-react";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
-import { format, addDays, startOfWeek } from "date-fns";
+import { useTimeSlots } from "@/hooks/useTimeSlots";
+import { Service } from "@/hooks/useServices";
+import { format } from "date-fns";
+import { BookingDialog } from "@/components/booking/BookingDialog";
+import { BookingSuccessDialog } from "@/components/booking/BookingSuccessDialog";
 
 interface AvailabilitySectionProps {
   availability: AvailabilitySlot[];
   helperId: string;
+  selectedService?: Service;
+  helperName: string;
 }
 
-export const AvailabilitySection = ({ availability, helperId }: AvailabilitySectionProps) => {
+export const AvailabilitySection = ({ availability, helperId, selectedService, helperName }: AvailabilitySectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState<any>(null);
 
+  const { timeSlots, loading: slotsLoading, formatTime } = useTimeSlots(availability, selectedDate, helperId);
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
 
   const getAvailableDays = () => {
     return availability.reduce((acc, slot) => {
@@ -39,22 +41,44 @@ export const AvailabilitySection = ({ availability, helperId }: AvailabilitySect
     return availability.filter(slot => slot.day_of_week === dayOfWeek);
   };
 
-  const getSelectedDaySlots = () => {
-    if (!selectedDate) return [];
-    const dayOfWeek = selectedDate.getDay();
-    return getSlotsForDay(dayOfWeek);
-  };
-
-  const handleSlotSelect = (slotId: string) => {
-    setSelectedSlot(selectedSlot === slotId ? null : slotId);
+  const handleSlotSelect = (timeSlot: string) => {
+    setSelectedSlot(selectedSlot === timeSlot ? null : timeSlot);
   };
 
   const handleBookSlot = () => {
-    if (selectedSlot && selectedDate) {
-      // This would normally open a booking dialog or redirect to booking page
-      console.log('Booking slot:', selectedSlot, 'for date:', selectedDate);
-      alert('Booking functionality would be implemented here!');
+    if (!selectedService) {
+      alert('Please select a service first from the Services section above.');
+      return;
     }
+    
+    if (selectedSlot && selectedDate) {
+      setShowBookingDialog(true);
+    }
+  };
+
+  const handleBookingSuccess = () => {
+    if (selectedService && selectedDate && selectedSlot) {
+      const endTime = calculateEndTime(selectedSlot, selectedService.duration_minutes || 60);
+      setBookingDetails({
+        serviceName: selectedService.title,
+        date: selectedDate,
+        time: `${formatTime(selectedSlot)} - ${formatTime(endTime)}`,
+        duration: selectedService.duration_minutes || 60,
+        helperName: helperName
+      });
+      setShowSuccessDialog(true);
+      setSelectedSlot(null);
+      // Refresh time slots would happen automatically through the hook
+    }
+  };
+
+  const calculateEndTime = (startTime: string, durationMinutes: number) => {
+    const [hours, minutes] = startTime.split(':');
+    const startDate = new Date();
+    startDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    
+    const endDate = new Date(startDate.getTime() + durationMinutes * 60000);
+    return `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
   };
 
   const disabledDays = (date: Date) => {
@@ -130,29 +154,42 @@ export const AvailabilitySection = ({ availability, helperId }: AvailabilitySect
             <CardContent>
               {selectedDate ? (
                 <div className="space-y-4">
-                  {getSelectedDaySlots().length > 0 ? (
+                  {slotsLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  ) : timeSlots.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-1 gap-2">
-                        {getSelectedDaySlots().map((slot) => (
+                      <div className="grid grid-cols-2 gap-2">
+                        {timeSlots.map((slot) => (
                           <Button
-                            key={slot.id}
-                            variant={selectedSlot === slot.id ? "default" : "outline"}
-                            className="justify-start text-left"
-                            onClick={() => handleSlotSelect(slot.id)}
+                            key={slot.time}
+                            variant={selectedSlot === slot.time ? "default" : "outline"}
+                            className="justify-center text-center"
+                            onClick={() => handleSlotSelect(slot.time)}
+                            disabled={!slot.available}
                           >
-                            {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
+                            {formatTime(slot.time)}
                           </Button>
                         ))}
                       </div>
                       
                       {selectedSlot && (
-                        <Button 
-                          className="w-full" 
-                          size="lg"
-                          onClick={handleBookSlot}
-                        >
-                          Book Selected Time
-                        </Button>
+                        <div className="space-y-2">
+                          {!selectedService && (
+                            <p className="text-sm text-amber-600 bg-amber-50 border border-amber-200 rounded p-2">
+                              ⚠️ Please select a service from the Services section above first
+                            </p>
+                          )}
+                          <Button 
+                            className="w-full" 
+                            size="lg"
+                            onClick={handleBookSlot}
+                            disabled={!selectedService}
+                          >
+                            Book Selected Time
+                          </Button>
+                        </div>
                       )}
                     </>
                   ) : (
@@ -170,6 +207,28 @@ export const AvailabilitySection = ({ availability, helperId }: AvailabilitySect
           </Card>
         </div>
       </div>
+
+      {/* Booking Dialog */}
+      {selectedService && selectedSlot && selectedDate && (
+        <BookingDialog
+          open={showBookingDialog}
+          onOpenChange={setShowBookingDialog}
+          service={selectedService}
+          selectedDate={selectedDate}
+          selectedTimeSlot={`${formatTime(selectedSlot)} - ${formatTime(calculateEndTime(selectedSlot, selectedService.duration_minutes || 60))}`}
+          helperId={helperId}
+          onBookingSuccess={handleBookingSuccess}
+        />
+      )}
+
+      {/* Success Dialog */}
+      {bookingDetails && (
+        <BookingSuccessDialog
+          open={showSuccessDialog}
+          onOpenChange={setShowSuccessDialog}
+          bookingDetails={bookingDetails}
+        />
+      )}
     </section>
   );
 };

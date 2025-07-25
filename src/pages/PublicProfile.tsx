@@ -20,6 +20,7 @@ const PublicProfile = () => {
   const [data, setData] = useState<PublicProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
   useEffect(() => {
     const fetchPublicProfile = async () => {
@@ -103,8 +104,17 @@ const PublicProfile = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <ProfileHero profile={data.profile} />
         <AboutSection profile={data.profile} />
-        <ServicesSection services={data.services} helperId={userId!} />
-        <AvailabilitySection availability={data.availability} helperId={userId!} />
+        <ServicesSection 
+          services={data.services} 
+          helperId={userId!} 
+          onServiceSelect={setSelectedService}
+        />
+        <AvailabilitySection 
+          availability={data.availability} 
+          helperId={userId!} 
+          selectedService={selectedService}
+          helperName={data.profile.display_name || 'Helper'}
+        />
       </div>
     </div>
   );
