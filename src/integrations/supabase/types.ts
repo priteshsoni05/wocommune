@@ -61,7 +61,7 @@ export type Database = {
           id: string
           notes: string | null
           seeker_email: string
-          seeker_id: string
+          seeker_id: string | null
           seeker_name: string
           service_id: string
           start_time: string
@@ -77,7 +77,7 @@ export type Database = {
           id?: string
           notes?: string | null
           seeker_email: string
-          seeker_id: string
+          seeker_id?: string | null
           seeker_name: string
           service_id: string
           start_time: string
@@ -93,7 +93,7 @@ export type Database = {
           id?: string
           notes?: string | null
           seeker_email?: string
-          seeker_id?: string
+          seeker_id?: string | null
           seeker_name?: string
           service_id?: string
           start_time?: string

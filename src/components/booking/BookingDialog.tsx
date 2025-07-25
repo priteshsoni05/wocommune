@@ -62,8 +62,8 @@ export const BookingDialog = ({
     
     setLoading(true);
     try {
-      // Create a guest user ID if not authenticated
-      const bookingUserId = user?.id || `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // Create a guest user ID if not authenticated - use null for anonymous users
+      const bookingUserId = user?.id || null;
       
       // Convert time strings to proper format for database
       const formatTimeForDB = (timeStr: string) => {
