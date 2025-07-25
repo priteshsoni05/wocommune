@@ -5,6 +5,7 @@ import { ProfileHero } from "@/components/public/ProfileHero";
 import { AboutSection } from "@/components/public/AboutSection";
 import { ServicesSection } from "@/components/public/ServicesSection";
 import { AvailabilitySection } from "@/components/public/AvailabilitySection";
+import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog";
 import { Profile } from "@/hooks/useProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
@@ -21,6 +22,7 @@ const PublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
 
   useEffect(() => {
     const fetchPublicProfile = async () => {
@@ -77,6 +79,11 @@ const PublicProfile = () => {
     fetchPublicProfile();
   }, [userId]);
 
+  const handleServiceBook = (service: Service) => {
+    setSelectedService(service);
+    setShowBookingDialog(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -107,7 +114,7 @@ const PublicProfile = () => {
         <ServicesSection 
           services={data.services} 
           helperId={userId!} 
-          onServiceSelect={setSelectedService}
+          onServiceBook={handleServiceBook}
         />
         <AvailabilitySection 
           availability={data.availability} 
@@ -116,6 +123,18 @@ const PublicProfile = () => {
           helperName={data.profile.display_name || 'Helper'}
         />
       </div>
+
+      {/* Service Booking Dialog */}
+      {selectedService && (
+        <ServiceBookingDialog
+          open={showBookingDialog}
+          onOpenChange={setShowBookingDialog}
+          service={selectedService}
+          availability={data.availability}
+          helperId={userId!}
+          helperName={data.profile.display_name || 'Helper'}
+        />
+      )}
     </div>
   );
 };
