@@ -14,7 +14,248 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      availability_slots: {
+        Row: {
+          created_at: string
+          day_of_week: number
+          end_time: string
+          helper_id: string
+          id: string
+          is_available: boolean | null
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          helper_id: string
+          id?: string
+          is_available?: boolean | null
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          helper_id?: string
+          id?: string
+          is_available?: boolean | null
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "availability_slots_helper_id_fkey"
+            columns: ["helper_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          booking_date: string
+          created_at: string
+          end_time: string
+          helper_id: string
+          id: string
+          notes: string | null
+          seeker_email: string
+          seeker_id: string
+          seeker_name: string
+          service_id: string
+          start_time: string
+          status: string | null
+          total_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string
+          end_time: string
+          helper_id: string
+          id?: string
+          notes?: string | null
+          seeker_email: string
+          seeker_id: string
+          seeker_name: string
+          service_id: string
+          start_time: string
+          status?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string
+          end_time?: string
+          helper_id?: string
+          id?: string
+          notes?: string | null
+          seeker_email?: string
+          seeker_id?: string
+          seeker_name?: string
+          service_id?: string
+          start_time?: string
+          status?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_helper_id_fkey"
+            columns: ["helper_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_seeker_id_fkey"
+            columns: ["seeker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      earnings: {
+        Row: {
+          amount: number
+          booking_id: string
+          created_at: string
+          helper_id: string
+          id: string
+          payout_date: string | null
+          status: string | null
+        }
+        Insert: {
+          amount: number
+          booking_id: string
+          created_at?: string
+          helper_id: string
+          id?: string
+          payout_date?: string | null
+          status?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_id?: string
+          created_at?: string
+          helper_id?: string
+          id?: string
+          payout_date?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "earnings_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "earnings_helper_id_fkey"
+            columns: ["helper_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          phone: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          helper_id: string
+          id: string
+          is_active: boolean | null
+          price_per_hour: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          helper_id: string
+          id?: string
+          is_active?: boolean | null
+          price_per_hour?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          helper_id?: string
+          id?: string
+          is_active?: boolean | null
+          price_per_hour?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "services_helper_id_fkey"
+            columns: ["helper_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
