@@ -2,12 +2,22 @@ import { CheckCircle, AlertCircle, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileStatusProps {
   status: 'active' | 'in_review' | 'pending';
 }
 
 export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleViewPublic = () => {
+    if (user) {
+      window.open(`/profile/${user.id}`, '_blank');
+    }
+  };
   const statusConfig = {
     active: {
       icon: CheckCircle,
@@ -63,7 +73,12 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
             <Edit className="h-4 w-4" />
             Edit Profile
           </Button>
-          <Button variant="outline" size="sm" className="gap-2 flex-1">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 flex-1"
+            onClick={handleViewPublic}
+          >
             <Eye className="h-4 w-4" />
             View Public
           </Button>
