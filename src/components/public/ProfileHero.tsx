@@ -31,7 +31,10 @@ export const ProfileHero = ({ profile }: ProfileHeroProps) => {
     <section className="text-center py-12 border-b border-border">
       <div className="space-y-6">
         <Avatar className="w-32 h-32 mx-auto">
-          <AvatarImage src={profile.avatar_url || undefined} alt={profile.display_name || 'Profile'} />
+          <AvatarImage 
+            src={profile.avatar_url || `https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&h=200&fit=crop&crop=face`} 
+            alt={profile.display_name || 'Profile'} 
+          />
           <AvatarFallback className="text-2xl bg-primary/10 text-primary">
             {getInitials(profile.display_name || 'Helper')}
           </AvatarFallback>
