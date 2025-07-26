@@ -152,19 +152,26 @@ export const ServiceBookingDialog = ({
                     </div>
                   ) : timeSlots.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-                        {timeSlots.map((slot) => (
-                          <Button
-                            key={slot.time}
-                            variant={selectedSlot === slot.time ? "default" : "outline"}
-                            className="justify-center text-center text-sm"
-                            onClick={() => handleSlotSelect(slot.time)}
-                            disabled={!slot.available}
-                          >
-                            {formatTime(slot.time)}
-                          </Button>
-                        ))}
-                      </div>
+                       <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                         {timeSlots.map((slot) => (
+                           <Button
+                             key={slot.time}
+                             variant={selectedSlot === slot.time ? "default" : "outline"}
+                             className={`justify-center text-center text-sm ${
+                               !slot.available 
+                                 ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50" 
+                                 : ""
+                             }`}
+                             onClick={() => slot.available && handleSlotSelect(slot.time)}
+                             disabled={!slot.available}
+                           >
+                             {formatTime(slot.time)}
+                             {!slot.available && (
+                               <span className="ml-1 text-xs">(Booked)</span>
+                             )}
+                           </Button>
+                         ))}
+                       </div>
                       
                       {selectedSlot && (
                         <div className="space-y-3 pt-4 border-t">

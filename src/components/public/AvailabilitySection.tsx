@@ -166,11 +166,18 @@ export const AvailabilitySection = ({ availability, helperId, selectedService, h
                           <Button
                             key={slot.time}
                             variant={selectedSlot === slot.time ? "default" : "outline"}
-                            className="justify-center text-center"
-                            onClick={() => handleSlotSelect(slot.time)}
+                            className={`justify-center text-center ${
+                              !slot.available 
+                                ? "bg-muted text-muted-foreground cursor-not-allowed opacity-50" 
+                                : ""
+                            }`}
+                            onClick={() => slot.available && handleSlotSelect(slot.time)}
                             disabled={!slot.available}
                           >
                             {formatTime(slot.time)}
+                            {!slot.available && (
+                              <span className="ml-1 text-xs">(Booked)</span>
+                            )}
                           </Button>
                         ))}
                       </div>
