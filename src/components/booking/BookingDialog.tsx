@@ -98,6 +98,15 @@ export const BookingDialog = ({
         .single();
 
       console.log('Supabase response:', { data, error });
+      
+      if (error) {
+        console.error('Detailed error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+      }
 
       if (error) throw error;
 
