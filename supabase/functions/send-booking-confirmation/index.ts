@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
       .eq('user_id', helperEmail)
       .single();
 
-    console.log('Helper profile lookup:', { helperProfile, profileError });
+    console.log('Helper profile lookup:', { helperProfile, profileError, helperId: helperEmail });
 
     const formatTime = (timeString: string) => {
       const [hours, minutes] = timeString.split(':');
