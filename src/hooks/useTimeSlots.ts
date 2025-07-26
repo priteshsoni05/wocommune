@@ -37,6 +37,10 @@ export const useTimeSlots = (
   const fetchBookingsForDate = async (date: Date) => {
     const dateString = date.toISOString().split('T')[0];
     
+    console.log('=== Fetching bookings ===');
+    console.log('Helper ID:', helperId);
+    console.log('Date:', dateString);
+    
     // Query for booking availability - now accessible to public users
     const { data: bookings, error } = await supabase
       .from('bookings')
@@ -45,6 +49,8 @@ export const useTimeSlots = (
       .eq('booking_date', dateString)
       .in('status', ['pending', 'confirmed']);
 
+    console.log('Query result:', { bookings, error });
+    
     if (error) {
       console.error('Error fetching bookings:', error);
       return [];
@@ -54,7 +60,12 @@ export const useTimeSlots = (
   };
 
   const isSlotBlocked = (timeString: string, bookings: Pick<Booking, 'start_time' | 'end_time' | 'status'>[]) => {
+    console.log(`=== Checking slot ${timeString} ===`);
+    console.log('Available bookings:', bookings);
+    
     for (const booking of bookings) {
+      console.log(`Checking against booking: ${booking.start_time} - ${booking.end_time}`);
+      
       const bookingStart = new Date(`2024-01-01 ${booking.start_time}`);
       const bookingEnd = new Date(`2024-01-01 ${booking.end_time}`);
       
@@ -63,11 +74,15 @@ export const useTimeSlots = (
       
       const slotTime = new Date(`2024-01-01 ${timeString}`);
       
+      console.log(`Booking start: ${bookingStart}, Booking end: ${bookingEnd}, Break end: ${breakEnd}, Slot time: ${slotTime}`);
+      
       // Check if slot conflicts with booking or break time
       if (slotTime >= bookingStart && slotTime < breakEnd) {
+        console.log(`✗ Slot ${timeString} is BLOCKED`);
         return true;
       }
     }
+    console.log(`✓ Slot ${timeString} is AVAILABLE`);
     return false;
   };
 
