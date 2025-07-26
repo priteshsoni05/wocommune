@@ -126,8 +126,8 @@ export const BookingDialog = ({
         throw error;
       }
 
-      // Send booking confirmation emails (only for authenticated users)
-      if (user?.id) {
+      // Send booking confirmation emails
+      try {
         await supabase.functions.invoke('send-booking-confirmation', {
           body: {
             booking: data,
@@ -135,6 +135,9 @@ export const BookingDialog = ({
             helperEmail: helperId
           }
         });
+      } catch (emailError) {
+        console.error('Email sending failed:', emailError);
+        // Don't throw error - booking was successful even if email failed
       }
 
       toast({
