@@ -212,8 +212,11 @@ export default function Helpanion() {
                     <CardHeader className={viewMode === 'list' ? 'flex-shrink-0 pb-0 pr-4' : ''}>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-12 w-12">
-                          <AvatarImage src={helpanion.avatar_url || ''} />
-                          <AvatarFallback>
+                          <AvatarImage 
+                            src={helpanion.avatar_url || `https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=150&h=150&fit=crop&crop=face`} 
+                            alt={`${helpanion.display_name}'s profile`}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary font-medium">
                             {getInitials(helpanion.display_name || 'Helper')}
                           </AvatarFallback>
                         </Avatar>
