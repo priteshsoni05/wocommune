@@ -6,7 +6,7 @@ import { Booking } from './useBookings';
 interface TimeSlot {
   time: string;
   available: boolean;
-  booking?: Booking;
+  booking?: Pick<Booking, 'start_time' | 'end_time' | 'status'>;
 }
 
 export const useTimeSlots = (
@@ -37,22 +37,27 @@ export const useTimeSlots = (
   const fetchBookingsForDate = async (date: Date) => {
     const dateString = date.toISOString().split('T')[0];
     
+    console.log('Fetching bookings for helper:', helperId, 'on date:', dateString);
+    
+    // Query without user authentication context - this should work for public viewing
     const { data: bookings, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select('start_time, end_time, status')
       .eq('helper_id', helperId)
       .eq('booking_date', dateString)
       .in('status', ['pending', 'confirmed']);
+
+    console.log('Bookings query result:', { bookings, error });
 
     if (error) {
       console.error('Error fetching bookings:', error);
       return [];
     }
 
-    return bookings as Booking[];
+    return bookings as Pick<Booking, 'start_time' | 'end_time' | 'status'>[];
   };
 
-  const isSlotBlocked = (timeString: string, bookings: Booking[]) => {
+  const isSlotBlocked = (timeString: string, bookings: Pick<Booking, 'start_time' | 'end_time' | 'status'>[]) => {
     for (const booking of bookings) {
       const bookingStart = new Date(`2024-01-01 ${booking.start_time}`);
       const bookingEnd = new Date(`2024-01-01 ${booking.end_time}`);
@@ -94,6 +99,8 @@ export const useTimeSlots = (
         // Get all bookings for the selected date
         const bookings = await fetchBookingsForDate(selectedDate);
         
+        console.log('Fetched bookings for date:', selectedDate.toISOString().split('T')[0], bookings);
+        
         // Generate time slots for all available periods
         const allSlots: TimeSlot[] = [];
         
@@ -105,6 +112,8 @@ export const useTimeSlots = (
             const existingBooking = bookings.find(booking => 
               booking.start_time <= timeString && booking.end_time > timeString
             );
+            
+            console.log(`Checking slot ${timeString}: blocked=${isBlocked}, existingBooking=${!!existingBooking}`);
             
             allSlots.push({
               time: timeString,
