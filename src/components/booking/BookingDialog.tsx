@@ -147,11 +147,21 @@ export const BookingDialog = ({
 
       onBookingSuccess();
       onOpenChange(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Booking error:', error);
+      
+      let errorMessage = "Something went wrong. Please try again.";
+      let errorTitle = "Booking failed";
+      
+      // Check for specific database constraint errors
+      if (error?.message?.includes('unique_helper_datetime') || error?.code === '23505') {
+        errorTitle = "Time slot unavailable";
+        errorMessage = "This time slot has already been booked. Please select a different time.";
+      }
+      
       toast({
-        title: "Booking failed",
-        description: "Something went wrong. Please try again.",
+        title: errorTitle,
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {

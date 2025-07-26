@@ -127,6 +127,11 @@ export const useTimeSlots = (
     };
 
     loadTimeSlots();
+    
+    // Set up an interval to refresh slots every 30 seconds to catch new bookings
+    const interval = setInterval(loadTimeSlots, 30000);
+    
+    return () => clearInterval(interval);
   }, [selectedDate, availability, helperId, refreshKey]);
 
   const formatTime = (timeString: string) => {
