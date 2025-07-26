@@ -72,9 +72,9 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Generate meeting details
-    const meetingId = `wo-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
-    const meetingLink = `https://meet.google.com/${meetingId}`;
+    // Generate meeting details using Jitsi Meet
+    const meetingId = `WOCommune-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
+    const meetingLink = `https://meet.jit.si/${meetingId}`;
     const meetingPassword = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     // Send confirmation email to seeker
@@ -126,7 +126,7 @@ const handler = async (req: Request): Promise<Response> => {
               📹 Meeting Details
             </h3>
             <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-              <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Google Meet:</p>
+              <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
               <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
               <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
               <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
@@ -152,7 +152,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="text-align: center; margin-top: 30px;">
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Google Meet: ' + meetingLink + '\n\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Video Meeting: ' + meetingLink + '\n\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
                style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
               📅 Add to Calendar
             </a>
@@ -220,7 +220,7 @@ const handler = async (req: Request): Promise<Response> => {
                 📹 Meeting Details (Share with Seeker)
               </h3>
               <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-                <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Google Meet Link:</p>
+                <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Video Meeting Link:</p>
                 <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
                 <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
                 <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
@@ -246,7 +246,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
-              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + booking.seeker_name)}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Client: ' + booking.seeker_name + '\nEmail: ' + booking.seeker_email + '\n\nGoogle Meet: ' + meetingLink + '\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description + (booking.notes ? '\n\nClient Notes: ' + booking.notes : ''))}" 
+              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + booking.seeker_name)}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Client: ' + booking.seeker_name + '\nEmail: ' + booking.seeker_email + '\n\nVideo Meeting: ' + meetingLink + '\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description + (booking.notes ? '\n\nClient Notes: ' + booking.notes : ''))}" 
                  style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
                 📅 Add to Calendar
               </a>
