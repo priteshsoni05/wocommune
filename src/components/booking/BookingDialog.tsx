@@ -91,11 +91,28 @@ export const BookingDialog = ({
 
       console.log('Booking data to insert:', bookingData);
 
-      const { data, error } = await supabase
-        .from('bookings')
-        .insert(bookingData)
-        .select()
-        .single();
+      // For anonymous users, we can't select the booking back due to RLS
+      // So we'll insert without selecting for anonymous users
+      let data, error;
+      
+      if (user?.id) {
+        // Authenticated user - can select the booking back
+        const result = await supabase
+          .from('bookings')
+          .insert(bookingData)
+          .select()
+          .single();
+        data = result.data;
+        error = result.error;
+      } else {
+        // Anonymous user - just insert without selecting
+        const result = await supabase
+          .from('bookings')
+          .insert(bookingData);
+        error = result.error;
+        // Create a mock data object for the email function
+        data = { ...bookingData, id: 'anonymous-booking' };
+      }
 
       console.log('Supabase response:', { data, error });
       
@@ -106,9 +123,8 @@ export const BookingDialog = ({
           hint: error.hint,
           code: error.code
         });
+        throw error;
       }
-
-      if (error) throw error;
 
       // Send booking confirmation emails
       await supabase.functions.invoke('send-booking-confirmation', {
