@@ -25,7 +25,7 @@ export const AvailabilitySection = ({ availability, helperId, selectedService, h
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [bookingDetails, setBookingDetails] = useState<any>(null);
 
-  const { timeSlots, loading: slotsLoading, formatTime } = useTimeSlots(availability, selectedDate, helperId);
+  const { timeSlots, loading: slotsLoading, formatTime, refreshSlots } = useTimeSlots(availability, selectedDate, helperId);
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const getAvailableDays = () => {
@@ -68,7 +68,8 @@ export const AvailabilitySection = ({ availability, helperId, selectedService, h
       });
       setShowSuccessDialog(true);
       setSelectedSlot(null);
-      // Refresh time slots would happen automatically through the hook
+      // Refresh the time slots to show the newly booked slot as unavailable
+      refreshSlots();
     }
   };
 

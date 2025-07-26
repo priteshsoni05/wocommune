@@ -16,6 +16,7 @@ export const useTimeSlots = (
 ) => {
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const generateTimeSlots = (startTime: string, endTime: string) => {
     const slots: string[] = [];
@@ -126,7 +127,7 @@ export const useTimeSlots = (
     };
 
     loadTimeSlots();
-  }, [selectedDate, availability, helperId]);
+  }, [selectedDate, availability, helperId, refreshKey]);
 
   const formatTime = (timeString: string) => {
     const [hours, minutes] = timeString.split(':');
@@ -136,9 +137,14 @@ export const useTimeSlots = (
     return `${displayHour}:${minutes} ${ampm}`;
   };
 
+  const refreshSlots = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
   return {
     timeSlots,
     loading,
-    formatTime
+    formatTime,
+    refreshSlots
   };
 };

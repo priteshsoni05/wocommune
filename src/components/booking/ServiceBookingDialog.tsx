@@ -34,7 +34,7 @@ export const ServiceBookingDialog = ({
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [bookingDetails, setBookingDetails] = useState<any>(null);
 
-  const { timeSlots, loading: slotsLoading, formatTime } = useTimeSlots(availability, selectedDate, helperId);
+  const { timeSlots, loading: slotsLoading, formatTime, refreshSlots } = useTimeSlots(availability, selectedDate, helperId);
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const getAvailableDays = () => {
@@ -84,6 +84,8 @@ export const ServiceBookingDialog = ({
       setShowSuccessDialog(true);
       setShowBookingForm(false);
       setSelectedSlot(null);
+      // Refresh the time slots to show the newly booked slot as unavailable
+      refreshSlots();
       // Close the main dialog
       onOpenChange(false);
     }

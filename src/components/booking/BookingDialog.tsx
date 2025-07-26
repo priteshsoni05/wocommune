@@ -126,14 +126,16 @@ export const BookingDialog = ({
         throw error;
       }
 
-      // Send booking confirmation emails
-      await supabase.functions.invoke('send-booking-confirmation', {
-        body: {
-          booking: data,
-          service: service,
-          helperEmail: helperId // We'll need to fetch the actual email
-        }
-      });
+      // Send booking confirmation emails (only for authenticated users)
+      if (user?.id) {
+        await supabase.functions.invoke('send-booking-confirmation', {
+          body: {
+            booking: data,
+            service: service,
+            helperEmail: helperId
+          }
+        });
+      }
 
       toast({
         title: "Booking confirmed!",

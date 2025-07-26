@@ -43,12 +43,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { booking, service, helperEmail }: BookingConfirmationRequest = await req.json();
 
-    // Get helper's email from profiles table
-    const { data: helperProfile } = await supabase
+    console.log('Received booking confirmation request:', { booking, service, helperEmail });
+
+    // Get helper's email from profiles table using helper_id (which is passed as helperEmail)
+    const { data: helperProfile, error: profileError } = await supabase
       .from('profiles')
       .select('email, display_name')
       .eq('user_id', helperEmail)
       .single();
+
+    console.log('Helper profile lookup:', { helperProfile, profileError });
 
     const formatTime = (timeString: string) => {
       const [hours, minutes] = timeString.split(':');
