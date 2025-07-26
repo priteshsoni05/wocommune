@@ -72,6 +72,11 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
+    // Generate meeting details
+    const meetingId = `wo-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
+    const meetingLink = `https://meet.google.com/${meetingId}`;
+    const meetingPassword = Math.random().toString(36).substring(2, 8).toUpperCase();
+
     // Send confirmation email to seeker
     const seekerEmailResponse = await resend.emails.send({
       from: "WO Commune <bookings@resend.dev>",
@@ -116,6 +121,19 @@ const handler = async (req: Request): Promise<Response> => {
             </table>
           </div>
 
+          <div style="background: #e8f5e8; border: 1px solid #4caf50; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+            <h3 style="margin: 0 0 15px 0; color: #2e7d32; display: flex; align-items: center;">
+              📹 Meeting Details
+            </h3>
+            <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+              <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Google Meet:</p>
+              <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
+              <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
+              <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+            </div>
+            <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
+          </div>
+
           ${booking.notes ? `
           <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
             <h3 style="margin: 0 0 10px 0; color: #856404;">Your Message:</h3>
@@ -126,14 +144,15 @@ const handler = async (req: Request): Promise<Response> => {
           <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
             <h3 style="margin: 0 0 15px 0; color: #155724;">What's Next?</h3>
             <ul style="margin: 0; padding-left: 20px; color: #155724;">
-              <li>Your Helpanion has been notified about the booking</li>
-              <li>You'll receive session details and meeting link closer to the date</li>
-              <li>Feel free to prepare any questions or materials in advance</li>
+              <li>Save the meeting link and details above</li>
+              <li>Add this session to your calendar using the button below</li>
+              <li>Join the meeting 5 minutes before the start time</li>
+              <li>Prepare any questions or materials in advance</li>
             </ul>
           </div>
 
           <div style="text-align: center; margin-top: 30px;">
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session')}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00" 
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Google Meet: ' + meetingLink + '\n\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
                style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
               📅 Add to Calendar
             </a>
@@ -187,7 +206,26 @@ const handler = async (req: Request): Promise<Response> => {
                   <td style="padding: 8px 0; font-weight: bold; color: #555;">Duration:</td>
                   <td style="padding: 8px 0; color: #333;">${service.duration_minutes} minutes</td>
                 </tr>
+                ${booking.total_amount ? `
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Earnings:</td>
+                  <td style="padding: 8px 0; color: #333; font-weight: bold;">$${booking.total_amount}</td>
+                </tr>
+                ` : ''}
               </table>
+            </div>
+
+            <div style="background: #e8f5e8; border: 1px solid #4caf50; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #2e7d32; display: flex; align-items: center;">
+                📹 Meeting Details (Share with Seeker)
+              </h3>
+              <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Google Meet Link:</p>
+                <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
+                <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
+                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+              </div>
+              <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 The seeker will receive the same meeting details in their confirmation email</p>
             </div>
 
             ${booking.notes ? `
@@ -200,10 +238,18 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
               <h3 style="margin: 0 0 15px 0; color: #155724;">Next Steps:</h3>
               <ul style="margin: 0; padding-left: 20px; color: #155724;">
-                <li>The seeker has been notified about the booking confirmation</li>
+                <li>Add this session to your calendar using the button below</li>
                 <li>Prepare for the session and any materials you might need</li>
+                <li>Join the meeting a few minutes early to test your setup</li>
                 <li>You can reach out to the seeker directly at ${booking.seeker_email}</li>
               </ul>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + booking.seeker_name)}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Client: ' + booking.seeker_name + '\nEmail: ' + booking.seeker_email + '\n\nGoogle Meet: ' + meetingLink + '\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description + (booking.notes ? '\n\nClient Notes: ' + booking.notes : ''))}" 
+                 style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
+                📅 Add to Calendar
+              </a>
             </div>
 
             <div style="text-align: center; color: #666; font-size: 14px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
