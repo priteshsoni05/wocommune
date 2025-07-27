@@ -21,6 +21,8 @@ export default function Auth() {
   const [username, setUsername] = useState('');
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
   const { user, signUp, signIn } = useAuth();
   const { addRole } = useUserRoles();
   const { updateProfile } = useProfile();
@@ -186,6 +188,40 @@ export default function Auth() {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+        redirectTo: `${window.location.origin}/auth?mode=login&role=${role}`
+      });
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error sending reset email",
+          description: error.message
+        });
+      } else {
+        toast({
+          title: "Reset email sent!",
+          description: "Please check your email for password reset instructions."
+        });
+        setShowForgotPassword(false);
+        setResetEmail('');
+      }
+    } catch (error) {
+      toast({
+        title: 'An error occurred',
+        description: 'Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getTitle = () => {
     if (mode === 'login') {
       return role === 'helpanion' ? 'Welcome back, Helpanion' : 'Welcome back, Walker';
@@ -320,11 +356,68 @@ export default function Auth() {
                 minLength={6}
               />
             </div>
+
+            {/* Forgot Password Link - Only show for login mode */}
+            {mode === 'login' && (
+              <div className="text-right">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+            )}
             
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
+
+          {/* Forgot Password Modal Content */}
+          {showForgotPassword && (
+            <div className="space-y-4 border-t pt-4">
+              <div className="text-center">
+                <h3 className="text-lg font-medium">Reset Your Password</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Enter your email address and we'll send you a link to reset your password.
+                </p>
+              </div>
+              
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="resetEmail">Email Address</Label>
+                  <Input
+                    id="resetEmail"
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    required
+                    placeholder="Enter your email address"
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => {
+                      setShowForgotPassword(false);
+                      setResetEmail('');
+                    }}
+                    disabled={loading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="flex-1" disabled={loading}>
+                    {loading ? 'Sending...' : 'Send Reset Link'}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          )}
 
           <div className="text-center">
             <div className="text-sm text-muted-foreground">
