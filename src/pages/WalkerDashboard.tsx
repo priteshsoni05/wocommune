@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function WalkerDashboard() {
   const { user, signOut } = useAuth();
   const { profile, updateProfile } = useProfile();
-  const { hasRole, addRole } = useUserRoles();
+  const { hasRole, addRole, loading: rolesLoading } = useUserRoles();
   const { bookings, loading: bookingsLoading } = useBookings();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -80,7 +80,7 @@ export default function WalkerDashboard() {
   };
 
   const handleRoleToggle = (checked: boolean) => {
-    if (checked) {
+    if (checked && !rolesLoading) {
       // Switch to Helpanion
       if (hasRole('helpanion')) {
         navigate('/helpanion-dashboard');
@@ -150,6 +150,7 @@ export default function WalkerDashboard() {
                 <Switch 
                   checked={false}
                   onCheckedChange={handleRoleToggle}
+                  disabled={rolesLoading}
                 />
               </div>
             </div>
