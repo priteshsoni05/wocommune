@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import { useUserRoles } from '@/hooks/useUserRoles';
 import { useBookings } from '@/hooks/useBookings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,19 +11,55 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Bell, Calendar, History, Settings, Video, Clock, Star } from 'lucide-react';
 import { format } from 'date-fns';
+import { useToast } from '@/hooks/use-toast';
 
 export default function WalkerDashboard() {
   const { user, signOut } = useAuth();
   const { profile, updateProfile } = useProfile();
+  const { hasRole, addRole } = useUserRoles();
   const { bookings, loading: bookingsLoading } = useBookings();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
   const [isEditing, setIsEditing] = useState(false);
+  const [showHelpanionModal, setShowHelpanionModal] = useState(false);
+  const [helpanionFormData, setHelpanionFormData] = useState({
+    fullName: "",
+    email: "",
+    username: "",
+  });
   const [formData, setFormData] = useState({
     display_name: profile?.display_name || '',
     email: profile?.email || '',
     phone: profile?.phone || '',
   });
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    if (profile && user) {
+      // Update last active role
+      updateProfile({ last_active_role: 'walker' });
+      setFormData({
+        display_name: profile.display_name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+      });
+      setHelpanionFormData({
+        fullName: profile.display_name || "",
+        email: profile.email || "",
+        username: "",
+      });
+    }
+  }, [profile, user]);
 
   const upcomingBookings = bookings.filter(booking => 
     booking.status === 'confirmed' && new Date(booking.booking_date) >= new Date()
@@ -34,6 +72,57 @@ export default function WalkerDashboard() {
   const handleSaveProfile = async () => {
     await updateProfile(formData);
     setIsEditing(false);
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const handleRoleToggle = (checked: boolean) => {
+    if (checked) {
+      // Switch to Helpanion
+      if (hasRole('helpanion')) {
+        navigate('/helpanion-dashboard');
+      } else {
+        setShowHelpanionModal(true);
+      }
+    }
+  };
+
+  const handleBecomeHelpanion = async () => {
+    // Update profile with username if provided
+    if (helpanionFormData.username) {
+      const profileResult = await updateProfile({ 
+        username: helpanionFormData.username,
+        display_name: helpanionFormData.fullName,
+        email: helpanionFormData.email
+      });
+      if (profileResult?.error) {
+        toast({
+          title: "Error",
+          description: "Failed to update profile. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
+    const result = await addRole('helpanion');
+    if (result?.error) {
+      toast({
+        title: "Error",
+        description: "Failed to add Helpanion role. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Welcome to Helpanions!",
+        description: "You can now provide guidance to Walkers.",
+      });
+      setShowHelpanionModal(false);
+      navigate('/helpanion-dashboard');
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -52,10 +141,20 @@ export default function WalkerDashboard() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-serif font-bold">Walker Dashboard</h1>
-              <p className="text-muted-foreground">Welcome back, {profile?.display_name || 'Walker'}</p>
+              <h1 className="text-2xl font-serif font-bold">
+                Hi {profile?.display_name?.split(' ')[0] || 'Walker'} (Walker)
+              </h1>
+              {hasRole('helpanion') && (
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
+                  <Switch 
+                    checked={false}
+                    onCheckedChange={handleRoleToggle}
+                  />
+                </div>
+              )}
             </div>
-            <Button variant="outline" onClick={signOut}>
+            <Button variant="outline" onClick={handleSignOut}>
               Sign Out
             </Button>
           </div>
@@ -63,6 +162,24 @@ export default function WalkerDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {!hasRole('helpanion') && (
+          <Card className="mb-6 border-primary/20 bg-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                Want to help others too?
+              </CardTitle>
+              <CardDescription>
+                Become a Helpanion and share your expertise with other community members.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={() => setShowHelpanionModal(true)}>
+                Become a Helpanion →
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <Tabs defaultValue="sessions" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="sessions" className="flex items-center gap-2">
@@ -87,7 +204,7 @@ export default function WalkerDashboard() {
           <TabsContent value="sessions" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Upcoming Sessions</CardTitle>
+                <CardTitle>Booked Sessions</CardTitle>
                 <CardDescription>
                   Your scheduled conversations with Helpanions
                 </CardDescription>
@@ -102,7 +219,7 @@ export default function WalkerDashboard() {
                     <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="text-lg font-medium mb-2">No upcoming sessions</h3>
                     <p className="text-muted-foreground mb-4">Book your first session with a Helpanion</p>
-                    <Button>Browse Helpanions</Button>
+                    <Button onClick={() => navigate('/helpanion')}>Browse Helpanions</Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -112,7 +229,7 @@ export default function WalkerDashboard() {
                           <div className="space-y-1">
                             <h4 className="font-medium">{booking.services?.title}</h4>
                             <p className="text-sm text-muted-foreground">
-                              with {booking.helper_id} {/* You might want to fetch helper name */}
+                              with Helper {booking.helper_id}
                             </p>
                           </div>
                           <Badge className={getStatusColor(booking.status)}>
@@ -160,7 +277,7 @@ export default function WalkerDashboard() {
           <TabsContent value="notifications" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Notifications Center</CardTitle>
+                <CardTitle>Notifications</CardTitle>
                 <CardDescription>
                   Messages and updates from your Helpanions
                 </CardDescription>
@@ -335,6 +452,56 @@ export default function WalkerDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Become Helpanion Modal */}
+      <Dialog open={showHelpanionModal} onOpenChange={setShowHelpanionModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Join as a Helpanion</DialogTitle>
+            <DialogDescription>
+              You haven't joined as a Helpanion yet. Want to join now and start helping other community members?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="helpanion-name">Full Name</Label>
+              <Input
+                id="helpanion-name"
+                value={helpanionFormData.fullName}
+                onChange={(e) => setHelpanionFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="helpanion-email">Email</Label>
+              <Input
+                id="helpanion-email"
+                type="email"
+                value={helpanionFormData.email}
+                onChange={(e) => setHelpanionFormData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter your email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="helpanion-username">Username (Unique Public ID)</Label>
+              <Input
+                id="helpanion-username"
+                value={helpanionFormData.username}
+                onChange={(e) => setHelpanionFormData(prev => ({ ...prev, username: e.target.value }))}
+                placeholder="Choose a unique username"
+              />
+            </div>
+            <div className="flex gap-2 pt-4">
+              <Button onClick={handleBecomeHelpanion} className="flex-1">
+                Yes, Join as Helpanion
+              </Button>
+              <Button variant="outline" onClick={() => setShowHelpanionModal(false)} className="flex-1">
+                Not now
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -10,6 +10,8 @@ export interface Profile {
   phone: string | null;
   bio: string | null;
   avatar_url: string | null;
+  username: string | null;
+  last_active_role: string | null;
   status: 'pending' | 'active' | 'in_review';
   created_at: string;
   updated_at: string;

@@ -1,55 +1,78 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { useProfile } from '@/hooks/useProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { useUserRoles } from '@/hooks/useUserRoles';
-import { Mail, LogIn } from 'lucide-react';
+import { Mail, LogIn, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { UserRole } from '@/hooks/useUserRoles';
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole>('walker');
+  const [username, setUsername] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const { user, signUp, signIn } = useAuth();
   const { addRole } = useUserRoles();
+  const { updateProfile } = useProfile();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Get the role from URL params if coming from "Join the Commune"
-  const roleFromUrl = searchParams.get('role') as UserRole;
-  
-  useEffect(() => {
-    if (roleFromUrl && ['walker', 'helpanion'].includes(roleFromUrl)) {
-      setSelectedRole(roleFromUrl);
-      setIsLogin(false); // Default to signup for role selection
-    }
-  }, [roleFromUrl]);
+  const mode = searchParams.get('mode') as 'login' | 'signup'; // login or signup
+  const role = searchParams.get('role') as UserRole; // walker or helpanion
 
   useEffect(() => {
     if (user) {
-      // Redirect based on user's role - will be handled by useUserRoles hook
-      navigate('/helpanion');
+      // Redirect based on the last active role or selected role
+      const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+      navigate(redirectPath);
     }
-  }, [user, navigate]);
+  }, [user, navigate, role]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
+      if (mode === 'login') {
+        // Login flow
+        let loginEmail = email;
+        
+        // For Helpanion login, allow login with username or email
+        if (role === 'helpanion' && emailOrUsername && !emailOrUsername.includes('@')) {
+          // It's a username, need to find the email
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('username', emailOrUsername)
+            .single();
+          
+          if (profileData?.email) {
+            loginEmail = profileData.email;
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Username not found",
+              description: "No account found with this username."
+            });
+            setLoading(false);
+            return;
+          }
+        } else if (role === 'helpanion') {
+          loginEmail = emailOrUsername;
+        }
+
+        const { error } = await signIn(loginEmail, password);
         if (error) {
           toast({
             variant: "destructive",
@@ -59,10 +82,11 @@ export default function Auth() {
         } else {
           toast({
             title: "Welcome back!",
-            description: "You've successfully logged in."
+            description: `You've successfully logged in as a ${role}.`
           });
         }
       } else {
+        // Signup flow
         const { error } = await signUp(email, password, fullName);
         if (error) {
           toast({
@@ -71,17 +95,27 @@ export default function Auth() {
             variant: 'destructive',
           });
         } else {
-          console.log('Signup successful, adding role:', selectedRole);
           // Add the selected role to the user after successful signup
-          const roleResult = await addRole(selectedRole);
-          console.log('Role assignment result:', roleResult);
+          const roleResult = await addRole(role);
           if (roleResult?.error) {
             console.warn('Failed to assign role:', roleResult.error);
+          }
+
+          // Update profile with username if Helpanion
+          if (role === 'helpanion' && username) {
+            await updateProfile({ 
+              username,
+              last_active_role: 'helpanion'
+            });
+          } else {
+            await updateProfile({ 
+              last_active_role: 'walker'
+            });
           }
           
           toast({
             title: 'Welcome to WO Commune!',
-            description: `You've joined as a ${selectedRole}. Please check your email to verify your account.`,
+            description: `You've joined as a ${role}. Please check your email to verify your account.`,
           });
         }
       }
@@ -99,10 +133,11 @@ export default function Auth() {
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
+      const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/helpanion`
+          redirectTo: `${window.location.origin}${redirectPath}`
         }
       });
       if (error) {
@@ -126,10 +161,11 @@ export default function Auth() {
   const handleLinkedInLogin = async () => {
     setLoading(true);
     try {
+      const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'linkedin_oidc',
         options: {
-          redirectTo: `${window.location.origin}/helpanion`
+          redirectTo: `${window.location.origin}${redirectPath}`
         }
       });
       if (error) {
@@ -150,18 +186,42 @@ export default function Auth() {
     }
   };
 
+  const getTitle = () => {
+    if (mode === 'login') {
+      return role === 'helpanion' ? 'Welcome back, Helpanion' : 'Welcome back, Walker';
+    } else {
+      return role === 'helpanion' ? 'Join as a Helpanion' : 'Join as a Walker';
+    }
+  };
+
+  const getDescription = () => {
+    if (mode === 'login') {
+      return role === 'helpanion' 
+        ? 'Sign in to your Helpanion account' 
+        : 'Sign in to your Walker account';
+    } else {
+      return role === 'helpanion' 
+        ? 'Start helping others with your expertise' 
+        : 'Start your journey seeking guidance';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-serif">
-            {isLogin ? 'Welcome back' : 'Join WO Commune'}
-          </CardTitle>
+          <div className="flex items-center justify-center mb-4">
+            <Link to="/" className="text-primary hover:text-primary/80">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div className="flex-1">
+              <CardTitle className="text-2xl font-serif">
+                {getTitle()}
+              </CardTitle>
+            </div>
+          </div>
           <CardDescription>
-            {isLogin 
-              ? 'Sign in to your account' 
-              : `Start your journey as a ${selectedRole === 'walker' ? 'Walker' : 'Helpanion'}`
-            }
+            {getDescription()}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -198,9 +258,9 @@ export default function Auth() {
             </div>
           </div>
 
-          {/* Manual Login Form */}
+          {/* Manual Login/Signup Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isLogin && (
+            {mode === 'signup' && (
               <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name</Label>
                 <Input
@@ -208,37 +268,43 @@ export default function Auth() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  required={!isLogin}
+                  required
                   placeholder="Enter your full name"
                 />
               </div>
             )}
 
-            {!isLogin && !roleFromUrl && (
-              <div className="space-y-3">
-                <Label>Join as</Label>
-                <RadioGroup value={selectedRole} onValueChange={(value: UserRole) => setSelectedRole(value)}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="walker" id="walker" />
-                    <Label htmlFor="walker" className="cursor-pointer">Walker - Seek help from experts</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="helpanion" id="helpanion" />
-                    <Label htmlFor="helpanion" className="cursor-pointer">Helpanion - Provide expert guidance</Label>
-                  </div>
-                </RadioGroup>
+            {mode === 'signup' && role === 'helpanion' && (
+              <div className="space-y-2">
+                <Label htmlFor="username">Username (Unique Public ID)</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="Choose a unique username"
+                />
               </div>
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">
+                {mode === 'login' && role === 'helpanion' ? 'Email or Username' : 'Email Address'}
+              </Label>
               <Input
                 id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type={mode === 'login' && role === 'helpanion' ? 'text' : 'email'}
+                value={mode === 'login' && role === 'helpanion' ? emailOrUsername : email}
+                onChange={(e) => {
+                  if (mode === 'login' && role === 'helpanion') {
+                    setEmailOrUsername(e.target.value);
+                  } else {
+                    setEmail(e.target.value);
+                  }
+                }}
                 required
-                placeholder="Enter your email"
+                placeholder={mode === 'login' && role === 'helpanion' ? 'Enter email or username' : 'Enter your email'}
               />
             </div>
             
@@ -256,21 +322,29 @@ export default function Auth() {
             </div>
             
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
+              {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
 
           <div className="text-center">
-            <Button
-              variant="link"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm"
-            >
-              {isLogin 
-                ? "Don't have an account? Sign up" 
-                : 'Already have an account? Sign in'
-              }
-            </Button>
+            <div className="text-sm text-muted-foreground">
+              {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
+            </div>
+            <div className="flex gap-2 justify-center mt-2">
+              <Link 
+                to={`/auth?mode=${mode === 'login' ? 'signup' : 'login'}&role=walker`}
+                className="text-sm text-primary hover:underline"
+              >
+                {mode === 'login' ? 'Join as Walker' : 'Login as Walker'}
+              </Link>
+              <span className="text-sm text-muted-foreground">•</span>
+              <Link 
+                to={`/auth?mode=${mode === 'login' ? 'signup' : 'login'}&role=helpanion`}
+                className="text-sm text-primary hover:underline"
+              >
+                {mode === 'login' ? 'Join as Helpanion' : 'Login as Helpanion'}
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>
