@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search, ChevronDown, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
+import { useUserRoles } from '@/hooks/useUserRoles';
 import { SeekHelpModal } from './SeekHelpModal';
 
 interface HelpanionHeaderProps {
@@ -25,6 +26,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
   const [isSeekHelpModalOpen, setIsSeekHelpModalOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
+  const { hasRole } = useUserRoles();
   const navigate = useNavigate();
 
   return (
@@ -77,16 +79,20 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex flex-col space-y-1 p-2">
-                      <p className="text-sm font-medium leading-none">{profile?.display_name || 'Walker'}</p>
+                      <p className="text-sm font-medium leading-none">{profile?.display_name || 'User'}</p>
                       <p className="text-xs leading-none text-muted-foreground">{profile?.email}</p>
                     </div>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate('/walker-dashboard')}>
-                      Walker Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/helpanion-dashboard')}>
-                      Helpanion Dashboard
-                    </DropdownMenuItem>
+                    {hasRole('walker') && (
+                      <DropdownMenuItem onClick={() => navigate('/walker-dashboard')}>
+                        Walker Dashboard
+                      </DropdownMenuItem>
+                    )}
+                    {hasRole('helpanion') && (
+                      <DropdownMenuItem onClick={() => navigate('/helpanion-dashboard')}>
+                        Helpanion Dashboard
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={signOut}>
                       Sign Out
