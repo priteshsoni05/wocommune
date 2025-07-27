@@ -148,7 +148,7 @@ export default function WalkerDashboard() {
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
                 <Switch 
-                  checked={false}
+                  checked={hasRole('helpanion')}
                   onCheckedChange={handleRoleToggle}
                   disabled={rolesLoading}
                 />

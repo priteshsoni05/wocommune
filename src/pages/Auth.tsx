@@ -82,6 +82,8 @@ export default function Auth() {
             description: error.message
           });
         } else {
+          // Ensure user has the role they're logging in as
+          await addRole(role);
           toast({
             title: "Welcome back!",
             description: `You've successfully logged in as a ${role}.`
