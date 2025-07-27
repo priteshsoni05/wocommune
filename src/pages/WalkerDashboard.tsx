@@ -144,15 +144,14 @@ export default function WalkerDashboard() {
               <h1 className="text-2xl font-serif font-bold">
                 Hi {profile?.display_name?.split(' ')[0] || 'Walker'} (Walker)
               </h1>
-              {hasRole('helpanion') && (
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
-                  <Switch 
-                    checked={false}
-                    onCheckedChange={handleRoleToggle}
-                  />
-                </div>
-              )}
+              {/* Role Toggle */}
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
+                <Switch 
+                  checked={false}
+                  onCheckedChange={handleRoleToggle}
+                />
+              </div>
             </div>
             <Button variant="outline" onClick={handleSignOut}>
               Sign Out
