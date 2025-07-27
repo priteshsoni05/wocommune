@@ -103,17 +103,34 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                 <>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="gap-2">
+                      <Button variant="default" className="gap-2">
                         Join the Commune
                         <ChevronDown className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-background border-border z-50">
                       <DropdownMenuItem asChild>
-                        <Link to="/auth?role=walker" className="cursor-pointer">Join as a Walker</Link>
+                        <Link to="/auth?mode=signup&role=walker" className="cursor-pointer">Walker</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/auth?role=helpanion" className="cursor-pointer">Join as a Helpanion</Link>
+                        <Link to="/auth?mode=signup&role=helpanion" className="cursor-pointer">Helpanion</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        Already a Member
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-background border-border z-50">
+                      <DropdownMenuItem asChild>
+                        <Link to="/auth?mode=login&role=walker" className="cursor-pointer">Walker</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/auth?mode=login&role=helpanion" className="cursor-pointer">Helpanion</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
