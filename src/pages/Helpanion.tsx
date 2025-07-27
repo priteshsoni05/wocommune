@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useHelpanions } from '@/hooks/useHelpanions';
 import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
 import { FeaturedHelpanions } from '@/components/helpanion/FeaturedHelpanions';
+import { TestimonialsSlider } from '@/components/helpanion/TestimonialsSlider';
 import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
 
 export default function Helpanion() {
@@ -64,6 +65,9 @@ export default function Helpanion() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Slider */}
+      <TestimonialsSlider />
 
       {/* Featured Helpanions */}
       <div id="featured-helpanions">
