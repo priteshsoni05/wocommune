@@ -102,7 +102,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                         <ChevronDown className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-background border-border">
+                    <DropdownMenuContent align="end" className="bg-background border-border z-50">
                       <DropdownMenuItem asChild>
                         <Link to="/auth" className="cursor-pointer">Join as a Walker</Link>
                       </DropdownMenuItem>
@@ -111,10 +111,6 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-
-                  <Button variant="ghost" asChild>
-                    <Link to="/auth">Login/Signup</Link>
-                  </Button>
                 </>
               )}
             </div>
