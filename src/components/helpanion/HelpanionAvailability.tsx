@@ -65,7 +65,7 @@ export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailability
 
     const result = await createSlot(formData);
     
-    if (result?.error) {
+    if (!result) {
       toast({
         title: "Error",
         description: "Failed to add availability slot.",
@@ -89,7 +89,7 @@ export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailability
   const handleDelete = async (slotId: string) => {
     if (window.confirm("Are you sure you want to delete this availability slot?")) {
       const result = await deleteSlot(slotId);
-      if (!result || result.error) {
+      if (!result) {
         toast({
           title: "Error",
           description: "Failed to delete availability slot.",
