@@ -18,6 +18,10 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
       window.open(`/profile/${user.id}`, '_blank');
     }
   };
+
+  const handleEditProfile = () => {
+    navigate('/helpanion-dashboard');
+  };
   const statusConfig = {
     active: {
       icon: CheckCircle,
@@ -69,7 +73,12 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
         </div>
         
         <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" className="gap-2 flex-1">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 flex-1"
+            onClick={handleEditProfile}
+          >
             <Edit className="h-4 w-4" />
             Edit Profile
           </Button>

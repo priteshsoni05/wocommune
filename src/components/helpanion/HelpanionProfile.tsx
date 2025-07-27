@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Profile } from "@/hooks/useProfile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Save, CheckCircle } from "lucide-react";
+import { Upload, Save, CheckCircle, Plus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HelpanionProfileProps {
   profile: Profile;
@@ -32,7 +34,15 @@ const useCaseOptions = [
 
 export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfileProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [customSchool, setCustomSchool] = useState("");
+  const [customRole, setCustomRole] = useState("");
+  const [showCustomSchool, setShowCustomSchool] = useState(false);
+  const [showCustomRole, setShowCustomRole] = useState(false);
+  
   const [formData, setFormData] = useState({
     display_name: profile.display_name || "",
     username: profile.username || "",
@@ -40,22 +50,87 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     email: profile.email || "",
     phone: profile.phone || "",
     avatar_url: profile.avatar_url || "",
-    // Additional fields (we'll store these in bio for now as JSON)
-    school: "",
-    currentRole: "",
-    useCase: "",
-    skills: "",
-    linkedin: "",
-    instagram: "",
-    portfolio: "",
-    website: ""
+    school: profile.school || "",
+    role: profile.role || "",
+    use_case: profile.use_case || "",
+    skills: profile.skills || "",
+    linkedin_url: profile.linkedin_url || "",
+    instagram_url: profile.instagram_url || "",
+    portfolio_url: profile.portfolio_url || "",
+    website_url: profile.website_url || ""
   });
+
+  // Load existing profile data when component mounts
+  useEffect(() => {
+    setFormData({
+      display_name: profile.display_name || "",
+      username: profile.username || "",
+      bio: profile.bio || "",
+      email: profile.email || "",
+      phone: profile.phone || "",
+      avatar_url: profile.avatar_url || "",
+      school: profile.school || "",
+      role: profile.role || "",
+      use_case: profile.use_case || "",
+      skills: profile.skills || "",
+      linkedin_url: profile.linkedin_url || "",
+      instagram_url: profile.instagram_url || "",
+      portfolio_url: profile.portfolio_url || "",
+      website_url: profile.website_url || ""
+    });
+  }, [profile]);
+
+  const uploadImage = async (file: File) => {
+    if (!user) return null;
+    
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file);
+      
+      if (uploadError) throw uploadError;
+      
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+      
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload image. Please try again.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const imageUrl = await uploadImage(file);
+    if (imageUrl) {
+      handleInputChange('avatar_url', imageUrl);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Use custom values if they exist
+      const schoolValue = showCustomSchool ? customSchool : formData.school;
+      const roleValue = showCustomRole ? customRole : formData.role;
+      
       const result = await updateProfile({
         display_name: formData.display_name,
         username: formData.username,
@@ -63,6 +138,14 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         email: formData.email,
         phone: formData.phone,
         avatar_url: formData.avatar_url,
+        school: schoolValue,
+        role: roleValue,
+        use_case: formData.use_case,
+        skills: formData.skills,
+        linkedin_url: formData.linkedin_url,
+        instagram_url: formData.instagram_url,
+        portfolio_url: formData.portfolio_url,
+        website_url: formData.website_url,
       });
 
       if (result.error) {
@@ -130,9 +213,22 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                   onChange={(e) => handleInputChange('avatar_url', e.target.value)}
                   placeholder="https://example.com/your-photo.jpg"
                 />
-                <Button type="button" variant="outline" size="sm">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
                   <Upload className="h-4 w-4 mr-2" />
-                  Upload Photo
+                  {uploading ? "Uploading..." : "Upload Photo"}
                 </Button>
               </div>
             </div>
@@ -225,35 +321,109 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="school">School/College</Label>
-                <Select value={formData.school} onValueChange={(value) => handleInputChange('school', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your school/college" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {schoolOptions.map((school) => (
-                      <SelectItem key={school} value={school}>{school}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {showCustomSchool ? (
+                  <div className="flex gap-2">
+                    <Input
+                      value={customSchool}
+                      onChange={(e) => setCustomSchool(e.target.value)}
+                      placeholder="Enter your school/college"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setShowCustomSchool(false);
+                        setCustomSchool("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <Select 
+                    value={formData.school} 
+                    onValueChange={(value) => {
+                      if (value === "add-new") {
+                        setShowCustomSchool(true);
+                      } else {
+                        handleInputChange('school', value);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your school/college" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {schoolOptions.map((school) => (
+                        <SelectItem key={school} value={school}>{school}</SelectItem>
+                      ))}
+                      <SelectItem value="add-new">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4" />
+                          Add New...
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="currentRole">Current Role / Field</Label>
-                <Select value={formData.currentRole} onValueChange={(value) => handleInputChange('currentRole', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roleOptions.map((role) => (
-                      <SelectItem key={role} value={role}>{role}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="role">Current Role / Field</Label>
+                {showCustomRole ? (
+                  <div className="flex gap-2">
+                    <Input
+                      value={customRole}
+                      onChange={(e) => setCustomRole(e.target.value)}
+                      placeholder="Enter your role/field"
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setShowCustomRole(false);
+                        setCustomRole("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <Select 
+                    value={formData.role} 
+                    onValueChange={(value) => {
+                      if (value === "add-new") {
+                        setShowCustomRole(true);
+                      } else {
+                        handleInputChange('role', value);
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roleOptions.map((role) => (
+                        <SelectItem key={role} value={role}>{role}</SelectItem>
+                      ))}
+                      <SelectItem value="add-new">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-4 w-4" />
+                          Add New...
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="useCase">Use Case / Expertise Area</Label>
-              <Select value={formData.useCase} onValueChange={(value) => handleInputChange('useCase', value)}>
+              <Label htmlFor="use_case">Use Case / Expertise Area</Label>
+              <Select value={formData.use_case} onValueChange={(value) => handleInputChange('use_case', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="What type of help do you offer?" />
                 </SelectTrigger>
@@ -291,20 +461,20 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Label htmlFor="linkedin_url">LinkedIn</Label>
                 <Input
-                  id="linkedin"
-                  value={formData.linkedin}
-                  onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                  id="linkedin_url"
+                  value={formData.linkedin_url}
+                  onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
                   placeholder="https://linkedin.com/in/yourprofile"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="instagram">Instagram</Label>
+                <Label htmlFor="instagram_url">Instagram</Label>
                 <Input
-                  id="instagram"
-                  value={formData.instagram}
-                  onChange={(e) => handleInputChange('instagram', e.target.value)}
+                  id="instagram_url"
+                  value={formData.instagram_url}
+                  onChange={(e) => handleInputChange('instagram_url', e.target.value)}
                   placeholder="https://instagram.com/yourhandle"
                 />
               </div>
@@ -312,20 +482,20 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="portfolio">Portfolio</Label>
+                <Label htmlFor="portfolio_url">Portfolio</Label>
                 <Input
-                  id="portfolio"
-                  value={formData.portfolio}
-                  onChange={(e) => handleInputChange('portfolio', e.target.value)}
+                  id="portfolio_url"
+                  value={formData.portfolio_url}
+                  onChange={(e) => handleInputChange('portfolio_url', e.target.value)}
                   placeholder="https://yourportfolio.com"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="website">Personal Website</Label>
+                <Label htmlFor="website_url">Personal Website</Label>
                 <Input
-                  id="website"
-                  value={formData.website}
-                  onChange={(e) => handleInputChange('website', e.target.value)}
+                  id="website_url"
+                  value={formData.website_url}
+                  onChange={(e) => handleInputChange('website_url', e.target.value)}
                   placeholder="https://yourwebsite.com"
                 />
               </div>

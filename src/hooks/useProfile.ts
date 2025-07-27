@@ -13,6 +13,14 @@ export interface Profile {
   username: string | null;
   last_active_role: string | null;
   status: 'pending' | 'active' | 'in_review';
+  school: string | null;
+  role: string | null;
+  use_case: string | null;
+  skills: string | null;
+  linkedin_url: string | null;
+  instagram_url: string | null;
+  portfolio_url: string | null;
+  website_url: string | null;
   created_at: string;
   updated_at: string;
 }

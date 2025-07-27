@@ -178,12 +178,20 @@ export type Database = {
           display_name: string | null
           email: string | null
           id: string
+          instagram_url: string | null
           last_active_role: string | null
+          linkedin_url: string | null
           phone: string | null
+          portfolio_url: string | null
+          role: string | null
+          school: string | null
+          skills: string | null
           status: string | null
           updated_at: string
+          use_case: string | null
           user_id: string
           username: string | null
+          website_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -192,12 +200,20 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          instagram_url?: string | null
           last_active_role?: string | null
+          linkedin_url?: string | null
           phone?: string | null
+          portfolio_url?: string | null
+          role?: string | null
+          school?: string | null
+          skills?: string | null
           status?: string | null
           updated_at?: string
+          use_case?: string | null
           user_id: string
           username?: string | null
+          website_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -206,12 +222,20 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           id?: string
+          instagram_url?: string | null
           last_active_role?: string | null
+          linkedin_url?: string | null
           phone?: string | null
+          portfolio_url?: string | null
+          role?: string | null
+          school?: string | null
+          skills?: string | null
           status?: string | null
           updated_at?: string
+          use_case?: string | null
           user_id?: string
           username?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }
