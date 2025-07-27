@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import PublicProfile from "./pages/PublicProfile";
 import Helpanion from "./pages/Helpanion";
@@ -24,7 +23,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Helpanion />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/landing" element={<Landing />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
