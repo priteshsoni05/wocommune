@@ -64,26 +64,6 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                 Seek Help
               </Button>
 
-              {/* Show Dashboard button for authenticated users */}
-              {user && hasRole('helpanion') && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/helpanion-dashboard')}
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                  Dashboard
-                </Button>
-              )}
-              
-              {user && hasRole('walker') && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => navigate('/walker-dashboard')}
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                  Dashboard
-                </Button>
-              )}
 
               {user ? (
                 /* User Profile Dropdown */
@@ -104,16 +84,20 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                       <p className="text-xs leading-none text-muted-foreground">{profile?.email}</p>
                     </div>
                     <DropdownMenuSeparator />
-                    {hasRole('walker') && (
-                      <DropdownMenuItem onClick={() => navigate('/walker-dashboard')}>
-                        Walker Dashboard
-                      </DropdownMenuItem>
-                    )}
-                    {hasRole('helpanion') && (
-                      <DropdownMenuItem onClick={() => navigate('/helpanion-dashboard')}>
-                        Helpanion Dashboard
-                      </DropdownMenuItem>
-                    )}
+                    <DropdownMenuItem onClick={() => {
+                      // Navigate to appropriate dashboard based on user's last active role or available roles
+                      if (profile?.last_active_role === 'helpanion' && hasRole('helpanion')) {
+                        navigate('/helpanion-dashboard');
+                      } else if (profile?.last_active_role === 'walker' && hasRole('walker')) {
+                        navigate('/walker-dashboard');
+                      } else if (hasRole('helpanion')) {
+                        navigate('/helpanion-dashboard');
+                      } else {
+                        navigate('/walker-dashboard');
+                      }
+                    }}>
+                      Dashboard
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={signOut}>
                       Sign Out
