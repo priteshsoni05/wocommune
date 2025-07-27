@@ -2,8 +2,10 @@ import { CheckCircle, AlertCircle, Edit, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
 
 interface ProfileStatusProps {
   status: 'active' | 'in_review' | 'pending';
@@ -12,6 +14,7 @@ interface ProfileStatusProps {
 export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { stats, loading } = useDashboardStats();
 
   const handleViewPublic = () => {
     if (user) {
@@ -70,6 +73,22 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
               {config.description}
             </p>
           </div>
+        </div>
+        
+        {/* Profile Completion */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Profile Completion</span>
+            <span className="text-sm font-medium">
+              {loading ? "..." : `${stats.profileCompletion}%`}
+            </span>
+          </div>
+          <Progress value={loading ? 0 : stats.profileCompletion} className="h-2" />
+          {(!loading && stats.profileCompletion < 100) && (
+            <p className="text-xs text-muted-foreground">
+              Complete your profile to attract more bookings
+            </p>
+          )}
         </div>
         
         <div className="flex gap-2 pt-2">

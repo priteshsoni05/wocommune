@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Upload, Save, CheckCircle, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCustomOptions } from "@/hooks/useCustomOptions";
 
 interface HelpanionProfileProps {
   profile: Profile;
@@ -42,6 +43,10 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [customRole, setCustomRole] = useState("");
   const [showCustomSchool, setShowCustomSchool] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
+  
+  // Custom options hooks
+  const { customOptions: customSchools, addCustomOption: addCustomSchool } = useCustomOptions('school');
+  const { customOptions: customRoles, addCustomOption: addCustomRole } = useCustomOptions('role');
   
   const [formData, setFormData] = useState({
     display_name: profile.display_name || "",
@@ -127,9 +132,39 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     setLoading(true);
 
     try {
-      // Use custom values if they exist
-      const schoolValue = showCustomSchool ? customSchool : formData.school;
-      const roleValue = showCustomRole ? customRole : formData.role;
+      // Handle custom school addition
+      let schoolValue = formData.school;
+      if (showCustomSchool && customSchool.trim()) {
+        const schoolResult = await addCustomSchool(customSchool);
+        if (schoolResult.error) {
+          toast({
+            title: "Error",
+            description: "Failed to save custom school option.",
+            variant: "destructive",
+          });
+          return;
+        }
+        schoolValue = customSchool;
+        setShowCustomSchool(false);
+        setCustomSchool("");
+      }
+
+      // Handle custom role addition
+      let roleValue = formData.role;
+      if (showCustomRole && customRole.trim()) {
+        const roleResult = await addCustomRole(customRole);
+        if (roleResult.error) {
+          toast({
+            title: "Error",
+            description: "Failed to save custom role option.",
+            variant: "destructive",
+          });
+          return;
+        }
+        roleValue = customRole;
+        setShowCustomRole(false);
+        setCustomRole("");
+      }
       
       const result = await updateProfile({
         display_name: formData.display_name,
@@ -159,6 +194,13 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           title: "Success",
           description: "Profile updated successfully!",
         });
+        
+        // Update form data with the new values
+        setFormData(prev => ({
+          ...prev,
+          school: schoolValue,
+          role: roleValue
+        }));
       }
     } catch (error) {
       toast({
@@ -333,12 +375,21 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setShowCustomSchool(false);
-                        setCustomSchool("");
+                      onClick={async () => {
+                        if (customSchool.trim()) {
+                          const result = await addCustomSchool(customSchool);
+                          if (result.data) {
+                            handleInputChange('school', customSchool);
+                            setShowCustomSchool(false);
+                            setCustomSchool("");
+                          }
+                        } else {
+                          setShowCustomSchool(false);
+                          setCustomSchool("");
+                        }
                       }}
                     >
-                      Cancel
+                      {customSchool.trim() ? "Add" : "Cancel"}
                     </Button>
                   </div>
                 ) : (
@@ -358,6 +409,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     <SelectContent>
                       {schoolOptions.map((school) => (
                         <SelectItem key={school} value={school}>{school}</SelectItem>
+                      ))}
+                      {customSchools.map((school) => (
+                        <SelectItem key={`custom-${school}`} value={school}>{school}</SelectItem>
                       ))}
                       <SelectItem value="add-new">
                         <div className="flex items-center gap-2">
@@ -383,12 +437,21 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setShowCustomRole(false);
-                        setCustomRole("");
+                      onClick={async () => {
+                        if (customRole.trim()) {
+                          const result = await addCustomRole(customRole);
+                          if (result.data) {
+                            handleInputChange('role', customRole);
+                            setShowCustomRole(false);
+                            setCustomRole("");
+                          }
+                        } else {
+                          setShowCustomRole(false);
+                          setCustomRole("");
+                        }
                       }}
                     >
-                      Cancel
+                      {customRole.trim() ? "Add" : "Cancel"}
                     </Button>
                   </div>
                 ) : (
@@ -408,6 +471,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     <SelectContent>
                       {roleOptions.map((role) => (
                         <SelectItem key={role} value={role}>{role}</SelectItem>
+                      ))}
+                      {customRoles.map((role) => (
+                        <SelectItem key={`custom-${role}`} value={role}>{role}</SelectItem>
                       ))}
                       <SelectItem value="add-new">
                         <div className="flex items-center gap-2">

@@ -125,6 +125,30 @@ export type Database = {
           },
         ]
       }
+      custom_options: {
+        Row: {
+          created_at: string
+          id: string
+          option_type: string
+          option_value: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_type: string
+          option_value: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_type?: string
+          option_value?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       earnings: {
         Row: {
           amount: number
