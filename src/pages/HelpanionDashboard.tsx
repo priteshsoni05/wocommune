@@ -3,28 +3,57 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
-import { WelcomeHeader } from "@/components/dashboard/WelcomeHeader";
-import { TodaysSessions } from "@/components/dashboard/TodaysSessions";
-import { UpcomingBookings } from "@/components/dashboard/UpcomingBookings";
-import { ProfileStatus } from "@/components/dashboard/ProfileStatus";
-import { EarningsSummary } from "@/components/dashboard/EarningsSummary";
-import { CalendarSlotManager } from "@/components/dashboard/CalendarSlotManager";
-import { QuickActions } from "@/components/dashboard/QuickActions";
-import { MyServices } from "@/components/dashboard/MyServices";
+import { useServices } from "@/hooks/useServices";
+import { useBookings } from "@/hooks/useBookings";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  Home, 
+  User, 
+  Lightbulb, 
+  Calendar, 
+  BookOpen, 
+  Star, 
+  Settings, 
+  ChevronRight,
+  LogOut
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { HelpanionHome } from "@/components/helpanion/HelpanionHome";
+import { HelpanionProfile } from "@/components/helpanion/HelpanionProfile";
+import { HelpanionServices } from "@/components/helpanion/HelpanionServices";
+import { HelpanionAvailability } from "@/components/helpanion/HelpanionAvailability";
+import { HelpanionBookings } from "@/components/helpanion/HelpanionBookings";
+import { HelpanionReviews } from "@/components/helpanion/HelpanionReviews";
+import { HelpanionSettings } from "@/components/helpanion/HelpanionSettings";
+
+type TabKey = 'home' | 'profile' | 'services' | 'availability' | 'bookings' | 'reviews' | 'settings';
+
+const navigationTabs = [
+  { key: 'home' as TabKey, label: 'Home', icon: Home },
+  { key: 'profile' as TabKey, label: 'My Profile', icon: User },
+  { key: 'services' as TabKey, label: 'Create Service', icon: Lightbulb },
+  { key: 'availability' as TabKey, label: 'Availability', icon: Calendar },
+  { key: 'bookings' as TabKey, label: 'Bookings', icon: BookOpen },
+  { key: 'reviews' as TabKey, label: 'Reviews', icon: Star },
+  { key: 'settings' as TabKey, label: 'Settings', icon: Settings },
+];
 
 const HelpanionDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const { profile, loading: profileLoading, updateProfile } = useProfile();
   const { hasRole, addRole } = useUserRoles();
+  const { services } = useServices();
+  const { bookings } = useBookings();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  const [activeTab, setActiveTab] = useState<TabKey>('home');
   const [showWalkerModal, setShowWalkerModal] = useState(false);
   const [walkerFormData, setWalkerFormData] = useState({
     fullName: "",
@@ -63,6 +92,20 @@ const HelpanionDashboard = () => {
     return null;
   }
 
+  const calculateProfileProgress = () => {
+    let completed = 0;
+    const total = 6;
+    
+    if (profile.display_name) completed++;
+    if (profile.bio) completed++;
+    if (profile.avatar_url) completed++;
+    if (profile.username) completed++;
+    if (services.length > 0) completed++;
+    if (bookings.length > 0) completed++;
+    
+    return Math.round((completed / total) * 100);
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
@@ -97,15 +140,59 @@ const HelpanionDashboard = () => {
     }
   };
 
+  const renderContent = () => {
+    const profileProgress = calculateProfileProgress();
+    
+    switch (activeTab) {
+      case 'home':
+        return (
+          <HelpanionHome 
+            profile={profile} 
+            profileProgress={profileProgress}
+            onNavigateToProfile={() => setActiveTab('profile')}
+          />
+        );
+      case 'profile':
+        return <HelpanionProfile profile={profile} updateProfile={updateProfile} />;
+      case 'services':
+        return <HelpanionServices profileProgress={profileProgress} />;
+      case 'availability':
+        return <HelpanionAvailability profileProgress={profileProgress} />;
+      case 'bookings':
+        return <HelpanionBookings />;
+      case 'reviews':
+        return <HelpanionReviews />;
+      case 'settings':
+        return <HelpanionSettings profile={profile} updateProfile={updateProfile} />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <WelcomeHeader userName={`${profile.display_name || 'Helpanion'} (Helpanion)`} />
+    <div className="min-h-screen bg-background flex">
+      {/* Left Navigation Panel */}
+      <div className="w-80 bg-card border-r border-border flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-border">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-xl font-semibold text-foreground">
+              WO Commune
+            </h1>
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
+              <p className="text-xs text-muted-foreground">(Helpanion)</p>
+            </div>
+            
             {hasRole('walker') && (
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm text-muted-foreground">Switch to Walker</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">Walker</span>
                 <Switch 
                   checked={false}
                   onCheckedChange={handleRoleToggle}
@@ -113,46 +200,67 @@ const HelpanionDashboard = () => {
               </div>
             )}
           </div>
-          <Button variant="outline" onClick={handleSignOut}>
-            Sign Out
-          </Button>
+          
+          {/* Profile Progress */}
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-muted-foreground">Profile Progress</span>
+              <span className="text-xs text-muted-foreground">{calculateProfileProgress()}%</span>
+            </div>
+            <Progress value={calculateProfileProgress()} className="h-2" />
+          </div>
         </div>
-        
+
+        {/* Navigation Tabs */}
+        <nav className="flex-1 p-4">
+          <div className="space-y-1">
+            {navigationTabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg transition-colors",
+                  activeTab === tab.key
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                )}
+              >
+                <tab.icon className="h-4 w-4" />
+                <span className="text-sm">{tab.label}</span>
+                {activeTab === tab.key && (
+                  <ChevronRight className="h-3 w-3 ml-auto" />
+                )}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* Become Walker CTA */}
         {!hasRole('walker') && (
-          <Card className="mb-6 border-primary/20 bg-primary/5">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+          <div className="p-4 border-t border-border">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+              <h3 className="text-sm font-medium text-foreground mb-1">
                 Want to seek help too?
-              </CardTitle>
-              <CardDescription>
-                Become a Walker to access guidance from other Helpanions in the community.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => setShowWalkerModal(true)}>
+              </h3>
+              <p className="text-xs text-muted-foreground mb-3">
+                Become a Walker to access guidance from other Helpanions.
+              </p>
+              <Button 
+                size="sm" 
+                className="w-full"
+                onClick={() => setShowWalkerModal(true)}
+              >
                 Become a Walker →
               </Button>
-            </CardContent>
-          </Card>
-        )}
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Main content area */}
-          <div className="lg:col-span-8 space-y-6">
-            <TodaysSessions />
-            <div id="my-services">
-              <MyServices />
             </div>
-            <UpcomingBookings />
           </div>
-          
-          {/* Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
-            <ProfileStatus status={profile.status} />
-            <EarningsSummary />
-            <CalendarSlotManager />
-            <QuickActions />
-          </div>
+        )}
+      </div>
+
+      {/* Right Content Panel */}
+      <div className="flex-1 flex flex-col">
+        <div className="flex-1 overflow-auto">
+          {renderContent()}
         </div>
       </div>
 
