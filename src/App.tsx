@@ -22,9 +22,9 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route path="/" element={<Helpanion />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/helpanion" element={<Helpanion />} />
+            <Route path="/landing" element={<Landing />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
