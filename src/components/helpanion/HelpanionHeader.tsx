@@ -110,10 +110,10 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-background border-border z-50">
                       <DropdownMenuItem asChild>
-                        <Link to="/auth" className="cursor-pointer">Join as a Walker</Link>
+                        <Link to="/auth?role=walker" className="cursor-pointer">Join as a Walker</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/auth" className="cursor-pointer">Join as a Helpanion</Link>
+                        <Link to="/auth?role=helpanion" className="cursor-pointer">Join as a Helpanion</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -7,21 +7,37 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
+import { useUserRoles } from '@/hooks/useUserRoles';
 import { Mail, LogIn } from 'lucide-react';
+import type { UserRole } from '@/hooks/useUserRoles';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('walker');
   const [loading, setLoading] = useState(false);
   const { user, signUp, signIn } = useAuth();
+  const { addRole } = useUserRoles();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    // Get the role from URL params if coming from "Join the Commune"
+    const roleParam = searchParams.get('role') as UserRole;
+    if (roleParam && ['walker', 'helpanion'].includes(roleParam)) {
+      setSelectedRole(roleParam);
+      setIsLogin(false); // Default to signup for role selection
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (user) {
+      // Redirect based on user's role - will be handled by useUserRoles hook
       navigate('/helpanion');
     }
   }, [user, navigate]);
@@ -54,9 +70,15 @@ export default function Auth() {
             variant: 'destructive',
           });
         } else {
+          // Add the selected role to the user after successful signup
+          const roleResult = await addRole(selectedRole);
+          if (roleResult?.error) {
+            console.warn('Failed to assign role:', roleResult.error);
+          }
+          
           toast({
             title: 'Welcome to WO Commune!',
-            description: 'Please check your email to verify your account.',
+            description: `You've joined as a ${selectedRole}. Please check your email to verify your account.`,
           });
         }
       }
@@ -134,8 +156,8 @@ export default function Auth() {
           </CardTitle>
           <CardDescription>
             {isLogin 
-              ? 'Sign in to your Walker account' 
-              : 'Start your journey as a Walker'
+              ? 'Sign in to your account' 
+              : `Start your journey as a ${selectedRole === 'walker' ? 'Walker' : 'Helpanion'}`
             }
           </CardDescription>
         </CardHeader>
@@ -186,6 +208,22 @@ export default function Auth() {
                   required={!isLogin}
                   placeholder="Enter your full name"
                 />
+              </div>
+            )}
+
+            {!isLogin && (
+              <div className="space-y-3">
+                <Label>Join as</Label>
+                <RadioGroup value={selectedRole} onValueChange={(value: UserRole) => setSelectedRole(value)}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="walker" id="walker" />
+                    <Label htmlFor="walker" className="cursor-pointer">Walker - Seek help from experts</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="helpanion" id="helpanion" />
+                    <Label htmlFor="helpanion" className="cursor-pointer">Helpanion - Provide expert guidance</Label>
+                  </div>
+                </RadioGroup>
               </div>
             )}
             
