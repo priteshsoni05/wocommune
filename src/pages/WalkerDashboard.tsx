@@ -80,14 +80,19 @@ export default function WalkerDashboard() {
   };
 
   const handleRoleToggle = (checked: boolean) => {
+    console.log('Toggle clicked, checked:', checked, 'hasRole helpanion:', hasRole('helpanion'), 'rolesLoading:', rolesLoading);
+    
     if (checked && !rolesLoading) {
-      // Switch to Helpanion
+      // User wants to switch to Helpanion
       if (hasRole('helpanion')) {
+        console.log('User has helpanion role, navigating to helpanion dashboard');
         navigate('/helpanion-dashboard');
       } else {
+        console.log('User does not have helpanion role, showing modal');
         setShowHelpanionModal(true);
       }
     }
+    // If unchecked, do nothing (stay on walker dashboard)
   };
 
   const handleBecomeHelpanion = async () => {
@@ -148,7 +153,7 @@ export default function WalkerDashboard() {
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
                 <Switch 
-                  checked={hasRole('helpanion')}
+                  checked={false}
                   onCheckedChange={handleRoleToggle}
                   disabled={rolesLoading}
                 />
