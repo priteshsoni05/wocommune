@@ -1,9 +1,18 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Search, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Search, ChevronDown, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/hooks/useProfile';
 import { SeekHelpModal } from './SeekHelpModal';
 
 interface HelpanionHeaderProps {
@@ -14,6 +23,9 @@ interface HelpanionHeaderProps {
 
 export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }: HelpanionHeaderProps) {
   const [isSeekHelpModalOpen, setIsSeekHelpModalOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { profile } = useProfile();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -50,26 +62,61 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
                 Seek Help
               </Button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="gap-2">
-                    Join the Commune
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-background border-border">
-                  <DropdownMenuItem asChild>
-                    <Link to="/auth" className="cursor-pointer">Join as a Walker</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/auth" className="cursor-pointer">Join as a Helpanion</Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {user ? (
+                /* User Profile Dropdown */
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.display_name || 'User'} />
+                        <AvatarFallback>
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex flex-col space-y-1 p-2">
+                      <p className="text-sm font-medium leading-none">{profile?.display_name || 'Walker'}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{profile?.email}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate('/walker-dashboard')}>
+                      Walker Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/helpanion-dashboard')}>
+                      Helpanion Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={signOut}>
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="gap-2">
+                        Join the Commune
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-background border-border">
+                      <DropdownMenuItem asChild>
+                        <Link to="/auth" className="cursor-pointer">Join as a Walker</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/auth" className="cursor-pointer">Join as a Helpanion</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-              <Button variant="ghost" asChild>
-                <Link to="/auth">Login/Signup</Link>
-              </Button>
+                  <Button variant="ghost" asChild>
+                    <Link to="/auth">Login/Signup</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

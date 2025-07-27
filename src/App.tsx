@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import PublicProfile from "./pages/PublicProfile";
 import Helpanion from "./pages/Helpanion";
+import WalkerDashboard from "./pages/WalkerDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanion" element={<Helpanion />} />
+            <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
+import { Mail, LogIn } from 'lucide-react';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp, signIn, user } = useAuth();
+  const { user, signUp, signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/helpanion');
     }
   }, [user, navigate]);
 
@@ -43,25 +46,79 @@ export default function Auth() {
           });
         }
       } else {
-        const { error } = await signUp(email, password, displayName);
+        const { error } = await signUp(email, password, fullName);
         if (error) {
           toast({
-            variant: "destructive",
-            title: "Sign up failed",
-            description: error.message
+            title: 'Error signing up',
+            description: error.message,
+            variant: 'destructive',
           });
         } else {
           toast({
-            title: "Welcome to Helpanion!",
-            description: "Your account has been created successfully."
+            title: 'Welcome to WO Commune!',
+            description: 'Please check your email to verify your account.',
           });
         }
       }
     } catch (error) {
       toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: "Please try again later."
+        title: 'An error occurred',
+        description: 'Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/helpanion`
+        }
+      });
+      if (error) {
+        toast({
+          title: 'Error with Google login',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'An error occurred',
+        description: 'Please try again later.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLinkedInLogin = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'linkedin_oidc',
+        options: {
+          redirectTo: `${window.location.origin}/helpanion`
+        }
+      });
+      if (error) {
+        toast({
+          title: 'Error with LinkedIn login',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'An error occurred',
+        description: 'Please try again later.',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -72,41 +129,75 @@ export default function Auth() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            {isLogin ? 'Welcome back' : 'Join Helpanion'}
+          <CardTitle className="text-2xl font-serif">
+            {isLogin ? 'Welcome back' : 'Join WO Commune'}
           </CardTitle>
           <CardDescription>
             {isLogin 
-              ? 'Sign in to your helper account' 
-              : 'Create your helper account and start offering your services'
+              ? 'Sign in to your Walker account' 
+              : 'Start your journey as a Walker'
             }
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* Social Login Buttons */}
+          <div className="space-y-2">
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={handleGoogleLogin}
+              disabled={loading}
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Continue with Gmail
+            </Button>
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={handleLinkedInLogin}
+              disabled={loading}
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Continue with LinkedIn
+            </Button>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with email
+              </span>
+            </div>
+          </div>
+
+          {/* Manual Login Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="displayName">Full Name</Label>
+                <Label htmlFor="fullName">Full Name</Label>
                 <Input
-                  id="displayName"
+                  id="fullName"
                   type="text"
-                  placeholder="Enter your full name"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   required={!isLogin}
+                  placeholder="Enter your full name"
                 />
               </div>
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email Address</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                placeholder="Enter your email"
               />
             </div>
             
@@ -115,25 +206,22 @@ export default function Auth() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                placeholder="Enter your password"
+                minLength={6}
               />
             </div>
             
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Create Account')}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
-          
-          <div className="mt-4 text-center">
+
+          <div className="text-center">
             <Button
-              variant="ghost"
+              variant="link"
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm"
             >
