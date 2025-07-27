@@ -54,7 +54,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
               </div>
             </div>
 
-            {/* Action Buttons */}
+             {/* Action Buttons */}
             <div className="flex items-center gap-3">
               <Button 
                 variant="default" 
@@ -63,6 +63,27 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
               >
                 Seek Help
               </Button>
+
+              {/* Show Dashboard button for authenticated users */}
+              {user && hasRole('helpanion') && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/helpanion-dashboard')}
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  Dashboard
+                </Button>
+              )}
+              
+              {user && hasRole('walker') && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/walker-dashboard')}
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                >
+                  Dashboard
+                </Button>
+              )}
 
               {user ? (
                 /* User Profile Dropdown */
