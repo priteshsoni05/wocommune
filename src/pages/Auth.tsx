@@ -26,14 +26,15 @@ export default function Auth() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  // Get the role from URL params if coming from "Join the Commune"
+  const roleFromUrl = searchParams.get('role') as UserRole;
+  
   useEffect(() => {
-    // Get the role from URL params if coming from "Join the Commune"
-    const roleParam = searchParams.get('role') as UserRole;
-    if (roleParam && ['walker', 'helpanion'].includes(roleParam)) {
-      setSelectedRole(roleParam);
+    if (roleFromUrl && ['walker', 'helpanion'].includes(roleFromUrl)) {
+      setSelectedRole(roleFromUrl);
       setIsLogin(false); // Default to signup for role selection
     }
-  }, [searchParams]);
+  }, [roleFromUrl]);
 
   useEffect(() => {
     if (user) {
@@ -213,7 +214,7 @@ export default function Auth() {
               </div>
             )}
 
-            {!isLogin && (
+            {!isLogin && !roleFromUrl && (
               <div className="space-y-3">
                 <Label>Join as</Label>
                 <RadioGroup value={selectedRole} onValueChange={(value: UserRole) => setSelectedRole(value)}>
