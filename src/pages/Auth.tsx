@@ -70,8 +70,10 @@ export default function Auth() {
             variant: 'destructive',
           });
         } else {
+          console.log('Signup successful, adding role:', selectedRole);
           // Add the selected role to the user after successful signup
           const roleResult = await addRole(selectedRole);
+          console.log('Role assignment result:', roleResult);
           if (roleResult?.error) {
             console.warn('Failed to assign role:', roleResult.error);
           }
