@@ -130,6 +130,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
+    console.log('Form submission started with data:', formData);
 
     try {
       // Handle custom school addition
@@ -166,7 +168,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         setCustomRole("");
       }
       
-      const result = await updateProfile({
+      const updateData = {
         display_name: formData.display_name,
         username: formData.username,
         bio: formData.bio,
@@ -181,15 +183,22 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         instagram_url: formData.instagram_url,
         portfolio_url: formData.portfolio_url,
         website_url: formData.website_url,
-      });
+      };
+      
+      console.log('Updating profile with data:', updateData);
+      const result = await updateProfile(updateData);
 
+      console.log('Profile update result:', result);
+      
       if (result.error) {
+        console.error('Profile update error:', result.error);
         toast({
           title: "Error",
           description: "Failed to update profile. Please try again.",
           variant: "destructive",
         });
       } else {
+        console.log('Profile updated successfully:', result.data);
         toast({
           title: "Success",
           description: "Profile updated successfully!",
