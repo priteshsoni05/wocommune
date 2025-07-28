@@ -43,6 +43,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [customRole, setCustomRole] = useState("");
   const [showCustomSchool, setShowCustomSchool] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
+  const [formInitialized, setFormInitialized] = useState(false);
   
   // Custom options hooks
   const { customOptions: customSchools, addCustomOption: addCustomSchool } = useCustomOptions('school');
@@ -65,34 +66,29 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     website_url: profile.website_url || ""
   });
 
-  // Load existing profile data when component mounts or profile changes
+  // Initialize form data only once when profile is first loaded
   useEffect(() => {
-    // Only update form data if it's different from current state to avoid overwriting user input
-    const newFormData = {
-      display_name: profile.display_name || "",
-      username: profile.username || "",
-      bio: profile.bio || "",
-      email: profile.email || "",
-      phone: profile.phone || "",
-      avatar_url: profile.avatar_url || "",
-      school: profile.school || "",
-      role: profile.role || "",
-      use_case: profile.use_case || "",
-      skills: profile.skills || "",
-      linkedin_url: profile.linkedin_url || "",
-      instagram_url: profile.instagram_url || "",
-      portfolio_url: profile.portfolio_url || "",
-      website_url: profile.website_url || ""
-    };
-    
-    // Only update if the form data is actually different (avoid infinite updates)
-    setFormData(prevData => {
-      const hasChanges = Object.keys(newFormData).some(key => 
-        prevData[key as keyof typeof prevData] !== newFormData[key as keyof typeof newFormData]
-      );
-      return hasChanges ? newFormData : prevData;
-    });
-  }, [profile]);
+    if (profile && !formInitialized) {
+      console.log('Initializing form with profile:', profile);
+      setFormData({
+        display_name: profile.display_name || "",
+        username: profile.username || "",
+        bio: profile.bio || "",
+        email: profile.email || "",
+        phone: profile.phone || "",
+        avatar_url: profile.avatar_url || "",
+        school: profile.school || "",
+        role: profile.role || "",
+        use_case: profile.use_case || "",
+        skills: profile.skills || "",
+        linkedin_url: profile.linkedin_url || "",
+        instagram_url: profile.instagram_url || "",
+        portfolio_url: profile.portfolio_url || "",
+        website_url: profile.website_url || ""
+      });
+      setFormInitialized(true);
+    }
+  }, [profile, formInitialized]);
 
   const uploadImage = async (file: File) => {
     if (!user) return null;
