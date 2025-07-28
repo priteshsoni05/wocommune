@@ -65,9 +65,10 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     website_url: profile.website_url || ""
   });
 
-  // Load existing profile data when component mounts
+  // Load existing profile data when component mounts or profile changes
   useEffect(() => {
-    setFormData({
+    // Only update form data if it's different from current state to avoid overwriting user input
+    const newFormData = {
       display_name: profile.display_name || "",
       username: profile.username || "",
       bio: profile.bio || "",
@@ -82,6 +83,14 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       instagram_url: profile.instagram_url || "",
       portfolio_url: profile.portfolio_url || "",
       website_url: profile.website_url || ""
+    };
+    
+    // Only update if the form data is actually different (avoid infinite updates)
+    setFormData(prevData => {
+      const hasChanges = Object.keys(newFormData).some(key => 
+        prevData[key as keyof typeof prevData] !== newFormData[key as keyof typeof newFormData]
+      );
+      return hasChanges ? newFormData : prevData;
     });
   }, [profile]);
 
@@ -223,6 +232,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   };
 
   const handleInputChange = (field: string, value: string) => {
+    console.log(`Updating field ${field} to:`, value);
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
