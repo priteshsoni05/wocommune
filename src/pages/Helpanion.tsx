@@ -17,9 +17,12 @@ export default function Helpanion() {
 
   // Handle direct search input changes
   const handleSearchChange = (value: string) => {
+    console.log('Search term changed:', value);
+    console.log('Total helpanions:', helpanions.length);
     setSearchTerm(value);
     
     if (!value.trim()) {
+      console.log('Empty search, clearing filtered results');
       setFilteredHelpanions([]);
       return;
     }
@@ -37,9 +40,15 @@ export default function Helpanion() {
         service.category?.toLowerCase().includes(searchLower)
       );
       
-      return matchesName || matchesBio || matchesServices;
+      const matches = matchesName || matchesBio || matchesServices;
+      if (matches) {
+        console.log('Match found:', helpanion.display_name, { matchesName, matchesBio, matchesServices });
+      }
+      
+      return matches;
     });
     
+    console.log('Filtered results:', filtered.length, filtered.map(h => h.display_name));
     setFilteredHelpanions(filtered);
   };
 

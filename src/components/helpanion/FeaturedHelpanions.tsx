@@ -11,6 +11,8 @@ interface FeaturedHelpanionsProps {
 }
 
 export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsProps) {
+  console.log('FeaturedHelpanions received:', { helpanions: helpanions.length, loading });
+  
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
