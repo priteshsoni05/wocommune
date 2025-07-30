@@ -51,9 +51,9 @@ export default function Helpanion() {
       />
 
       {/* Hero Section */}
-      <section className="px-4 py-20 bg-gradient-to-b from-muted/30 to-background">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="px-4 py-16 bg-gradient-to-b from-muted/30 to-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Hero Image - Left Side */}
             <div className="order-2 lg:order-1">
               <img 
@@ -65,14 +65,14 @@ export default function Helpanion() {
             
             {/* Hero Text - Right Side */}
             <div className="order-1 lg:order-2 text-center lg:text-left">
-              <h1 className="text-5xl md:text-6xl font-serif font-bold text-foreground mb-6 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4 leading-tight">
                 Real people. Real conversations. Real guidance.
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              <p className="text-base text-muted-foreground mb-6 leading-relaxed">
                 Find someone who's been there—and is here to help you walk your path.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" className="text-lg px-8 py-6" onClick={scrollToFeatured}>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <Button size="lg" className="px-6 py-2.5 text-sm font-medium" onClick={scrollToFeatured}>
                   Explore Helpanions
                 </Button>
               </div>
