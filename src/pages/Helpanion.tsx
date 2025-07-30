@@ -15,6 +15,34 @@ export default function Helpanion() {
   
   const { helpanions, loading } = useHelpanions();
 
+  // Handle direct search input changes
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    
+    if (!value.trim()) {
+      setFilteredHelpanions([]);
+      return;
+    }
+
+    // Filter helpanions based on search term
+    const filtered = helpanions.filter(helpanion => {
+      const searchLower = value.toLowerCase();
+      
+      // Check if search matches bio, display name, or services
+      const matchesName = helpanion.display_name?.toLowerCase().includes(searchLower);
+      const matchesBio = helpanion.bio?.toLowerCase().includes(searchLower);
+      const matchesServices = helpanion.services?.some(service => 
+        service.title?.toLowerCase().includes(searchLower) ||
+        service.description?.toLowerCase().includes(searchLower) ||
+        service.category?.toLowerCase().includes(searchLower)
+      );
+      
+      return matchesName || matchesBio || matchesServices;
+    });
+    
+    setFilteredHelpanions(filtered);
+  };
+
   const handleFilteredSearch = (filters: string[]) => {
     if (filters.length === 0) {
       setFilteredHelpanions([]);
@@ -46,7 +74,7 @@ export default function Helpanion() {
       {/* Header */}
       <HelpanionHeader 
         searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+        onSearchChange={handleSearchChange}
         onFilteredSearch={handleFilteredSearch}
       />
 
