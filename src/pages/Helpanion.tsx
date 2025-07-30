@@ -7,6 +7,7 @@ import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
 import { FeaturedHelpanions } from '@/components/helpanion/FeaturedHelpanions';
 import { TestimonialsSlider } from '@/components/helpanion/TestimonialsSlider';
 import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
+import heroImage from '@/assets/hero-helpanion.jpg';
 
 export default function Helpanion() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,6 +59,16 @@ export default function Helpanion() {
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
             Find someone who's been there—and is here to help you walk your path.
           </p>
+          
+          {/* Hero Image */}
+          <div className="mb-8">
+            <img 
+              src={heroImage} 
+              alt="Helpanion community connecting and supporting each other" 
+              className="w-full max-w-3xl mx-auto rounded-2xl shadow-2xl object-cover"
+            />
+          </div>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6" onClick={scrollToFeatured}>
               Explore Helpanions
