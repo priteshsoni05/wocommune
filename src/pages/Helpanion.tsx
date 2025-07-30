@@ -7,7 +7,7 @@ import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
 import { FeaturedHelpanions } from '@/components/helpanion/FeaturedHelpanions';
 import { TestimonialsSlider } from '@/components/helpanion/TestimonialsSlider';
 import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
-import heroImage from '@/assets/hero-helpanion.jpg';
+import heroImage from '@/assets/hero-sketch.jpg';
 
 export default function Helpanion() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,28 +51,32 @@ export default function Helpanion() {
       />
 
       {/* Hero Section */}
-      <section className="px-4 py-20 text-center bg-gradient-to-b from-muted/30 to-background">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold text-foreground mb-6 leading-tight">
-            Real people. Real conversations. Real guidance.
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Find someone who's been there—and is here to help you walk your path.
-          </p>
-          
-          {/* Hero Image */}
-          <div className="mb-8">
-            <img 
-              src={heroImage} 
-              alt="Helpanion community connecting and supporting each other" 
-              className="w-full max-w-3xl mx-auto rounded-2xl shadow-2xl object-cover"
-            />
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-6" onClick={scrollToFeatured}>
-              Explore Helpanions
-            </Button>
+      <section className="px-4 py-20 bg-gradient-to-b from-muted/30 to-background">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Hero Image - Left Side */}
+            <div className="order-2 lg:order-1">
+              <img 
+                src={heroImage} 
+                alt="Helpanion mentorship and guidance illustration" 
+                className="w-full max-w-lg mx-auto rounded-2xl shadow-xl object-cover"
+              />
+            </div>
+            
+            {/* Hero Text - Right Side */}
+            <div className="order-1 lg:order-2 text-center lg:text-left">
+              <h1 className="text-5xl md:text-6xl font-serif font-bold text-foreground mb-6 leading-tight">
+                Real people. Real conversations. Real guidance.
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                Find someone who's been there—and is here to help you walk your path.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button size="lg" className="text-lg px-8 py-6" onClick={scrollToFeatured}>
+                  Explore Helpanions
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
