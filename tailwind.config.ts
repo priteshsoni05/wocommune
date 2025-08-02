@@ -18,6 +18,10 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'futura': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
+				'futura-bold': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

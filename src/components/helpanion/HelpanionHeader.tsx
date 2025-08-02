@@ -37,7 +37,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
           <div className="flex lg:hidden items-center justify-between mb-3">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="text-lg sm:text-xl font-serif font-bold text-foreground hover:text-primary transition-colors">
+              <Link to="/" className="text-lg sm:text-xl font-futura-bold text-foreground hover:text-primary transition-colors">
                 WO Commune
               </Link>
             </div>
@@ -134,7 +134,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
           <div className="hidden lg:flex items-center justify-between">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="text-xl font-serif font-bold text-foreground hover:text-primary transition-colors">
+              <Link to="/" className="text-xl font-futura-bold text-foreground hover:text-primary transition-colors">
                 WO Commune
               </Link>
             </div>

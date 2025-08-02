@@ -104,7 +104,7 @@ export default function Helpanion() {
             
             {/* Hero Text - Right Side */}
             <div className="order-1 lg:order-2 text-center lg:text-left px-2 sm:px-0">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground mb-3 sm:mb-4 leading-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-futura-bold text-foreground mb-3 sm:mb-4 leading-tight">
                 Real people. Real conversations. Real guidance.
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
