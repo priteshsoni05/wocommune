@@ -112,7 +112,7 @@ export default function Helpanion() {
               </p>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center lg:justify-start">
                 <Button size="lg" className="px-4 sm:px-6 py-2 sm:py-2.5 text-sm font-medium" onClick={scrollToFeatured}>
-                  Explore Helpanions
+                  Explore Helpanion
                 </Button>
               </div>
             </div>
