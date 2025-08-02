@@ -9,7 +9,7 @@ export function HelpanionFooter() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-xl font-serif font-bold text-foreground">WO Commune</h3>
+            <h3 className="text-xl font-futura-bold text-foreground">WO Commune</h3>
             <p className="text-sm text-muted-foreground">
               Part of Walker's Odyssey - connecting help seekers with people who've walked the path before.
             </p>
@@ -17,7 +17,7 @@ export function HelpanionFooter() {
 
           {/* Platform Links */}
           <div className="space-y-4">
-            <h4 className="font-medium text-foreground">Platform</h4>
+            <h4 className="font-futura-bold text-foreground">Platform</h4>
             <div className="space-y-2">
               <Link to="/about" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 About WO Commune
@@ -36,7 +36,7 @@ export function HelpanionFooter() {
 
           {/* Community */}
           <div className="space-y-4">
-            <h4 className="font-medium text-foreground">Community</h4>
+            <h4 className="font-futura-bold text-foreground">Community</h4>
             <div className="space-y-2">
               <Link to="/helpanion" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Find a Helpanion
@@ -55,7 +55,7 @@ export function HelpanionFooter() {
 
           {/* Contact */}
           <div className="space-y-4">
-            <h4 className="font-medium text-foreground">Get in Touch</h4>
+            <h4 className="font-futura-bold text-foreground">Get in Touch</h4>
             <div className="space-y-2">
               <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact Us
