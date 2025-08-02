@@ -32,11 +32,109 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
   return (
     <>
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          {/* Mobile Layout */}
+          <div className="flex lg:hidden items-center justify-between mb-3">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-serif font-bold text-foreground hover:text-primary transition-colors">
+              <Link to="/" className="text-lg sm:text-xl font-serif font-bold text-foreground hover:text-primary transition-colors">
+                WO Commune
+              </Link>
+            </div>
+            
+            {/* Mobile Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="default" 
+                onClick={() => setIsSeekHelpModalOpen(true)}
+                className="bg-primary hover:bg-primary/90 text-xs px-3 py-1.5"
+              >
+                Seek Help
+              </Button>
+
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-7 w-7 rounded-full">
+                      <Avatar className="h-7 w-7">
+                        <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.display_name || 'User'} />
+                        <AvatarFallback>
+                          <User className="h-3 w-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48" align="end" forceMount>
+                    <div className="flex flex-col space-y-1 p-2">
+                      <p className="text-xs font-medium leading-none">{profile?.display_name || 'User'}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{profile?.email}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => {
+                      if (profile?.last_active_role === 'helpanion' && hasRole('helpanion')) {
+                        navigate('/helpanion-dashboard');
+                      } else if (profile?.last_active_role === 'walker' && hasRole('walker')) {
+                        navigate('/walker-dashboard');
+                      } else if (hasRole('helpanion')) {
+                        navigate('/helpanion-dashboard');
+                      } else {
+                        navigate('/walker-dashboard');
+                      }
+                    }}>
+                      Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={signOut}>
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="text-xs px-2 py-1.5">
+                      Join/Login
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-background border-border z-50">
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth?mode=signup&role=walker" className="cursor-pointer text-xs">Join as Walker</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth?mode=signup&role=helpanion" className="cursor-pointer text-xs">Join as Helpanion</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth?mode=login&role=walker" className="cursor-pointer text-xs">Login as Walker</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/auth?mode=login&role=helpanion" className="cursor-pointer text-xs">Login as Helpanion</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Search Bar */}
+          <div className="lg:hidden w-full">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search Helpanions..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex items-center justify-between">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link to="/" className="text-xl font-serif font-bold text-foreground hover:text-primary transition-colors">
                 WO Commune
               </Link>
             </div>
@@ -63,7 +161,6 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
               >
                 Seek Help
               </Button>
-
 
               {user ? (
                 /* User Profile Dropdown */

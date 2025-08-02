@@ -88,28 +88,30 @@ export default function Helpanion() {
       />
 
       {/* Hero Section */}
-      <section className="px-4 py-16 bg-gradient-to-b from-muted/30 to-background">
+      <section className="px-3 sm:px-4 py-8 sm:py-12 lg:py-16 bg-gradient-to-b from-muted/30 to-background">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Hero Image - Left Side */}
             <div className="order-2 lg:order-1">
-              <img 
-                src={heroImage} 
-                alt="Helpanion mentorship and guidance illustration" 
-                className="w-full max-w-lg mx-auto rounded-2xl shadow-xl object-cover"
-              />
+              <div className="aspect-[4/3] sm:aspect-square lg:aspect-[4/3] w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
+                <img 
+                  src={heroImage} 
+                  alt="Helpanion mentorship and guidance illustration" 
+                  className="w-full h-full rounded-xl sm:rounded-2xl shadow-lg object-cover"
+                />
+              </div>
             </div>
             
             {/* Hero Text - Right Side */}
-            <div className="order-1 lg:order-2 text-center lg:text-left">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4 leading-tight">
+            <div className="order-1 lg:order-2 text-center lg:text-left px-2 sm:px-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground mb-3 sm:mb-4 leading-tight">
                 Real people. Real conversations. Real guidance.
               </h1>
-              <p className="text-base text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
                 Find someone who's been there—and is here to help you walk your path.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Button size="lg" className="px-6 py-2.5 text-sm font-medium" onClick={scrollToFeatured}>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center lg:justify-start">
+                <Button size="lg" className="px-4 sm:px-6 py-2 sm:py-2.5 text-sm font-medium" onClick={scrollToFeatured}>
                   Explore Helpanions
                 </Button>
               </div>
