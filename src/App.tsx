@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
 import PublicProfile from "./pages/PublicProfile";
 import Helpanion from "./pages/Helpanion";
+import HelpanionsDirectory from "./pages/HelpanionsDirectory";
 import WalkerDashboard from "./pages/WalkerDashboard";
 import HelpanionDashboard from "./pages/HelpanionDashboard";
 import NotFound from "./pages/NotFound";
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Helpanion />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/helpanions" element={<HelpanionsDirectory />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
             <Route path="/profile/:userId" element={<PublicProfile />} />
