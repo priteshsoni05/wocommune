@@ -11,6 +11,20 @@ import heroImage from '@/assets/hero-helpanion.jpg';
 export default function Helpanion() {
   const { helpanions, loading } = useHelpanions();
 
+  const handleSearchChange = (value: string) => {
+    // Redirect to helpanions directory page with search term
+    if (value.trim()) {
+      window.location.href = `/helpanions?search=${encodeURIComponent(value)}`;
+    }
+  };
+
+  const handleFilteredSearch = (filters: string[]) => {
+    // Redirect to helpanions directory page with filters
+    if (filters.length > 0) {
+      window.location.href = `/helpanions?filters=${encodeURIComponent(filters.join(','))}`;
+    }
+  };
+
   const scrollToFeatured = () => {
     document.getElementById('featured-helpanions')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -20,8 +34,8 @@ export default function Helpanion() {
       {/* Header */}
       <HelpanionHeader 
         searchTerm=""
-        onSearchChange={() => {}}
-        onFilteredSearch={() => {}}
+        onSearchChange={handleSearchChange}
+        onFilteredSearch={handleFilteredSearch}
       />
 
       {/* Hero Section */}

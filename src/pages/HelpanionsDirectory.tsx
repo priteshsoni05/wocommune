@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useHelpanions } from '@/hooks/useHelpanions';
+import { useSearchParams } from 'react-router-dom';
 import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
 import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,9 +13,18 @@ import { Link } from 'react-router-dom';
 
 export default function HelpanionsDirectory() {
   const { helpanions, loading } = useHelpanions();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+
+  // Update search term from URL params
+  useEffect(() => {
+    const urlSearch = searchParams.get('search');
+    if (urlSearch && urlSearch !== searchTerm) {
+      setSearchTerm(urlSearch);
+    }
+  }, [searchParams]);
 
   // Extract unique categories from all services
   const categories = useMemo(() => {
