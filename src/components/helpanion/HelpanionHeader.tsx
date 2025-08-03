@@ -154,9 +154,6 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
 
              {/* Action Buttons */}
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="font-futura" asChild>
-                <Link to="/helpanions">Browse All</Link>
-              </Button>
               <Button 
                 variant="default" 
                 onClick={() => setIsSeekHelpModalOpen(true)}
