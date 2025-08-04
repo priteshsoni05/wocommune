@@ -6,15 +6,20 @@ import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
 import { FeaturedHelpanions } from '@/components/helpanion/FeaturedHelpanions';
 import { TestimonialsSlider } from '@/components/helpanion/TestimonialsSlider';
 import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
+import { SearchResultsModal } from '@/components/helpanion/SearchResultsModal';
 import heroImage from '@/assets/hero-helpanion.jpg';
 
 export default function Helpanion() {
   const { helpanions, loading } = useHelpanions();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const handleSearchChange = (value: string) => {
-    // Redirect to helpanions directory page with search term
+    setSearchTerm(value);
     if (value.trim()) {
-      window.location.href = `/helpanions?search=${encodeURIComponent(value)}`;
+      setIsSearchModalOpen(true);
+    } else {
+      setIsSearchModalOpen(false);
     }
   };
 
@@ -33,9 +38,17 @@ export default function Helpanion() {
     <div className="min-h-screen bg-background font-futura">
       {/* Header */}
       <HelpanionHeader 
-        searchTerm=""
+        searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         onFilteredSearch={handleFilteredSearch}
+      />
+
+      {/* Search Results Modal */}
+      <SearchResultsModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        searchTerm={searchTerm}
+        helpanions={helpanions}
       />
 
       {/* Hero Section */}
