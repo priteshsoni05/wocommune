@@ -24,6 +24,7 @@ import {
   LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { HelpanionHome } from "@/components/helpanion/HelpanionHome";
 import { HelpanionProfile } from "@/components/helpanion/HelpanionProfile";
 import { HelpanionServices } from "@/components/helpanion/HelpanionServices";
@@ -169,104 +170,116 @@ const HelpanionDashboard = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background flex">
-      {/* Left Navigation Panel */}
-      <div className="w-80 bg-card border-r border-border flex flex-col">
-        {/* Header */}
-        <div className="p-6 border-b border-border">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-semibold text-foreground">
-              WO Commune
-            </h1>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4" />
+  const renderSidebar = () => (
+    <div className="h-full bg-card flex flex-col">
+      {/* Header */}
+      <div className="p-4 lg:p-6 border-b border-border">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg lg:text-xl font-semibold text-foreground">
+            WO Commune
+          </h1>
+          <Button variant="ghost" size="sm" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
+            <p className="text-xs text-muted-foreground">(Helpanion)</p>
+          </div>
+          
+          {hasRole('walker') && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Walker</span>
+              <Switch 
+                checked={false}
+                onCheckedChange={handleRoleToggle}
+              />
+            </div>
+          )}
+        </div>
+        
+        {/* Profile Progress */}
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs text-muted-foreground">Profile Progress</span>
+            <span className="text-xs text-muted-foreground">{calculateProfileProgress()}%</span>
+          </div>
+          <Progress value={calculateProfileProgress()} className="h-2" />
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <nav className="flex-1 p-4">
+        <div className="space-y-1">
+          {navigationTabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-3 lg:py-2.5 text-left rounded-lg transition-colors touch-manipulation",
+                activeTab === tab.key
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <tab.icon className="h-5 w-5 lg:h-4 lg:w-4 flex-shrink-0" />
+              <span className="text-base lg:text-sm">{tab.label}</span>
+              {activeTab === tab.key && (
+                <ChevronRight className="h-4 w-4 lg:h-3 lg:w-3 ml-auto" />
+              )}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Become Walker CTA */}
+      {!hasRole('walker') && (
+        <div className="p-4 border-t border-border">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-foreground mb-1">
+              Want to seek help too?
+            </h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              Become a Walker to access guidance from other Helpanions.
+            </p>
+            <Button 
+              size="sm" 
+              className="w-full"
+              onClick={() => setShowWalkerModal(true)}
+            >
+              Become a Walker →
             </Button>
           </div>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
-              <p className="text-xs text-muted-foreground">(Helpanion)</p>
-            </div>
-            
-            {hasRole('walker') && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Walker</span>
-                <Switch 
-                  checked={false}
-                  onCheckedChange={handleRoleToggle}
-                />
-              </div>
-            )}
-          </div>
-          
-          {/* Profile Progress */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-muted-foreground">Profile Progress</span>
-              <span className="text-xs text-muted-foreground">{calculateProfileProgress()}%</span>
-            </div>
-            <Progress value={calculateProfileProgress()} className="h-2" />
-          </div>
         </div>
+      )}
+    </div>
+  );
 
-        {/* Navigation Tabs */}
-        <nav className="flex-1 p-4">
-          <div className="space-y-1">
-            {navigationTabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={cn(
-                  "w-full flex items-center gap-3 px-3 py-2.5 text-left rounded-lg transition-colors",
-                  activeTab === tab.key
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-              >
-                <tab.icon className="h-4 w-4" />
-                <span className="text-sm">{tab.label}</span>
-                {activeTab === tab.key && (
-                  <ChevronRight className="h-3 w-3 ml-auto" />
-                )}
-              </button>
-            ))}
-          </div>
-        </nav>
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-foreground">
+        WO Commune
+      </h1>
+      <Button variant="ghost" size="sm" onClick={handleSignOut}>
+        <LogOut className="h-4 w-4" />
+      </Button>
+    </div>
+  );
 
-        {/* Become Walker CTA */}
-        {!hasRole('walker') && (
-          <div className="p-4 border-t border-border">
-            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-foreground mb-1">
-                Want to seek help too?
-              </h3>
-              <p className="text-xs text-muted-foreground mb-3">
-                Become a Walker to access guidance from other Helpanions.
-              </p>
-              <Button 
-                size="sm" 
-                className="w-full"
-                onClick={() => setShowWalkerModal(true)}
-              >
-                Become a Walker →
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Right Content Panel */}
-      <div className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-auto">
-          {renderContent()}
-        </div>
-      </div>
+  return (
+    <>
+      <DashboardLayout
+        sidebar={renderSidebar()}
+        header={renderHeader()}
+      >
+        {renderContent()}
+      </DashboardLayout>
 
       {/* Become Walker Modal */}
       <Dialog open={showWalkerModal} onOpenChange={setShowWalkerModal}>
-        <DialogContent>
+        <DialogContent className="mx-4 max-w-md">
           <DialogHeader>
             <DialogTitle>Join as a Walker</DialogTitle>
             <DialogDescription>
@@ -304,7 +317,7 @@ const HelpanionDashboard = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 

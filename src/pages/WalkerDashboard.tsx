@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useBookings } from '@/hooks/useBookings';
+import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Bell, Calendar, History, Settings, Video, Clock, Star } from 'lucide-react';
+import { Bell, Calendar, History, Settings, Video, Clock, Star, LogOut } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
@@ -139,328 +140,374 @@ export default function WalkerDashboard() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
+  const renderSidebar = () => (
+    <div className="h-full bg-card flex flex-col">
       {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-serif font-bold">
-                Hi {profile?.display_name?.split(' ')[0] || 'Walker'} (Walker)
-              </h1>
-              {/* Role Toggle */}
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm text-muted-foreground">Switch to Helpanion</span>
-                <Switch 
-                  checked={false}
-                  onCheckedChange={handleRoleToggle}
-                  disabled={rolesLoading}
-                />
-              </div>
-            </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              Sign Out
-            </Button>
+      <div className="p-4 lg:p-6 border-b border-border">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg lg:text-xl font-semibold text-foreground">
+            WO Commune
+          </h1>
+          <Button variant="ghost" size="sm" onClick={handleSignOut}>
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Hi {profile?.display_name?.split(' ')[0] || 'Walker'} (Walker)
+          </p>
+          {/* Role Toggle */}
+          <div className="flex items-center gap-2 mt-2">
+            <span className="text-xs text-muted-foreground">Switch to Helpanion</span>
+            <Switch 
+              checked={false}
+              onCheckedChange={handleRoleToggle}
+              disabled={rolesLoading}
+            />
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {!hasRole('helpanion') && (
-          <Card className="mb-6 border-primary/20 bg-primary/5">
+      {/* Quick Actions */}
+      {!hasRole('helpanion') && (
+        <div className="p-4 border-b border-border">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+            <h3 className="text-sm font-medium text-foreground mb-1">
+              Want to help others too?
+            </h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              Become a Helpanion and share your expertise.
+            </p>
+            <Button 
+              size="sm" 
+              className="w-full"
+              onClick={() => setShowHelpanionModal(true)}
+            >
+              Become a Helpanion →
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <div className="flex-1 p-4">
+        <p className="text-xs text-muted-foreground mb-4 uppercase font-medium">Dashboard</p>
+        <div className="space-y-1">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start gap-3 py-3 lg:py-2"
+            onClick={() => navigate('/helpanion')}
+          >
+            <Calendar className="h-5 w-5 lg:h-4 lg:w-4" />
+            <span className="text-base lg:text-sm">Browse Helpanions</span>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold">
+        Walker Dashboard
+      </h1>
+      <Button variant="ghost" size="sm" onClick={handleSignOut}>
+        <LogOut className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+
+  const renderContent = () => (
+    <div className="space-y-6">
+      <Tabs defaultValue="sessions" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto">
+          <TabsTrigger value="sessions" className="flex items-center gap-2 py-3 px-2 lg:px-4">
+            <Calendar className="w-4 h-4" />
+            <span className="text-xs lg:text-sm">Sessions</span>
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="flex items-center gap-2 py-3 px-2 lg:px-4">
+            <Bell className="w-4 h-4" />
+            <span className="text-xs lg:text-sm">Notifications</span>
+          </TabsTrigger>
+          <TabsTrigger value="history" className="flex items-center gap-2 py-3 px-2 lg:px-4">
+            <History className="w-4 h-4" />
+            <span className="text-xs lg:text-sm">History</span>
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex items-center gap-2 py-3 px-2 lg:px-4">
+            <Settings className="w-4 h-4" />
+            <span className="text-xs lg:text-sm">Settings</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Upcoming Sessions */}
+        <TabsContent value="sessions" className="space-y-6">
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                Want to help others too?
-              </CardTitle>
+              <CardTitle>Booked Sessions</CardTitle>
               <CardDescription>
-                Become a Helpanion and share your expertise with other community members.
+                Your scheduled conversations with Helpanions
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button onClick={() => setShowHelpanionModal(true)}>
-                Become a Helpanion →
-              </Button>
+              {bookingsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-muted-foreground">Loading sessions...</div>
+                </div>
+              ) : upcomingBookings.length === 0 ? (
+                <div className="text-center py-8">
+                  <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No upcoming sessions</h3>
+                  <p className="text-muted-foreground mb-4">Book your first session with a Helpanion</p>
+                  <Button onClick={() => navigate('/helpanion')}>Browse Helpanions</Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {upcomingBookings.map((booking) => (
+                    <div key={booking.id} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
+                        <div className="space-y-1">
+                          <h4 className="font-medium">{booking.services?.title}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            with Helper {booking.helper_id}
+                          </p>
+                        </div>
+                        <Badge className={getStatusColor(booking.status)}>
+                          {booking.status}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {format(new Date(booking.booking_date), 'MMM dd, yyyy')}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {booking.start_time} - {booking.end_time}
+                        </div>
+                      </div>
+
+                      {booking.notes && (
+                        <p className="text-sm bg-muted/50 p-3 rounded">
+                          "{booking.notes}"
+                        </p>
+                      )}
+
+                      {booking.status === 'confirmed' && (
+                        <div className="flex flex-col lg:flex-row gap-2">
+                          <Button size="sm" className="w-full lg:w-auto">
+                            <Video className="w-4 h-4 mr-2" />
+                            Join Meeting
+                          </Button>
+                          <Button variant="outline" size="sm" className="w-full lg:w-auto">
+                            Reschedule
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
-        )}
+        </TabsContent>
 
-        <Tabs defaultValue="sessions" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="sessions" className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Sessions
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Notifications
-            </TabsTrigger>
-            <TabsTrigger value="history" className="flex items-center gap-2">
-              <History className="w-4 h-4" />
-              History
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Settings
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Upcoming Sessions */}
-          <TabsContent value="sessions" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Booked Sessions</CardTitle>
-                <CardDescription>
-                  Your scheduled conversations with Helpanions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {bookingsLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="text-muted-foreground">Loading sessions...</div>
+        {/* Notifications */}
+        <TabsContent value="notifications" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Notifications</CardTitle>
+              <CardDescription>
+                Messages and updates from your Helpanions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Mock notifications - replace with real data */}
+                <div className="border-l-4 border-primary pl-4 py-2">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-1 lg:gap-0">
+                    <h4 className="font-medium">Session Reminder</h4>
+                    <span className="text-xs text-muted-foreground">2 hours ago</span>
                   </div>
-                ) : upcomingBookings.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No upcoming sessions</h3>
-                    <p className="text-muted-foreground mb-4">Book your first session with a Helpanion</p>
-                    <Button onClick={() => navigate('/helpanion')}>Browse Helpanions</Button>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your session with Sarah is starting in 24 hours. Don't forget to prepare your questions!
+                  </p>
+                </div>
+                
+                <Separator />
+                
+                <div className="border-l-4 border-green-500 pl-4 py-2">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-1 lg:gap-0">
+                    <h4 className="font-medium">Session Confirmed</h4>
+                    <span className="text-xs text-muted-foreground">1 day ago</span>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {upcomingBookings.map((booking) => (
-                      <div key={booking.id} className="border rounded-lg p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-1">
-                            <h4 className="font-medium">{booking.services?.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              with Helper {booking.helper_id}
-                            </p>
-                          </div>
-                          <Badge className={getStatusColor(booking.status)}>
-                            {booking.status}
-                          </Badge>
-                        </div>
-                        
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {format(new Date(booking.booking_date), 'MMM dd, yyyy')}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {booking.start_time} - {booking.end_time}
-                          </div>
-                        </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Great news! Your session request has been confirmed by your Helpanion.
+                  </p>
+                </div>
+                
+                <Separator />
+                
+                <div className="text-center py-8 text-muted-foreground">
+                  <Bell className="w-12 h-12 mx-auto mb-4" />
+                  <p>You're all caught up!</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-                        {booking.notes && (
-                          <p className="text-sm bg-muted/50 p-3 rounded">
-                            "{booking.notes}"
-                          </p>
-                        )}
-
-                        {booking.status === 'confirmed' && (
-                          <div className="flex gap-2">
-                            <Button size="sm">
-                              <Video className="w-4 h-4 mr-2" />
-                              Join Meeting
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              Reschedule
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Notifications */}
-          <TabsContent value="notifications" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>
-                  Messages and updates from your Helpanions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+        {/* Session History */}
+        <TabsContent value="history" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Session History</CardTitle>
+              <CardDescription>
+                Your completed conversations and feedback
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {completedBookings.length === 0 ? (
+                <div className="text-center py-8">
+                  <History className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No completed sessions yet</h3>
+                  <p className="text-muted-foreground">Your session history will appear here</p>
+                </div>
+              ) : (
                 <div className="space-y-4">
-                  {/* Mock notifications - replace with real data */}
-                  <div className="border-l-4 border-primary pl-4 py-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">Session Reminder</h4>
-                      <span className="text-xs text-muted-foreground">2 hours ago</span>
+                  {completedBookings.map((booking) => (
+                    <div key={booking.id} className="border rounded-lg p-4 space-y-3">
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
+                        <div className="space-y-1">
+                          <h4 className="font-medium">{booking.services?.title}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {format(new Date(booking.booking_date), 'MMM dd, yyyy')}
+                          </p>
+                        </div>
+                        <div className="flex flex-col lg:flex-row gap-2">
+                          <Button variant="outline" size="sm" className="w-full lg:w-auto">
+                            <Star className="w-4 h-4 mr-2" />
+                            Leave Feedback
+                          </Button>
+                          <Button variant="outline" size="sm" className="w-full lg:w-auto">
+                            Rebook
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Your session with Sarah is starting in 24 hours. Don't forget to prepare your questions!
-                    </p>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Account Settings */}
+        <TabsContent value="settings" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Account Settings</CardTitle>
+              <CardDescription>
+                Manage your profile and preferences
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2">
+                  <h3 className="text-lg font-medium">Profile Information</h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="w-full lg:w-auto"
+                  >
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </Button>
+                </div>
+
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="display_name">Full Name</Label>
+                    <Input
+                      id="display_name"
+                      value={formData.display_name}
+                      onChange={(e) => setFormData({...formData, display_name: e.target.value})}
+                      disabled={!isEditing}
+                    />
                   </div>
                   
-                  <Separator />
-                  
-                  <div className="border-l-4 border-green-500 pl-4 py-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">Session Confirmed</h4>
-                      <span className="text-xs text-muted-foreground">1 day ago</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Great news! Your session request has been confirmed by your Helpanion.
-                    </p>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      disabled={!isEditing}
+                    />
                   </div>
                   
-                  <Separator />
-                  
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Bell className="w-12 h-12 mx-auto mb-4" />
-                    <p>You're all caught up!</p>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number (Optional)</Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      disabled={!isEditing}
+                      placeholder="Enter your phone number"
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
-          {/* Session History */}
-          <TabsContent value="history" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Session History</CardTitle>
-                <CardDescription>
-                  Your completed conversations and feedback
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {completedBookings.length === 0 ? (
-                  <div className="text-center py-8">
-                    <History className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No completed sessions yet</h3>
-                    <p className="text-muted-foreground">Your session history will appear here</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {completedBookings.map((booking) => (
-                      <div key={booking.id} className="border rounded-lg p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-1">
-                            <h4 className="font-medium">{booking.services?.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {format(new Date(booking.booking_date), 'MMM dd, yyyy')}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
-                              <Star className="w-4 h-4 mr-2" />
-                              Leave Feedback
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              Rebook
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Account Settings */}
-          <TabsContent value="settings" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-                <CardDescription>
-                  Manage your profile and preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium">Profile Information</h3>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setIsEditing(!isEditing)}
-                    >
-                      {isEditing ? 'Cancel' : 'Edit'}
+                {isEditing && (
+                  <div className="flex flex-col lg:flex-row gap-2">
+                    <Button onClick={handleSaveProfile} className="w-full lg:w-auto">Save Changes</Button>
+                    <Button variant="outline" onClick={() => setIsEditing(false)} className="w-full lg:w-auto">
+                      Cancel
                     </Button>
                   </div>
+                )}
+              </div>
 
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="display_name">Full Name</Label>
-                      <Input
-                        id="display_name"
-                        value={formData.display_name}
-                        onChange={(e) => setFormData({...formData, display_name: e.target.value})}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number (Optional)</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        disabled={!isEditing}
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
-                  </div>
+              <Separator />
 
-                  {isEditing && (
-                    <div className="flex gap-2">
-                      <Button onClick={handleSaveProfile}>Save Changes</Button>
-                      <Button variant="outline" onClick={() => setIsEditing(false)}>
-                        Cancel
-                      </Button>
-                    </div>
-                  )}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Email Preferences</h3>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" defaultChecked className="rounded" />
+                    <span className="text-sm">Session reminders (24 hours before)</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" defaultChecked className="rounded" />
+                    <span className="text-sm">Session reminders (1 hour before)</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                    <input type="checkbox" defaultChecked className="rounded" />
+                    <span className="text-sm">Updates from Helpanions</span>
+                  </label>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
 
-                <Separator />
-
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Email Preferences</h3>
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input type="checkbox" defaultChecked className="rounded" />
-                      <span className="text-sm">Session reminders (24 hours before)</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input type="checkbox" defaultChecked className="rounded" />
-                      <span className="text-sm">Session reminders (1 hour before)</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input type="checkbox" defaultChecked className="rounded" />
-                      <span className="text-sm">Updates from Helpanions</span>
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+  return (
+    <>
+      <DashboardLayout
+        sidebar={renderSidebar()}
+        header={renderHeader()}
+      >
+        {renderContent()}
+      </DashboardLayout>
 
       {/* Become Helpanion Modal */}
       <Dialog open={showHelpanionModal} onOpenChange={setShowHelpanionModal}>
-        <DialogContent>
+        <DialogContent className="mx-4 max-w-md">
           <DialogHeader>
             <DialogTitle>Join as a Helpanion</DialogTitle>
             <DialogDescription>
@@ -507,6 +554,6 @@ export default function WalkerDashboard() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
