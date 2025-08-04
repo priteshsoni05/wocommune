@@ -14,17 +14,17 @@ import { Link } from 'react-router-dom';
 export default function HelpanionsDirectory() {
   const { helpanions, loading } = useHelpanions();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [directorySearchTerm, setDirectorySearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  // Update search term from URL params
+  // Update directory search from URL params only on initial load
   useEffect(() => {
     const urlSearch = searchParams.get('search');
-    if (urlSearch && urlSearch !== searchTerm) {
-      setSearchTerm(urlSearch);
+    if (urlSearch && !directorySearchTerm) {
+      setDirectorySearchTerm(urlSearch);
     }
-  }, [searchParams]);
+  }, [searchParams, directorySearchTerm]);
 
   // Extract unique categories from all services
   const categories = useMemo(() => {
@@ -37,12 +37,12 @@ export default function HelpanionsDirectory() {
   // Filter and sort helpanions
   const filteredHelpanions = useMemo(() => {
     let filtered = helpanions.filter(helpanion => {
-      const matchesSearch = searchTerm === '' || 
-        helpanion.display_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        helpanion.bio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      const matchesSearch = directorySearchTerm === '' || 
+        helpanion.display_name?.toLowerCase().includes(directorySearchTerm.toLowerCase()) ||
+        helpanion.bio?.toLowerCase().includes(directorySearchTerm.toLowerCase()) ||
         helpanion.services.some(s => 
-          s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.description?.toLowerCase().includes(searchTerm.toLowerCase())
+          s.title.toLowerCase().includes(directorySearchTerm.toLowerCase()) ||
+          s.description?.toLowerCase().includes(directorySearchTerm.toLowerCase())
         );
 
       const matchesCategory = selectedCategory === 'all' || 
@@ -73,7 +73,7 @@ export default function HelpanionsDirectory() {
     }
 
     return filtered;
-  }, [helpanions, searchTerm, selectedCategory, sortBy]);
+  }, [helpanions, directorySearchTerm, selectedCategory, sortBy]);
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -87,8 +87,8 @@ export default function HelpanionsDirectory() {
   return (
     <div className="min-h-screen bg-background font-futura">
       <HelpanionHeader 
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
+        searchTerm=""
+        onSearchChange={() => {}}
         onFilteredSearch={() => {}}
       />
       
@@ -108,8 +108,8 @@ export default function HelpanionsDirectory() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search helpanions, services, or skills..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={directorySearchTerm}
+                onChange={(e) => setDirectorySearchTerm(e.target.value)}
                 className="pl-10 font-futura"
               />
             </div>

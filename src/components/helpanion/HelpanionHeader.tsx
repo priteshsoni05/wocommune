@@ -19,15 +19,22 @@ import { SeekHelpModal } from './SeekHelpModal';
 interface HelpanionHeaderProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
+  onSearchSubmit?: (searchQuery: string) => void;
   onFilteredSearch: (filters: string[]) => void;
 }
 
-export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }: HelpanionHeaderProps) {
+export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, onFilteredSearch }: HelpanionHeaderProps) {
   const [isSeekHelpModalOpen, setIsSeekHelpModalOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
   const { hasRole } = useUserRoles();
   const navigate = useNavigate();
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onSearchSubmit) {
+      onSearchSubmit(searchTerm);
+    }
+  };
 
   return (
     <>
@@ -121,12 +128,13 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
           <div className="lg:hidden w-full">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search Helpanions..."
-                value={searchTerm}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
-              />
+               <Input
+                 placeholder="Search Helpanions..."
+                 value={searchTerm}
+                 onChange={(e) => onSearchChange(e.target.value)}
+                 onKeyPress={handleKeyPress}
+                 className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
+               />
             </div>
           </div>
 
@@ -143,12 +151,13 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onFilteredSearch }
             <div className="flex-1 max-w-md mx-8">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search for a Helpanion by field, experience, or keyword..."
-                  value={searchTerm}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  className="pl-10 bg-muted/30 border-muted focus:bg-background"
-                />
+                 <Input
+                   placeholder="Search for a Helpanion by field, experience, or keyword..."
+                   value={searchTerm}
+                   onChange={(e) => onSearchChange(e.target.value)}
+                   onKeyPress={handleKeyPress}
+                   className="pl-10 bg-muted/30 border-muted focus:bg-background"
+                 />
               </div>
             </div>
 

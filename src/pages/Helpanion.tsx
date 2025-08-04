@@ -16,10 +16,13 @@ export default function Helpanion() {
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    if (value.trim()) {
+    // Don't open modal immediately, wait for user to finish typing
+  };
+
+  const handleSearchSubmit = (searchQuery: string) => {
+    if (searchQuery.trim()) {
+      setSearchTerm(searchQuery);
       setIsSearchModalOpen(true);
-    } else {
-      setIsSearchModalOpen(false);
     }
   };
 
@@ -40,6 +43,7 @@ export default function Helpanion() {
       <HelpanionHeader 
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        onSearchSubmit={handleSearchSubmit}
         onFilteredSearch={handleFilteredSearch}
       />
 
