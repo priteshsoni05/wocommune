@@ -14,43 +14,43 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
   const firstName = profile.display_name?.split(' ')[0] || 'Helpanion';
   
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-5">
       {/* Welcome Header */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
           Hi {firstName} 👋
         </h1>
-        <p className="text-base text-muted-foreground">
+        <p className="text-sm lg:text-base text-muted-foreground">
           Welcome to your Helpanion dashboard
         </p>
       </div>
 
       {/* Profile Progress Card */}
       <Card className="border-primary/20 bg-primary/5">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-3 lg:pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Profile Progress</CardTitle>
-              <CardDescription className="text-sm">
+              <CardTitle className="text-sm lg:text-base">Profile Progress</CardTitle>
+              <CardDescription className="text-xs lg:text-sm">
                 Complete your profile to start offering help
               </CardDescription>
             </div>
             <div className="text-right">
-              <span className="text-xl font-bold text-primary">{profileProgress}%</span>
+              <span className="text-lg lg:text-xl font-bold text-primary">{profileProgress}%</span>
               <p className="text-xs text-muted-foreground">Complete</p>
             </div>
           </div>
-          <Progress value={profileProgress} className="h-2" />
+          <Progress value={profileProgress} className="h-1.5 lg:h-2" />
         </CardHeader>
         <CardContent>
           {profileProgress < 80 ? (
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <p className="text-xs lg:text-sm text-muted-foreground">
                 Complete your profile to start offering help to the community
               </p>
-              <Button onClick={onNavigateToProfile} className="ml-4">
+              <Button onClick={onNavigateToProfile} size="sm" className="w-full sm:w-auto text-xs h-8">
                 Complete Profile
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-3 w-3" />
               </Button>
             </div>
           ) : (
@@ -66,12 +66,12 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
 
       {/* Inspirational Message */}
       <Card className="bg-gradient-to-r from-accent to-secondary border-0">
-        <CardContent className="pt-5">
+        <CardContent className="pt-4 lg:pt-5">
           <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">
+            <h3 className="text-base lg:text-lg font-semibold text-foreground">
               "Your experiences can light someone's path"
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs lg:text-sm text-muted-foreground">
               Every skill you've learned, every challenge you've overcome, and every insight you've gained 
               has the power to guide someone else on their journey.
             </p>
@@ -80,29 +80,29 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
       </Card>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 lg:gap-3">
         <Card>
-          <CardContent className="pt-4">
+          <CardContent className="pt-3 lg:pt-4">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-primary">0</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-primary">0</h3>
               <p className="text-xs text-muted-foreground">Active Services</p>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-4">
+          <CardContent className="pt-3 lg:pt-4">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-primary">0</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-primary">0</h3>
               <p className="text-xs text-muted-foreground">Upcoming Sessions</p>
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-4">
+          <CardContent className="pt-3 lg:pt-4">
             <div className="text-center">
-              <h3 className="text-xl font-bold text-primary">0</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-primary">0</h3>
               <p className="text-xs text-muted-foreground">Total Reviews</p>
             </div>
           </CardContent>
@@ -111,9 +111,9 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
 
       {/* Getting Started Guide */}
       <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base">Getting Started</CardTitle>
-          <CardDescription className="text-sm">
+        <CardHeader className="pb-3 lg:pb-4">
+          <CardTitle className="text-sm lg:text-base">Getting Started</CardTitle>
+          <CardDescription className="text-xs lg:text-sm">
             Follow these steps to become an active Helpanion
           </CardDescription>
         </CardHeader>

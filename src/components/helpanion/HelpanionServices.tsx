@@ -146,11 +146,11 @@ export const HelpanionServices = ({ profileProgress }: HelpanionServicesProps) =
   };
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 sm:p-4 lg:p-8 space-y-4 lg:space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Create Service</h1>
-          <p className="text-lg text-muted-foreground">
+          <h1 className="text-lg sm:text-xl lg:text-3xl font-bold text-foreground">Create Service</h1>
+          <p className="text-sm lg:text-lg text-muted-foreground">
             Share your expertise with the community
           </p>
         </div>
@@ -158,8 +158,10 @@ export const HelpanionServices = ({ profileProgress }: HelpanionServicesProps) =
         <Button 
           onClick={() => setShowCreateForm(!showCreateForm)}
           disabled={isProfileIncomplete}
+          size="sm"
+          className="w-full sm:w-auto text-xs h-8"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-3 w-3 mr-1.5" />
           Add Service
         </Button>
       </div>
@@ -308,11 +310,11 @@ export const HelpanionServices = ({ profileProgress }: HelpanionServicesProps) =
                 />
               </div>
 
-              <div className="flex gap-2 pt-4">
-                <Button type="submit" disabled={loading}>
+              <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                <Button type="submit" disabled={loading} size="sm" className="text-xs h-8">
                   {editingService ? "Update Service" : "Add to Live Services"}
                 </Button>
-                <Button type="button" variant="outline" onClick={resetForm}>
+                <Button type="button" variant="outline" onClick={resetForm} size="sm" className="text-xs h-8">
                   Cancel
                 </Button>
               </div>
@@ -322,20 +324,20 @@ export const HelpanionServices = ({ profileProgress }: HelpanionServicesProps) =
       )}
 
       {/* Existing Services */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Your Services</h2>
+      <div className="space-y-3 lg:space-y-4">
+        <h2 className="text-base lg:text-xl font-semibold">Your Services</h2>
         
         {services.length === 0 ? (
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center py-8">
-                <Lightbulb className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-foreground mb-2">No services yet</h3>
-                <p className="text-muted-foreground mb-4">
+            <CardContent className="pt-4 lg:pt-6">
+              <div className="text-center py-6 lg:py-8">
+                <Lightbulb className="h-10 w-10 lg:h-12 lg:w-12 text-muted-foreground mx-auto mb-3 lg:mb-4" />
+                <h3 className="text-base lg:text-lg font-medium text-foreground mb-2">No services yet</h3>
+                <p className="text-sm text-muted-foreground mb-3 lg:mb-4">
                   Create your first service to start helping others in the community
                 </p>
-                <Button onClick={() => setShowCreateForm(true)} disabled={isProfileIncomplete}>
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button onClick={() => setShowCreateForm(true)} disabled={isProfileIncomplete} size="sm" className="text-xs h-8">
+                  <Plus className="h-3 w-3 mr-1.5" />
                   Create Your First Service
                 </Button>
               </div>
