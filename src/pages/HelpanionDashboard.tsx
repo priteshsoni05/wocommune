@@ -173,61 +173,72 @@ const HelpanionDashboard = () => {
   const renderSidebar = () => (
     <div className="h-full bg-card flex flex-col">
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b border-border">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg lg:text-xl font-semibold text-foreground">
+      <div className="p-3 lg:p-6 border-b border-border">
+        <div className="flex items-center justify-between mb-3 lg:mb-4">
+          <h1 className="text-base lg:text-xl font-semibold text-foreground">
             WO Commune
           </h1>
-          <Button variant="ghost" size="sm" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-7 w-7 lg:h-8 lg:w-8">
+            <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
           </Button>
         </div>
         
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
+            <p className="text-xs lg:text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
             <p className="text-xs text-muted-foreground">(Helpanion)</p>
           </div>
           
           {hasRole('walker') && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 lg:gap-2">
               <span className="text-xs text-muted-foreground">Walker</span>
               <Switch 
                 checked={false}
                 onCheckedChange={handleRoleToggle}
+                className="scale-75 lg:scale-100"
               />
             </div>
           )}
         </div>
         
         {/* Profile Progress */}
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
+        <div className="mt-3 lg:mt-4">
+          <div className="flex items-center justify-between mb-1 lg:mb-2">
             <span className="text-xs text-muted-foreground">Profile Progress</span>
             <span className="text-xs text-muted-foreground">{calculateProfileProgress()}%</span>
           </div>
-          <Progress value={calculateProfileProgress()} className="h-2" />
+          <Progress value={calculateProfileProgress()} className="h-1.5 lg:h-2" />
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="flex-1 p-4">
-        <div className="space-y-1">
+      <nav className="flex-1 p-2 lg:p-4">
+        <div className="space-y-0.5 lg:space-y-1">
           {navigationTabs.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => {
+                setActiveTab(tab.key);
+                // Auto-close sidebar on mobile when tab is selected
+                if (window.innerWidth < 1024) {
+                  // Use setTimeout to ensure state update happens
+                  setTimeout(() => {
+                    const event = new CustomEvent('closeMobileSidebar');
+                    window.dispatchEvent(event);
+                  }, 100);
+                }
+              }}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-3 lg:py-2.5 text-left rounded-lg transition-colors touch-manipulation",
+                "w-full flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg transition-colors touch-manipulation min-h-[44px]",
                 activeTab === tab.key
                   ? "bg-primary text-primary-foreground"
                   : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               )}
             >
-              <tab.icon className="h-5 w-5 lg:h-4 lg:w-4 flex-shrink-0" />
-              <span className="text-base lg:text-sm">{tab.label}</span>
+              <tab.icon className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
+              <span className="text-sm lg:text-sm font-medium">{tab.label}</span>
               {activeTab === tab.key && (
-                <ChevronRight className="h-4 w-4 lg:h-3 lg:w-3 ml-auto" />
+                <ChevronRight className="h-3 w-3 lg:h-3 lg:w-3 ml-auto" />
               )}
             </button>
           ))}
@@ -236,17 +247,17 @@ const HelpanionDashboard = () => {
 
       {/* Become Walker CTA */}
       {!hasRole('walker') && (
-        <div className="p-4 border-t border-border">
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-foreground mb-1">
+        <div className="p-3 lg:p-4 border-t border-border">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 lg:p-4">
+            <h3 className="text-xs lg:text-sm font-medium text-foreground mb-1">
               Want to seek help too?
             </h3>
-            <p className="text-xs text-muted-foreground mb-3">
+            <p className="text-xs text-muted-foreground mb-2 lg:mb-3">
               Become a Walker to access guidance from other Helpanions.
             </p>
             <Button 
               size="sm" 
-              className="w-full"
+              className="w-full text-xs h-7 lg:h-8"
               onClick={() => setShowWalkerModal(true)}
             >
               Become a Walker →

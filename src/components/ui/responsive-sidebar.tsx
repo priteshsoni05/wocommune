@@ -26,7 +26,7 @@ export function ResponsiveSidebar({ isOpen, onOpenChange, children }: Responsive
   if (isMobile) {
     return (
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
-        <SheetContent side="left" className="w-80 p-0">
+        <SheetContent side="left" className="w-72 sm:w-80 p-0 max-w-[85vw]">
           {children}
         </SheetContent>
       </Sheet>

@@ -22,10 +22,22 @@ export function DashboardLayout({ sidebar, header, children, className }: Dashbo
       }
     };
 
+    // Handle custom event to close mobile sidebar
+    const handleCloseMobileSidebar = () => {
+      if (isMobile) {
+        setSidebarOpen(false);
+      }
+    };
+
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
+    window.addEventListener('closeMobileSidebar', handleCloseMobileSidebar);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+      window.removeEventListener('closeMobileSidebar', handleCloseMobileSidebar);
+    };
+  }, [isMobile]);
 
   return (
     <div className={cn("min-h-screen bg-background", className)}>
