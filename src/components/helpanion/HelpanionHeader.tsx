@@ -36,6 +36,14 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, on
     }
   };
 
+  const handleSearchInput = (value: string) => {
+    onSearchChange(value);
+    // Trigger search immediately when typing
+    if (value.trim() && onSearchSubmit) {
+      onSearchSubmit(value);
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -129,12 +137,12 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, on
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                <Input
-                 placeholder="Search Helpanions..."
-                 value={searchTerm}
-                 onChange={(e) => onSearchChange(e.target.value)}
-                 onKeyPress={handleKeyPress}
-                 className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
-               />
+                  placeholder="Search Helpanions..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearchInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
+                />
             </div>
           </div>
 
@@ -152,12 +160,12 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, on
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                  <Input
-                   placeholder="Search for a Helpanion by field, experience, or keyword..."
-                   value={searchTerm}
-                   onChange={(e) => onSearchChange(e.target.value)}
-                   onKeyPress={handleKeyPress}
-                   className="pl-10 bg-muted/30 border-muted focus:bg-background"
-                 />
+                    placeholder="Search for a Helpanion by field, experience, or keyword..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearchInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="pl-10 bg-muted/30 border-muted focus:bg-background"
+                  />
               </div>
             </div>
 

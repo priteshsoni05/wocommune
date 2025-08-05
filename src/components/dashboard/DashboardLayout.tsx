@@ -49,8 +49,8 @@ export function DashboardLayout({ sidebar, header, children, className }: Dashbo
 
       {/* Main Content */}
       <div className={cn(
-        "flex flex-col",
-        isMobile ? "lg:ml-80" : "lg:ml-80"
+        "flex flex-col min-h-screen",
+        "lg:ml-80"
       )}>
         {/* Desktop Header */}
         {!isMobile && header && (
@@ -62,8 +62,8 @@ export function DashboardLayout({ sidebar, header, children, className }: Dashbo
         )}
 
         {/* Content Area */}
-        <main className="flex-1 p-4 lg:p-6">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 p-3 sm:p-4 lg:p-6 pb-safe">
+          <div className="max-w-7xl mx-auto w-full">
             {children}
           </div>
         </main>

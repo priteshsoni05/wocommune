@@ -16,7 +16,12 @@ export default function Helpanion() {
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    // Don't open modal immediately, wait for user to finish typing
+    // Show modal immediately when user starts typing
+    if (value.trim()) {
+      setIsSearchModalOpen(true);
+    } else {
+      setIsSearchModalOpen(false);
+    }
   };
 
   const handleSearchSubmit = (searchQuery: string) => {
