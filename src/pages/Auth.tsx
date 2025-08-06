@@ -156,37 +156,69 @@ export default function Auth() {
         }
       } else {
         // Signup flow
-        const { error } = await signUp(email, password, fullName);
-        if (error) {
-          toast({
-            title: 'Error signing up',
-            description: error.message,
-            variant: 'destructive',
-          });
-        } else {
-          // Add the selected role to the user after successful signup
-          const roleResult = await addRole(role);
-          if (roleResult?.error) {
-            console.warn('Failed to assign role:', roleResult.error);
-          }
+const { error } = await signUp(email, password, fullName);
+if (error) {
+  toast({
+    title: 'Error signing up',
+    description: error.message,
+    variant: 'destructive',
+  });
+  setLoading(false);
+  return;
+}
 
-          // Update profile with username if Helpanion
-          if (role === 'helpanion' && username) {
-            await updateProfile({ 
-              username,
-              last_active_role: 'helpanion'
-            });
-          } else {
-            await updateProfile({ 
-              last_active_role: 'walker'
-            });
-          }
-          
-          toast({
-            title: 'Welcome to WO Commune!',
-            description: `You've joined as a ${role}. Please check your email to verify your account.`,
-          });
-        }
+// Add role to user
+const roleResult = await addRole(role);
+if (roleResult?.error) {
+  console.warn('Failed to assign role:', roleResult.error);
+}
+
+// Check for unique username if role is helpanion
+if (role === 'helpanion' && username) {
+  const { data: existing } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .single();
+
+  if (existing) {
+    toast({
+      variant: 'destructive',
+      title: 'Username already taken',
+      description: 'Please choose a different username.'
+    });
+    setLoading(false);
+    return;
+  }
+
+  await updateProfile({ 
+    username,
+    last_active_role: 'helpanion'
+  });
+} else {
+  await updateProfile({ last_active_role: 'walker' });
+}
+
+// Show toast & redirect
+toast({
+  title: 'Verify your email to continue',
+  description: 'We’ve sent you a confirmation email. Click the link to activate your account.',
+});
+
+navigate('/verify-email'); // New page explaining next steps
+return; // End here to prevent double click or fallback login
+        export default function VerifyEmail() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4 max-w-md p-4">
+        <h1 className="text-2xl font-bold">Check Your Email 📩</h1>
+        <p className="text-muted-foreground">
+          We've sent a confirmation link to your email. Please verify your account to complete the signup process.
+        </p>
+        <p className="text-sm">If you didn’t receive the email, check your spam folder or try signing up again with a different address.</p>
+      </div>
+    </div>
+  );
       }
     } catch (error) {
       toast({
