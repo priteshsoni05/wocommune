@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, LogIn, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -23,6 +24,8 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [showRoleJoinModal, setShowRoleJoinModal] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const { user, signUp, signIn } = useAuth();
   const { addRole } = useUserRoles();
   const { updateProfile } = useProfile();
@@ -33,13 +36,37 @@ export default function Auth() {
   const mode = searchParams.get('mode') as 'login' | 'signup'; // login or signup
   const role = searchParams.get('role') as UserRole; // walker or helpanion
 
-  useEffect(() => {
-    if (user) {
-      // Redirect based on the last active role or selected role
-      const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+  const handleRoleJoin = async () => {
+    if (!selectedRole) return;
+    
+    try {
+      const roleResult = await addRole(selectedRole);
+      if (roleResult?.error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to add role. Please try again."
+        });
+        return;
+      }
+
+      const redirectPath = selectedRole === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
       navigate(redirectPath);
+      
+      toast({
+        title: `Welcome to ${selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}!`,
+        description: `You've successfully joined as a ${selectedRole}.`
+      });
+      
+      setShowRoleJoinModal(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong. Please try again."
+      });
     }
-  }, [user, navigate, role]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,12 +109,50 @@ export default function Auth() {
             description: error.message
           });
         } else {
-          // Ensure user has the role they're logging in as
-          await addRole(role);
-          toast({
-            title: "Welcome back!",
-            description: `You've successfully logged in as a ${role}.`
-          });
+          // Wait for authentication to complete and then check roles
+          setTimeout(async () => {
+            try {
+              const { data: session } = await supabase.auth.getSession();
+              if (session?.session?.user) {
+                const { data: userRoles, error: rolesError } = await supabase
+                  .from('user_roles')
+                  .select('role')
+                  .eq('user_id', session.session.user.id);
+                
+                if (rolesError) {
+                  console.error('Error fetching roles:', rolesError);
+                  // Default to allowing login for backward compatibility
+                  const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+                  navigate(redirectPath);
+                  return;
+                }
+
+                const roles = userRoles?.map(r => r.role) || [];
+                const hasRequiredRole = roles.includes(role);
+                
+                if (!hasRequiredRole) {
+                  // User doesn't have this role - show modal to join
+                  setShowRoleJoinModal(true);
+                  setSelectedRole(role);
+                  return;
+                }
+
+                // User has the role - proceed with login
+                const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+                navigate(redirectPath);
+                
+                toast({
+                  title: "Welcome back!",
+                  description: `You've successfully logged in as a ${role}.`
+                });
+              }
+            } catch (error) {
+              console.error('Error in post-login flow:', error);
+              // Fallback: allow login
+              const redirectPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+              navigate(redirectPath);
+            }
+          }, 1000);
         }
       } else {
         // Signup flow
@@ -443,6 +508,33 @@ export default function Auth() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Role Join Modal */}
+      <Dialog open={showRoleJoinModal} onOpenChange={setShowRoleJoinModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}</DialogTitle>
+            <DialogDescription>
+              You're not registered as a {selectedRole} yet. Would you like to join now?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 pt-4">
+            <Button 
+              variant="outline" 
+              className="flex-1" 
+              onClick={() => setShowRoleJoinModal(false)}
+            >
+              Not Now
+            </Button>
+            <Button 
+              className="flex-1" 
+              onClick={handleRoleJoin}
+            >
+              Yes, Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

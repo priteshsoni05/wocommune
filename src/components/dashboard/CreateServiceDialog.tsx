@@ -222,43 +222,23 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
             </div>
           </div>
 
-import React, { useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
-import { Label } from '@/components/ui/label'; // Optional if using shadcn/ui
-
-const categoryOptions = [
-  { value: 'career', label: 'Career & Business' },
-  { value: 'education', label: 'Education & Tutoring' },
-  { value: 'health', label: 'Health & Wellness' },
-  { value: 'creative', label: 'Creative & Arts' },
-  { value: 'technology', label: 'Technology' },
-  { value: 'life', label: 'Life Coaching' },
-  { value: 'other', label: 'Other' },
-];
-
-export const CategorySelector = () => {
-  const [category, setCategory] = useState(null);
-
-  const handleChange = (newValue: any) => {
-    setCategory(newValue);
-  };
-
-  return (
-    <div className="space-y-2">
-      <Label htmlFor="category">Category</Label>
-      <CreatableSelect
-        instanceId="category"
-        isClearable
-        onChange={handleChange}
-        options={categoryOptions}
-        value={category}
-        placeholder="Select or create a category"
-        className="text-sm"
-      />
-    </div>
-  );
-};
-
+          <div className="space-y-2">
+            <Label htmlFor="category">Category</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="career">Career & Business</SelectItem>
+                <SelectItem value="education">Education & Tutoring</SelectItem>
+                <SelectItem value="health">Health & Wellness</SelectItem>
+                <SelectItem value="creative">Creative & Arts</SelectItem>
+                <SelectItem value="technology">Technology</SelectItem>
+                <SelectItem value="life">Life Coaching</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="space-y-2">
             <Label htmlFor="image">Service Image (Optional)</Label>
