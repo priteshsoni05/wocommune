@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,39 +9,23 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, ChevronDown, User } from 'lucide-react';
+import { ChevronDown, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { SeekHelpModal } from './SeekHelpModal';
+import { SmartSearchBar } from './SmartSearchBar';
 
 interface HelpanionHeaderProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  onSearchSubmit?: (searchQuery: string) => void;
   onFilteredSearch: (filters: string[]) => void;
 }
 
-export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, onFilteredSearch }: HelpanionHeaderProps) {
+export function HelpanionHeader({ onFilteredSearch }: HelpanionHeaderProps) {
   const [isSeekHelpModalOpen, setIsSeekHelpModalOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { profile } = useProfile();
   const { hasRole } = useUserRoles();
   const navigate = useNavigate();
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && onSearchSubmit) {
-      onSearchSubmit(searchTerm);
-    }
-  };
-
-  const handleSearchInput = (value: string) => {
-    onSearchChange(value);
-    // Trigger search immediately when typing
-    if (value.trim() && onSearchSubmit) {
-      onSearchSubmit(value);
-    }
-  };
 
   return (
     <>
@@ -134,16 +117,10 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, on
 
           {/* Mobile Search Bar */}
           <div className="lg:hidden w-full">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-               <Input
-                  placeholder="Search Helpanions..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearchInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="pl-10 bg-muted/30 border-muted focus:bg-background text-sm"
-                />
-            </div>
+            <SmartSearchBar 
+              placeholder="Search Helpanions..."
+              isMobile={true}
+            />
           </div>
 
           {/* Desktop Layout */}
@@ -157,16 +134,7 @@ export function HelpanionHeader({ searchTerm, onSearchChange, onSearchSubmit, on
 
             {/* Search Bar */}
             <div className="flex-1 max-w-md mx-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                 <Input
-                    placeholder="Search for a Helpanion by field, experience, or keyword..."
-                    value={searchTerm}
-                    onChange={(e) => handleSearchInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="pl-10 bg-muted/30 border-muted focus:bg-background"
-                  />
-              </div>
+              <SmartSearchBar />
             </div>
 
              {/* Action Buttons */}

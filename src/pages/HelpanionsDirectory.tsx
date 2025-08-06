@@ -87,8 +87,6 @@ export default function HelpanionsDirectory() {
   return (
     <div className="min-h-screen bg-background font-futura">
       <HelpanionHeader 
-        searchTerm=""
-        onSearchChange={() => {}}
         onFilteredSearch={() => {}}
       />
       

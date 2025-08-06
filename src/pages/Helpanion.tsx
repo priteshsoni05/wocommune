@@ -46,9 +46,6 @@ export default function Helpanion() {
     <div className="min-h-screen bg-background font-futura">
       {/* Header */}
       <HelpanionHeader 
-        searchTerm={searchTerm}
-        onSearchChange={handleSearchChange}
-        onSearchSubmit={handleSearchSubmit}
         onFilteredSearch={handleFilteredSearch}
       />
 
