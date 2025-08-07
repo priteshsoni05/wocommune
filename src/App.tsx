@@ -23,6 +23,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Helpanion />} />
+            <Route path="/helpanion" element={<Helpanion />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanions" element={<HelpanionsDirectory />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />

@@ -197,7 +197,10 @@ export default function WalkerDashboard() {
           <Button 
             variant="ghost" 
             className="w-full justify-start gap-3 py-3 lg:py-2"
-            onClick={() => navigate('/')}
+            onClick={() => {
+              console.log('WalkerDashboard: Browse Helpanions clicked, navigating to /helpanion');
+              navigate('/helpanion');
+            }}
           >
             <Calendar className="h-5 w-5 lg:h-4 lg:w-4" />
             <span className="text-base lg:text-sm">Browse Helpanions</span>
@@ -259,7 +262,10 @@ export default function WalkerDashboard() {
                   <Calendar className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
                   <h3 className="text-lg font-medium mb-2">No upcoming sessions</h3>
                   <p className="text-muted-foreground mb-4">Book your first session with a Helpanion</p>
-                  <Button onClick={() => navigate('/helpanion')}>Browse Helpanions</Button>
+                  <Button onClick={() => {
+                    console.log('WalkerDashboard: Browse Helpanions (content area) clicked, navigating to /helpanion');
+                    navigate('/helpanion');
+                  }}>Browse Helpanions</Button>
                 </div>
               ) : (
                 <div className="space-y-4">
