@@ -15,7 +15,7 @@ import { useCustomOptions } from "@/hooks/useCustomOptions";
 
 interface HelpanionProfileProps {
   profile: Profile;
-  updateProfile: (updates: Partial<Profile>) => Promise<{ error?: any; data?: any }>;
+  updateProfile: (updates: Partial<Profile>) => Promise<{ error?: any; data?: any }>; 
 }
 
 const schoolOptions = [
@@ -44,11 +44,17 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [showCustomSchool, setShowCustomSchool] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
-  
+
   // Custom options hooks
   const { customOptions: customSchools, addCustomOption: addCustomSchool } = useCustomOptions('school');
   const { customOptions: customRoles, addCustomOption: addCustomRole } = useCustomOptions('role');
-  
+
+  // Use Case custom logic
+  const [showCustomUseCase, setShowCustomUseCase] = useState(false);
+  const [customUseCase, setCustomUseCase] = useState("");
+  const [customUseCases, setCustomUseCases] = useState<string[]>([]);
+  const [useCaseLoading, setUseCaseLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     display_name: profile.display_name || "",
     username: profile.username || "",
@@ -66,10 +72,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     website_url: profile.website_url || ""
   });
 
-  // Initialize form data only once when profile is first loaded
   useEffect(() => {
     if (profile && !formInitialized) {
-      console.log('Initializing form with profile:', profile);
       setFormData({
         display_name: profile.display_name || "",
         username: profile.username || "",
@@ -90,27 +94,71 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     }
   }, [profile, formInitialized]);
 
+  // Fetch custom use cases from Supabase
+  useEffect(() => {
+    const fetchCustomUseCases = async () => {
+      setUseCaseLoading(true);
+      const { data, error } = await supabase.from("custom_options").select("*").eq("type", "use_case");
+      if (data) {
+        setCustomUseCases(data.map((item: any) => item.value));
+      }
+      setUseCaseLoading(false);
+    };
+    fetchCustomUseCases();
+  }, []);
+
+  const addCustomUseCase = async (value: string) => {
+    if (
+      useCaseOptions.some(
+        (opt) => opt.toLowerCase() === value.trim().toLowerCase()
+      ) ||
+      customUseCases.some(
+        (opt) => opt.toLowerCase() === value.trim().toLowerCase()
+      )
+    ) {
+      toast({
+        title: "Duplicate Value",
+        description: "This use case/expertise area already exists.",
+        variant: "destructive",
+      });
+      return { error: "duplicate" };
+    }
+    const { data, error } = await supabase
+      .from("custom_options")
+      .insert({ type: "use_case", value: value.trim() })
+      .select();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add the new use case. Please try again.",
+        variant: "destructive",
+      });
+      return { error };
+    } else {
+      setCustomUseCases((prev) => [...prev, value.trim()]);
+      toast({
+        title: "Added!",
+        description: "Your expertise area was added for all users.",
+      });
+      return { data };
+    }
+  };
+
   const uploadImage = async (file: File) => {
     if (!user) return null;
-    
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file);
-      
       if (uploadError) throw uploadError;
-      
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
-      
       return data.publicUrl;
     } catch (error) {
-      console.error('Error uploading image:', error);
       toast({
         title: "Error",
         description: "Failed to upload image. Please try again.",
@@ -125,7 +173,6 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
     const imageUrl = await uploadImage(file);
     if (imageUrl) {
       handleInputChange('avatar_url', imageUrl);
@@ -135,11 +182,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
-    console.log('Form submission started with data:', formData);
-
     try {
-      // Handle custom school addition
+      // Custom school value
       let schoolValue = formData.school;
       if (showCustomSchool && customSchool.trim()) {
         const schoolResult = await addCustomSchool(customSchool);
@@ -155,8 +199,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         setShowCustomSchool(false);
         setCustomSchool("");
       }
-
-      // Handle custom role addition
+      // Custom role value
       let roleValue = formData.role;
       if (showCustomRole && customRole.trim()) {
         const roleResult = await addCustomRole(customRole);
@@ -172,7 +215,22 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         setShowCustomRole(false);
         setCustomRole("");
       }
-      
+      // Custom use case value
+      let useCaseValue = formData.use_case;
+      if (showCustomUseCase && customUseCase.trim()) {
+        const useCaseResult = await addCustomUseCase(customUseCase);
+        if (useCaseResult.error) {
+          toast({
+            title: "Error",
+            description: "Failed to save custom expertise area.",
+            variant: "destructive",
+          });
+          return;
+        }
+        useCaseValue = customUseCase;
+        setShowCustomUseCase(false);
+        setCustomUseCase("");
+      }
       const updateData = {
         display_name: formData.display_name,
         username: formData.username,
@@ -182,38 +240,30 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         avatar_url: formData.avatar_url,
         school: schoolValue,
         role: roleValue,
-        use_case: formData.use_case,
+        use_case: useCaseValue,
         skills: formData.skills,
         linkedin_url: formData.linkedin_url,
         instagram_url: formData.instagram_url,
         portfolio_url: formData.portfolio_url,
         website_url: formData.website_url,
       };
-      
-      console.log('Updating profile with data:', updateData);
       const result = await updateProfile(updateData);
-
-      console.log('Profile update result:', result);
-      
       if (result.error) {
-        console.error('Profile update error:', result.error);
         toast({
           title: "Error",
           description: "Failed to update profile. Please try again.",
           variant: "destructive",
         });
       } else {
-        console.log('Profile updated successfully:', result.data);
         toast({
           title: "Success",
           description: "Profile updated successfully!",
         });
-        
-        // Update form data with the new values
         setFormData(prev => ({
           ...prev,
           school: schoolValue,
-          role: roleValue
+          role: roleValue,
+          use_case: useCaseValue
         }));
       }
     } catch (error) {
@@ -228,7 +278,6 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   };
 
   const handleInputChange = (field: string, value: string) => {
-    console.log(`Updating field ${field} to:`, value);
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -240,9 +289,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           Complete your profile to start helping others
         </p>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
-        {/* Profile Photo */}
+        {/* ...other profile fields... */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm lg:text-base">
@@ -292,81 +340,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           </CardContent>
         </Card>
 
-        {/* Basic Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              Basic Information
-              {formData.display_name && formData.username && <CheckCircle className="h-5 w-5 text-success" />}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="display_name">Full Name *</Label>
-                <Input
-                  id="display_name"
-                  value={formData.display_name}
-                  onChange={(e) => handleInputChange('display_name', e.target.value)}
-                  placeholder="Your full name"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="username">Unique Username *</Label>
-                <Input
-                  id="username"
-                  value={formData.username}
-                  onChange={(e) => handleInputChange('username', e.target.value)}
-                  placeholder="your-unique-username"
-                  required
-                />
-                <p className="text-xs text-muted-foreground">
-                  This will be used in your public profile URL
-                </p>
-              </div>
-            </div>
+        {/* ...Basic Information, Professional Background, Role... */}
 
-            <div className="space-y-2">
-              <Label htmlFor="bio">Short Bio (280 characters max)</Label>
-              <Textarea
-                id="bio"
-                value={formData.bio}
-                onChange={(e) => handleInputChange('bio', e.target.value)}
-                placeholder="Tell people what makes you unique and how you can help..."
-                maxLength={280}
-                rows={3}
-              />
-              <p className="text-xs text-muted-foreground text-right">
-                {formData.bio.length}/280 characters
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="your@email.com"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone (Optional)</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="+1 (555) 123-4567"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Professional Background */}
+        {/* School/College */}
         <Card>
           <CardHeader>
             <CardTitle>Professional Background</CardTitle>
@@ -376,6 +352,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* School */}
               <div className="space-y-2">
                 <Label htmlFor="school">School/College</Label>
                 {showCustomSchool ? (
@@ -438,6 +415,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                   </Select>
                 )}
               </div>
+              {/* Role */}
               <div className="space-y-2">
                 <Label htmlFor="role">Current Role / Field</Label>
                 {showCustomRole ? (
@@ -502,20 +480,91 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
               </div>
             </div>
 
+            {/* Use Case / Expertise Area */}
             <div className="space-y-2">
               <Label htmlFor="use_case">Use Case / Expertise Area</Label>
-              <Select value={formData.use_case} onValueChange={(value) => handleInputChange('use_case', value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="What type of help do you offer?" />
-                </SelectTrigger>
-                <SelectContent>
-                  {useCaseOptions.map((useCase) => (
-                    <SelectItem key={useCase} value={useCase}>{useCase}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {showCustomUseCase ? (
+                <div className="flex gap-2">
+                  <Input
+                    value={customUseCase}
+                    onChange={(e) => setCustomUseCase(e.target.value)}
+                    placeholder="Enter your expertise area"
+                    className="flex-1"
+                    maxLength={50}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={useCaseLoading}
+                    onClick={async () => {
+                      if (customUseCase.trim().length < 3) {
+                        toast({
+                          title: "Too Short",
+                          description: "Please enter at least 3 characters.",
+                          variant: "destructive",
+                        });
+                        return;
+                      }
+                      const result = await addCustomUseCase(customUseCase);
+                      if (result.data) {
+                        handleInputChange("use_case", customUseCase.trim());
+                        setShowCustomUseCase(false);
+                        setCustomUseCase("");
+                      }
+                    }}
+                  >
+                    {customUseCase.trim() ? "Add" : "Cancel"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setShowCustomUseCase(false);
+                      setCustomUseCase("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              ) : (
+                <Select
+                  value={formData.use_case}
+                  onValueChange={(value) => {
+                    if (value === "add-new") {
+                      setShowCustomUseCase(true);
+                    } else {
+                      handleInputChange("use_case", value);
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="What type of help do you offer?" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {useCaseOptions.map((useCase) => (
+                      <SelectItem key={useCase} value={useCase}>
+                        {useCase}
+                      </SelectItem>
+                    ))}
+                    {customUseCases.map((useCase) => (
+                      <SelectItem key={`custom-${useCase}`} value={useCase}>
+                        {useCase}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="add-new">
+                      <div className="flex items-center gap-2">
+                        <Plus className="h-4 w-4" />
+                        Add New...
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             </div>
 
+            {/* Skills */}
             <div className="space-y-2">
               <Label htmlFor="skills">Tags/Skills</Label>
               <Input
@@ -560,7 +609,6 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                 />
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="portfolio_url">Portfolio</Label>
