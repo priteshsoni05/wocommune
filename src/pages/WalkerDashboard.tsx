@@ -41,7 +41,7 @@ export default function WalkerDashboard() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/helpanion');
+      navigate('/');
     }
   }, [user, navigate]);
 
@@ -77,7 +77,7 @@ export default function WalkerDashboard() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/helpanion');
+    navigate('/');
   };
 
   const handleRoleToggle = (checked: boolean) => {
@@ -197,7 +197,7 @@ export default function WalkerDashboard() {
           <Button 
             variant="ghost" 
             className="w-full justify-start gap-3 py-3 lg:py-2"
-            onClick={() => navigate('/helpanion')}
+            onClick={() => navigate('/')}
           >
             <Calendar className="h-5 w-5 lg:h-4 lg:w-4" />
             <span className="text-base lg:text-sm">Browse Helpanions</span>

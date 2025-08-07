@@ -63,7 +63,7 @@ const HelpanionDashboard = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/helpanion');
+      navigate('/');
     }
   }, [user, authLoading, navigate]);
 
@@ -109,7 +109,7 @@ const HelpanionDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/helpanion');
+    navigate('/');
   };
 
   const handleRoleToggle = (checked: boolean) => {

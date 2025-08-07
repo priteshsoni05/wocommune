@@ -20,7 +20,7 @@ const Index = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/helpanion');
+      navigate('/');
     }
   }, [user, authLoading, navigate]);
 
