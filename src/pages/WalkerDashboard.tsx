@@ -41,7 +41,7 @@ export default function WalkerDashboard() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/');
+      navigate('/helpanion');
     }
   }, [user, navigate]);
 
@@ -77,7 +77,7 @@ export default function WalkerDashboard() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
+    navigate('/helpanion');
   };
 
   const handleRoleToggle = (checked: boolean) => {
