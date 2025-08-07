@@ -178,9 +178,15 @@ const HelpanionDashboard = () => {
           <h1 className="text-base lg:text-xl font-semibold text-foreground">
             WO Commune
           </h1>
-          <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-7 w-7 lg:h-8 lg:w-8">
-            <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
-          </Button>
+          <div className="flex gap-1">
+            {/* New: Go to main WO Commune page, do NOT log out */}
+            <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="h-7 w-7 lg:h-8 lg:w-8" aria-label="Go to WO Commune main page">
+              <Home className="h-3 w-3 lg:h-4 lg:w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-7 w-7 lg:h-8 lg:w-8" aria-label="Sign out">
+              <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
+            </Button>
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
