@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Bell, Calendar, History, Settings, Video, Clock, Star, LogOut } from 'lucide-react';
+import { Bell, Calendar, History, Settings, Video, Clock, Star, LogOut, Home } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
@@ -148,9 +148,14 @@ export default function WalkerDashboard() {
           <h1 className="text-lg lg:text-xl font-semibold text-foreground">
             WO Commune
           </h1>
-          <Button variant="ghost" size="sm" onClick={handleSignOut}>
-            <LogOut className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-1">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="h-7 w-7 lg:h-8 lg:w-8" aria-label="Go to WO Commune main page">
+              <Home className="h-3 w-3 lg:h-4 lg:w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="h-7 w-7 lg:h-8 lg:w-8" aria-label="Sign out">
+              <LogOut className="h-3 w-3 lg:h-4 lg:w-4" />
+            </Button>
+          </div>
         </div>
         
         <div>

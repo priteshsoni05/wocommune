@@ -98,9 +98,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   useEffect(() => {
     const fetchCustomUseCases = async () => {
       setUseCaseLoading(true);
-      const { data, error } = await supabase.from("custom_options").select("*").eq("type", "use_case");
+      const { data, error } = await supabase.from("custom_options").select("*").eq("option_type", "use_case");
       if (data) {
-        setCustomUseCases(data.map((item: any) => item.value));
+        setCustomUseCases(data.map((item: any) => item.option_value));
       }
       setUseCaseLoading(false);
     };
@@ -125,7 +125,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     }
     const { data, error } = await supabase
       .from("custom_options")
-      .insert({ type: "use_case", value: value.trim() })
+      .insert({ option_type: "use_case", option_value: value.trim(), user_id: user?.id || '' })
       .select();
     if (error) {
       toast({

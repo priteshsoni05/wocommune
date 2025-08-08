@@ -1,6 +1,4 @@
 import React from "react";
-import WOCommune from "../components/WOCommune";
-import WOProducts from "../components/WOProducts";
 
 const Home: React.FC = () => (
   <main>
@@ -8,10 +6,6 @@ const Home: React.FC = () => (
       <h1>Walker&apos;s Odyssey</h1>
       <p>Welcome to the journey! Explore our communities, events, and products.</p>
     </section>
-
-    <WOCommune />
-
-    <WOProducts />
   </main>
 );
 
