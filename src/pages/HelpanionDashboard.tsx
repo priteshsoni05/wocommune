@@ -176,13 +176,10 @@ const HelpanionDashboard = () => {
     <div className="h-full bg-card flex flex-col">
       {/* Header */}
       <div className="p-3 lg:p-6 border-b border-border">
-        <div className="flex items-center justify-between mb-3 lg:mb-4">
+        <div className="mb-3 lg:mb-4">
           <h1 className="text-base lg:text-xl font-semibold text-foreground">
             WO Commune
           </h1>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="h-7 w-7 lg:h-8 lg:w-8" aria-label="Go to WO Commune main page">
-            <Home className="h-3 w-3 lg:h-4 lg:w-4" />
-          </Button>
         </div>
         
         <div className="flex items-center justify-between">
