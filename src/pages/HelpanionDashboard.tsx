@@ -151,6 +151,8 @@ const HelpanionDashboard = () => {
             profile={profile} 
             profileProgress={profileProgress}
             onNavigateToProfile={() => setActiveTab('profile')}
+            onNavigateToServices={() => setActiveTab('services')}
+            onNavigateToAvailability={() => setActiveTab('availability')}
           />
         );
       case 'profile':

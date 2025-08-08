@@ -3,15 +3,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, ArrowRight } from "lucide-react";
+import { GettingStartedChecklist } from "./GettingStartedChecklist";
+import { useBookings } from "@/hooks/useBookings";
+import { useServices } from "@/hooks/useServices";
 
 interface HelpanionHomeProps {
   profile: Profile;
   profileProgress: number;
   onNavigateToProfile: () => void;
+  onNavigateToServices: () => void;
+  onNavigateToAvailability: () => void;
 }
 
-export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }: HelpanionHomeProps) => {
+export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile, onNavigateToServices, onNavigateToAvailability }: HelpanionHomeProps) => {
   const firstName = profile.display_name?.split(' ')[0] || 'Helpanion';
+  const { services } = useServices();
+  const { bookings } = useBookings();
+  
+  // Calculate real stats
+  const activeServices = services.filter(s => s.is_active).length;
+  const upcomingBookings = bookings.filter(b => 
+    b.status === 'confirmed' && new Date(b.booking_date) >= new Date()
+  ).length;
   
   return (
     <div className="p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-5">
@@ -84,7 +97,7 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
         <Card>
           <CardContent className="pt-3 lg:pt-4">
             <div className="text-center">
-              <h3 className="text-lg lg:text-xl font-bold text-primary">0</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-primary">{activeServices}</h3>
               <p className="text-xs text-muted-foreground">Active Services</p>
             </div>
           </CardContent>
@@ -93,7 +106,7 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
         <Card>
           <CardContent className="pt-3 lg:pt-4">
             <div className="text-center">
-              <h3 className="text-lg lg:text-xl font-bold text-primary">0</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-primary">{upcomingBookings}</h3>
               <p className="text-xs text-muted-foreground">Upcoming Sessions</p>
             </div>
           </CardContent>
@@ -110,49 +123,12 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile }:
       </div>
 
       {/* Getting Started Guide */}
-      <Card>
-        <CardHeader className="pb-3 lg:pb-4">
-          <CardTitle className="text-sm lg:text-base">Getting Started</CardTitle>
-          <CardDescription className="text-xs lg:text-sm">
-            Follow these steps to become an active Helpanion
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                profile.display_name ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground'
-              }`}>
-                {profile.display_name ? '✓' : '1'}
-              </div>
-              <span className="text-sm">Complete your profile information</span>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                profile.bio ? 'bg-success text-success-foreground' : 'bg-muted text-muted-foreground'
-              }`}>
-                {profile.bio ? '✓' : '2'}
-              </div>
-              <span className="text-sm">Add your bio and expertise areas</span>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-xs">
-                3
-              </div>
-              <span className="text-sm">Create your first service offering</span>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-full bg-muted text-muted-foreground flex items-center justify-center text-xs">
-                4
-              </div>
-              <span className="text-sm">Set your availability schedule</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <GettingStartedChecklist 
+        profile={profile}
+        onNavigateToProfile={onNavigateToProfile}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToAvailability={onNavigateToAvailability}
+      />
     </div>
   );
 };
