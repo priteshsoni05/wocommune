@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ProfileHero } from "@/components/public/ProfileHero";
 import { AboutSection } from "@/components/public/AboutSection";
 import { ServicesSection } from "@/components/public/ServicesSection";
-import { AvailabilitySection } from "@/components/public/AvailabilitySection";
 import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog";
 import { Profile } from "@/hooks/useProfile";
 import { Service } from "@/hooks/useServices";
@@ -34,40 +33,43 @@ const PublicProfile = () => {
       }
 
       try {
+        // Fetch profile
         const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', userId)
+          .from("profiles")
+          .select("*")
+          .eq("user_id", userId)
           .single();
 
-        if (profileError) throw profileError;
+        if (profileError || !profile) throw profileError || new Error("No profile found");
 
+        // Fetch active services
         const { data: services, error: servicesError } = await supabase
-          .from('services')
-          .select('*')
-          .eq('helper_id', userId)
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
+          .from("services")
+          .select("*")
+          .eq("helper_id", userId)
+          .eq("is_active", true)
+          .order("created_at", { ascending: false });
 
-        if (servicesError) throw servicesError;
+        if (servicesError || !services) throw servicesError || new Error("No services found");
 
+        // Fetch availability slots
         const { data: availability, error: availabilityError } = await supabase
-          .from('availability_slots')
-          .select('*')
-          .eq('helper_id', userId)
-          .eq('is_available', true)
-          .order('day_of_week', { ascending: true })
-          .order('start_time', { ascending: true });
+          .from("availability_slots")
+          .select("*")
+          .eq("helper_id", userId)
+          .eq("is_available", true)
+          .order("day_of_week", { ascending: true })
+          .order("start_time", { ascending: true });
 
-        if (availabilityError) throw availabilityError;
+        if (availabilityError || !availability) throw availabilityError || new Error("No availability found");
 
         setData({
           profile: profile as Profile,
           services: services as Service[],
-          availability: availability as AvailabilitySlot[]
+          availability: availability as AvailabilitySlot[],
         });
       } catch (err) {
-        setError('Failed to load profile');
+        setError("Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -120,12 +122,11 @@ const PublicProfile = () => {
               </div>
             </div>
           </div>
-
           {/* Right column: Services */}
           <div className="w-full lg:w-3/5 flex flex-col gap-6">
-            <ServicesSection 
-              services={data.services} 
-              helperId={userId!} 
+            <ServicesSection
+              services={data.services}
+              helperId={userId as string}
               onServiceBook={handleServiceBook}
             />
             {/* Optionally, add <AvailabilitySection /> here if desired */}
@@ -140,8 +141,8 @@ const PublicProfile = () => {
           onOpenChange={setShowBookingDialog}
           service={selectedService}
           availability={data.availability}
-          helperId={userId!}
-          helperName={data.profile.display_name || 'Helper'}
+          helperId={userId as string}
+          helperName={data.profile.display_name || "Helper"}
         />
       )}
     </div>
