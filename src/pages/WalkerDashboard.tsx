@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';mport { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
@@ -259,7 +260,7 @@ export default function WalkerDashboard() {
                       className="flex items-center justify-between border-b border-border pb-2"
                     >
                       <div>
-                        <div className="font-medium">{booking.helpanion_name}</div>
+                        <div className="font-medium">{booking.seeker_name}</div>
                         <div className="text-xs text-muted-foreground">
                           {format(new Date(booking.booking_date), 'PPpp')}
                         </div>
@@ -312,7 +313,7 @@ export default function WalkerDashboard() {
                       className="flex items-center justify-between border-b border-border pb-2"
                     >
                       <div>
-                        <div className="font-medium">{booking.helpanion_name}</div>
+                        <div className="font-medium">{booking.seeker_name}</div>
                         <div className="text-xs text-muted-foreground">
                           {format(new Date(booking.booking_date), 'PPpp')}
                         </div>
