@@ -9,6 +9,7 @@ import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog"
 import { Profile } from "@/hooks/useProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
+// import { ReviewsSection } from "@/components/public/ReviewsSection"; // Uncomment if you have this
 
 interface PublicProfileData {
   profile: Profile;
@@ -33,7 +34,6 @@ const PublicProfile = () => {
       }
 
       try {
-        // Fetch profile
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
@@ -42,7 +42,6 @@ const PublicProfile = () => {
 
         if (profileError) throw profileError;
 
-        // Fetch active services
         const { data: services, error: servicesError } = await supabase
           .from('services')
           .select('*')
@@ -52,7 +51,6 @@ const PublicProfile = () => {
 
         if (servicesError) throw servicesError;
 
-        // Fetch availability slots
         const { data: availability, error: availabilityError } = await supabase
           .from('availability_slots')
           .select('*')
@@ -69,7 +67,6 @@ const PublicProfile = () => {
           availability: availability as AvailabilitySlot[]
         });
       } catch (err) {
-        console.error('Error fetching public profile:', err);
         setError('Failed to load profile');
       } finally {
         setLoading(false);
@@ -107,15 +104,33 @@ const PublicProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <ProfileHero profile={data.profile} />
-        <AboutSection profile={data.profile} />
-        <ServicesSection 
-          services={data.services} 
-          helperId={userId!} 
-          onServiceBook={handleServiceBook}
-        />
+    <div className="min-h-screen bg-background py-8">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left column: Profile, About, Top Reviews & Ratings */}
+          <div className="w-full lg:w-2/5 flex flex-col gap-6">
+            <ProfileHero profile={data.profile} />
+            <AboutSection profile={data.profile} />
+            {/* Replace below with your actual reviews/ratings component */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Top Reviews & Ratings</h3>
+              <div className="text-muted-foreground text-sm">
+                {/* <ReviewsSection userId={userId!} /> */}
+                (Reviews and ratings go here)
+              </div>
+            </div>
+          </div>
+
+          {/* Right column: Services */}
+          <div className="w-full lg:w-3/5 flex flex-col gap-6">
+            <ServicesSection 
+              services={data.services} 
+              helperId={userId!} 
+              onServiceBook={handleServiceBook}
+            />
+            {/* Optionally, add <AvailabilitySection /> here if desired */}
+          </div>
+        </div>
       </div>
 
       {/* Service Booking Dialog */}
