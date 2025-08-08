@@ -1,23 +1,30 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useBookings } from '@/hooks/useBookings';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Bell, Calendar, History, Settings, Video, Clock, Star, LogOut, Home } from 'lucide-react';
+import { Bell, Calendar, History, Settings, LogOut, Home, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+
+type TabKey = 'sessions' | 'notifications' | 'history' | 'settings';
+
+const navigationTabs = [
+  { key: 'sessions' as TabKey, label: 'Sessions', icon: Calendar },
+  { key: 'notifications' as TabKey, label: 'Notifications', icon: Bell },
+  { key: 'history' as TabKey, label: 'History', icon: History },
+  { key: 'settings' as TabKey, label: 'Settings', icon: Settings },
+];
 
 export default function WalkerDashboard() {
   const { user, signOut } = useAuth();
@@ -27,6 +34,7 @@ export default function WalkerDashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const [activeTab, setActiveTab] = useState<TabKey>('sessions');
   const [isEditing, setIsEditing] = useState(false);
   const [showHelpanionModal, setShowHelpanionModal] = useState(false);
   const [helpanionFormData, setHelpanionFormData] = useState({
@@ -136,45 +144,95 @@ export default function WalkerDashboard() {
     }
   };
 
-  // Sidebar rendering (Home and Logout buttons REMOVED from sidebar)
   const renderSidebar = () => (
     <div className="h-full bg-card flex flex-col">
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b border-border">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-lg lg:text-xl font-semibold text-foreground">
+      <div className="p-3 lg:p-6 border-b border-border">
+        <div className="mb-3 lg:mb-4">
+          <h1 className="text-base lg:text-xl font-semibold text-foreground">
             WO Commune
           </h1>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">
-            Hi {profile?.display_name?.split(' ')[0] || 'Walker'} (Walker)
-          </p>
-          {/* Role Toggle */}
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-xs text-muted-foreground">Switch to Helpanion</span>
-            <Switch
-              checked={false}
-              onCheckedChange={handleRoleToggle}
-              disabled={rolesLoading}
-            />
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs lg:text-sm text-muted-foreground">Hi {profile?.display_name || 'Walker'}</p>
+            <p className="text-xs text-muted-foreground">(Walker)</p>
           </div>
+          
+          {hasRole('helpanion') && (
+            <div className="flex items-center gap-1 lg:gap-2">
+              <span className="text-xs text-muted-foreground">Helpanion</span>
+              <Switch 
+                checked={false}
+                onCheckedChange={handleRoleToggle}
+                className="scale-75 lg:scale-100"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Navigation Tabs */}
+      <nav className="flex-1 p-2 lg:p-4">
+        <div className="space-y-0.5 lg:space-y-1">
+          {navigationTabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => {
+                setActiveTab(tab.key);
+                // Auto-close sidebar on mobile when tab is selected
+                if (window.innerWidth < 1024) {
+                  // Use setTimeout to ensure state update happens
+                  setTimeout(() => {
+                    const event = new CustomEvent('closeMobileSidebar');
+                    window.dispatchEvent(event);
+                  }, 100);
+                }
+              }}
+              className={cn(
+                "w-full flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg transition-colors touch-manipulation min-h-[44px]",
+                activeTab === tab.key
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <tab.icon className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
+              <span className="text-sm lg:text-sm font-medium">{tab.label}</span>
+              {activeTab === tab.key && (
+                <ChevronRight className="h-3 w-3 lg:h-3 lg:w-3 ml-auto" />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Browse Helpanions button */}
+        <div className="mt-4 pt-4 border-t border-border">
+          <p className="text-xs text-muted-foreground mb-2 uppercase font-medium">Quick Actions</p>
+          <Button
+            variant="ghost"
+            className="w-full justify-start gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg"
+            onClick={() => navigate('/helpanion')}
+          >
+            <Calendar className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
+            <span className="text-sm lg:text-sm font-medium">Browse Helpanions</span>
+          </Button>
+        </div>
+      </nav>
+
+      {/* Become Helpanion CTA */}
       {!hasRole('helpanion') && (
-        <div className="p-4 border-b border-border">
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-foreground mb-1">
+        <div className="p-3 lg:p-4 border-t border-border">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 lg:p-4">
+            <h3 className="text-xs lg:text-sm font-medium text-foreground mb-1">
               Want to help others too?
             </h3>
-            <p className="text-xs text-muted-foreground mb-3">
+            <p className="text-xs text-muted-foreground mb-2 lg:mb-3">
               Become a Helpanion and share your expertise.
             </p>
-            <Button
-              size="sm"
-              className="w-full"
+            <Button 
+              size="sm" 
+              className="w-full text-xs h-7 lg:h-8"
               onClick={() => setShowHelpanionModal(true)}
             >
               Become a Helpanion →
@@ -182,21 +240,6 @@ export default function WalkerDashboard() {
           </div>
         </div>
       )}
-
-      {/* Navigation */}
-      <div className="flex-1 p-4">
-        <p className="text-xs text-muted-foreground mb-4 uppercase font-medium">Dashboard</p>
-        <div className="space-y-1">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-3 py-3 lg:py-2"
-            onClick={() => navigate('/helpanion')}
-          >
-            <Calendar className="h-5 w-5 lg:h-4 lg:w-4" />
-            <span className="text-base lg:text-sm">Browse Helpanions</span>
-          </Button>
-        </div>
-      </div>
     </div>
   );
 
@@ -219,27 +262,10 @@ export default function WalkerDashboard() {
     </div>
   );
 
-  // Content
-  const renderContent = () => (
-    <div className="py-4 px-2 sm:px-4">
-      <Tabs defaultValue="sessions" className="w-full">
-        <TabsList className="mb-6 w-full flex">
-          <TabsTrigger value="sessions" className="flex-1">
-            <Calendar className="h-4 w-4 mr-2" /> Sessions
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex-1">
-            <Bell className="h-4 w-4 mr-2" /> Notifications
-          </TabsTrigger>
-          <TabsTrigger value="history" className="flex-1">
-            <History className="h-4 w-4 mr-2" /> History
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="flex-1">
-            <Settings className="h-4 w-4 mr-2" /> Settings
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Sessions Tab */}
-        <TabsContent value="sessions">
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'sessions':
+        return (
           <Card>
             <CardHeader>
               <CardTitle>Upcoming Sessions</CardTitle>
@@ -274,10 +300,9 @@ export default function WalkerDashboard() {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Notifications Tab */}
-        <TabsContent value="notifications">
+        );
+      case 'notifications':
+        return (
           <Card>
             <CardHeader>
               <CardTitle>Notifications</CardTitle>
@@ -289,10 +314,9 @@ export default function WalkerDashboard() {
               <div className="text-muted-foreground">No new notifications.</div>
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* History Tab */}
-        <TabsContent value="history">
+        );
+      case 'history':
+        return (
           <Card>
             <CardHeader>
               <CardTitle>Completed Sessions</CardTitle>
@@ -327,10 +351,9 @@ export default function WalkerDashboard() {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Settings Tab */}
-        <TabsContent value="settings">
+        );
+      case 'settings':
+        return (
           <Card>
             <CardHeader>
               <CardTitle>Profile Settings</CardTitle>
@@ -410,10 +433,11 @@ export default function WalkerDashboard() {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
