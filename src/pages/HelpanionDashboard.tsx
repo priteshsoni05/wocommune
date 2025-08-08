@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
@@ -76,106 +76,258 @@ const HelpanionDashboard = () => {
         email: profile.email || "",
       });
     }
-  }, [profile, user, updateProfile]);
+  }, [profile, user]);
 
-  // --- Add: Home Button for top right corner ---
-  // We'll place this button outside or at the end of the navigation/top bar inside DashboardLayout if possible.
-  // If DashboardLayout exposes a header prop/slot, use it. Otherwise, add here above main content.
-  // For simplicity, add it above the main content for now.
+  if (authLoading || profileLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Handlers for tab navigation
-  const handleTabChange = (key: TabKey) => {
-    setActiveTab(key);
+  if (!user || !profile) {
+    return null;
+  }
+
+  const calculateProfileProgress = () => {
+    let completed = 0;
+    const total = 6;
+    
+    if (profile.display_name) completed++;
+    if (profile.bio) completed++;
+    if (profile.avatar_url) completed++;
+    if (profile.username) completed++;
+    if (services.length > 0) completed++;
+    if (bookings.length > 0) completed++;
+    
+    return Math.round((completed / total) * 100);
   };
 
-  // Render content based on the active tab
-  const renderTabContent = () => {
-    if (!profile) return null;
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  const handleRoleToggle = (checked: boolean) => {
+    if (checked) {
+      // Switch to Walker
+      if (hasRole('walker')) {
+        navigate('/walker-dashboard');
+      } else {
+        setShowWalkerModal(true);
+      }
+    }
+  };
+
+  const handleBecomeWalker = async () => {
+    const result = await addRole('walker');
+    if (result?.error) {
+      toast({
+        title: "Error",
+        description: "Failed to add Walker role. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Welcome to Walkers!",
+        description: "You can now seek help from Helpanions.",
+      });
+      setShowWalkerModal(false);
+      navigate('/walker-dashboard');
+    }
+  };
+
+  const renderContent = () => {
+    const profileProgress = calculateProfileProgress();
+    
     switch (activeTab) {
       case 'home':
         return (
-          <HelpanionHome
-            profile={profile}
-            profileProgress={profile.profileProgress || 0}
+          <HelpanionHome 
+            profile={profile} 
+            profileProgress={profileProgress}
             onNavigateToProfile={() => setActiveTab('profile')}
             onNavigateToServices={() => setActiveTab('services')}
             onNavigateToAvailability={() => setActiveTab('availability')}
           />
         );
       case 'profile':
-        return (
-          <HelpanionProfile
-            profile={profile}
-            updateProfile={updateProfile}
-          />
-        );
+        return <HelpanionProfile profile={profile} updateProfile={updateProfile} />;
       case 'services':
-        return (
-          <HelpanionServices
-            profileProgress={profile.profileProgress || 0}
-          />
-        );
+        return <HelpanionServices profileProgress={profileProgress} />;
       case 'availability':
-        return (
-          <HelpanionAvailability
-            profileProgress={profile.profileProgress || 0}
-          />
-        );
+        return <HelpanionAvailability profileProgress={profileProgress} />;
       case 'bookings':
         return <HelpanionBookings />;
       case 'reviews':
         return <HelpanionReviews />;
       case 'settings':
-        return (
-          <HelpanionSettings
-            profile={profile}
-            updateProfile={updateProfile}
-          />
-        );
+        return <HelpanionSettings profile={profile} updateProfile={updateProfile} />;
       default:
         return null;
     }
   };
 
-  return (
-    <DashboardLayout>
-      {/* Top bar for navigation & home button */}
-      <div className="flex items-center justify-between px-4 py-3 border-b bg-background z-10">
-        <div className="flex items-center gap-2">
-          {navigationTabs.map((tab) => (
-            <Button
-              key={tab.key}
-              variant={activeTab === tab.key ? "default" : "ghost"}
-              className={cn("flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium", {
-                "bg-primary text-white": activeTab === tab.key
-              })}
-              onClick={() => handleTabChange(tab.key)}
-            >
-              <tab.icon className="w-4 h-4 mr-1" />
-              {tab.label}
-            </Button>
-          ))}
+  const renderSidebar = () => (
+    <div className="h-full bg-card flex flex-col">
+      {/* Header */}
+      <div className="p-3 lg:p-6 border-b border-border">
+        <div className="mb-3 lg:mb-4">
+          <h1 className="text-base lg:text-xl font-semibold text-foreground">
+            WO Commune
+          </h1>
         </div>
-        {/* Home button on right */}
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
-            <Link to="/">
-              <Home className="w-4 h-4 mr-1" />
-              Home
-            </Link>
-          </Button>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs lg:text-sm text-muted-foreground">Hi {profile.display_name || 'Helpanion'}</p>
+            <p className="text-xs text-muted-foreground">(Helpanion)</p>
+          </div>
+          
+          {hasRole('walker') && (
+            <div className="flex items-center gap-1 lg:gap-2">
+              <span className="text-xs text-muted-foreground">Walker</span>
+              <Switch 
+                checked={false}
+                onCheckedChange={handleRoleToggle}
+                className="scale-75 lg:scale-100"
+              />
+            </div>
+          )}
+        </div>
+        
+        {/* Profile Progress */}
+        <div className="mt-3 lg:mt-4">
+          <div className="flex items-center justify-between mb-1 lg:mb-2">
+            <span className="text-xs text-muted-foreground">Profile Progress</span>
+            <span className="text-xs text-muted-foreground">{calculateProfileProgress()}%</span>
+          </div>
+          <Progress value={calculateProfileProgress()} className="h-1.5 lg:h-2" />
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="p-4">
-        {profileLoading ? (
-          <div className="text-center text-muted-foreground py-10">Loading...</div>
-        ) : (
-          renderTabContent()
-        )}
-      </div>
-    </DashboardLayout>
+      {/* Navigation Tabs */}
+      <nav className="flex-1 p-2 lg:p-4">
+        <div className="space-y-0.5 lg:space-y-1">
+          {navigationTabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => {
+                setActiveTab(tab.key);
+                // Auto-close sidebar on mobile when tab is selected
+                if (window.innerWidth < 1024) {
+                  // Use setTimeout to ensure state update happens
+                  setTimeout(() => {
+                    const event = new CustomEvent('closeMobileSidebar');
+                    window.dispatchEvent(event);
+                  }, 100);
+                }
+              }}
+              className={cn(
+                "w-full flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg transition-colors touch-manipulation min-h-[44px]",
+                activeTab === tab.key
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              )}
+            >
+              <tab.icon className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
+              <span className="text-sm lg:text-sm font-medium">{tab.label}</span>
+              {activeTab === tab.key && (
+                <ChevronRight className="h-3 w-3 lg:h-3 lg:w-3 ml-auto" />
+              )}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Become Walker CTA */}
+      {!hasRole('walker') && (
+        <div className="p-3 lg:p-4 border-t border-border">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 lg:p-4">
+            <h3 className="text-xs lg:text-sm font-medium text-foreground mb-1">
+              Want to seek help too?
+            </h3>
+            <p className="text-xs text-muted-foreground mb-2 lg:mb-3">
+              Become a Walker to access guidance from other Helpanions.
+            </p>
+            <Button 
+              size="sm" 
+              className="w-full text-xs h-7 lg:h-8"
+              onClick={() => setShowWalkerModal(true)}
+            >
+              Become a Walker →
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-foreground">
+        WO Commune
+      </h1>
+      <Button variant="ghost" size="sm" onClick={handleSignOut}>
+        <LogOut className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+
+  return (
+    <>
+      <DashboardLayout
+        sidebar={renderSidebar()}
+        header={renderHeader()}
+      >
+        {renderContent()}
+      </DashboardLayout>
+
+      {/* Become Walker Modal */}
+      <Dialog open={showWalkerModal} onOpenChange={setShowWalkerModal}>
+        <DialogContent className="mx-4 max-w-md">
+          <DialogHeader>
+            <DialogTitle>Join as a Walker</DialogTitle>
+            <DialogDescription>
+              You haven't joined as a Walker yet. Want to join now and start seeking help from other Helpanions?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="walker-name">Full Name</Label>
+              <Input
+                id="walker-name"
+                value={walkerFormData.fullName}
+                onChange={(e) => setWalkerFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="walker-email">Email</Label>
+              <Input
+                id="walker-email"
+                type="email"
+                value={walkerFormData.email}
+                onChange={(e) => setWalkerFormData(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter your email"
+              />
+            </div>
+            <div className="flex gap-2 pt-4">
+              <Button onClick={handleBecomeWalker} className="flex-1">
+                Yes, Join as Walker
+              </Button>
+              <Button variant="outline" onClick={() => setShowWalkerModal(false)} className="flex-1">
+                Not now
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
