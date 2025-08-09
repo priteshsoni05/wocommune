@@ -38,7 +38,7 @@ const PublicProfile = () => {
           .from("profiles")
           .select("*")
           .eq("user_id", userId)
-          .single();
+          .maybeSingle();
 
         if (profileError || !profile) throw profileError || new Error("No profile found");
 
