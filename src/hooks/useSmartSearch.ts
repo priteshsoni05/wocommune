@@ -218,7 +218,17 @@ export const useSmartSearch = () => {
 
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     if (suggestion.type === 'person' && suggestion.userId) {
-      navigate(`/profile/${suggestion.userId}`);
+      // First get the username from the profile
+      supabase
+        .from('profiles')
+        .select('username')
+        .eq('user_id', suggestion.userId)
+        .single()
+        .then(({ data }) => {
+          if (data?.username) {
+            navigate(`/${data.username}`);
+          }
+        });
     } else {
       // For tags, roles, schools, redirect to filtered search
       const filterParam = encodeURIComponent(suggestion.text);

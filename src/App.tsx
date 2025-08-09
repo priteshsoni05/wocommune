@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/helpanions" element={<HelpanionsDirectory />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
-            <Route path="/profile/:userId" element={<PublicProfile />} />
+            <Route path="/:username" element={<PublicProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

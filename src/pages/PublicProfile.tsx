@@ -17,7 +17,7 @@ interface PublicProfileData {
 }
 
 const PublicProfile = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { username } = useParams<{ username: string }>();
   const [data, setData] = useState<PublicProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,37 +26,37 @@ const PublicProfile = () => {
 
   useEffect(() => {
     const fetchPublicProfile = async () => {
-      if (!userId) {
+      if (!username) {
         setError("Profile not found");
         setLoading(false);
         return;
       }
 
       try {
-        // Fetch profile
+        // Fetch profile by username
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("*")
-          .eq("user_id", userId)
+          .eq("username", username)
           .maybeSingle();
 
         if (profileError || !profile) throw profileError || new Error("No profile found");
 
-        // Fetch active services
+        // Fetch active services using the profile's user_id
         const { data: services, error: servicesError } = await supabase
           .from("services")
           .select("*")
-          .eq("helper_id", userId)
+          .eq("helper_id", profile.user_id)
           .eq("is_active", true)
           .order("created_at", { ascending: false });
 
         if (servicesError || !services) throw servicesError || new Error("No services found");
 
-        // Fetch availability slots
+        // Fetch availability slots using the profile's user_id
         const { data: availability, error: availabilityError } = await supabase
           .from("availability_slots")
           .select("*")
-          .eq("helper_id", userId)
+          .eq("helper_id", profile.user_id)
           .eq("is_available", true)
           .order("day_of_week", { ascending: true })
           .order("start_time", { ascending: true });
@@ -76,7 +76,7 @@ const PublicProfile = () => {
     };
 
     fetchPublicProfile();
-  }, [userId]);
+  }, [username]);
 
   const handleServiceBook = (service: Service) => {
     setSelectedService(service);
@@ -382,7 +382,7 @@ const PublicProfile = () => {
           onOpenChange={setShowBookingDialog}
           service={selectedService}
           availability={data.availability}
-          helperId={userId as string}
+          helperId={data.profile.user_id}
           helperName={data.profile.display_name || "Helper"}
         />
       )}
