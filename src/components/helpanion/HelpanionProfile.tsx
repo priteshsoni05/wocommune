@@ -15,11 +15,11 @@ import { useCustomOptions } from "@/hooks/useCustomOptions";
 
 interface HelpanionProfileProps {
   profile: Profile;
-  updateProfile: (updates: Partial<Profile>) => Promise<{ error?: any; data?: any }>; 
+  updateProfile: (updates: Partial<Profile>) => Promise<{ error?: any; data?: any }>;
 }
 
 const schoolOptions = [
-  "NIFT", "IIM", "ISB", "IIT", "NIT", "BITS", "Delhi University", "Mumbai University", 
+  "NIFT", "IIM", "ISB", "IIT", "NIT", "BITS", "Delhi University", "Mumbai University",
   "Bangalore University", "Anna University", "Dropout", "Self-taught", "Other"
 ];
 
@@ -29,8 +29,17 @@ const roleOptions = [
 ];
 
 const useCaseOptions = [
-  "Early Career Guidance", "Freelance Help", "Mental Health", "Academic Support", 
+  "Early Career Guidance", "Freelance Help", "Mental Health", "Academic Support",
   "Business Mentoring", "Creative Projects", "Technical Skills", "Life Coaching", "Other"
+];
+
+// --- Enhancements: Required fields for completion meter and validation ---
+const REQUIRED_FIELDS = [
+  "display_name",
+  "username",
+  "bio",
+  "skills",
+  "avatar_url"
 ];
 
 export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfileProps) => {
@@ -44,6 +53,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [showCustomSchool, setShowCustomSchool] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [formInitialized, setFormInitialized] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
 
   // Custom options hooks
   const { customOptions: customSchools, addCustomOption: addCustomSchool } = useCustomOptions('school');
@@ -71,6 +81,12 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     portfolio_url: profile.portfolio_url || "",
     website_url: profile.website_url || ""
   });
+
+  // --- Enhancement: Profile completion calculation ---
+  const completion = Math.round(
+    REQUIRED_FIELDS.filter((key) => !!formData[key as keyof typeof formData]?.trim()).length /
+    REQUIRED_FIELDS.length * 100
+  );
 
   useEffect(() => {
     if (profile && !formInitialized) {
@@ -179,9 +195,50 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     }
   };
 
+  // --- Enhancement: Username normalizer and uniqueness check ---
+  const handleUsernameChange = (value: string) => {
+    const normalized = value.replace(/\s/g, "").toLowerCase();
+    setFormData((prev) => ({ ...prev, username: normalized }));
+    setUsernameError("");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setUsernameError("");
+
+    // --- Enhancement: Check all required fields ---
+    for (const field of REQUIRED_FIELDS) {
+      if (!formData[field as keyof typeof formData]?.trim()) {
+        toast({
+          title: "Missing required field",
+          description: `Please fill out your ${field.replace("_", " ")}.`,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+    }
+
+    // --- Enhancement: Check username uniqueness ---
+    if (formData.username) {
+      const { data: existing } = await supabase
+        .from("profiles")
+        .select("id")
+        .ilike("username", formData.username)
+        .neq("id", profile.id);
+      if (existing && existing.length > 0) {
+        toast({
+          title: "Username taken",
+          description: "Please choose a different username.",
+          variant: "destructive",
+        });
+        setUsernameError("Username already taken");
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       // Custom school value
       let schoolValue = formData.school;
@@ -279,6 +336,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === "username") setUsernameError("");
   };
 
   return (
@@ -289,8 +347,17 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           Complete your profile to start helping others
         </p>
       </div>
+
+      {/* --- Enhancement: Completion meter --- */}
+      <div className="mb-4 flex items-center gap-2">
+        <span className="font-semibold">Profile Completion:</span>
+        <span>{completion}%</span>
+        <div className="w-32 h-2 bg-gray-200 rounded">
+          <div className="h-2 bg-blue-500 rounded" style={{ width: `${completion}%` }} />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
-        {/* ...other profile fields... */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-sm lg:text-base">
@@ -310,13 +377,14 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-2">
-                <Label htmlFor="avatar_url">Profile Image URL</Label>
+                <Label htmlFor="avatar_url">Profile Image URL <span className="text-red-500">*</span></Label>
                 <Input
                   id="avatar_url"
                   type="url"
                   value={formData.avatar_url}
                   onChange={(e) => handleInputChange('avatar_url', e.target.value)}
                   placeholder="https://example.com/your-photo.jpg"
+                  required
                 />
                 <input
                   ref={fileInputRef}
@@ -325,9 +393,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                   onChange={handleFileUpload}
                   className="hidden"
                 />
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
@@ -340,9 +408,54 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           </CardContent>
         </Card>
 
-        {/* ...Basic Information, Professional Background, Role... */}
+        {/* Basic Information */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Information</CardTitle>
+            <CardDescription>
+              Tell us about yourself
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="display_name">Display Name <span className="text-red-500">*</span></Label>
+                <Input
+                  id="display_name"
+                  value={formData.display_name}
+                  onChange={(e) => handleInputChange('display_name', e.target.value)}
+                  placeholder="Your full name"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username <span className="text-red-500">*</span></Label>
+                <Input
+                  id="username"
+                  value={formData.username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  placeholder="Choose a unique username"
+                  required
+                />
+                {usernameError && (
+                  <div className="text-red-500 text-xs mt-1">{usernameError}</div>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bio">About / Bio <span className="text-red-500">*</span></Label>
+              <Textarea
+                id="bio"
+                value={formData.bio}
+                onChange={(e) => handleInputChange('bio', e.target.value)}
+                placeholder="Tell us about your experience, background, and what you offer."
+                required
+              />
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* School/College */}
+        {/* Professional Background, Role */}
         <Card>
           <CardHeader>
             <CardTitle>Professional Background</CardTitle>
@@ -385,8 +498,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     </Button>
                   </div>
                 ) : (
-                  <Select 
-                    value={formData.school} 
+                  <Select
+                    value={formData.school}
                     onValueChange={(value) => {
                       if (value === "add-new") {
                         setShowCustomSchool(true);
@@ -448,8 +561,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     </Button>
                   </div>
                 ) : (
-                  <Select 
-                    value={formData.role} 
+                  <Select
+                    value={formData.role}
                     onValueChange={(value) => {
                       if (value === "add-new") {
                         setShowCustomRole(true);
@@ -566,12 +679,13 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
             {/* Skills */}
             <div className="space-y-2">
-              <Label htmlFor="skills">Tags/Skills</Label>
+              <Label htmlFor="skills">Tags/Skills <span className="text-red-500">*</span></Label>
               <Input
                 id="skills"
                 value={formData.skills}
                 onChange={(e) => handleInputChange('skills', e.target.value)}
                 placeholder="UI/UX, JavaScript, Product Strategy, etc. (comma-separated)"
+                required
               />
               <p className="text-xs text-muted-foreground">
                 Separate multiple skills with commas
