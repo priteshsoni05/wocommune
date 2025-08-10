@@ -124,7 +124,7 @@ const Home: React.FC = () => {
             style={{
               fontSize: "22px",
               fontFamily: "'Source Sans Pro', sans-serif",
-              color: "#FFFFF",
+              color: "#FFFFFF",
             }}
             className="max-w-3xl"
           >
