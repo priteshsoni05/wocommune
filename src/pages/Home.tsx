@@ -1,3 +1,4 @@
+// Home.tsx
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/nicolas-lobos-b5VHELeW4Qw-unsplash.jpg";
@@ -5,15 +6,23 @@ import heroHelp from "@/assets/hero-helpanion.jpg";
 import heroSketch from "@/assets/hero-sketch.jpg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { HelpanionFooter } from "@/components/helpanion/HelpanionFooter";
 import { Menu } from "lucide-react";
 
 const Home: React.FC = () => {
   useEffect(() => {
     document.title = "Walker's Odyssey – Your trusted companion";
-    const desc = "Connecting you with guidance, community, and inspiration to walk your path with purpose.";
-    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    const desc =
+      "Connecting you with guidance, community, and inspiration to walk your path with purpose.";
+    let meta = document.querySelector(
+      'meta[name="description"]'
+    ) as HTMLMetaElement | null;
     if (!meta) {
       meta = document.createElement("meta");
       meta.name = "description";
@@ -21,7 +30,9 @@ const Home: React.FC = () => {
     }
     meta.content = desc;
 
-    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    let link = document.querySelector(
+      'link[rel="canonical"]'
+    ) as HTMLLinkElement | null;
     if (!link) {
       link = document.createElement("link");
       link.rel = "canonical";
@@ -29,22 +40,21 @@ const Home: React.FC = () => {
     }
     link.href = window.location.origin + "/";
 
-    // Prevent horizontal scroll gap (extra safety)
-    const prevOverflowX = document.documentElement.style.overflowX;
+    // Prevent horizontal scroll gap
     document.documentElement.style.overflowX = "hidden";
+    document.body.style.overflowX = "hidden";
     return () => {
-      // cleanup
-      document.documentElement.style.overflowX = prevOverflowX || "";
+      document.documentElement.style.overflowX = "";
+      document.body.style.overflowX = "";
     };
   }, []);
 
   return (
-    // added w-full and overflow-x-hidden to stop horizontal overflow/gap
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col snap-y snap-mandatory overflow-y-scroll overflow-x-hidden">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col snap-y snap-mandatory overflow-y-auto overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative h-screen snap-start w-full">
         <div
-          className="absolute inset-0 bg-cover bg-center w-full h-full max-w-full"
+          className="absolute inset-0 bg-cover bg-center w-full h-full"
           style={{ backgroundImage: `url(${heroImage})` }}
           aria-hidden="true"
         />
@@ -69,13 +79,13 @@ const Home: React.FC = () => {
                   align="end"
                   className="min-w-48 z-50 bg-transparent backdrop-blur-sm border-none shadow-none"
                 >
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="bg-transparent">
                     <Link to="/about">About</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="bg-transparent">
                     <Link to="/get-help">Commune</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="bg-transparent">
                     <a href="#">Shop</a>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -86,7 +96,7 @@ const Home: React.FC = () => {
               className="tracking-widest font-bold"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "24px", // reduced by 25%
+                fontSize: "24px", // 25% smaller than original
                 color: "#636363",
               }}
             >
@@ -107,23 +117,27 @@ const Home: React.FC = () => {
           >
             Your trusted companion for every step
           </h2>
-
           <div className="w-12 border-t-2 border-black my-2" />
-
           <p
             style={{
               fontSize: "24px",
               fontFamily: "'Source Sans Pro', sans-serif",
               color: "#000000",
             }}
-            className="max-w-3xl max-w-full"
+            className="max-w-3xl"
           >
-            Connecting you with guidance, community, and inspiration to walk your path with purpose.
+            Connecting you with guidance, community, and inspiration to walk your
+            path with purpose.
           </p>
         </div>
 
         <div className="absolute right-4 bottom-4 z-20">
-          <Button asChild variant="ghost" size="sm" className="px-0 bg-transparent hover:bg-transparent">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="px-0 bg-transparent hover:bg-transparent"
+          >
             <Link to="/about">Know us</Link>
           </Button>
         </div>
@@ -133,15 +147,21 @@ const Home: React.FC = () => {
       <main className="snap-start w-full">
         <section className="container mx-auto py-8 space-y-6">
           <h2 className="text-muted-foreground">wo commune</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:h-[calc(100vh-200px)]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-[calc(100vh-180px)]">
             <Link to="#" className="group">
               <Card className="h-full aspect-[4/3] overflow-hidden transition-shadow group-hover:shadow-md">
-                <div className="relative h-full w-full max-w-full">
-                  <img src={heroSketch} alt="Join Events" className="absolute inset-0 h-full w-full object-cover max-w-full" />
+                <div className="relative h-full w-full">
+                  <img
+                    src={heroSketch}
+                    alt="Join Events"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">Join Events</h3>
-                    <span className="text-muted-foreground">Network and grow</span>
+                    <span className="text-muted-foreground">
+                      Network and grow
+                    </span>
                   </div>
                 </div>
               </Card>
@@ -149,11 +169,17 @@ const Home: React.FC = () => {
 
             <Link to="/get-help" className="group">
               <Card className="h-full aspect-[4/3] overflow-hidden border-primary/40 hover:border-primary transition-colors">
-                <div className="relative h-full w-full max-w-full">
-                  <img src={heroHelp} alt="Get Help, Meet Your Helpanion" className="absolute inset-0 h-full w-full object-cover max-w-full" />
+                <div className="relative h-full w-full">
+                  <img
+                    src={heroHelp}
+                    alt="Get Help, Meet Your Helpanion"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
-                    <h3 className="text-xl font-semibold">Get Help, Meet Your Helpanion</h3>
+                    <h3 className="text-xl font-semibold">
+                      Get Help, Meet Your Helpanion
+                    </h3>
                     <span className="text-muted-foreground">Seek help</span>
                   </div>
                 </div>
@@ -165,11 +191,15 @@ const Home: React.FC = () => {
         {/* Shop */}
         <section className="container mx-auto pb-16 space-y-6 snap-start w-full">
           <h2 className="text-muted-foreground">Shop</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:h-[calc(100vh-200px)]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-[calc(100vh-180px)]">
             <a href="#" className="group">
               <Card className="h-full aspect-[4/3] overflow-hidden transition-shadow group-hover:shadow-md">
-                <div className="relative h-full w-full max-w-full">
-                  <img src={heroHelp} alt="Walkmate" className="absolute inset-0 h-full w-full object-cover max-w-full" />
+                <div className="relative h-full w-full">
+                  <img
+                    src={heroHelp}
+                    alt="Walkmate"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">Walkmate</h3>
@@ -179,16 +209,27 @@ const Home: React.FC = () => {
             </a>
 
             <a href="#" className="group">
-              <Card className="h-full aspect-[4/3] overflow-hidden w-full max-w-full">
+              <Card className="h-full aspect-[4/3] overflow-hidden">
                 <div className="relative h-full w-full">
-                  <img src={heroSketch} alt="WO Commune Planner" className="absolute inset-0 h-full w-full object-cover max-w-full" />
+                  <img
+                    src={heroSketch}
+                    alt="WO Commune Planner"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">
-                      The planner you’re looking for has finally arrived at WO Commune
+                      The planner you’re looking for has finally arrived at WO
+                      Commune
                     </h3>
                     <div>
-                      <Button variant="ghost" size="sm" className="px-3 bg-transparent hover:bg-transparent">Shop Now</Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="px-3 bg-transparent hover:bg-transparent"
+                      >
+                        Shop Now
+                      </Button>
                     </div>
                   </div>
                 </div>
