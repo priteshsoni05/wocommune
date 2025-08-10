@@ -11,6 +11,8 @@ import HelpanionsDirectory from "./pages/HelpanionsDirectory";
 import WalkerDashboard from "./pages/WalkerDashboard";
 import HelpanionDashboard from "./pages/HelpanionDashboard";
 import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +24,9 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Helpanion />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/get-help" element={<Helpanion />} />
             <Route path="/helpanion" element={<Helpanion />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanions" element={<HelpanionsDirectory />} />

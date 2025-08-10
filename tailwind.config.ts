@@ -21,6 +21,8 @@ export default {
 			fontFamily: {
 				'futura': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
 				'futura-bold': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
+				body: ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+				brand: ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
