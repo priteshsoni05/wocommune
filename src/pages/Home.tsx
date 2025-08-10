@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/WO-Image.png";
+import heroImage from "@/assets/WO-Image";
 import getHelpImage from "@/assets/Get help Image.751Z.png";
 import walkmatePlanner from "@/assets/Walkmate.696Z.png";
 import heroSketch from "@/assets/Brunch.416Z.png";
