@@ -39,7 +39,6 @@ const Home: React.FC = () => {
     }
     link.href = window.location.origin + "/";
 
-    // Prevent horizontal scroll gap
     document.documentElement.style.overflowX = "hidden";
     return () => {
       document.documentElement.style.overflowX = "";
@@ -93,7 +92,7 @@ const Home: React.FC = () => {
               className="tracking-widest font-bold"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "22px", // slightly smaller for better balance
+                fontSize: "22px",
                 color: "#636363",
               }}
             >
@@ -147,7 +146,7 @@ const Home: React.FC = () => {
           <h2 className="text-muted-foreground">wo commune</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[2px] md:h-[calc(100vh-250px)]">
             <Link to="#" className="group">
-              <Card className="h-full aspect-[4/5] overflow-hidden transition-shadow group-hover:shadow-md">
+              <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img
                     src={heroSketch}
@@ -164,7 +163,7 @@ const Home: React.FC = () => {
             </Link>
 
             <Link to="/get-help" className="group">
-              <Card className="h-full aspect-[4/5] overflow-hidden border-primary/40 hover:border-primary transition-colors">
+              <Card className="h-full overflow-hidden border-primary/40 hover:border-primary transition-colors">
                 <div className="relative h-full w-full">
                   <img
                     src={heroHelp}
@@ -189,7 +188,7 @@ const Home: React.FC = () => {
           <h2 className="text-muted-foreground">Shop</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[2px] md:h-[calc(100vh-250px)]">
             <a href="#" className="group">
-              <Card className="h-full aspect-[4/5] overflow-hidden transition-shadow group-hover:shadow-md">
+              <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img
                     src={heroHelp}
@@ -205,7 +204,7 @@ const Home: React.FC = () => {
             </a>
 
             <a href="#" className="group">
-              <Card className="h-full aspect-[4/5] overflow-hidden">
+              <Card className="h-full overflow-hidden">
                 <div className="relative h-full w-full">
                   <img
                     src={heroSketch}
