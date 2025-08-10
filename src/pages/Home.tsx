@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-
-// ✅ Updated imports with new image file names
 import heroImage from "@/assets/WalkersOdysseyHero.png";
 import getHelpImage from "@/assets/GetHelpImage.png";
 import walkmatePlanner from "@/assets/WalkmatePlanner.png";
