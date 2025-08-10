@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/Walker's Odyssey Image, Hero Section 2.248Z";
-import gethelpimage from "@/assets/Get help Image.751Z.png";
-import walkmateplanner from "@/assets/Walkmate.696Z.png";
-import heroSketch from "@/assets/Brunch.416Z.png";
+
+// ✅ Updated imports with new image file names
+import heroImage from "@/assets/WalkersOdysseyHero.png";
+import getHelpImage from "@/assets/GetHelpImage.png";
+import walkmatePlanner from "@/assets/WalkmatePlanner.png";
+import heroSketch from "@/assets/BrunchSketch.png";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -49,10 +52,14 @@ const Home: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex-shrink-0">
+      <section className="relative h-screen w-full flex-shrink-0 overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          className="absolute inset-0 bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            backgroundSize: "contain", // ✅ shows full image without cropping
+            backgroundColor: "#ffffff", // fill gaps with white if image doesn't cover
+          }}
           aria-hidden="true"
         />
         <div className="absolute inset-0 bg-background/60" />
@@ -167,7 +174,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden border-primary/40 hover:border-primary transition-colors">
                 <div className="relative h-full w-full">
                   <img
-                    src={gethelpimage}
+                    src={getHelpImage}
                     alt="Get Help, Meet Your Helpanion"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -192,7 +199,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img
-                    src={walkmateplanner}
+                    src={walkmatePlanner}
                     alt="Walkmate"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -208,7 +215,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden">
                 <div className="relative h-full w-full">
                   <img
-                    src={walkmateplanner}
+                    src={walkmatePlanner}
                     alt="WO Commune Planner"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
