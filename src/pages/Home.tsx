@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/nicolas-lobos-b5VHELeW4Qw-unsplash.jpg";
-import heroHelp from "@/assets/hero-helpanion.jpg";
-import heroSketch from "@/assets/hero-sketch.jpg";
+import heroImage from "@/assets/Walker's Odyssey Image, Hero Section 2.248Z";
+import gethelpimage from "@/assets/Get help Image.751Z.png";
+import walkmateplanner from "@/assets/Walkmate.696Z.png";
+import heroSketch from "@/assets/Brunch.416Z.png";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -166,7 +167,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden border-primary/40 hover:border-primary transition-colors">
                 <div className="relative h-full w-full">
                   <img
-                    src={heroHelp}
+                    src={gethelpimage}
                     alt="Get Help, Meet Your Helpanion"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -191,7 +192,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img
-                    src={heroHelp}
+                    src={walkmateplanner}
                     alt="Walkmate"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
@@ -207,7 +208,7 @@ const Home: React.FC = () => {
               <Card className="h-full overflow-hidden">
                 <div className="relative h-full w-full">
                   <img
-                    src={heroSketch}
+                    src={walkmateplanner}
                     alt="WO Commune Planner"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
