@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/woimg.png";
-import getHelpImage from "@/assets/Get help Image.751Z.png";
+import getHelpImage from "@/assets/Ghimg.png";
 import walkmatePlanner from "@/assets/Walkmate.696Z.png";
 import heroSketch from "@/assets/Brunch.416Z.png";
 
@@ -49,62 +49,61 @@ const Home: React.FC = () => {
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
+      {/* Header Bar */}
+      <header className="w-full bg-white flex items-center justify-between px-4 py-2 border-b border-gray-200 fixed top-0 left-0 z-50">
+        {/* Logo / Title */}
+        <Link
+          to="/"
+          className="tracking-widest font-bold"
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "20px",
+            color: "#333333",
+          }}
+        >
+          WALKER'S ODYSSEY
+        </Link>
+
+        {/* Burger Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Open menu"
+              className="bg-transparent hover:bg-gray-100 rounded-full"
+            >
+              <Menu className="h-5 w-5 text-gray-700" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="min-w-48 z-50 bg-white border border-gray-200 shadow-lg"
+          >
+            <DropdownMenuItem asChild>
+              <Link to="/about">About</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/get-help">Commune</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a href="#">Shop</a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex-shrink-0 overflow-hidden">
+      <section className="relative h-screen w-full flex-shrink-0 overflow-hidden pt-[56px]">
         <div
           className="absolute inset-0 bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${heroImage})`,
-            backgroundSize: "cover", // Full stretch
+            backgroundSize: "cover",
             backgroundColor: "#ffffff",
           }}
           aria-hidden="true"
         />
-
-        {/* Header */}
-        <div className="absolute top-0 left-0 w-full z-20">
-          <div className="container mx-auto py-4 flex items-center justify-center relative">
-            <div className="absolute right-4">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Open menu"
-                    className="bg-transparent hover:bg-transparent focus-visible:bg-transparent"
-                  >
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="min-w-48 z-50 bg-transparent backdrop-blur-sm border-none shadow-none"
-                >
-                  <DropdownMenuItem asChild>
-                    <Link to="/about">About</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/get-help">Commune</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="#">Shop</a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <Link
-              to="/"
-              className="tracking-widest font-bold"
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "22px",
-                color: "#636363",
-              }}
-            >
-              WALKER'S ODYSSEY
-            </Link>
-          </div>
-        </div>
 
         {/* Hero Copy */}
         <div className="relative z-10 h-full container mx-auto flex flex-col items-center justify-center text-center gap-4 px-4">
