@@ -55,12 +55,11 @@ const Home: React.FC = () => {
           className="absolute inset-0 bg-center bg-no-repeat"
           style={{
             backgroundImage: `url(${heroImage})`,
-            backgroundSize: "contain", // ✅ shows full image without cropping
-            backgroundColor: "#ffffff", // fill gaps with white if image doesn't cover
+            backgroundSize: "cover", // Full stretch
+            backgroundColor: "#ffffff",
           }}
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-background/60" />
 
         {/* Header */}
         <div className="absolute top-0 left-0 w-full z-20">
@@ -159,7 +158,6 @@ const Home: React.FC = () => {
                     alt="Join Events"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">Join Events</h3>
                     <span className="text-muted-foreground">Network and grow</span>
@@ -176,7 +174,6 @@ const Home: React.FC = () => {
                     alt="Get Help, Meet Your Helpanion"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">
                       Get Help, Meet Your Helpanion
@@ -201,7 +198,6 @@ const Home: React.FC = () => {
                     alt="Walkmate"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">Walkmate</h3>
                   </div>
@@ -217,7 +213,6 @@ const Home: React.FC = () => {
                     alt="WO Commune Planner"
                     className="absolute inset-0 h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-background/40" />
                   <div className="relative p-4 flex flex-col justify-between h-full">
                     <h3 className="text-xl font-semibold">
                       The planner you’re looking for has finally arrived at WO Commune
