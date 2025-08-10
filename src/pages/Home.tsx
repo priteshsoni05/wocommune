@@ -71,7 +71,7 @@ const Home: React.FC = () => {
 
         {/* Hero copy */}
         <div className="relative z-10 h-full container mx-auto flex flex-col items-center justify-center text-center gap-4">
-          <h1>Your trusted companion for every step</h1>
+          <h2>Your trusted companion for every step</h2>
           <p className="max-w-2xl text-muted-foreground">
             Connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
