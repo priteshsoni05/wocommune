@@ -111,7 +111,7 @@ const Home: React.FC = () => {
             style={{
               fontSize: "48px",
               fontFamily: "'Source Sans Pro', sans-serif",
-              color: "#000000",
+              color: "#FFFFFF",
             }}
             className="max-w-full"
           >
@@ -124,11 +124,11 @@ const Home: React.FC = () => {
             style={{
               fontSize: "22px",
               fontFamily: "'Source Sans Pro', sans-serif",
-              color: "#000000",
+              color: "#FFFFF",
             }}
             className="max-w-3xl"
           >
-            Connecting you with guidance, community, and inspiration to walk your path with purpose.
+            connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
         </div>
 
