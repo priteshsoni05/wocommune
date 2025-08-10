@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/Walker's Odyssey Image, Hero Section.774Z.png";
-import getHelpImage from "@/assets/GetHelpImage.png";
-import walkmatePlanner from "@/assets/Get help Image.751Z.png";
+import getHelpImage from "@/assets/Get help Image.751Z.png";
+import walkmatePlanner from "@/assets/Walkmate.696Z.png";
 import heroSketch from "@/assets/Brunch.416Z.png";
 
 import { Button } from "@/components/ui/button";
