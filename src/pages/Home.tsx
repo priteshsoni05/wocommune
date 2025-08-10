@@ -74,7 +74,7 @@ const Home: React.FC = () => {
               className="tracking-widest font-bold"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "40px",
+                fontSize: "32px", // reduced from 40px
                 color: "#636363",
               }}
             >
@@ -88,7 +88,7 @@ const Home: React.FC = () => {
           <h2
             style={{
               fontSize: "50px",
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'Source Sans Pro', sans-serif", // changed font
               color: "#000000",
             }}
           >
@@ -97,8 +97,8 @@ const Home: React.FC = () => {
           <div className="w-12 border-t-2 border-black my-2"></div>
           <p
             style={{
-              fontSize: "35px",
-              fontFamily: "'Cormorant Garamond', serif",
+              fontSize: "24px",
+              fontFamily: "'Source Sans Pro', sans-serif", // changed font
               color: "#000000",
             }}
             className="max-w-3xl"
