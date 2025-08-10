@@ -56,7 +56,10 @@ const Home: React.FC = () => {
                     <Menu className="h-5 w-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="min-w-48 z-50 bg-background">
+                <DropdownMenuContent
+                  align="end"
+                  className="min-w-48 z-50 bg-transparent backdrop-blur-sm border-none shadow-none"
+                >
                   <DropdownMenuItem asChild>
                     <Link to="/about">About</Link>
                   </DropdownMenuItem>
@@ -74,7 +77,7 @@ const Home: React.FC = () => {
               className="tracking-widest font-bold"
               style={{
                 fontFamily: "'Cormorant Garamond', serif",
-                fontSize: "32px", // reduced from 40px
+                fontSize: "24px", // reduced by 25% from 32px
                 color: "#636363",
               }}
             >
@@ -88,7 +91,7 @@ const Home: React.FC = () => {
           <h2
             style={{
               fontSize: "50px",
-              fontFamily: "'Source Sans Pro', sans-serif", // changed font
+              fontFamily: "'Source Sans Pro', sans-serif",
               color: "#000000",
             }}
           >
@@ -98,7 +101,7 @@ const Home: React.FC = () => {
           <p
             style={{
               fontSize: "24px",
-              fontFamily: "'Source Sans Pro', sans-serif", // changed font
+              fontFamily: "'Source Sans Pro', sans-serif",
               color: "#000000",
             }}
             className="max-w-3xl"
@@ -121,11 +124,11 @@ const Home: React.FC = () => {
 
       {/* WO Commune */}
       <main className="snap-start">
-        <section className="container mx-auto py-12 space-y-6">
+        <section className="container mx-auto py-8 space-y-6">
           <h2 className="text-muted-foreground">wo commune</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:h-[calc(100vh-200px)]">
             <Link to="#" className="group">
-              <Card className="aspect-[4/5] overflow-hidden transition-shadow group-hover:shadow-md">
+              <Card className="h-full aspect-[4/3] overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img src={heroSketch} alt="Join Events" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-background/40" />
@@ -138,7 +141,7 @@ const Home: React.FC = () => {
             </Link>
 
             <Link to="/get-help" className="group">
-              <Card className="aspect-[4/5] overflow-hidden border-primary/40 hover:border-primary transition-colors">
+              <Card className="h-full aspect-[4/3] overflow-hidden border-primary/40 hover:border-primary transition-colors">
                 <div className="relative h-full w-full">
                   <img src={heroHelp} alt="Get Help, Meet Your Helpanion" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-background/40" />
@@ -155,9 +158,9 @@ const Home: React.FC = () => {
         {/* Shop */}
         <section className="container mx-auto pb-16 space-y-6 snap-start">
           <h2 className="text-muted-foreground">Shop</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:h-[calc(100vh-200px)]">
             <a href="#" className="group">
-              <Card className="aspect-[4/5] overflow-hidden transition-shadow group-hover:shadow-md">
+              <Card className="h-full aspect-[4/3] overflow-hidden transition-shadow group-hover:shadow-md">
                 <div className="relative h-full w-full">
                   <img src={heroHelp} alt="Walkmate" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-background/40" />
@@ -169,7 +172,7 @@ const Home: React.FC = () => {
             </a>
 
             <a href="#" className="group">
-              <Card className="aspect-[4/5] overflow-hidden">
+              <Card className="h-full aspect-[4/3] overflow-hidden">
                 <div className="relative h-full w-full">
                   <img src={heroSketch} alt="WO Commune Planner" className="absolute inset-0 h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-background/40" />
