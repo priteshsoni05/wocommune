@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
                 <Link to="/get-help" className="hover:underline">Commune</Link>
               </li>
               <li>
-                <Link to="/shop" className="hidden md:inline hover:underline">Shop</Link>
+                <Link to="#" className="hidden md:inline hover:underline">Shop</Link>
               </li>
             </ul>
           </nav>
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
               Start Your Journey
             </Link>
             <Link
-              to="/commune"
+              to="/get-help"
               className="inline-block px-5 py-2 rounded-md font-medium border border-white/60 text-white bg-white/10 hover:bg-white/20"
             >
               Join the Community
@@ -125,7 +125,7 @@ const HomePage: React.FC = () => {
               or navigating an unfamiliar path, we’re here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.
             </p>
-            <Link to="/our-story" className="inline-flex items-center gap-2 text-sm font-medium text-[#444] hover:underline">
+            <Link to="/about" className="inline-flex items-center gap-2 text-sm font-medium text-[#444] hover:underline">
               Our Story →
             </Link>
           </div>
@@ -228,7 +228,7 @@ const HomePage: React.FC = () => {
               Short takes and stories about walking, learning, and the tiny steps that shape a life.
             </p>
             <div className="mt-4">
-              <Link to="/stories" className="text-sm font-medium" style={{ color: PINE }}>
+              <Link to="/about" className="text-sm font-medium" style={{ color: PINE }}>
                 Our Story →
               </Link>
             </div>
@@ -280,8 +280,8 @@ const HomePage: React.FC = () => {
               <h6 className="font-semibold mb-3">Brand</h6>
               <ul className="space-y-3 text-sm text-gray-700">
                 <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="/brand-story" className="hover:underline">Brand Story</Link></li>
-                <li><Link to="/vision" className="hover:underline">Vision</Link></li>
+                <li><Link to="#" className="hover:underline">Brand Story</Link></li>
+                <li><Link to="#" className="hover:underline">Vision</Link></li>
                 <li><Link to="/about" className="hover:underline">About</Link></li>
               </ul>
             </div>
@@ -290,10 +290,10 @@ const HomePage: React.FC = () => {
             <div>
               <h6 className="font-semibold mb-3">Commune</h6>
               <ul className="space-y-3 text-sm text-gray-700">
-                <li><Link to="/know-commune" className="hover:underline">Know Commune</Link></li>
-                <li><Link to="/join-commune" className="hover:underline">Join Commune</Link></li>
-                <li><Link to="/become-helpanion" className="hover:underline">Become a Helpanion</Link></li>
-                <li><Link to="/community-guidelines" className="hover:underline">Community Guidelines</Link></li>
+                <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
+                <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
+                <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
+                <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
               </ul>
             </div>
 
@@ -302,7 +302,7 @@ const HomePage: React.FC = () => {
               <h6 className="font-semibold mb-3">Get in touch</h6>
               <ul className="space-y-3 text-sm text-gray-700">
                 <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-                <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
+                <li><Link to="#" className="hover:underline">Contact Us</Link></li>
                 <li><a href="#" className="hover:underline">LinkedIn</a></li>
                 <li><a href="#" className="hover:underline">Instagram</a></li>
               </ul>
