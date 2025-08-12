@@ -93,10 +93,10 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
       if (userId) {
         // create profiles row (if you use separate table)
         await supabase.from("profiles").upsert({
-          id: userId,
-          name,
-          username,
-          role: selectedRole,
+          user_id: userId,
+          display_name: name,
+          email,
+          last_active_role: selectedRole,
         });
       }
 

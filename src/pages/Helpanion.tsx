@@ -30,116 +30,75 @@ export default function WOCommunePage(): JSX.Element {
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
       {/* ===== Main header remains unchanged (from your site) ===== */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="text-[18px] md:text-[20px] font-semibold tracking-widest"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#222" }}
+            className="text-[20px] font-semibold tracking-widest"
+            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+            aria-label="Walker’s Odyssey home"
           >
             WALKER'S ODYSSEY
           </Link>
 
-          {/* Right: Auth + Mobile menu toggle */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="text-sm px-4 py-1 rounded-md font-medium"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Sign Up
-            </button>
-            <button
-              className="lg:hidden ml-1"
-              onClick={() => setMobileMenuOpen((s) => !s)}
-              aria-label="Open menu"
-            >
-              {mobileMenuOpen ? <X /> : <MenuIcon />}
-            </button>
-          </div>
+          {/* Right side / simple menu */}
+          <nav className="text-sm">
+            <ul className="flex items-center gap-4">
+              <li>
+                <Link to="/about" className="hover:underline">About</Link>
+              </li>
+              <li>
+                <Link to="/get-help" className="hover:underline">Commune</Link>
+              </li>
+              <li>
+                <Link to="#" className="hidden md:inline hover:underline">Shop</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </header>
 
-      {/* Spacer for fixed header */}
       <div className="h-16" />
 
       {/* ===== Sub-header for WOCommune ===== */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
-          {/* Left: WO Commune */}
-          <Link to="/wocommune" className="font-semibold text-gray-800">
-            WO COMMUNE
-          </Link>
-
-          {/* Center: Get Help + Search */}
-          <div className="flex items-center gap-6">
-            {/* Get Help with mega menu */}
-            <div
-              className="relative"
-              onMouseEnter={() => setMegaMenuOpen(true)}
-              onMouseLeave={() => setMegaMenuOpen(false)}
+          {/* Left: WO COMMUNE + Get Help button */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/get-help"
+              className="font-semibold tracking-widest text-[15px]"
+              style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
             >
-              <button
-                className="bg-green-700 text-white px-4 py-1.5 rounded hover:bg-green-800 transition"
-              >
-                Get Help
-              </button>
+              WO COMMUNE
+            </Link>
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="inline-block px-5 py-2 rounded-md font-semibold"
+              style={{ backgroundColor: PINE, color: "#fff" }}
+            >
+              Get Help
+            </button>
+          </div>
 
-              {megaMenuOpen && (
-                <div className="absolute left-0 mt-2 w-[600px] bg-white shadow-lg rounded-lg p-4 grid grid-cols-3 gap-4 z-50">
-                  <div>
-                    <h4 className="font-semibold text-sm mb-2">By College Life</h4>
-                    <ul className="space-y-1 text-sm text-gray-600">
-                      <li>Freshers</li>
-                      <li>Final Years</li>
-                      <li>Campus Leaders</li>
-                      <li>Alumni Networking</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm mb-2">By Profession</h4>
-                    <ul className="space-y-1 text-sm text-gray-600">
-                      <li>Early Career</li>
-                      <li>Mid-Career</li>
-                      <li>Freelancers</li>
-                      <li>Career Switchers</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm mb-2">Events & Meetups</h4>
-                    <ul className="space-y-1 text-sm text-gray-600">
-                      <li>Run Club</li>
-                      <li>Expert Sessions</li>
-                      <li>Movie Screenings</li>
-                      <li>Networking Dinners</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Search */}
-            <div className="relative hidden md:block">
+          {/* Center: Search */}
+          <div className="flex-1 hidden md:flex items-center justify-center">
+            <div className="relative w-full max-w-md">
               <input
                 type="text"
                 placeholder="Search events, help topics or podcasts..."
-                className="w-72 pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
+                className="w-full pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
               />
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
           </div>
 
-          {/* Right: Auth */}
+          {/* Right: Login / Sign Up */}
           <button
             onClick={() => setAuthOpen(true)}
-            className="bg-green-700 text-white px-4 py-1.5 rounded hover:bg-green-800 transition"
+            className="inline-block px-5 py-2 rounded-md font-semibold"
+            style={{ backgroundColor: PINE, color: "#fff" }}
           >
             Login / Sign Up
           </button>
