@@ -1,154 +1,180 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/contexts/AuthContext";
-import { useUserRoles } from "@/hooks/useUserRoles";
-import { useProfile } from "@/hooks/useProfile";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { LogIn, Mail } from "lucide-react";
+import React, { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { X } from "lucide-react";
 
-interface AuthModalProps {
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL!,
+  import.meta.env.VITE_SUPABASE_ANON_KEY!
+);
+
+const PINE = "#01796F";
+
+export default function AuthModal({
+  open,
+  onOpenChange,
+  role,
+}: {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultRole?: "walker" | "helpanion";
-}
+  onOpenChange: (o: boolean) => void;
+  role?: "walker" | "helpanion" | null;
+}) {
+  const [tab, setTab] = useState<"signup" | "login">("signup");
+  const [selectedRole, setSelectedRole] = useState(role || "walker");
+  const [form, setForm] = useState({ name: "", username: "", email: "", password: "" });
 
-export default function AuthModal({ open, onOpenChange, defaultRole = "walker" }: AuthModalProps) {
-  const [mode, setMode] = useState<"login" | "signup">("login");
-  const [role, setRole] = useState<"walker" | "helpanion">(defaultRole);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { signUp, signIn } = useAuth();
-  const { addRole } = useUserRoles();
-  const { updateProfile } = useProfile();
-  const { toast } = useToast();
-
-  const handleEmailAuth = async () => {
-    setLoading(true);
-    try {
-      if (mode === "login") {
-        const { error } = await signIn(email, password);
-        if (error) throw error;
-        toast({ title: "Welcome back!", description: `Logged in as ${role}` });
-      } else {
-        const { error } = await signUp(email, password, fullName);
-        if (error) throw error;
-
-        await addRole(role);
-
-        if (role === "helpanion" && username) {
-          await updateProfile({ username, last_active_role: "helpanion" });
-        } else {
-          await updateProfile({ last_active_role: "walker" });
-        }
-
-        toast({
-          title: "Verify your email",
-          description: "We've sent you a confirmation link to activate your account."
-        });
-      }
-      onOpenChange(false);
-    } catch (err: any) {
-      toast({ variant: "destructive", title: "Error", description: err.message });
-    } finally {
-      setLoading(false);
-    }
+  const handleOAuth = async (provider: "google" | "linkedin") => {
+    await supabase.auth.signInWithOAuth({ provider });
   };
 
-  const handleOAuth = async (provider: "google" | "linkedin_oidc") => {
-    setLoading(true);
-    try {
-      const redirectPath = role === "helpanion" ? "/helpanion-dashboard" : "/walker-dashboard";
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: { redirectTo: `${window.location.origin}${redirectPath}` }
+  const handleSubmit = async () => {
+    if (tab === "signup") {
+      const { error } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+        options: {
+          data: {
+            name: form.name,
+            username: form.username,
+            role: selectedRole,
+          },
+        },
       });
-      if (error) throw error;
-    } catch (err: any) {
-      toast({ variant: "destructive", title: "Error", description: err.message });
-    } finally {
-      setLoading(false);
+      if (error) alert(error.message);
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password,
+      });
+      if (error) alert(error.message);
     }
   };
+
+  if (!open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{mode === "login" ? "Sign In" : "Create Account"}</DialogTitle>
-          <DialogDescription>
-            {mode === "login" ? "Access your WOCommune account" : "Join the WOCommune community"}
-          </DialogDescription>
-        </DialogHeader>
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-md rounded-lg shadow-lg relative">
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute top-3 right-3 text-gray-500"
+        >
+          <X size={20} />
+        </button>
 
-        <Tabs value={mode} onValueChange={(v) => setMode(v as "login" | "signup")} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
+        {/* Tabs */}
+        <div className="flex border-b">
+          <button
+            className={`flex-1 py-2 text-sm font-medium ${
+              tab === "signup" ? "border-b-2 border-[var(--pine)]" : ""
+            }`}
+            onClick={() => setTab("signup")}
+          >
+            Join the Commune
+          </button>
+          <button
+            className={`flex-1 py-2 text-sm font-medium ${
+              tab === "login" ? "border-b-2 border-[var(--pine)]" : ""
+            }`}
+            onClick={() => setTab("login")}
+          >
+            Already a member
+          </button>
+        </div>
 
-          <TabsContent value="login" className="mt-4 space-y-4">
-            <Button variant="outline" className="w-full" onClick={() => handleOAuth("google")} disabled={loading}>
-              <Mail className="w-4 h-4 mr-2" /> Continue with Google
-            </Button>
-            <Button variant="outline" className="w-full" onClick={() => handleOAuth("linkedin_oidc")} disabled={loading}>
-              <LogIn className="w-4 h-4 mr-2" /> Continue with LinkedIn
-            </Button>
+        {/* Body */}
+        <div className="p-6 space-y-4">
+          {tab === "signup" && (
+            <>
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value as any)}
+                className="w-full border px-3 py-2 rounded-md text-sm"
+              >
+                <option value="walker">Join as a Walker</option>
+                <option value="helpanion">Join as a Helpanion</option>
+              </select>
+              <input
+                placeholder="Full Name"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+              <input
+                placeholder="Username"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+            </>
+          )}
 
-            <div className="relative">
-              <Separator className="w-full" />
-              <span className="absolute left-1/2 -top-3 bg-background px-2 text-xs transform -translate-x-1/2">
-                Or with Email
-              </span>
-            </div>
+          {tab === "login" && (
+            <>
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value as any)}
+                className="w-full border px-3 py-2 rounded-md text-sm"
+              >
+                <option value="walker">Login as Walker</option>
+                <option value="helpanion">Login as Helpanion</option>
+              </select>
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full border px-3 py-2 rounded-md text-sm"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
+            </>
+          )}
 
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Password</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
+          {/* Submit */}
+          <button
+            onClick={handleSubmit}
+            className="w-full py-2 rounded-md font-medium"
+            style={{ backgroundColor: PINE, color: "#fff" }}
+          >
+            {tab === "signup" ? "Sign Up" : "Login"}
+          </button>
 
-            <Button className="w-full bg-green-600 hover:bg-green-700" onClick={handleEmailAuth} disabled={loading}>
-              {loading ? "Please wait..." : "Sign In"}
-            </Button>
-          </TabsContent>
-
-          <TabsContent value="signup" className="mt-4 space-y-4">
-            <div className="space-y-2">
-              <Label>Full Name</Label>
-              <Input value={fullName} onChange={(e) => setFullName(e.target.value)} />
-            </div>
-            {role === "helpanion" && (
-              <div className="space-y-2">
-                <Label>Username</Label>
-                <Input value={username} onChange={(e) => setUsername(e.target.value)} />
-              </div>
-            )}
-            <div className="space-y-2">
-              <Label>Email</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Password</Label>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <Button className="w-full bg-green-600 hover:bg-green-700" onClick={handleEmailAuth} disabled={loading}>
-              {loading ? "Please wait..." : "Create Account"}
-            </Button>
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+          {/* OAuth */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handleOAuth("google")}
+              className="flex-1 border px-3 py-2 rounded-md text-sm"
+            >
+              Continue with Google
+            </button>
+            <button
+              onClick={() => handleOAuth("linkedin")}
+              className="flex-1 border px-3 py-2 rounded-md text-sm"
+            >
+              Continue with LinkedIn
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
