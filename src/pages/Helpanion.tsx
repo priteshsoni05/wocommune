@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Menu as MenuIcon, X, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import AuthModal from "./AuthModal";
+import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -12,20 +13,6 @@ const PINE = "#01796F";
 
 export default function WOCommunePage(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
-  const [mobileMegaOpen, setMobileMegaOpen] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const mobileMegaRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (mobileMegaRef.current && !mobileMegaRef.current.contains(e.target as Node)) {
-        setMobileMegaOpen(null);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
@@ -73,13 +60,7 @@ export default function WOCommunePage(): JSX.Element {
             >
               WO COMMUNE
             </Link>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Get Help
-            </button>
+            <GetHelpMegaMenu />
           </div>
 
           {/* Center: Search */}
@@ -304,100 +285,6 @@ export default function WOCommunePage(): JSX.Element {
   );
 }
 
-/* ================= Helper components ================= */
-
-// Desktop mega menu: hover-based multi-column dropdown
-function MegaMenuDesktop() {
-  const menuCols = [
-    {
-      title: "By College Life",
-      items: ["Freshers", "Final Years", "Campus Leaders", "Alumni Networking"],
-    },
-    {
-      title: "By Profession",
-      items: ["Early Career", "Mid-Career", "Freelancers", "Career Switchers"],
-    },
-    {
-      title: "Events & Meetups",
-      items: ["Run Club", "Expert Sessions", "Movie Screenings", "Networking Dinners"],
-    },
-    {
-      title: "Podcasts & Stories",
-      items: ["BYJM Podcast", "Beginner's Talk", "Member Stories"],
-    },
-    {
-      title: "Get Help",
-      items: ["Book 1:1", "Ask the Community", "Join as Helpanion"],
-    },
-  ];
-
-  return (
-    <div className="flex items-start gap-6">
-      {menuCols.map((col, idx) => (
-        <div key={col.title} className="group relative">
-          {/* Menu heading */}
-          <button className="text-sm font-medium flex items-center gap-1 hover:text-[var(--pine, #01796F)]">
-            {col.title} <ChevronRight size={14} />
-          </button>
-
-          {/* Dropdown panel (shows on hover via group-hover on desktop) */}
-          <div className="absolute left-0 top-full mt-3 hidden group-hover:block bg-white border rounded-md shadow-lg p-4 min-w-[220px] z-40">
-            <div className="grid gap-2">
-              {col.items.map((it) => (
-                <a key={it} href="#" className="text-sm text-gray-700 hover:text-gray-900">
-                  {it}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// Mobile mega menu item component
-function MobileMegaItem({
-  title,
-  id,
-  openKey,
-  setOpenKey,
-  children,
-}: {
-  title: string;
-  id: string;
-  openKey: string | null;
-  setOpenKey: (k: string | null) => void;
-  children: React.ReactNode;
-}) {
-  const isOpen = openKey === id;
-  return (
-    <div className="border-b border-gray-100 py-3">
-      <button
-        onClick={() => setOpenKey(isOpen ? null : id)}
-        className="w-full flex items-center justify-between text-left text-sm font-medium"
-      >
-        <span>{title}</span>
-        <ChevronRight className={`transform ${isOpen ? "rotate-90" : "rotate-0"}`} />
-      </button>
-      {isOpen && <div className="mt-3 pl-3">{children}</div>}
-    </div>
-  );
-}
-
-function MobileMegaList({ items }: { items: string[] }) {
-  return (
-    <ul className="space-y-2 text-sm">
-      {items.map((it) => (
-        <li key={it}>
-          <a href="#" className="text-gray-700 hover:underline">
-            {it}
-          </a>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 // Small tab button used above
 function TabButton({ children }: { children: React.ReactNode }) {
