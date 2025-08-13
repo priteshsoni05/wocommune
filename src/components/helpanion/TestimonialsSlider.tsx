@@ -69,18 +69,20 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-export function TestimonialsSlider() {
+export function TestimonialsSlider({ compact = false }: { compact?: boolean }) {
   return (
-    <section className="py-16 bg-muted/20">
+    <section className={compact ? "py-6 bg-muted/10 border-y" : "py-16 bg-muted/20"}>
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-futura-bold text-foreground mb-4">
-            Voices from our Community
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real experiences from seekers who found guidance through WO Commune
-          </p>
-        </div>
+        {!compact && (
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-futura-bold text-foreground mb-4">
+              Voices from our Community
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Real experiences from seekers who found guidance through WO Commune
+            </p>
+          </div>
+        )}
         
         <Carousel
           opts={{

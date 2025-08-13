@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Star, ShieldCheck, Users } from "lucide-react";
+import { Search } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
+import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
+import { FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -15,7 +17,15 @@ const PINE = "#01796F";
 export default function WOCommunePage(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
   const { helpanions, loading } = useHelpanions();
-  const featured = helpanions[0];
+  const topHelpanions = useMemo(() => {
+    const hasRating = helpanions.some((h: any) => (h as any).average_rating || (h as any).rating);
+    const sorted = [...helpanions].sort((a: any, b: any) => {
+      const ra = (a as any).average_rating ?? (a as any).rating ?? 0;
+      const rb = (b as any).average_rating ?? (b as any).rating ?? 0;
+      return hasRating ? rb - ra : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+    return sorted.slice(0, 3);
+  }, [helpanions]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
@@ -128,27 +138,14 @@ export default function WOCommunePage(): JSX.Element {
           </div>
         </div>
       </section>
-      {/* ===== Ratings strip and Featured Helpanion ===== */}
-      <section className="bg-white border-y border-gray-200">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex flex-wrap items-center gap-6 text-gray-700">
-              <div className="flex items-center gap-2">
-                {[0,1,2,3,4].map((i) => (
-                  <Star key={i} className="w-4 h-4 text-primary" />
-                ))}
-                <span className="text-sm">4.9 average rating</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" />
-                <span className="text-sm">500+ verified sessions</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-primary" />
-                <span className="text-sm">Community‑vetted Helpanions</span>
-              </div>
-            </div>
+      {/* ===== Reviews strip (carousel) ===== */}
+      <TestimonialsSlider compact />
 
+      {/* ===== Featured Helpanions (max 3) ===== */}
+      <section className="bg-white">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-10">
+          <FeaturedHelpanions helpanions={topHelpanions} loading={loading} />
+          <div className="text-center mt-8">
             <Link
               to="/helpanions"
               className="inline-block px-5 py-2 rounded-md font-semibold"
@@ -156,42 +153,6 @@ export default function WOCommunePage(): JSX.Element {
             >
               Explore all Helpanions
             </Link>
-          </div>
-
-          <div className="mt-6">
-            {loading ? (
-              <div className="h-24 rounded-md bg-gray-100 animate-pulse" />
-            ) : featured ? (
-              <div className="flex items-center gap-4 p-4 border rounded-md bg-[#F3F2EE]">
-                <img
-                  src={featured.avatar_url || HERO_IMG}
-                  alt={`${featured.display_name || "Helpanion"} avatar`}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <div className="font-semibold">{featured.display_name || "Featured Helpanion"}</div>
-                  <div className="text-sm text-gray-600 line-clamp-2">
-                    {featured.bio || "Experienced helpanion supporting walkers in their journey."}
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {featured.services?.slice(0, 2).map((s: any) => (
-                      <span key={s.id} className="text-xs px-2 py-0.5 rounded-full bg-white border">
-                        {s.category || s.title}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <Link
-                  to={`/profile/${featured.user_id}`}
-                  className="px-4 py-2 rounded-md font-medium"
-                  style={{ backgroundColor: PINE, color: "#fff" }}
-                >
-                  View
-                </Link>
-              </div>
-            ) : (
-              <div className="text-sm text-gray-500">No helpanions available right now.</div>
-            )}
           </div>
         </div>
       </section>
