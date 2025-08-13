@@ -26,7 +26,7 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
     return (
       <section className="px-4 py-16">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-futura-bold text-center mb-12">Featured Helpanions</h2>
+          <h2 className="text-3xl font-body font-semibold text-center mb-12">Featured Helpanions</h2>
           <div className="text-center py-12">
             <p className="text-muted-foreground">We're finding the right people for you...</p>
           </div>
@@ -39,7 +39,7 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
     return (
       <section className="px-4 py-16">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-futura-bold text-center mb-12">Featured Helpanions</h2>
+          <h2 className="text-3xl font-body font-semibold text-center mb-12">Featured Helpanions</h2>
           <div className="text-center py-12">
             <p className="text-muted-foreground">No Helpanions available at the moment. Check back soon!</p>
           </div>
@@ -51,7 +51,7 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
   return (
     <section className="px-4 py-16 bg-muted/10">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-futura-bold text-center mb-12 text-foreground">
+        <h2 className="text-3xl font-body font-semibold text-center mb-12 text-foreground">
           Featured Helpanions
         </h2>
         
@@ -80,7 +80,7 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
                   
                   <div>
                     <div className="flex items-center justify-center gap-2 mb-2">
-                      <CardTitle className="text-lg font-futura-bold">{helpanion.display_name}</CardTitle>
+                      <CardTitle className="text-lg font-body font-semibold">{helpanion.display_name}</CardTitle>
                       {isNew && <Badge variant="secondary" className="text-xs">New</Badge>}
                     </div>
                     {minPrice && (
@@ -106,12 +106,12 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
                     </div>
                     
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" className="flex-1" asChild>
+                      <Button size="sm" variant="default" className="flex-1" asChild>
                         <Link to={`/profile/${helpanion.user_id}`}>
                           View Profile
                         </Link>
                       </Button>
-                      <Button size="sm" className="flex-1 group-hover:bg-primary/90" asChild>
+                      <Button size="sm" variant="success" className="flex-1" asChild>
                         <Link to={`/profile/${helpanion.user_id}`}>
                           Book Session
                           <ArrowRight className="ml-1 h-3 w-3" />

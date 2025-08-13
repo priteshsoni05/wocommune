@@ -75,7 +75,7 @@ export function TestimonialsSlider({ compact = false }: { compact?: boolean }) {
       <div className="max-w-7xl mx-auto px-4">
         {!compact && (
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-futura-bold text-foreground mb-4">
+          <h2 className="text-3xl font-body font-semibold text-foreground mb-4">
               Voices from our Community
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -106,7 +106,7 @@ export function TestimonialsSlider({ compact = false }: { compact?: boolean }) {
                     "{testimonial.quote}"
                   </blockquote>
                   <div className="mt-auto">
-                    <div className="font-futura-bold text-foreground">— {testimonial.name}</div>
+                    <div className="font-semibold text-foreground">— {testimonial.name}</div>
                     <div className="text-sm text-muted-foreground">{testimonial.field}</div>
                   </div>
                 </div>
