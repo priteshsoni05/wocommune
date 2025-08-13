@@ -111,7 +111,7 @@ export function FeaturedHelpanions({ helpanions, loading }: FeaturedHelpanionsPr
                           View Profile
                         </Link>
                       </Button>
-                      <Button size="sm" variant="success" className="flex-1" asChild>
+                      <Button size="sm" variant="brand" className="flex-1" asChild>
                         <Link to={`/profile/${helpanion.user_id}`}>
                           Book Session
                           <ArrowRight className="ml-1 h-3 w-3" />

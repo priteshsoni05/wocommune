@@ -6,6 +6,7 @@ import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
+import { Button } from "@/components/ui/button";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -146,13 +147,11 @@ export default function WOCommunePage(): JSX.Element {
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-10">
           <FeaturedHelpanions helpanions={topHelpanions} loading={loading} />
           <div className="text-center mt-8">
-            <Link
-              to="/helpanions"
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Explore all Helpanions
-            </Link>
+            <div className="text-center mt-8">
+              <Button size="default" variant="brand" asChild>
+                <Link to="/helpanions">Explore all Helpanions</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
