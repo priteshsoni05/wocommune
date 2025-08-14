@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import AuthModal from "./AuthModal";
@@ -6,7 +6,7 @@ import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
-import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabaseClient";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -18,22 +18,46 @@ const PINE = "#01796F";
 export default function WOCommunePage(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
   const { helpanions, loading } = useHelpanions();
+
+  const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    const fetchHelpanions = async () => {
+      setFetching(true);
+      const { data, error } = await supabase
+        .from("helponions")
+        .select("id, name, bio, profile_image, average_rating, rating, created_at");
+
+      if (error) {
+        console.error("Error fetching Helpanions:", error);
+      } else {
+        setFetchedHelpanions(data || []);
+      }
+      setFetching(false);
+    };
+
+    fetchHelpanions();
+  }, []);
+
   const topHelpanions = useMemo(() => {
-    const hasRating = helpanions.some((h: any) => (h as any).average_rating || (h as any).rating);
-    const sorted = [...helpanions].sort((a: any, b: any) => {
-      const ra = (a as any).average_rating ?? (a as any).rating ?? 0;
-      const rb = (b as any).average_rating ?? (b as any).rating ?? 0;
-      return hasRating ? rb - ra : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    const list = fetchedHelpanions.length > 0 ? fetchedHelpanions : helpanions;
+    const hasRating = list.some((h: any) => h.average_rating || h.rating);
+    const sorted = [...list].sort((a: any, b: any) => {
+      const ra = a.average_rating ?? a.rating ?? 0;
+      const rb = b.average_rating ?? b.rating ?? 0;
+      return hasRating
+        ? rb - ra
+        : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
     return sorted.slice(0, 3);
-  }, [helpanions]);
+  }, [helpanions, fetchedHelpanions]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
-      {/* ===== Main header remains unchanged (from your site) ===== */}
+      {/* ===== Main Header ===== */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
-          {/* Logo */}
           <Link
             to="/"
             className="text-[20px] font-semibold tracking-widest"
@@ -42,19 +66,11 @@ export default function WOCommunePage(): JSX.Element {
           >
             WALKER'S ODYSSEY
           </Link>
-
-          {/* Right side / simple menu */}
           <nav className="text-sm">
             <ul className="flex items-center gap-4">
-              <li>
-                <Link to="/about" className="hover:underline">About</Link>
-              </li>
-              <li>
-                <Link to="/get-help" className="hover:underline">Commune</Link>
-              </li>
-              <li>
-                <Link to="#" className="hidden md:inline hover:underline">Shop</Link>
-              </li>
+              <li><Link to="/about" className="hover:underline">About</Link></li>
+              <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
+              <li><Link to="#" className="hidden md:inline hover:underline">Shop</Link></li>
             </ul>
           </nav>
         </div>
@@ -62,10 +78,9 @@ export default function WOCommunePage(): JSX.Element {
 
       <div className="h-16" />
 
-      {/* ===== Sub-header for WOCommune ===== */}
+      {/* ===== Sub-header ===== */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
-          {/* Left: WO COMMUNE + Get Help button */}
           <div className="flex items-center gap-3">
             <Link
               to="/get-help"
@@ -76,8 +91,6 @@ export default function WOCommunePage(): JSX.Element {
             </Link>
             <GetHelpMegaMenu />
           </div>
-
-          {/* Center: Search */}
           <div className="flex-1 hidden md:flex items-center justify-center">
             <div className="relative w-full max-w-md">
               <input
@@ -88,8 +101,6 @@ export default function WOCommunePage(): JSX.Element {
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
           </div>
-
-          {/* Right: Login / Sign Up */}
           <button
             onClick={() => setAuthOpen(true)}
             className="inline-block px-5 py-2 rounded-md font-semibold"
@@ -100,7 +111,7 @@ export default function WOCommunePage(): JSX.Element {
         </div>
       </div>
 
-      {/* ===== Hero Section (unchanged from your layout) ===== */}
+      {/* ===== Hero Section ===== */}
       <section
         className="relative w-full bg-cover bg-center"
         style={{ backgroundImage: `url(${HERO_IMG})` }}
@@ -139,107 +150,36 @@ export default function WOCommunePage(): JSX.Element {
           </div>
         </div>
       </section>
-      {/* ===== Reviews strip (carousel) ===== */}
+
+      {/* ===== Testimonials ===== */}
       <TestimonialsSlider compact />
 
-      {/* ===== Featured Helpanions (max 3) ===== */}
-     import React, { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import FeaturedHelpanions from "@/components/FeaturedHelpanions";
+      {/* ===== Featured Helpanions ===== */}
+      <div className="max-w-7xl mx-auto px-4 py-10">
+        <h1 className="text-2xl font-bold mb-8 text-center">Featured Helpanions</h1>
+        {fetching ? (
+          <p className="text-center text-gray-500">Loading...</p>
+        ) : (
+          <FeaturedHelpanions helpanions={topHelpanions} />
+        )}
+      </div>
 
-const WOCommunePage = () => {
-  const [helpanions, setHelpanions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchHelpanions = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("helponions")
-        .select("id, name, bio, profile_image");
-
-      if (error) {
-        console.error("Error fetching Helpanions:", error);
-      } else {
-        setHelpanions(data || []);
-      }
-      setLoading(false);
-    };
-
-    fetchHelpanions();
-  }, []);
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-8 text-center">
-        Featured Helpanions
-      </h1>
-
-      {loading ? (
-        <p className="text-center text-gray-500">Loading...</p>
-      ) : (
-        <FeaturedHelpanions helpanions={helpanions} />
-      )}
-    </div>
-  );
-};
-
-      {/* ================= Tabs: Events / Conversations / Podcasts ================= */}
+      {/* ===== Tabs Section ===== */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-        {/* Tabs */}
         <div className="flex gap-4 items-center mb-6">
           <TabButton>Events</TabButton>
           <TabButton>Conversations</TabButton>
           <TabButton>Podcasts</TabButton>
           <div className="ml-auto text-sm text-gray-500">Showing featured picks</div>
         </div>
-
-        {/* Grid for featured content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Featured Event Card */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <img src={EVENT_IMG} alt="Event" className="w-full h-44 object-cover" />
-            <div className="p-4">
-              <div className="text-sm text-gray-500">Networking Dinner</div>
-              <h3 className="font-semibold mt-1">Dinner & Conversations — City Hub</h3>
-              <p className="text-sm text-gray-600 mt-2">Join like-minded walkers for an evening of meaningful conversation and food.</p>
-                <button className="px-4 py-2 rounded-md" style={{ backgroundColor: PINE, color: "#fff" }}>
-                  RSVP
-                </button>
-            </div>
-          </div>
-
-          {/* Community Conversation Card */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <img src={CONVO_IMG} alt="Conversation" className="w-full h-44 object-cover" />
-            <div className="p-4">
-              <div className="text-sm text-gray-500">Community Talk</div>
-              <h3 className="font-semibold mt-1">From Comparison to Contentment</h3>
-              <p className="text-sm text-gray-600 mt-2">A group conversation about stopping comparison and finding your own pace.</p>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-xs text-gray-500">Online • Free</div>
-                <button className="px-3 py-1 rounded-md border border-gray-300">Join</button>
-              </div>
-            </div>
-          </div>
-
-          {/* Podcast Card */}
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <img src={PODCAST_IMG} alt="Podcast" className="w-full h-44 object-cover" />
-            <div className="p-4">
-              <div className="text-sm text-gray-500">Podcast</div>
-              <h3 className="font-semibold mt-1">You Give Up, Until You Decide Not To</h3>
-              <p className="text-sm text-gray-600 mt-2">Listen to inspiring journeys in short conversational episodes.</p>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="text-xs text-gray-500">20 min</div>
-                <button className="px-3 py-1 rounded-md border border-gray-300">Listen</button>
-              </div>
-            </div>
-          </div>
+          <Card image={EVENT_IMG} title="Dinner & Conversations — City Hub" desc="Join like-minded walkers for an evening of meaningful conversation and food." btn="RSVP" />
+          <Card image={CONVO_IMG} title="From Comparison to Contentment" desc="A group conversation about stopping comparison and finding your own pace." btn="Join" secondary />
+          <Card image={PODCAST_IMG} title="You Give Up, Until You Decide Not To" desc="Listen to inspiring journeys in short conversational episodes." btn="Listen" secondary />
         </div>
       </section>
 
-      {/* ================= Impact Metrics ================= */}
+      {/* ===== Impact Metrics ===== */}
       <section className="bg-white py-10">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex gap-8">
@@ -251,16 +191,14 @@ const WOCommunePage = () => {
         </div>
       </section>
 
-      {/* ================= Podcasts & Stories Section (full) ================= */}
+      {/* ===== Podcasts & Stories ===== */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         <div className="md:flex md:items-start md:gap-8">
           <div className="md:flex-1">
             <h2 className="text-2xl font-semibold mb-4">Podcasts & Stories</h2>
             <p className="text-gray-600 mb-6">Hear real stories from walkers, learn practical tips, and join the conversation.</p>
-
-            {/* small list of episodes (placeholder) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[1,2,3,4].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="p-4 bg-gray-50 rounded-md border">
                   <div className="font-semibold">Episode {i} — Small Wins</div>
                   <div className="text-sm text-gray-600 mt-1">A short talk about how tiny daily wins compound into change.</div>
@@ -268,8 +206,6 @@ const WOCommunePage = () => {
               ))}
             </div>
           </div>
-
-          {/* Newsletter CTA */}
           <aside className="mt-6 md:mt-0 md:w-[320px] p-6 bg-[#F3F2EE] rounded-md flex flex-col justify-between">
             <div>
               <h4 className="text-lg font-serif mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Walk with us</h4>
@@ -288,7 +224,7 @@ const WOCommunePage = () => {
         </div>
       </section>
 
-      {/* ================= Footer (Figma style) ================= */}
+      {/* ===== Footer ===== */}
       <footer className="bg-[#FAF9F6] border-t border-gray-200 mt-8">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
           <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -321,7 +257,6 @@ const WOCommunePage = () => {
               </ul>
             </div>
           </div>
-
           <div className="border-t border-gray-200 mt-8 pt-6">
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
@@ -335,14 +270,12 @@ const WOCommunePage = () => {
         </div>
       </footer>
 
-      {/* ================= Auth Modal (triggered by header) ================= */}
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }
 
-
-// Small tab button used above
+// Small Tab button
 function TabButton({ children }: { children: React.ReactNode }) {
   return (
     <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm">
@@ -357,6 +290,44 @@ function StatBlock({ number, label }: { number: string; label: string }) {
     <div className="text-center">
       <div className="text-xl font-semibold">{number}</div>
       <div className="text-sm text-gray-600">{label}</div>
+    </div>
+  );
+}
+
+// Card Component for tabs
+function Card({
+  image,
+  title,
+  desc,
+  btn,
+  secondary,
+}: {
+  image: string;
+  title: string;
+  desc: string;
+  btn: string;
+  secondary?: boolean;
+}) {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+      <img src={image} alt={title} className="w-full h-44 object-cover" />
+      <div className="p-4">
+        <h3 className="font-semibold mt-1">{title}</h3>
+        <p className="text-sm text-gray-600 mt-2">{desc}</p>
+        {secondary ? (
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-xs text-gray-500">Online • Free</div>
+            <button className="px-3 py-1 rounded-md border border-gray-300">{btn}</button>
+          </div>
+        ) : (
+          <button
+            className="mt-3 px-4 py-2 rounded-md"
+            style={{ backgroundColor: PINE, color: "#fff" }}
+          >
+            {btn}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
