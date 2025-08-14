@@ -143,19 +143,93 @@ export default function WOCommunePage(): JSX.Element {
       <TestimonialsSlider compact />
 
       {/* ===== Featured Helpanions (max 3) ===== */}
-      <section className="bg-white">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-10">
-          <FeaturedHelpanions helpanions={topHelpanions} loading={loading} />
-          <div className="text-center mt-8">
-            <div className="text-center mt-8">
-              <Button size="default" variant="brand" asChild>
-                <Link to="/helpanions">Explore all Helpanions</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      export function FeaturedHelpanions({
+  helpanions,
+  loading,
+}: {
+  helpanions: any[];
+  loading: boolean;
+}) {
+  if (loading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
 
+  if (!helpanions || helpanions.length === 0) {
+    return <div className="text-center py-10">No featured helpanions available.</div>;
+  }
+
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold text-center mb-8">
+        Featured Helpanions
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {helpanions.map((h) => (
+          <HelpanionCard key={h.id} helpanion={h} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HelpanionCard({ helpanion }: { helpanion: any }) {
+  return (
+    <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full p-4">
+      {/* Top section */}
+      <div className="flex flex-col items-center text-center flex-1">
+        <img
+          src={helpanion.avatar || "/assets/default-avatar.jpg"}
+          alt={helpanion.name}
+          className="w-20 h-20 rounded-full object-cover mb-3"
+        />
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold">{helpanion.name}</h3>
+          {helpanion.isNew && (
+            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+              New
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-gray-500 mt-1">
+          From ₹{helpanion.rate}/hour
+        </p>
+        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+          {helpanion.bio}
+        </p>
+
+        {/* Tags */}
+        <div className="flex gap-2 flex-wrap mt-3">
+          {helpanion.tags?.map((tag: string) => (
+            <span
+              key={tag}
+              className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom buttons */}
+      <div className="mt-auto flex gap-2 pt-4">
+        <Link
+          to={`/helpanions/${helpanion.id}`}
+          className="flex-1 px-4 py-2 rounded-md bg-black text-white text-sm text-center"
+        >
+          View Profile
+        </Link>
+        <Link
+          to={`/helpanions/${helpanion.id}/book`}
+          className="flex-1 px-4 py-2 rounded-md text-sm text-center"
+          style={{ backgroundColor: PINE, color: "#fff" }}
+        >
+          Book Session →
+        </Link>
+      </div>
+    </div>
+  );
+}
       {/* ================= Tabs: Events / Conversations / Podcasts ================= */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         {/* Tabs */}
