@@ -1,42 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import FeaturedHelpanions from "@/components/FeaturedHelpanions";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const WOCommunePage = () => {
-  const [helpanions, setHelpanions] = useState([]);
-  const [loading, setLoading] = useState(true);
+interface Helpanion {
+  id: string;
+  display_name?: string;
+  bio?: string;
+  avatar_url?: string;
+}
 
-  useEffect(() => {
-    const fetchHelpanions = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("helponions")
-        .select("id, name, bio, profile_image");
+interface FeaturedHelpanionsProps {
+  helpanions: Helpanion[];
+}
 
-      if (error) {
-        console.error("Error fetching Helpanions:", error);
-      } else {
-        setHelpanions(data || []);
-      }
-      setLoading(false);
-    };
+const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) => {
+  const fetchHelpanions = async () => {
+    // This component now receives helpanions as props instead of fetching
 
-    fetchHelpanions();
-  }, []);
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-8 text-center">
-        Featured Helpanions
-      </h1>
-
-      {loading ? (
-        <p className="text-center text-gray-500">Loading...</p>
-      ) : (
-        <FeaturedHelpanions helpanions={helpanions} />
-      )}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {helpanions.map((helpanion) => (
+        <Card key={helpanion.id} className="overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center text-center">
+              <Avatar className="w-16 h-16 mb-4">
+                <AvatarImage src={helpanion.avatar_url} alt={helpanion.display_name} />
+                <AvatarFallback>
+                  {helpanion.display_name?.charAt(0)?.toUpperCase() || "H"}
+                </AvatarFallback>
+              </Avatar>
+              <h3 className="font-semibold text-lg mb-2">
+                {helpanion.display_name || "Helpanion"}
+              </h3>
+              <p className="text-muted-foreground text-sm line-clamp-3">
+                {helpanion.bio || "Ready to help you on your journey."}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
 
-export default WOCommunePage;
+export default FeaturedHelpanions;

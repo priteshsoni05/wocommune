@@ -5,8 +5,8 @@ import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
-import { FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
-import { supabase } from "@/lib/supabaseClient";
+import FeaturedHelpanions from "@/components/helpanion/FeaturedHelpanions";
+import { supabase } from "@/integrations/supabase/client";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -26,8 +26,9 @@ export default function WOCommunePage(): JSX.Element {
     const fetchHelpanions = async () => {
       setFetching(true);
       const { data, error } = await supabase
-        .from("helponions")
-        .select("id, name, bio, profile_image, average_rating, rating, created_at");
+        .from("profiles")
+        .select("id, display_name, bio, avatar_url, created_at")
+        .eq("status", "active");
 
       if (error) {
         console.error("Error fetching Helpanions:", error);
