@@ -6,8 +6,7 @@ import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog"
 import { Profile } from "@/hooks/useProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
-import { FaInstagram, FaLinkedin, FaGlobe, FaFolderOpen } from "react-icons/fa";
-import { CheckCircle } from "lucide-react";
+import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle } from "lucide-react";
 
 interface PublicProfileData {
   profile: Profile;
@@ -16,6 +15,7 @@ interface PublicProfileData {
 }
 
 const PINE = "#01796F";
+const TEXT = "#111111";
 
 const PublicProfile = () => {
   const { username } = useParams<{ username: string }>();
@@ -53,6 +53,7 @@ const PublicProfile = () => {
 
         if (servicesError) throw servicesError;
 
+        // keep availability fetch (used by booking dialog)
         const { data: availability, error: availabilityError } = await supabase
           .from("availability_slots")
           .select("*")
@@ -89,7 +90,7 @@ const PublicProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gray-600">
+      <div className="min-h-screen flex items-center justify-center" style={{ color: TEXT }}>
         Loading profile...
       </div>
     );
@@ -97,7 +98,7 @@ const PublicProfile = () => {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center" style={{ color: TEXT }}>
         <h1 className="text-xl font-semibold">Profile Not Found</h1>
         <Link
           to="/commune"
@@ -112,10 +113,12 @@ const PublicProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      {/* Header */}
+      {/* Header — simple, like WO Commune page */}
       <div className="w-full border-b bg-white">
-        <div className="max-w-[1140px] mx-auto flex justify-between items-center px-4 py-3">
-          <div className="font-semibold">WO COMMUNE</div>
+        <div className="w-full mx-auto flex justify-between items-center px-4 md:px-6 py-3">
+          <div className="font-semibold tracking-wide" style={{ color: TEXT }}>
+            WO COMMUNE
+          </div>
           <button
             onClick={() => navigate("/commune")}
             className="px-4 py-2 rounded-md text-white font-medium"
@@ -126,112 +129,127 @@ const PublicProfile = () => {
         </div>
       </div>
 
-      {/* Main grid */}
-      <div className="max-w-[1140px] mx-auto grid lg:grid-cols-12 gap-6 px-4 py-8">
+      {/* Main grid (full-width, minimal breathing on sides) */}
+      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 px-4 md:px-6">
         {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border rounded-lg p-6 space-y-6">
-          <div className="text-center">
+        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:min-h-[calc(100vh-56px)]">
+          <div className="text-center space-y-3" style={{ color: TEXT }}>
             <img
               src={data.profile.avatar_url || "/placeholder.svg"}
               alt={data.profile.display_name || "Profile"}
-              className="w-28 h-28 mx-auto rounded-full border object-cover"
+              className="w-28 h-28 mx-auto rounded-full border-4 border-[#E6EDEB] object-cover"
             />
-            <h1 className="mt-3 text-xl font-bold flex items-center justify-center gap-2">
+            <h1 className="text-xl font-bold flex items-center justify-center gap-1">
               {data.profile.display_name}
-              <CheckCircle className="text-green-600 w-5 h-5" />
+              <CheckCircle size={18} color={PINE} aria-label="Verified" />
             </h1>
-            {data.profile.role && (
-              <p className="text-sm">{data.profile.role}</p>
-            )}
+            <p className="text-sm">
+              I help with {data.profile.role || "Professional Services"}
+            </p>
           </div>
 
           {/* Expertise */}
           {data.profile.skills && (
-            <div>
+            <div className="mt-6" style={{ color: TEXT }}>
               <h3 className="text-sm font-medium mb-2">Expertise</h3>
               <div className="flex flex-wrap gap-2">
-                {data.profile.skills.split(",").slice(0, 5).map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 text-xs rounded-full bg-gray-100"
-                  >
-                    {skill.trim()}
-                  </span>
-                ))}
+                {data.profile.skills
+                  .split(",")
+                  .slice(0, 5)
+                  .map((skill, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 text-xs rounded-full border"
+                      style={{ borderColor: "#D1D5DB", color: TEXT, backgroundColor: "#FFFFFF" }}
+                    >
+                      {skill.trim()}
+                    </span>
+                  ))}
               </div>
             </div>
           )}
 
           {/* Reviews */}
-          <div className="text-center">
-            <p className="text-sm">
-              ⭐ 4.9 (24 reviews) • 87 sessions completed
-            </p>
+          <div className="mt-6" style={{ color: TEXT }}>
+            <h3 className="text-sm font-medium mb-1">Reviews</h3>
+            <p className="text-sm">★ 4.9 (24 reviews) • 87 sessions completed</p>
           </div>
 
-          {/* Social icons */}
-          <div className="flex gap-4 justify-center">
+          {/* Social icons (just below reviews) */}
+          <div className="mt-3 flex items-center justify-start gap-3" style={{ color: TEXT }}>
             {data.profile.instagram_url && (
-              <a href={data.profile.instagram_url} target="_blank" rel="noreferrer">
-                <FaInstagram className="w-5 h-5" />
+              <a href={data.profile.instagram_url} target="_blank" rel="noreferrer" aria-label="Instagram">
+                <Instagram size={18} />
               </a>
             )}
             {data.profile.linkedin_url && (
-              <a href={data.profile.linkedin_url} target="_blank" rel="noreferrer">
-                <FaLinkedin className="w-5 h-5" />
+              <a href={data.profile.linkedin_url} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <Linkedin size={18} />
               </a>
             )}
             {data.profile.website_url && (
-              <a href={data.profile.website_url} target="_blank" rel="noreferrer">
-                <FaGlobe className="w-5 h-5" />
+              <a href={data.profile.website_url} target="_blank" rel="noreferrer" aria-label="Website">
+                <Globe size={18} />
               </a>
             )}
             {data.profile.portfolio_url && (
-              <a href={data.profile.portfolio_url} target="_blank" rel="noreferrer">
-                <FaFolderOpen className="w-5 h-5" />
+              <a href={data.profile.portfolio_url} target="_blank" rel="noreferrer" aria-label="Portfolio">
+                <FolderOpen size={18} />
               </a>
             )}
           </div>
 
           {/* About */}
           {data.profile.bio && (
-            <div>
-              <h3 className="text-sm font-medium mb-1">About</h3>
-              <p className="text-sm">{data.profile.bio}</p>
+            <div className="mt-6" style={{ color: TEXT }}>
+              <h3 className="text-sm font-medium mb-2">About</h3>
+              <p className="text-sm leading-relaxed">{data.profile.bio}</p>
             </div>
           )}
         </aside>
 
-        {/* Services */}
-        <main className="lg:col-span-8" ref={servicesRef}>
-          <h2 className="text-2xl font-bold mb-6">Services</h2>
-          <div className="space-y-6">
-            {data.services.map((service) => (
-              <div
-                key={service.id}
-                className="bg-white border rounded-lg p-5 flex justify-between items-start"
-              >
-                <div>
-                  <h3 className="text-lg font-semibold">{service.title}</h3>
-                  <p className="text-sm mt-1">{service.description}</p>
+        {/* Main Content — Services only */}
+        <main className="lg:col-span-8 p-6" style={{ color: TEXT }}>
+          <div ref={servicesRef}>
+            <h2 className="text-2xl font-bold mb-6">Services</h2>
+
+            <div className="space-y-6">
+              {data.services.map((service) => (
+                <div
+                  key={service.id}
+                  className="bg-white border border-gray-200 rounded-xl p-6"
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold">{service.title}</h3>
+                      <p className="text-sm mt-2 leading-relaxed">
+                        {service.description}
+                      </p>
+                    </div>
+
+                    <div className="shrink-0 text-right">
+                      <div className="text-base font-semibold">₹{service.price_per_hour}</div>
+                      <button
+                        onClick={() => handleServiceBook(service)}
+                        className="mt-2 inline-flex items-center justify-center rounded-md text-white text-sm px-3 py-1.5"
+                        style={{ backgroundColor: PINE }}
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <p className="text-lg font-bold">₹{service.price_per_hour}</p>
-                  <button
-                    onClick={() => handleServiceBook(service)}
-                    className="mt-2 px-3 py-1 rounded-md text-white text-sm"
-                    style={{ backgroundColor: PINE }}
-                  >
-                    Book Now
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+
+              {data.services.length === 0 && (
+                <div className="text-sm">No services published yet.</div>
+              )}
+            </div>
           </div>
         </main>
       </div>
 
-      {/* Mobile Sticky CTA */}
+      {/* Mobile sticky CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4">
         <button
           onClick={scrollToServices}
