@@ -339,13 +339,29 @@ export default function WOCommune(): JSX.Element {
 
       {/* ===== Featured Helpanions ===== */}
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <h1 className="text-2xl font-bold mb-8 text-center">Featured Helpanions</h1>
+        <h1
+          className="text-2xl font-bold mb-8 text-center"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          Featured Helpanions
+        </h1>
         {fetching ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
-          // The FeaturedHelpanions component already uses equal-height cards.
           <FeaturedHelpanions helpanions={topHelpanions} />
         )}
+        <div className="mt-8 flex justify-center">
+          <Link
+            to="/helpanions"
+            className="px-6 py-3 rounded-md font-medium text-white"
+            style={{
+              backgroundColor: "#01796F",
+              fontFamily: "'Source Sans Pro', sans-serif",
+            }}
+          >
+            Explore all helpanions
+          </Link>
+        </div>
       </div>
 
       {/* ===== Tabs Section (equal-height cards) ===== */}
@@ -357,7 +373,6 @@ export default function WOCommune(): JSX.Element {
           <div className="ml-auto text-sm text-gray-500">Showing featured picks</div>
         </div>
 
-        {/* Make grid items stretch so each card fills same height */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           <Card
             image={EVENT_IMG}
@@ -428,76 +443,33 @@ export default function WOCommune(): JSX.Element {
       </section>
 
       {/* ===== Footer ===== */}
-      <footer className="bg-[#FAF9F6] border-t border-gray-200 mt-8">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
-          <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>WALKER'S ODYSSEY</h5>
-              <p className="text-sm text-gray-600 max-w-[320px]">Your trusted companion for every step — connecting you with guidance, community, and inspiration to walk your path with purpose.</p>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Brand</h6>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="/brand-story" className="hover:underline">Brand Story</Link></li>
-                <li><Link to="/vision" className="hover:underline">Vision</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Commune</h6>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li><Link to="/events" className="hover:underline">Events</Link></li>
-                <li><Link to="/conversations" className="hover:underline">Conversations</Link></li>
-                <li><Link to="/helpanions" className="hover:underline">Find Helpanion</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Get in touch</h6>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-                <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
-                <li><a href="#" className="hover:underline">Instagram</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-200 mt-8 pt-6">
-            <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-                <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-                <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-              </div>
-            </div>
+      <footer className="bg-[#222] text-white py-8">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between gap-4">
+          <div className="text-sm">© {new Date().getFullYear()} Walker’s Odyssey</div>
+          <div className="flex gap-4 text-sm">
+            <Link to="/privacy" className="hover:underline">Privacy</Link>
+            <Link to="/terms" className="hover:underline">Terms</Link>
           </div>
         </div>
       </footer>
 
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+      {/* Auth modal */}
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </div>
   );
 }
 
-// Small Tab button
 function TabButton({ children }: { children: React.ReactNode }) {
   return (
-    <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm">
+    <button
+      className="px-4 py-2 rounded-md border border-gray-300 text-sm font-medium hover:bg-gray-50"
+      style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+    >
       {children}
     </button>
   );
 }
 
-// Stat block
-function StatBlock({ number, label }: { number: string; label: string }) {
-  return (
-    <div className="text-center">
-      <div className="text-xl font-semibold">{number}</div>
-      <div className="text-sm text-gray-600">{label}</div>
-    </div>
-  );
-}
-
-// Card Component for tabs (equal-height)
 function Card({
   image,
   title,
@@ -512,32 +484,31 @@ function Card({
   secondary?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full min-h-[420px]">
-      <img src={image} alt={title} className="w-full h-44 object-cover" />
-      <div className="p-6 flex flex-col flex-1">
-        <h3 className="font-semibold mt-1 text-2xl">{title}</h3>
-        <p className="text-sm text-gray-600 mt-3">
-          {desc}
-        </p>
-
-        {secondary ? (
-          <div className="mt-auto flex items-center justify-between pt-4">
-            <div className="text-xs text-gray-500">Online • Free</div>
-            <button className="px-4 py-2 rounded-md border border-gray-300">
-              {btn}
-            </button>
-          </div>
-        ) : (
-          <div className="mt-auto pt-4">
-            <button
-              className="px-5 py-2.5 rounded-md"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              {btn}
-            </button>
-          </div>
-        )}
+    <div className="bg-white border rounded-md shadow-sm overflow-hidden flex flex-col">
+      <img src={image} alt="" className="w-full h-48 object-cover" />
+      <div className="flex flex-col flex-1 p-4">
+        <h3 className="font-semibold text-lg mb-2">{title}</h3>
+        <p className="text-gray-600 text-sm mb-4 flex-1">{desc}</p>
+        <button
+          className={`px-4 py-2 rounded-md text-sm font-medium mt-auto ${
+            secondary ? "bg-gray-200 text-gray-800" : "text-white"
+          }`}
+          style={!secondary ? { backgroundColor: PINE } : {}}
+        >
+          {btn}
+        </button>
       </div>
+    </div>
+  );
+}
+
+function StatBlock({ number, label }: { number: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="text-2xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+        {number}
+      </div>
+      <div className="text-sm text-gray-600">{label}</div>
     </div>
   );
 }
