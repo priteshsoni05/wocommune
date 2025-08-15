@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
@@ -16,6 +16,16 @@ const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
 
 const PINE = "#01796F";
 
+type Profile = {
+  display_name?: string | null;
+  avatar_url?: string | null;
+  role?: string | null;
+  account_type?: string | null;
+  user_type?: string | null;
+  is_helpanion?: boolean | null;
+  created_at?: string | null;
+};
+
 export default function WOCommunePage(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
@@ -23,6 +33,11 @@ export default function WOCommunePage(): JSX.Element {
 
   const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
+
+  // Current logged-in user's profile for header menu
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchHelpanions = async () => {
@@ -42,6 +57,74 @@ export default function WOCommunePage(): JSX.Element {
 
     fetchHelpanions();
   }, []);
+
+  // Fetch the current user's profile for name/avatar/role
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(
+          "display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at"
+        )
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching current user profile:", error);
+        setProfile(null);
+      } else {
+        setProfile(data as Profile);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
+  // Close menu on outside click
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    if (menuOpen) document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [menuOpen]);
+
+  const roleLabel = useMemo(() => {
+    const src =
+      profile?.role ||
+      profile?.account_type ||
+      profile?.user_type ||
+      (profile?.is_helpanion ? "helpaNion" : "");
+    if (!src) return "Walker";
+    const val = String(src).toLowerCase();
+    if (val.includes("help")) return "Helpanion";
+    if (val.includes("walker")) return "Walker";
+    return val.charAt(0).toUpperCase() + val.slice(1);
+  }, [profile]);
+
+  const displayName = useMemo(() => {
+    if (profile?.display_name && profile.display_name.trim().length > 0) {
+      return profile.display_name.split(" ")[0]; // first name feel
+    }
+    if (user?.email) return user.email.split("@")[0];
+    return "There";
+  }, [profile, user]);
+
+  const avatarContent = useMemo(() => {
+    if (profile?.avatar_url) return { type: "image", value: profile.avatar_url };
+    const initial =
+      (profile?.display_name?.[0] ||
+        user?.email?.[0] ||
+        "U").toUpperCase();
+    return { type: "initial", value: initial };
+  }, [profile, user]);
 
   const topHelpanions = useMemo(() => {
     const list = fetchedHelpanions.length > 0 ? fetchedHelpanions : helpanions;
@@ -94,6 +177,7 @@ export default function WOCommunePage(): JSX.Element {
             </Link>
             <GetHelpMegaMenu />
           </div>
+
           <div className="flex-1 hidden md:flex items-center justify-center">
             <div className="relative w-full max-w-md">
               <input
@@ -104,15 +188,69 @@ export default function WOCommunePage(): JSX.Element {
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
           </div>
+
+          {/* Right side: Auth */}
           {user ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm">Welcome, {user.email}</span>
+            <div ref={menuRef} className="relative">
               <button
-                onClick={() => signOut()}
-                className="inline-block px-5 py-2 rounded-md font-semibold border border-gray-300 hover:bg-gray-50"
+                onClick={() => setMenuOpen((v) => !v)}
+                className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-50"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
               >
-                Sign Out
+                {/* Avatar */}
+                {avatarContent.type === "image" ? (
+                  <img
+                    src={avatarContent.value}
+                    alt={`${displayName} avatar`}
+                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                  />
+                ) : (
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
+                    style={{ backgroundColor: PINE }}
+                    aria-hidden
+                  >
+                    {avatarContent.value}
+                  </div>
+                )}
+
+                {/* Greeting */}
+                <div className="hidden sm:flex flex-col items-start leading-4">
+                  <span className="text-xs text-gray-500">Hi</span>
+                  <span className="text-sm font-medium">
+                    {displayName} ({roleLabel})
+                  </span>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-500" />
               </button>
+
+              {/* Dropdown */}
+              {menuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
+                >
+                  <Link
+                    to="/dashboard"
+                    className="block px-4 py-2 text-sm hover:bg-gray-50"
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      signOut();
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    role="menuitem"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <button
