@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
 import PublicProfile from "./pages/PublicProfile";
-import Helpanion from "./pages/Helpanion";
+import WOCommune from "./pages/WOCommune";
 import HelpanionsDirectory from "./pages/HelpanionsDirectory";
 import WalkerDashboard from "./pages/WalkerDashboard";
 import HelpanionDashboard from "./pages/HelpanionDashboard";
@@ -26,8 +26,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/get-help" element={<Helpanion />} />
-            <Route path="/helpanion" element={<Helpanion />} />
+            <Route path="/get-help" element={<WOCommune />} />
+            <Route path="/wo-commune" element={<WOCommune />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanions" element={<HelpanionsDirectory />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
