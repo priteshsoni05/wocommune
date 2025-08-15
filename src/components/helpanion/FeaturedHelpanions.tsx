@@ -33,16 +33,16 @@ const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) =
               <div className="flex flex-col items-center text-center flex-1">
                 <Avatar className="w-16 h-16 mb-4 border border-neutral-200 shadow-sm">
                   <AvatarImage src={helpanion.avatar_url} alt={helpanion.display_name} />
-                  <AvatarFallback>
+                  <AvatarFallback className="font-[Cormorant_Garamond] text-lg">
                     {helpanion.display_name?.charAt(0)?.toUpperCase() || "H"}
                   </AvatarFallback>
                 </Avatar>
 
-                <h3 className="text-base md:text-lg font-futura-bold mb-1">
+                <h3 className="text-base md:text-lg font-[Cormorant_Garamond] font-semibold mb-1">
                   {helpanion.display_name || "Helpanion"}
                 </h3>
 
-                <p className="text-sm text-gray-600 line-clamp-3 mb-4 font-futura">
+                <p className="text-sm text-gray-600 line-clamp-3 mb-4 font-[Source_Sans_Pro]">
                   {helpanion.bio || "Helping through shared experience and practical insights."}
                 </p>
               </div>
@@ -52,13 +52,13 @@ const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) =
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 rounded-lg border-neutral-800 text-neutral-900 hover:bg-neutral-900 hover:text-white font-futura"
+                  className="flex-1 rounded-lg border-neutral-800 text-neutral-900 hover:bg-neutral-900 hover:text-white font-[Source_Sans_Pro]"
                 >
                   View Profile
                 </Button>
                 <Button
                   size="sm"
-                  className="flex-1 rounded-lg text-white font-futura hover:opacity-90"
+                  className="flex-1 rounded-lg text-white font-[Source_Sans_Pro] hover:opacity-90"
                   style={{ backgroundColor: PINE }}
                 >
                   Book Session
@@ -74,7 +74,7 @@ const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) =
       <div className="flex justify-end">
         <Button
           asChild
-          className="rounded-lg text-white font-futura hover:opacity-90"
+          className="rounded-lg text-white font-[Source_Sans_Pro] hover:opacity-90"
           style={{ backgroundColor: PINE }}
         >
           <Link to="/helpenions-directory">
