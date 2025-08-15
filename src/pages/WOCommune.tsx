@@ -5,7 +5,7 @@ import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
-import FeaturedHelpanions from "@/components/helpanion/FeaturedHelpanions";
+import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -16,29 +16,59 @@ const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
 
 const PINE = "#01796F";
 
+// ------------ Helpers for clean first name ------------
+const titleCase = (s: string) =>
+  s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
+
+const deriveFirstName = (profile: any, user: any) => {
+  const meta = user?.user_metadata || {};
+  const candidates = [
+    profile?.display_name,         // e.g., "Pritesh Soni"
+    meta.given_name,               // OAuth given_name
+    meta.full_name || meta.name,   // OAuth name
+  ].filter(Boolean) as string[];
+
+  if (candidates.length) {
+    const first = String(candidates[0]).trim().split(/\s+/)[0];
+    return titleCase(first);
+  }
+
+  if (user?.email) {
+    const local = user.email.split("@")[0];   // "pritesh.soni03"
+    const first = local.split(/[._-]+/)[0];   // "pritesh"
+    return titleCase(first);
+  }
+
+  return "Friend";
+};
+
 type Profile = {
+  id?: string;
   display_name?: string | null;
+  bio?: string | null;
   avatar_url?: string | null;
+  status?: string | null;
+  created_at?: string | null;
   role?: string | null;
   account_type?: string | null;
   user_type?: string | null;
   is_helpanion?: boolean | null;
-  created_at?: string | null;
 };
 
-export default function WOCommunePage(): JSX.Element {
+export default function WOCommune(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const { helpanions, loading } = useHelpanions();
+  const { helpanions } = useHelpanions();
 
   const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
 
-  // Current logged-in user's profile for header menu
+  // Current user's profile (for avatar/name/role)
   const [profile, setProfile] = useState<Profile | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+  // Fetch active helpanions for "Featured Helpanions"
   useEffect(() => {
     const fetchHelpanions = async () => {
       setFetching(true);
@@ -58,7 +88,7 @@ export default function WOCommunePage(): JSX.Element {
     fetchHelpanions();
   }, []);
 
-  // Fetch the current user's profile for name/avatar/role
+  // Fetch current user's profile
   useEffect(() => {
     const loadProfile = async () => {
       if (!user) {
@@ -68,7 +98,7 @@ export default function WOCommunePage(): JSX.Element {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at"
+          "id, display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at"
         )
         .eq("id", user.id)
         .single();
@@ -84,7 +114,7 @@ export default function WOCommunePage(): JSX.Element {
     loadProfile();
   }, [user]);
 
-  // Close menu on outside click
+  // Close user menu on outside click
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
       if (!menuRef.current) return;
@@ -96,6 +126,7 @@ export default function WOCommunePage(): JSX.Element {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [menuOpen]);
 
+  // Role label derivation
   const roleLabel = useMemo(() => {
     const src =
       profile?.role ||
@@ -109,23 +140,22 @@ export default function WOCommunePage(): JSX.Element {
     return val.charAt(0).toUpperCase() + val.slice(1);
   }, [profile]);
 
-  const displayName = useMemo(() => {
-    if (profile?.display_name && profile.display_name.trim().length > 0) {
-      return profile.display_name.split(" ")[0]; // first name feel
-    }
-    if (user?.email) return user.email.split("@")[0];
-    return "There";
-  }, [profile, user]);
+  // Clean first name for header
+  const displayName = useMemo(() => deriveFirstName(profile, user), [profile, user]);
 
+  // Avatar content (image or initial)
   const avatarContent = useMemo(() => {
     if (profile?.avatar_url) return { type: "image", value: profile.avatar_url };
     const initial =
-      (profile?.display_name?.[0] ||
-        user?.email?.[0] ||
-        "U").toUpperCase();
+      (profile?.display_name?.[0] || user?.email?.[0] || "U").toUpperCase();
     return { type: "initial", value: initial };
   }, [profile, user]);
 
+  // Dynamic dashboard route (no universal /dashboard route in this app)
+  const dashboardPath =
+    roleLabel === "Helpanion" ? "/helpanion-dashboard" : "/walker-dashboard";
+
+  // Featured Helpanions (top 3)
   const topHelpanions = useMemo(() => {
     const list = fetchedHelpanions.length > 0 ? fetchedHelpanions : helpanions;
     const hasRating = list.some((h: any) => h.average_rating || h.rating);
@@ -232,7 +262,7 @@ export default function WOCommunePage(): JSX.Element {
                   className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
                 >
                   <Link
-                    to="/dashboard"
+                    to={dashboardPath}
                     className="block px-4 py-2 text-sm hover:bg-gray-50"
                     role="menuitem"
                     onClick={() => setMenuOpen(false)}
@@ -313,11 +343,12 @@ export default function WOCommunePage(): JSX.Element {
         {fetching ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
+          // The FeaturedHelpanions component already uses equal-height cards.
           <FeaturedHelpanions helpanions={topHelpanions} />
         )}
       </div>
 
-      {/* ===== Tabs Section ===== */}
+      {/* ===== Tabs Section (equal-height cards) ===== */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         <div className="flex gap-4 items-center mb-6">
           <TabButton>Events</TabButton>
@@ -325,10 +356,29 @@ export default function WOCommunePage(): JSX.Element {
           <TabButton>Podcasts</TabButton>
           <div className="ml-auto text-sm text-gray-500">Showing featured picks</div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card image={EVENT_IMG} title="Dinner & Conversations — City Hub" desc="Join like-minded walkers for an evening of meaningful conversation and food." btn="RSVP" />
-          <Card image={CONVO_IMG} title="From Comparison to Contentment" desc="A group conversation about stopping comparison and finding your own pace." btn="Join" secondary />
-          <Card image={PODCAST_IMG} title="You Give Up, Until You Decide Not To" desc="Listen to inspiring journeys in short conversational episodes." btn="Listen" secondary />
+
+        {/* Make grid items stretch so each card fills same height */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          <Card
+            image={EVENT_IMG}
+            title="Dinner & Conversations — City Hub"
+            desc="Join like-minded walkers for an evening of meaningful conversation and food."
+            btn="RSVP"
+          />
+          <Card
+            image={CONVO_IMG}
+            title="From Comparison to Contentment"
+            desc="A group conversation about stopping comparison and finding your own pace."
+            btn="Join"
+            secondary
+          />
+          <Card
+            image={PODCAST_IMG}
+            title="You Give Up, Until You Decide Not To"
+            desc="Listen to inspiring journeys in short conversational episodes."
+            btn="Listen"
+            secondary
+          />
         </div>
       </section>
 
@@ -447,7 +497,7 @@ function StatBlock({ number, label }: { number: string; label: string }) {
   );
 }
 
-// Card Component for tabs
+// Card Component for tabs (equal-height)
 function Card({
   image,
   title,
@@ -462,23 +512,30 @@ function Card({
   secondary?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full min-h-[420px]">
       <img src={image} alt={title} className="w-full h-44 object-cover" />
-      <div className="p-4">
-        <h3 className="font-semibold mt-1">{title}</h3>
-        <p className="text-sm text-gray-600 mt-2">{desc}</p>
+      <div className="p-6 flex flex-col flex-1">
+        <h3 className="font-semibold mt-1 text-2xl">{title}</h3>
+        <p className="text-sm text-gray-600 mt-3">
+          {desc}
+        </p>
+
         {secondary ? (
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-auto flex items-center justify-between pt-4">
             <div className="text-xs text-gray-500">Online • Free</div>
-            <button className="px-3 py-1 rounded-md border border-gray-300">{btn}</button>
+            <button className="px-4 py-2 rounded-md border border-gray-300">
+              {btn}
+            </button>
           </div>
         ) : (
-          <button
-            className="mt-3 px-4 py-2 rounded-md"
-            style={{ backgroundColor: PINE, color: "#fff" }}
-          >
-            {btn}
-          </button>
+          <div className="mt-auto pt-4">
+            <button
+              className="px-5 py-2.5 rounded-md"
+              style={{ backgroundColor: PINE, color: "#fff" }}
+            >
+              {btn}
+            </button>
+          </div>
         )}
       </div>
     </div>
