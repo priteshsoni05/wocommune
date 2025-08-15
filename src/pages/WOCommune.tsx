@@ -6,6 +6,7 @@ import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import FeaturedHelpanions from "@/components/helpanion/FeaturedHelpanions";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
@@ -17,6 +18,7 @@ const PINE = "#01796F";
 
 export default function WOCommunePage(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const { helpanions, loading } = useHelpanions();
 
   const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
@@ -102,13 +104,25 @@ export default function WOCommunePage(): JSX.Element {
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
           </div>
-          <button
-            onClick={() => setAuthOpen(true)}
-            className="inline-block px-5 py-2 rounded-md font-semibold"
-            style={{ backgroundColor: PINE, color: "#fff" }}
-          >
-            Login / Sign Up
-          </button>
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm">Welcome, {user.email}</span>
+              <button
+                onClick={() => signOut()}
+                className="inline-block px-5 py-2 rounded-md font-semibold border border-gray-300 hover:bg-gray-50"
+              >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="inline-block px-5 py-2 rounded-md font-semibold"
+              style={{ backgroundColor: PINE, color: "#fff" }}
+            >
+              Login / Sign Up
+            </button>
+          )}
         </div>
       </div>
 

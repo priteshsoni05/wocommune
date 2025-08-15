@@ -70,12 +70,14 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
       }
 
       // Sign up via Supabase; store minimal metadata in auth user and also create profile row
+      const redirectUrl = `${window.location.origin}/`;
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
-            name,
+            display_name: name,
             username,
             role: selectedRole,
           },
@@ -83,7 +85,12 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
       });
 
       if (error) {
-        alert(error.message || "Signup failed");
+        console.error('Signup error:', error);
+        if (error.message.includes('already registered')) {
+          alert('This email is already registered. Please try logging in instead.');
+        } else {
+          alert(error.message || "Signup failed");
+        }
         setLoading(false);
         return;
       }
@@ -91,13 +98,29 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
       // If user object returned, upsert profile row
       const userId = data?.user?.id;
       if (userId) {
-        // create profiles row (if you use separate table)
-        await supabase.from("profiles").upsert({
+        // create profiles row and user role
+        const { error: profileError } = await supabase.from("profiles").upsert({
           user_id: userId,
           display_name: name,
+          username,
           email,
           last_active_role: selectedRole,
+          status: 'active'
         });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+        }
+
+        // Add user role
+        const { error: roleError } = await supabase.from("user_roles").insert({
+          user_id: userId,
+          role: selectedRole,
+        });
+
+        if (roleError) {
+          console.error('Role creation error:', roleError);
+        }
       }
 
       alert("Signup successful — check your email to verify (if required).");
@@ -122,7 +145,12 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
 
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        alert(error.message || "Login failed.");
+        console.error('Login error:', error);
+        if (error.message.includes('Invalid login credentials')) {
+          alert('Invalid email or password. Please try again.');
+        } else {
+          alert(error.message || "Login failed.");
+        }
         setLoading(false);
         return;
       }
