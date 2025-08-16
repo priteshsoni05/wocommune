@@ -312,7 +312,7 @@ const HomePage: React.FC = () => {
           {/* Bottom row: divider + copyright + socials */}
           <div className="border-t border-gray-200 mt-8 pt-6">
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved. <span className="text-[10px] text-gray-400">• Deployed via PR check</span></p>
               <div className="flex items-center gap-3">
                 <img src={SOCIAL_ICON} alt="social-1" className="w-5 h-5" />
                 <img src={SOCIAL_ICON} alt="social-2" className="w-5 h-5" />
