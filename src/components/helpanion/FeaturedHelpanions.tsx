@@ -12,22 +12,21 @@ type Props = {
 };
 
 const PINE = "#01796F";
-const AVATAR_FALLBACK = ""; // leave empty to use initials; or set to a placeholder image path if you prefer
+const AVATAR_FALLBACK = ""; // keep empty to show initials when no avatar
 
 function getInitial(name: string) {
-  const n = name?.trim();
-  if (!n) return "H";
-  return n[0]!.toUpperCase();
+  const n = (name || "").trim();
+  return n ? n[0].toUpperCase() : "H";
 }
 
 function HelpanionCard({ helpanion }: { helpanion: Helpanion }) {
-  const name = (helpa­nion.display_name || "Helpanion").trim();
+  const name = (helpanion.display_name || "Helpanion").trim();
   const bio =
-    (helpa­nion.bio?.trim() ||
-      "At Walker’s Odyssey, we believe every journey is unique. Whether you’re taking your first step or navigating an unfamiliar path, we’re here to walk alongside you — offering guidance, inspiration, and a community that celebrates your pace, your way.") as string;
+    (helpanion.bio?.trim() ||
+      "Helping through shared experience and practical insights.") as string;
 
   const shortBio = bio.length > 280 ? `${bio.slice(0, 277)}...` : bio;
-  const img = hel­panion.avatar_url || AVATAR_FALLBACK;
+  const img = helpanion.avatar_url || AVATAR_FALLBACK;
   const showInitials = !img;
 
   return (
@@ -36,35 +35,29 @@ function HelpanionCard({ helpanion }: { helpanion: Helpanion }) {
       {showInitials ? (
         <div
           className="w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-semibold mb-4"
-          style={{ backgroundColor: "#D1D5DB" /* neutral gray like mock */ }}
+          style={{ backgroundColor: "#D1D5DB" }}
           aria-label={`${name} avatar placeholder`}
         >
           {getInitial(name)}
         </div>
       ) : (
         <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border border-gray-200">
-          <img
-            src={img}
-            alt={`${name} avatar`}
-            className="w-full h-full object-cover"
-          />
+          <img src={img} alt={`${name} avatar`} className="w-full h-full object-cover" />
         </div>
       )}
 
       {/* Name */}
       <h3 className="text-base md:text-lg font-semibold mb-2">{name}</h3>
 
-      {/* Bio (flex-1 to push CTA to bottom) */}
-      <p className="text-gray-700 text-sm leading-relaxed mb-4 flex-1">
-        {shortBio}
-      </p>
+      {/* Bio */}
+      <p className="text-gray-700 text-sm leading-relaxed mb-4 flex-1">{shortBio}</p>
 
-      {/* Full-width CTA */}
+      {/* Full-width CTA anchored to bottom */}
       <button
-        className="w-full px-4 py-2 rounded-md text-sm font-medium text-white"
+        className="w-full px-4 py-2 rounded-md text-sm font-medium text-white mt-auto"
         style={{ backgroundColor: PINE }}
         onClick={() => {
-          // Hook up navigation when profile routes are available, e.g.:
+          // TODO: navigate to a profile route when available, e.g.:
           // navigate(`/helpanions/${helpanion.id}`)
         }}
       >
@@ -76,11 +69,7 @@ function HelpanionCard({ helpanion }: { helpanion: Helpanion }) {
 
 export default function FeaturedHelpanions({ helpanions }: Props) {
   if (!helpanions?.length) {
-    return (
-      <div className="text-center text-gray-500 text-sm">
-        No helpanions to show yet.
-      </div>
-    );
+    return <div className="text-center text-gray-500 text-sm">No helpanions to show yet.</div>;
   }
 
   return (
