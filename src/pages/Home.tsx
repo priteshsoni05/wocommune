@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="text-[20px] font-semibold tracking-widest"
+            className="text-[15px] font-semibold tracking-widest"
             style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
             aria-label="Walker’s Odyssey home"
           >
