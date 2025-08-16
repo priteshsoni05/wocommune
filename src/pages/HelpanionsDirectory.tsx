@@ -1,17 +1,56 @@
-// src/pages/HelpanionsDirectory.tsx
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Search, ChevronDown, ArrowRight } from "lucide-react";
 import { useHelpanions } from '@/hooks/useHelpanions';
-import { useSearchParams, Link } from 'react-router-dom';
-import { HelpanionHeader } from '@/components/helpanion/HelpanionHeader';
-import { HelpanionFooter } from '@/components/helpanion/HelpanionFooter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { ArrowRight, Search } from 'lucide-react';
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import AuthModal from "./AuthModal";
 
-const PINE = '#01796F'; // brand pine (same as homepage buttons)
+const PINE = '#01796F';
+
+// ------------ Helpers for clean first name ------------
+const titleCase = (s: string) =>
+  s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
+
+const deriveFirstName = (profile: any, user: any) => {
+  const meta = user?.user_metadata || {};
+  const candidates = [
+    profile?.display_name,         // e.g., "Pritesh Soni"
+    meta.given_name,               // OAuth given_name
+    meta.full_name || meta.name,   // OAuth name
+  ].filter(Boolean) as string[];
+
+  if (candidates.length) {
+    const first = String(candidates[0]).trim().split(/\s+/)[0];
+    return titleCase(first);
+  }
+
+  if (user?.email) {
+    const local = user.email.split("@")[0];   // "pritesh.soni03"
+    const first = local.split(/[._-]+/)[0];   // "pritesh"
+    return titleCase(first);
+  }
+
+  return "Friend";
+};
+
+type Profile = {
+  id?: string;
+  display_name?: string | null;
+  bio?: string | null;
+  avatar_url?: string | null;
+  status?: string | null;
+  created_at?: string | null;
+  role?: string | null;
+  account_type?: string | null;
+  user_type?: string | null;
+  is_helpanion?: boolean | null;
+};
 
 export default function HelpanionsDirectory() {
   const { helpanions, loading } = useHelpanions();
@@ -19,6 +58,13 @@ export default function HelpanionsDirectory() {
   const [directorySearchTerm, setDirectorySearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState<'newest' | 'price-low' | 'price-high'>('newest');
+  
+  // Auth state matching WO Commune
+  const [authOpen, setAuthOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Sync initial search from URL
   useEffect(() => {
@@ -26,6 +72,29 @@ export default function HelpanionsDirectory() {
     if (urlSearch && !directorySearchTerm) setDirectorySearchTerm(urlSearch);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch current user's profile (matching WO Commune)
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error loading profile:", error);
+      } else {
+        setProfile(data);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
 
   // Unique categories from services
   const categories = useMemo(() => {
@@ -82,15 +151,89 @@ export default function HelpanionsDirectory() {
     return filtered;
   }, [helpanions, directorySearchTerm, selectedCategory, sortBy]);
 
-  return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111] font-futura">
-      {/* Top site header stays as-is */}
-      <HelpanionHeader onFilteredSearch={() => {}} />
+  // Handle sign out
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setMenuOpen(false);
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
-      {/* Page intro */}
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#FAF9F6] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+      {/* ===== Header (matching WO Commune) ===== */}
+      <header className="bg-[#FAF9F6] py-4">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/get-help" className="font-serif text-xl font-semibold text-[#111]" 
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            WO Commune
+          </Link>
+
+          {/* Navigation + User menu */}
+          <div className="flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+              <Link to="/get-help" className="hover:text-gray-600">Home</Link>
+              <Link to="/helpanions" className="text-[#01796F] font-semibold">Directory</Link>
+              <Link to="/about" className="hover:text-gray-600">About</Link>
+            </nav>
+
+            {/* Auth section */}
+            {user ? (
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="flex items-center gap-2 text-sm font-medium hover:text-gray-600"
+                >
+                  <span>Hi, {deriveFirstName(profile, user)}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {menuOpen && (
+                  <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+                    <button
+                      onClick={handleSignOut}
+                      className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => setAuthOpen(true)}
+                className="px-4 py-2 rounded-md font-medium text-white"
+                style={{ backgroundColor: PINE }}
+              >
+                Join / Login
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* ===== Page Content ===== */}
       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8">
+        {/* Page intro */}
         <div className="text-center pt-8 md:pt-10">
-          <h1 className="text-3xl md:text-4xl font-futura-bold tracking-tight">Discover Helpanions</h1>
+          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight" 
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Discover Helpanions
+          </h1>
           <p className="mt-3 text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
             Find the right helpanion to guide you with practical experience and real-world advice.
           </p>
@@ -151,10 +294,10 @@ export default function HelpanionsDirectory() {
         ) : filteredHelpanions.length === 0 ? (
           <div className="text-center py-16 text-gray-600">No helpanions found matching your criteria.</div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pb-12">
             {filteredHelpanions.map((h: any) => {
               const minPrice = getMinPrice(h.services);
-              const slug = h.username || h.user_id; // works with either route strategy
+              const slug = h.username || h.user_id;
 
               return (
                 <Card
@@ -175,7 +318,7 @@ export default function HelpanionsDirectory() {
                             }}
                           />
                         ) : (
-                          <span className="text-sm font-futura-bold text-neutral-700">
+                          <span className="text-sm font-semibold text-neutral-700">
                             {getInitials(h.display_name || 'Helper')}
                           </span>
                         )}
@@ -183,14 +326,17 @@ export default function HelpanionsDirectory() {
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-base md:text-lg font-futura-bold truncate">{h.display_name}</h3>
+                          <h3 className="text-base md:text-lg font-semibold truncate" 
+                              style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                            {h.display_name}
+                          </h3>
                         </div>
                         <p className="mt-1 text-sm text-gray-600 line-clamp-2">
                           {h.bio || 'Helping through shared experience and practical insights.'}
                         </p>
                         {minPrice !== null && (
                           <p className="mt-2 text-sm text-neutral-800">
-                            From <span className="font-futura-bold">₹{minPrice}</span> / hour
+                            From <span className="font-semibold">₹{minPrice}</span> / hour
                           </p>
                         )}
                       </div>
@@ -244,7 +390,19 @@ export default function HelpanionsDirectory() {
         )}
       </div>
 
-      <HelpanionFooter />
+      {/* ===== Footer (matching WO Commune) ===== */}
+      <footer className="bg-[#222] text-white py-8">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between gap-4">
+          <div className="text-sm">© {new Date().getFullYear()} Walker's Odyssey</div>
+          <div className="flex gap-4 text-sm">
+            <Link to="/privacy" className="hover:underline">Privacy</Link>
+            <Link to="/terms" className="hover:underline">Terms</Link>
+          </div>
+        </div>
+      </footer>
+
+      {/* Auth modal */}
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }
