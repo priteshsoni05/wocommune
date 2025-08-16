@@ -437,7 +437,7 @@ function Footer() {
         </div>
         <div className="border-t border-gray-200 mt-8 pt-6">
           <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved. <span className="text-gray-400">• Pipeline ✓</span></p>
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 bg-gray-200 rounded-sm" />
               <div className="w-6 h-6 bg-gray-200 rounded-sm" />
