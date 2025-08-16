@@ -454,7 +454,7 @@ export default function WOCommune(): JSX.Element {
       </footer>
 
       {/* Auth modal */}
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }

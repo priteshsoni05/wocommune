@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
+import { useRef } from 'react';
 
 interface Testimonial {
   id: string;
@@ -70,6 +70,8 @@ const StarRating = ({ rating }: { rating: number }) => {
 };
 
 export function TestimonialsSlider({ compact = false }: { compact?: boolean }) {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
   return (
     <section className={compact ? "py-6 bg-muted/10 border-y" : "py-16 bg-muted/20"}>
       <div className="max-w-7xl mx-auto px-4">
@@ -85,16 +87,11 @@ export function TestimonialsSlider({ compact = false }: { compact?: boolean }) {
         )}
         
         <Carousel
+          ref={carouselRef}
           opts={{
             align: "start",
             loop: true,
           }}
-          plugins={[
-            Autoplay({
-              delay: 3000,
-              stopOnInteraction: false,
-            }),
-          ]}
           className="w-full"
         >
           <CarouselContent className="-ml-2 md:-ml-4">
