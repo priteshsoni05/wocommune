@@ -5,7 +5,7 @@ import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
-import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
+// Removed: import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,6 +14,7 @@ const EVENT_IMG = "/assets/event-placeholder.jpg";
 const CONVO_IMG = "/assets/convo-placeholder.jpg";
 const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
 const SOCIAL_ICON = "/assets/social-placeholder-24.png";
+const AVATAR_FALLBACK = "/assets/event-placeholder.jpg";
 
 const PINE = "#01796F";
 
@@ -338,20 +339,25 @@ export default function WOCommune(): JSX.Element {
       {/* ===== Testimonials ===== */}
       <TestimonialsSlider compact />
 
-      {/* ===== Featured Helpanions ===== */}
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      {/* ===== Featured Helpanions (updated to match card layout from image) ===== */}
+      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         <h1
           className="text-2xl font-bold mb-8 text-center"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
           Featured Helpanions
         </h1>
+
         {fetching ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
-          <FeaturedHelpanions helpanions={topHelpanions} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {topHelpanions.map((h: any) => (
+              <HelpanionCard key={h.id} helpanion={h} />
+            ))}
+          </div>
         )}
-      </div>
+      </section>
 
       {/* ===== Tabs Section (equal-height cards) ===== */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
@@ -545,6 +551,39 @@ function Card({
           style={!secondary ? { backgroundColor: PINE } : {}}
         >
           {btn}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* Matches the visual size and layout in the provided image:
+   - Tall image area (h-48)
+   - Title, short description
+   - Primary CTA anchored at the bottom
+*/
+function HelpanionCard({ helpanion }: { helpanion: any }) {
+  const name = helpanion.display_name || "Helpanion";
+  const bio =
+    (helpa­nion.bio as string | null)?.toString().trim() || "A trusted companion to walk with you on your journey.";
+  const shortBio = bio.length > 160 ? bio.slice(0, 157) + "..." : bio;
+  const image = helpanion.avatar_url || AVATAR_FALLBACK;
+
+  return (
+    <div className="bg-white border rounded-md shadow-sm overflow-hidden flex flex-col">
+      <img
+        src={image}
+        alt={`${name} avatar`}
+        className="w-full h-48 object-cover"
+      />
+      <div className="flex flex-col flex-1 p-4">
+        <h3 className="font-semibold text-lg mb-2">{name}</h3>
+        <p className="text-gray-600 text-sm mb-4 flex-1">{shortBio}</p>
+        <button
+          className="px-4 py-2 rounded-md text-sm font-medium mt-auto text-white"
+          style={{ backgroundColor: PINE }}
+        >
+          View profile
         </button>
       </div>
     </div>
