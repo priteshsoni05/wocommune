@@ -77,7 +77,7 @@ const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) =
           className="rounded-lg text-white font-[Source_Sans_Pro] hover:opacity-90"
           style={{ backgroundColor: PINE }}
         >
-          <Link to="/helpenions-directory">
+          <Link to="/helpanions">
             Explore all helpanions
             <ArrowRight className="ml-1 h-4 w-4" />
           </Link>

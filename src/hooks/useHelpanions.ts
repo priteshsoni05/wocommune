@@ -33,7 +33,25 @@ export const useHelpanions = () => {
 
   const fetchHelpanions = async () => {
     try {
-      // Fetch active profiles with their services
+      // First, get user IDs with helpanion role
+      const { data: helpanionRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', 'helpanion');
+
+      if (rolesError) {
+        console.error('Error fetching helpanion roles:', rolesError);
+        return;
+      }
+
+      const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
+      
+      if (helpanionUserIds.length === 0) {
+        setHelpanions([]);
+        return;
+      }
+
+      // Then fetch profiles that have helpanion role and active services
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select(`
@@ -48,7 +66,8 @@ export const useHelpanions = () => {
             is_active
           )
         `)
-        .eq('status', 'active');
+        .eq('status', 'active')
+        .in('user_id', helpanionUserIds);
 
       if (profilesError) {
         console.error('Error fetching helpanions:', profilesError);
