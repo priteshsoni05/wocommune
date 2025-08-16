@@ -13,6 +13,7 @@ const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
 const CONVO_IMG = "/assets/convo-placeholder.jpg";
 const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
+const SOCIAL_ICON = "/assets/social-placeholder-24.png";
 
 const PINE = "#01796F";
 
@@ -412,31 +413,91 @@ export default function WOCommune(): JSX.Element {
               ))}
             </div>
           </div>
-          <aside className="mt-6 md:mt-0 md:w-[320px] p-6 bg-[#F3F2EE] rounded-md flex flex-col justify-between">
-            <div>
-              <h4 className="text-lg font-serif mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Walk with us</h4>
-              <p className="text-sm text-gray-700 mb-4">Stories, guidance, and events — straight to your inbox.</p>
-            </div>
-            <a
-              href="https://wocommune.substack.com/"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-block text-center px-4 py-2 rounded-md font-medium"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Subscribe on Substack
-            </a>
-          </aside>
         </div>
       </section>
 
-      {/* ===== Footer ===== */}
-      <footer className="bg-[#222] text-white py-8">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between gap-4">
-          <div className="text-sm">© {new Date().getFullYear()} Walker’s Odyssey</div>
-          <div className="flex gap-4 text-sm">
-            <Link to="/privacy" className="hover:underline">Privacy</Link>
-            <Link to="/terms" className="hover:underline">Terms</Link>
+      {/* ===== Newsletter CTA (match Home.tsx design) ===== */}
+      <section className="bg-[#F3F2EE] py-10">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <h4 className="text-xl font-serif" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Walk with us
+            </h4>
+            <p className="text-sm text-gray-700">Stories, guidance, and events — straight to your inbox.</p>
+          </div>
+          <div className="flex gap-3 w-full md:w-auto">
+            <a
+              href="https://wocommune.substack.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-5 py-2 rounded-md font-semibold"
+              style={{ backgroundColor: "#2C5F50", color: "#fff" }}
+            >
+              Subscribe on Substack
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Footer (match Home.tsx design) ===== */}
+      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
+          {/* Footer grid: brand + 3 columns */}
+          <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+            {/* Brand Column */}
+            <div>
+              <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                WALKER'S ODYSSEY
+              </h5>
+              <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
+                Your trusted companion for every step - connecting you with guidance, community, and inspiration to walk your path with purpose.
+              </p>
+            </div>
+
+            {/* Brand Links */}
+            <div>
+              <h6 className="font-semibold mb-3">Brand</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><Link to="/about" className="hover:underline">About</Link></li>
+                <li><Link to="#" className="hover:underline">Brand Story</Link></li>
+                <li><Link to="#" className="hover:underline">Vision</Link></li>
+                <li><Link to="/about" className="hover:underline">About</Link></li>
+              </ul>
+            </div>
+
+            {/* Commune Links */}
+            <div>
+              <h6 className="font-semibold mb-3">Commune</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
+                <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
+                <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
+                <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
+              </ul>
+            </div>
+
+            {/* Get in touch */}
+            <div>
+              <h6 className="font-semibold mb-3">Get in touch</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
+                <li><Link to="#" className="hover:underline">Contact Us</Link></li>
+                <li><a href="#" className="hover:underline">LinkedIn</a></li>
+                <li><a href="#" className="hover:underline">Instagram</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom row: divider + copyright + socials */}
+          <div className="border-t border-gray-200 mt-8 pt-6">
+            <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
+              <div className="flex items-center gap-3">
+                <img src={SOCIAL_ICON} alt="social-1" className="w-5 h-5" />
+                <img src={SOCIAL_ICON} alt="social-2" className="w-5 h-5" />
+                <img src={SOCIAL_ICON} alt="social-3" className="w-5 h-5" />
+              </div>
+            </div>
           </div>
         </div>
       </footer>
