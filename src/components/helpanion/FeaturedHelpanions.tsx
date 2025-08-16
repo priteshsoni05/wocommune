@@ -1,90 +1,93 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 
-interface Helpanion {
+type Helpanion = {
   id: string;
-  display_name?: string;
-  bio?: string;
-  avatar_url?: string;
-}
-
-interface FeaturedHelpanionsProps {
-  helpanions: Helpanion[];
-}
-
-const PINE = "#01796F";
-const IMAGE_FALLBACK = "/assets/event-placeholder.jpg";
-
-const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) => {
-  return (
-    <div className="space-y-6">
-      {/* Cards grid (match size/layout shown in image) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        {helpanions.map((helpanion) => {
-          const name = helpanion.display_name || "Helpanion";
-          const bio =
-            (helpanion.bio || "Helping through shared experience and practical insights.").trim();
-          const shortBio = bio.length > 160 ? `${bio.slice(0, 157)}...` : bio;
-          const img = helpanion.avatar_url || IMAGE_FALLBACK;
-
-          return (
-            <Card
-              key={helpanion.id}
-              className="bg-white border rounded-md shadow-sm overflow-hidden flex flex-col h-full"
-            >
-              {/* Tall image area */}
-              <img
-                src={img}
-                alt={`${name} avatar`}
-                className="w-full h-48 object-cover"
-              />
-
-              {/* Content */}
-              <CardContent className="p-4 flex flex-col flex-1">
-                <h3
-                  className="font-semibold text-lg mb-2"
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  {name}
-                </h3>
-                <p
-                  className="text-gray-600 text-sm mb-4 flex-1"
-                  style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
-                >
-                  {shortBio}
-                </p>
-
-                {/* Full-width primary CTA anchored at bottom */}
-                <Button
-                  className="w-full text-white font-medium"
-                  style={{ backgroundColor: PINE }}
-                >
-                  View Profile
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* CTA below cards */}
-      <div className="flex justify-end">
-        <Button
-          asChild
-          className="rounded-lg text-white font-[Source_Sans_Pro] hover:opacity-90"
-          style={{ backgroundColor: PINE }}
-        >
-          <Link to="/helpanions">
-            Explore all helpanions
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
-        </Button>
-      </div>
-    </div>
-  );
+  display_name?: string | null;
+  bio?: string | null;
+  avatar_url?: string | null;
 };
 
-export default FeaturedHelpanions;
+type Props = {
+  helpanions: Helpanion[];
+};
+
+const PINE = "#01796F";
+const AVATAR_FALLBACK = ""; // leave empty to use initials; or set to a placeholder image path if you prefer
+
+function getInitial(name: string) {
+  const n = name?.trim();
+  if (!n) return "H";
+  return n[0]!.toUpperCase();
+}
+
+function HelpanionCard({ helpanion }: { helpanion: Helpanion }) {
+  const name = (helpa­nion.display_name || "Helpanion").trim();
+  const bio =
+    (helpa­nion.bio?.trim() ||
+      "At Walker’s Odyssey, we believe every journey is unique. Whether you’re taking your first step or navigating an unfamiliar path, we’re here to walk alongside you — offering guidance, inspiration, and a community that celebrates your pace, your way.") as string;
+
+  const shortBio = bio.length > 280 ? `${bio.slice(0, 277)}...` : bio;
+  const img = hel­panion.avatar_url || AVATAR_FALLBACK;
+  const showInitials = !img;
+
+  return (
+    <div className="bg-white border rounded-md shadow-sm p-6 flex flex-col items-center text-center h-full">
+      {/* Circular avatar */}
+      {showInitials ? (
+        <div
+          className="w-24 h-24 rounded-full flex items-center justify-center text-white text-2xl font-semibold mb-4"
+          style={{ backgroundColor: "#D1D5DB" /* neutral gray like mock */ }}
+          aria-label={`${name} avatar placeholder`}
+        >
+          {getInitial(name)}
+        </div>
+      ) : (
+        <div className="w-24 h-24 rounded-full overflow-hidden mb-4 border border-gray-200">
+          <img
+            src={img}
+            alt={`${name} avatar`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      {/* Name */}
+      <h3 className="text-base md:text-lg font-semibold mb-2">{name}</h3>
+
+      {/* Bio (flex-1 to push CTA to bottom) */}
+      <p className="text-gray-700 text-sm leading-relaxed mb-4 flex-1">
+        {shortBio}
+      </p>
+
+      {/* Full-width CTA */}
+      <button
+        className="w-full px-4 py-2 rounded-md text-sm font-medium text-white"
+        style={{ backgroundColor: PINE }}
+        onClick={() => {
+          // Hook up navigation when profile routes are available, e.g.:
+          // navigate(`/helpanions/${helpanion.id}`)
+        }}
+      >
+        View Profile
+      </button>
+    </div>
+  );
+}
+
+export default function FeaturedHelpanions({ helpanions }: Props) {
+  if (!helpanions?.length) {
+    return (
+      <div className="text-center text-gray-500 text-sm">
+        No helpanions to show yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      {helpanions.map((h) => (
+        <HelpanionCard key={h.id} helpanion={h} />
+      ))}
+    </div>
+  );
+}
