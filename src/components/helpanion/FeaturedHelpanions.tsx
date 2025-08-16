@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -17,57 +16,58 @@ interface FeaturedHelpanionsProps {
 }
 
 const PINE = "#01796F";
+const IMAGE_FALLBACK = "/assets/event-placeholder.jpg";
 
 const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) => {
   return (
     <div className="space-y-6">
-      {/* Cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {helpanions.map((helpanion) => (
-          <Card
-            key={helpanion.id}
-            className="border border-neutral-200 bg-white rounded-2xl hover:shadow-md hover:border-neutral-300 transition"
-          >
-            <CardContent className="p-5 flex flex-col h-full">
-              {/* Profile header */}
-              <div className="flex flex-col items-center text-center flex-1">
-                <Avatar className="w-16 h-16 mb-4 border border-neutral-200 shadow-sm">
-                  <AvatarImage src={helpanion.avatar_url} alt={helpanion.display_name} />
-                  <AvatarFallback className="font-[Cormorant_Garamond] text-lg">
-                    {helpanion.display_name?.charAt(0)?.toUpperCase() || "H"}
-                  </AvatarFallback>
-                </Avatar>
+      {/* Cards grid (match size/layout shown in image) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        {helpanions.map((helpanion) => {
+          const name = helpanion.display_name || "Helpanion";
+          const bio =
+            (helpanion.bio || "Helping through shared experience and practical insights.").trim();
+          const shortBio = bio.length > 160 ? `${bio.slice(0, 157)}...` : bio;
+          const img = helpanion.avatar_url || IMAGE_FALLBACK;
 
-                <h3 className="text-base md:text-lg font-[Cormorant_Garamond] font-semibold mb-1">
-                  {helpanion.display_name || "Helpanion"}
+          return (
+            <Card
+              key={helpanion.id}
+              className="bg-white border rounded-md shadow-sm overflow-hidden flex flex-col h-full"
+            >
+              {/* Tall image area */}
+              <img
+                src={img}
+                alt={`${name} avatar`}
+                className="w-full h-48 object-cover"
+              />
+
+              {/* Content */}
+              <CardContent className="p-4 flex flex-col flex-1">
+                <h3
+                  className="font-semibold text-lg mb-2"
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  {name}
                 </h3>
-
-                <p className="text-sm text-gray-600 line-clamp-3 mb-4 font-[Source_Sans_Pro]">
-                  {helpanion.bio || "Helping through shared experience and practical insights."}
+                <p
+                  className="text-gray-600 text-sm mb-4 flex-1"
+                  style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+                >
+                  {shortBio}
                 </p>
-              </div>
 
-              {/* CTAs */}
-              <div className="flex gap-2 mt-auto">
+                {/* Full-width primary CTA anchored at bottom */}
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 rounded-lg border-neutral-800 text-neutral-900 hover:bg-neutral-900 hover:text-white font-[Source_Sans_Pro]"
+                  className="w-full text-white font-medium"
+                  style={{ backgroundColor: PINE }}
                 >
                   View Profile
                 </Button>
-                <Button
-                  size="sm"
-                  className="flex-1 rounded-lg text-white font-[Source_Sans_Pro] hover:opacity-90"
-                  style={{ backgroundColor: PINE }}
-                >
-                  Book Session
-                  <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* CTA below cards */}
