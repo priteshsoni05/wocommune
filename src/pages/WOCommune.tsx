@@ -350,18 +350,6 @@ export default function WOCommune(): JSX.Element {
         ) : (
           <FeaturedHelpanions helpanions={topHelpanions} />
         )}
-        <div className="mt-8 flex justify-center">
-          <Link
-            to="/helpanions"
-            className="px-6 py-3 rounded-md font-medium text-white"
-            style={{
-              backgroundColor: "#01796F",
-              fontFamily: "'Source Sans Pro', sans-serif",
-            }}
-          >
-            Explore all helpanions
-          </Link>
-        </div>
       </div>
 
       {/* ===== Tabs Section (equal-height cards) ===== */}
