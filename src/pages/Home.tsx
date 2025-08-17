@@ -132,7 +132,8 @@ const HomePage: React.FC = () => {
 
           {/* Right column: portrait image (3:4) */}
           <div className="px-2 flex justify-center md:justify-end">
-            <div className="w-[350px] sm:w-[420px] md:w-[520px] lg:w-[550px] h-[700px] rounded-md overflow-hidden shadow-sm">
+            {/* Reduced by ~25% width and height */}
+            <div className="w-[262px] sm:w-[315px] md:w-[390px] lg:w-[412px] h-[525px] rounded-md overflow-hidden shadow-sm">
               <img
                 src={ABOUT_IMG}
                 alt="Two people walking on a forest path (symbolic, non-romantic)"
@@ -187,7 +188,7 @@ const HomePage: React.FC = () => {
           {/* Card 1: Upcoming events (text card) */}
           <div className="bg-white rounded-md p-4 shadow-sm h-56 flex flex-col">
             <h4 className="font-medium mb-2">Upcoming Events</h4>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 flex-1">
               <div className="mb-4">
                 <div className="font-semibold">Networking Dinner</div>
                 <div className="text-xs text-gray-500">24 Aug 2025 — 7:00 PM</div>
@@ -195,10 +196,10 @@ const HomePage: React.FC = () => {
                   Cafe Veritas — Downtown. An evening of conversation and community.
                 </div>
               </div>
-              <a className="text-sm mt-auto inline-block" style={{ color: PINE }} href="#">
-                See all events →
-              </a>
             </div>
+            <a className="text-sm inline-block" style={{ color: PINE }} href="#">
+              See all events →
+            </a>
           </div>
 
           {/* Card 2: Image */}
