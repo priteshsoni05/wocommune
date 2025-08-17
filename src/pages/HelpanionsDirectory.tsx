@@ -391,7 +391,6 @@ export default function HelpanionsDirectory() {
                 <li><Link to="/about" className="hover:underline">About</Link></li>
                 <li><Link to="#" className="hover:underline">Brand Story</Link></li>
                 <li><Link to="#" className="hover:underline">Vision</Link></li>
-                <li><Link to="/about" className="hover:underline">About</Link></li>
               </ul>
             </div>
             <div>
