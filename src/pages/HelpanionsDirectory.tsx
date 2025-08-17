@@ -350,7 +350,7 @@ export default function HelpanionsDirectory() {
       </div>
 
       {/* ===== Newsletter CTA ===== */}
-      <section className="bg-white border-t py-12">
+      <section className="bg-[#F3F2EE] py-10">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
           <h2 className="text-2xl font-semibold mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Stay connected with Walker’s Odyssey
@@ -371,46 +371,51 @@ export default function HelpanionsDirectory() {
       </section>
 
       {/* ===== Footer ===== */}
-      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              WALKER'S ODYSSEY
-            </h5>
-            <p className="text-sm text-gray-600">
-              Your trusted companion for every step – connecting you with guidance, community, and inspiration.
-            </p>
+      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200 mt-8">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
+          <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+            <div>
+              <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                WALKER'S ODYSSEY
+              </h5>
+              <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
+                Your trusted companion for every step - connecting you with guidance, community, and inspiration to walk your path with purpose.
+              </p>
+            </div>
+            <div>
+              <h6 className="font-semibold mb-3">Brand</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><Link to="/about" className="hover:underline">About</Link></li>
+                <li><Link to="#" className="hover:underline">Brand Story</Link></li>
+                <li><Link to="#" className="hover:underline">Vision</Link></li>
+                <li><Link to="/about" className="hover:underline">About</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h6 className="font-semibold mb-3">Commune</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
+                <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
+                <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
+                <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h6 className="font-semibold mb-3">Get in touch</h6>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
+                <li><Link to="#" className="hover:underline">Contact Us</Link></li>
+                <li><a href="#" className="hover:underline">LinkedIn</a></li>
+                <li><a href="#" className="hover:underline">Instagram</a></li>
+              </ul>
+            </div>
           </div>
-          <div>
-            <h6 className="font-semibold mb-3">Brand</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link to="/about">About</Link></li>
-              <li><Link to="#">Brand Story</Link></li>
-              <li><Link to="#">Vision</Link></li>
-            </ul>
+
+          <div className="border-t border-gray-200 mt-8 pt-6">
+            <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved. <span className="text-gray-400">• Pipeline ✓</span></p>
+            </div>
           </div>
-          <div>
-            <h6 className="font-semibold mb-3">Commune</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link to="/get-help">Know Commune</Link></li>
-              <li><Link to="/get-help">Join Commune</Link></li>
-              <li><Link to="/helpanions">Become a Helpanion</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h6 className="font-semibold mb-3">Get in touch</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><a href="mailto:commune@walkersodyssey.com">commune@walkersodyssey.com</a></li>
-              {SOCIALS.map((s) => (
-                <li key={s.name}>
-                  <a href={s.href} target="_blank" rel="noopener noreferrer">{s.name}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className="border-t mt-6 pt-4 text-center text-xs text-gray-500">
-          © {new Date().getFullYear()} Walker's Odyssey. All rights reserved.
         </div>
       </footer>
 
