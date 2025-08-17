@@ -16,7 +16,7 @@ type Helpanion = {
   sessions_completed?: number | null; // optional
 };
 
-const PINE = "2C5F50";
+const PINE = "#2C5F50";
 const IMAGE_FALLBACK = "/assets/event-placeholder.jpg";
 
 /**
