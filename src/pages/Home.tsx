@@ -1,17 +1,17 @@
 // HomePage.tsx
 // React + Tailwind responsive homepage for Walker's Odyssey
-// - Replace dummy images in the code with your real asset paths
-// - Newsletter CTA links to your Substack as requested
+// - Uses real assets from src/assets
+// - Newsletter CTA links to Substack as requested
 
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Instagram, Linkedin, Twitter } from "lucide-react";
 
-/* ---------- Dummy images (replace with your own) ---------- */
-const HERO_IMG = "/assets/hero-placeholder.jpg";
-const ABOUT_IMG = "/assets/about-placeholder-portrait.jpg";
-const EVENT_PLACEHOLDER = "/assets/event-placeholder.jpg";
-const PODCAST_PLACEHOLDER = "/assets/podcast-placeholder.jpg";
-const SOCIAL_ICON = "/assets/social-placeholder-24.png";
+/* ---------- Real images (from src/assets) ---------- */
+import HERO_IMG from "../assets/hero-placeholder.jpg";
+import ABOUT_IMG from "../assets/about-placeholder-portrait.jpg";
+import EVENT_PLACEHOLDER from "../assets/event-placeholder.jpg";
+import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
 
 /* ---------- Brand color tokens (used inline for clarity) ---------- */
 const PINE = "#2C5F50"; // pine forest green
@@ -191,11 +191,11 @@ const HomePage: React.FC = () => {
                 <div className="text-xs text-gray-500">24 Aug 2025 — 7:00 PM</div>
                 <div className="text-xs mt-2">Cafe Veritas — Downtown. An evening of conversation and community.</div>
               </div>
-              <a className="text-sm text-pine-600" href="#">See all events →</a>
+              <a className="text-sm" style={{ color: PINE }} href="#">See all events →</a>
             </div>
           </div>
 
-          {/* Events gallery placeholder */}
+          {/* Events gallery */}
           <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="rounded-md overflow-hidden bg-gray-100 h-40">
               <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
@@ -313,9 +313,15 @@ const HomePage: React.FC = () => {
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
               <div className="flex items-center gap-3">
-                <img src={SOCIAL_ICON} alt="social-1" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="social-2" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="social-3" className="w-5 h-5" />
+                <a href="#" aria-label="Twitter" className="text-[#2B2B2B] hover:text-black">
+                  <Twitter size={20} />
+                </a>
+                <a href="#" aria-label="LinkedIn" className="text-[#2B2B2B] hover:text-black">
+                  <Linkedin size={20} />
+                </a>
+                <a href="#" aria-label="Instagram" className="text-[#2B2B2B] hover:text-black">
+                  <Instagram size={20} />
+                </a>
               </div>
             </div>
           </div>
