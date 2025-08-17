@@ -181,28 +181,34 @@ const HomePage: React.FC = () => {
       {/* ------------------------ Community & Events ------------------------ */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         <h3 className="text-lg font-semibold mb-4">Community & Events</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Upcoming events column */}
-          <div className="col-span-1 md:col-span-1 bg-white rounded-md p-4 shadow-sm">
+
+        {/* Make all three cards the same size */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          {/* Card 1: Upcoming events (text card) */}
+          <div className="bg-white rounded-md p-4 shadow-sm h-56 flex flex-col">
             <h4 className="font-medium mb-2">Upcoming Events</h4>
             <div className="text-sm text-gray-600">
               <div className="mb-4">
                 <div className="font-semibold">Networking Dinner</div>
                 <div className="text-xs text-gray-500">24 Aug 2025 — 7:00 PM</div>
-                <div className="text-xs mt-2">Cafe Veritas — Downtown. An evening of conversation and community.</div>
+                <div className="text-xs mt-2">
+                  Cafe Veritas — Downtown. An evening of conversation and community.
+                </div>
               </div>
-              <a className="text-sm" style={{ color: PINE }} href="#">See all events →</a>
+              <a className="text-sm mt-auto inline-block" style={{ color: PINE }} href="#">
+                See all events →
+              </a>
             </div>
           </div>
 
-          {/* Events gallery */}
-          <div className="col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="rounded-md overflow-hidden bg-gray-100 h-40">
-              <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
-            </div>
-            <div className="rounded-md overflow-hidden bg-gray-100 h-40">
-              <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
-            </div>
+          {/* Card 2: Image */}
+          <div className="rounded-md overflow-hidden shadow-sm h-56 bg-gray-100">
+            <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
+          </div>
+
+          {/* Card 3: Image */}
+          <div className="rounded-md overflow-hidden shadow-sm h-56 bg-gray-100">
+            <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
@@ -313,7 +319,7 @@ const HomePage: React.FC = () => {
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
               <div className="flex items-center gap-3">
-                <a href="#" aria-label="Substack" className="text-[#2B2B2B] hover:text-black">
+                <a href="#" aria-label="Twitter" className="text-[#2B2B2B] hover:text-black">
                   <Twitter size={20} />
                 </a>
                 <a href="#" aria-label="LinkedIn" className="text-[#2B2B2B] hover:text-black">
