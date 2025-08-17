@@ -1,6 +1,6 @@
 // src/pages/WOCommune.tsx
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronDown, ArrowRight } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
@@ -61,6 +61,7 @@ export default function WOCommune(): JSX.Element {
   const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { helpanions } = useHelpanions();
+  const navigate = useNavigate();
 
   const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -69,6 +70,16 @@ export default function WOCommune(): JSX.Element {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  // Simple search state + handler for hero
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    // Navigate to this page with a query param to avoid "broken" button feel
+    navigate(`/get-help?query=${encodeURIComponent(q)}`);
+  };
 
   // Fetch active helpanions for "Featured Helpanions"
   useEffect(() => {
@@ -188,7 +199,16 @@ export default function WOCommune(): JSX.Element {
             <ul className="flex items-center gap-4">
               <li><Link to="/about" className="hover:underline">About</Link></li>
               <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
-              <li><Link to="#" className="hidden md:inline hover:underline">Shop</Link></li>
+              {/* Disabled placeholder instead of broken "#" link */}
+              <li>
+                <span
+                  className="hidden md:inline text-gray-400 cursor-not-allowed"
+                  aria-disabled="true"
+                  title="Shop is coming soon"
+                >
+                  Shop
+                </span>
+              </li>
             </ul>
           </nav>
         </div>
@@ -216,6 +236,7 @@ export default function WOCommune(): JSX.Element {
                 type="text"
                 placeholder="Search events, help topics or podcasts..."
                 className="w-full pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
+                aria-label="Search events, help topics or podcasts"
               />
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
@@ -226,9 +247,13 @@ export default function WOCommune(): JSX.Element {
             <div ref={menuRef} className="relative">
               <button
                 onClick={() => setMenuOpen((v) => !v)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setMenuOpen(false);
+                }}
                 className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-50"
-                aria-haspopup="menu"
+                aria-haspopup="dialog"
                 aria-expanded={menuOpen}
+                aria-controls="user-menu"
               >
                 {/* Avatar */}
                 {avatarContent.type === "image" ? (
@@ -257,16 +282,15 @@ export default function WOCommune(): JSX.Element {
                 <ChevronDown className="w-4 h-4 text-gray-500" />
               </button>
 
-              {/* Dropdown */}
+              {/* Dropdown (no menu roles to avoid implying unsupported keyboard model) */}
               {menuOpen && (
                 <div
-                  role="menu"
+                  id="user-menu"
                   className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
                 >
                   <Link
                     to={dashboardPath}
                     className="block px-4 py-2 text-sm hover:bg-gray-50"
-                    role="menuitem"
                     onClick={() => setMenuOpen(false)}
                   >
                     Dashboard
@@ -277,7 +301,6 @@ export default function WOCommune(): JSX.Element {
                       signOut();
                     }}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                    role="menuitem"
                   >
                     Sign Out
                   </button>
@@ -312,18 +335,22 @@ export default function WOCommune(): JSX.Element {
               you take meaningful steps — at your pace.
             </p>
             <div className="mt-6 w-full max-w-[700px] mx-auto md:mx-0">
-              <div className="flex items-center gap-3 bg-white rounded-md px-3 py-2 shadow">
+              <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-3 py-2 shadow">
                 <input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search 'career advice', 'run club', 'networking'..."
                   className="flex-1 text-sm outline-none"
+                  aria-label="Search query"
                 />
                 <button
+                  type="submit"
                   className="px-4 py-2 rounded-md"
                   style={{ backgroundColor: PINE, color: "#fff" }}
                 >
                   Search
                 </button>
-              </div>
+              </form>
             </div>
           </div>
           <div className="w-full md:w-[420px] lg:w-[520px] rounded-md overflow-hidden shadow-lg border border-white/20">
@@ -341,12 +368,12 @@ export default function WOCommune(): JSX.Element {
 
       {/* ===== Featured Helpanions ===== */}
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <h1
+        <h2
           className="text-2xl font-bold mb-8 text-center"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
           Featured Helpanions
-        </h1>
+        </h2>
         {fetching ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : (
@@ -419,7 +446,7 @@ export default function WOCommune(): JSX.Element {
       </section>
 
       {/* ===== Footer ===== */}
-      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200 mt-8">
+      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
           <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
             <div>
@@ -434,8 +461,8 @@ export default function WOCommune(): JSX.Element {
               <h6 className="font-semibold mb-3">Brand</h6>
               <ul className="space-y-3 text-sm text-gray-700">
                 <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="#" className="hover:underline">Brand Story</Link></li>
-                <li><Link to="#" className="hover:underline">Vision</Link></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Brand Story</span></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Vision</span></li>
               </ul>
             </div>
             <div>
@@ -444,16 +471,16 @@ export default function WOCommune(): JSX.Element {
                 <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
                 <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
                 <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
-                <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Community Guidelines</span></li>
               </ul>
             </div>
             <div>
               <h6 className="font-semibold mb-3">Get in touch</h6>
               <ul className="space-y-3 text-sm text-gray-700">
                 <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-                <li><Link to="#" className="hover:underline">Contact Us</Link></li>
-                <li><a href="#" className="hover:underline">LinkedIn</a></li>
-                <li><a href="#" className="hover:underline">Instagram</a></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Contact Us</span></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">LinkedIn</span></li>
+                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Instagram</span></li>
               </ul>
             </div>
           </div>
@@ -462,9 +489,9 @@ export default function WOCommune(): JSX.Element {
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
               <div className="flex items-center gap-3">
-                <img src={SOCIAL_ICON} alt="social-1" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="social-2" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="social-3" className="w-5 h-5" />
+                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
+                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
+                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
               </div>
             </div>
           </div>
@@ -499,7 +526,7 @@ function StatBlock({ number, label }: { number: string; label: string }) {
 function Card({ image, title, desc, btn, secondary }: { image: string; title: string; desc: string; btn: string; secondary?: boolean; }) {
   return (
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full min-h-[420px]">
-      <img src={image} alt={title} className="w-full h-44 object-cover" />
+      <img src={image} alt={title} className="w-full h-44 object-cover" loading="lazy" />
       <div className="p-6 flex flex-col flex-1">
         <h3 className="font-semibold mt-1 text-2xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{title}</h3>
         <p className="text-sm text-gray-600 mt-3" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>{desc}</p>
