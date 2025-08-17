@@ -27,7 +27,7 @@ export default function WOCommunePage(): JSX.Element {
       setLoading(true);
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, display_name, bio, avatar_url, created_at")
+        .select("id, display_name, bio, avatar_url, created_at, username, user_id, price_min, average_rating, sessions_completed")
         .eq("status", "active");
 
       if (error) {
@@ -187,7 +187,7 @@ function SubHeader() {
           </div>
         </div>
         <button
-          onClick={() => alert("Login clicked")}
+          onClick={() => onLoginClick()}
           className="inline-block px-5 py-2 rounded-md font-semibold"
           style={{ backgroundColor: PINE, color: "#fff" }}
         >
@@ -250,31 +250,50 @@ function FeaturedHelpanionsList({ helpanions, loading }: { helpanions: any[]; lo
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {helpanions.map((h) => (
-                <div key={h.id} className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full p-4">
-                  <div className="flex flex-col items-center text-center flex-1">
-                    <img
-                      src={h.avatar || "/assets/default-avatar.jpg"}
-                      alt={h.name}
-                      className="w-20 h-20 rounded-full object-cover mb-3"
-                    />
-                    <h3 className="font-semibold">{h.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">From ₹{h.rate}/hour</p>
-                    <p className="text-sm text-gray-600 mt-2 line-clamp-3">{h.bio}</p>
+              {helpanions.map((h) => {
+                const name: string = h?.display_name || h?.name || "Helpanion";
+                const avatar: string = h?.avatar_url || h?.avatar || "/assets/default-avatar.jpg";
+                const rate: number | string | undefined = h?.rate ?? h?.price_min;
+                const bio: string = h?.bio || "";
+                const slug: string | number = h?.username || h?.user_id || h?.id;
+                const profileUrl = `/p/${encodeURIComponent(String(slug))}`;
+
+                return (
+                  <div key={h.id} className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full p-4">
+                    <div className="flex flex-col items-center text-center flex-1">
+                      <img
+                        src={avatar}
+                        alt={name}
+                        className="w-20 h-20 rounded-full object-cover mb-3"
+                      />
+                      <h3 className="font-semibold">{name}</h3>
+                      {rate != null && rate !== "" && (
+                        <p className="text-sm text-gray-500 mt-1">From ₹{rate}/hour</p>
+                      )}
+                      {bio && (
+                        <p className="text-sm text-gray-600 mt-2 line-clamp-3">{bio}</p>
+                      )}
+                    </div>
+                    <div className="mt-auto flex gap-2 pt-4">
+                      <Link
+                        className="flex-1 px-4 py-2 rounded-md bg-black text-white text-sm text-center"
+                        to={profileUrl}
+                        aria-label={`View ${name} profile`}
+                      >
+                        View Profile
+                      </Link>
+                      <Link
+                        className="flex-1 px-4 py-2 rounded-md text-sm text-center"
+                        style={{ backgroundColor: PINE, color: "#fff" }}
+                        to={profileUrl}
+                        aria-label={`Book a session with ${name}`}
+                      >
+                        Book Session →
+                      </Link>
+                    </div>
                   </div>
-                  <div className="mt-auto flex gap-2 pt-4">
-                    <button className="flex-1 px-4 py-2 rounded-md bg-black text-white text-sm">
-                      View Profile
-                    </button>
-                    <button
-                      className="flex-1 px-4 py-2 rounded-md text-sm"
-                      style={{ backgroundColor: PINE, color: "#fff" }}
-                    >
-                      Book Session →
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             <div className="text-center mt-8">
               <Button size="default" variant="brand" asChild>
