@@ -313,7 +313,7 @@ const HomePage: React.FC = () => {
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
               <div className="flex items-center gap-3">
-                <a href="#" aria-label="Twitter" className="text-[#2B2B2B] hover:text-black">
+                <a href="#" aria-label="Substack" className="text-[#2B2B2B] hover:text-black">
                   <Twitter size={20} />
                 </a>
                 <a href="#" aria-label="LinkedIn" className="text-[#2B2B2B] hover:text-black">
