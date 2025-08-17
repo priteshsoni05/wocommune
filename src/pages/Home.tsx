@@ -15,7 +15,7 @@ import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
 
 /* ---------- Brand color tokens (used inline for clarity) ---------- */
 const PINE = "#2C5F50"; // pine forest green
-const GOLD = "#C7A76C"; // accent gold
+const GOLD = "#000000"; // accent gold
 
 const HomePage: React.FC = () => {
   useEffect(() => {
