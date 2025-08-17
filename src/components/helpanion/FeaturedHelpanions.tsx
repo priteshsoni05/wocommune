@@ -133,13 +133,15 @@ const FeaturedHelpanions: React.FC<{ helpanions: Helpanion[] }> = ({ helpanions 
 
                   {/* Book Session - primary */}
                   <Button
-                    asChild
                     className="w-full h-10 font-medium text-white"
                     style={{ backgroundColor: PINE }}
+                    onClick={() => {
+                      // TODO: Open booking modal
+                      window.location.href = `/p/${slug}?action=book`;
+                    }}
+                    aria-label={`Book a session with ${name}`}
                   >
-                    <Link to={`/p/${slug}?action=book`} aria-label={`Book a session with ${name}`}>
-                      Book Session
-                    </Link>
+                    Book Session
                   </Button>
                 </div>
               </CardContent>

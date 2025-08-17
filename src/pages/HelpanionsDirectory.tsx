@@ -121,69 +121,135 @@ export default function HelpanionsDirectory() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
-      {/* ===== Header ===== */}
-      <header className="bg-[#FAF9F6] py-4 border-b border-gray-200">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex items-center justify-between">
+      {/* ===== Main Header ===== */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
           <Link
-            to="/get-help"
-            className="font-serif text-xl font-semibold text-[#111]"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            to="/"
+            className="text-[20px] font-semibold tracking-widest"
+            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+            aria-label="Walker's Odyssey home"
           >
-            WO Commune
+            WALKER'S ODYSSEY
           </Link>
-          <div className="flex items-center gap-6">
-            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-              <Link to="/get-help">Home</Link>
-              <Link to="/helpanions" className="text-[#01796F] font-semibold">
-                Directory
-              </Link>
-              <Link to="/about">About</Link>
-            </nav>
-            {user ? (
-              <div className="relative" ref={menuRef}>
-                <button
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-2 text-sm font-medium"
-                >
-                  Hi, {deriveFirstName(profile, user)}
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                {menuOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-48 bg-white border rounded-md shadow-lg py-1 z-50">
-                    <button
-                      onClick={async () => {
-                        await signOut();
-                        setMenuOpen(false);
-                      }}
-                      className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
-                    >
-                      Sign out
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={() => setAuthOpen(true)}
-                className="px-4 py-2 rounded-md font-medium text-white"
-                style={{ backgroundColor: PINE }}
-              >
-                Join / Login
-              </button>
-            )}
-          </div>
+          <nav className="text-sm">
+            <ul className="flex items-center gap-4">
+              <li><Link to="/about" className="hover:underline">About</Link></li>
+              <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
+              <li><Link to="#" className="hidden md:inline hover:underline">Shop</Link></li>
+            </ul>
+          </nav>
         </div>
       </header>
 
-      {/* ===== Hero Text (Header + Subheader) ===== */}
-      <div className="max-w-3xl mx-auto text-center py-10 px-4">
-        <h1 className="text-3xl md:text-4xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Discover Helpanions
-        </h1>
-        <p className="mt-3 text-base md:text-lg text-gray-600">
-          Find the right helpanion to guide you with real-world advice and practical experience.
-        </p>
+      <div className="h-16" />
+
+      {/* ===== Sub-header ===== */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
+          <div className="flex items-center gap-3">
+            <Link
+              to="/get-help"
+              className="font-semibold tracking-widest text-[15px]"
+              style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+            >
+              WO COMMUNE
+            </Link>
+          </div>
+
+          <div className="flex-1 hidden md:flex items-center justify-center">
+            <div className="relative w-full max-w-md">
+              <input
+                type="text"
+                placeholder="Search helpanions..."
+                value={directorySearchTerm}
+                onChange={(e) => setDirectorySearchTerm(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+            </div>
+          </div>
+
+          {/* Right side: Auth */}
+          {user ? (
+            <div ref={menuRef} className="relative">
+              <button
+                onClick={() => setMenuOpen((v) => !v)}
+                className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-50"
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+              >
+                {/* Avatar */}
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
+                  style={{ backgroundColor: PINE }}
+                  aria-hidden
+                >
+                  {(profile?.display_name?.[0] || user?.email?.[0] || "U").toUpperCase()}
+                </div>
+
+                {/* Greeting */}
+                <div className="hidden sm:flex flex-col items-start leading-4">
+                  <span className="text-xs text-gray-500">Hi</span>
+                  <span className="text-sm font-medium">
+                    {deriveFirstName(profile, user)}
+                  </span>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-500" />
+              </button>
+
+              {/* Dropdown */}
+              {menuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
+                >
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      signOut();
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
+                    role="menuitem"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="inline-block px-5 py-2 rounded-md font-semibold"
+              style={{ backgroundColor: PINE, color: "#fff" }}
+            >
+              Login / Sign Up
+            </button>
+          )}
+        </div>
       </div>
+
+      {/* ===== Hero Section ===== */}
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 
+            className="text-3xl md:text-5xl font-semibold leading-tight"
+            style={{ fontFamily: "'Source Sans Pro', sans-serif", color: "#333" }}
+          >
+            Discover Helpanions
+          </h1>
+          
+          {/* small divider */}
+          <div className="w-12 border-t-2 border-[#01796F] mx-auto my-4" />
+          
+          <p 
+            className="text-base md:text-xl text-gray-600 max-w-2xl mx-auto"
+            style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+          >
+            Find the right helpanion to guide you with real-world advice and practical experience.
+          </p>
+        </div>
+      </section>
 
       {/* ===== Filters ===== */}
       <div className="max-w-[1140px] mx-auto px-4 md:px-8">

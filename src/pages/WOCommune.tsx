@@ -398,17 +398,6 @@ export default function WOCommune(): JSX.Element {
         </div>
       </section>
 
-      {/* ===== Impact Metrics ===== */}
-      <section className="bg-white py-10">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex gap-8">
-            <StatBlock number="500+" label="Walkers supported" />
-            <StatBlock number="100+" label="Events hosted" />
-            <StatBlock number="200+" label="1:1 sessions" />
-          </div>
-          <div className="text-sm text-gray-600">Trusted by walkers across cities — join the community today.</div>
-        </div>
-      </section>
 
       {/* ===== Newsletter CTA (match Home.tsx design) ===== */}
       <section className="bg-[#F3F2EE] py-10">

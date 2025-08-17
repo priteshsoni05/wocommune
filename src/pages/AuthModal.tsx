@@ -112,10 +112,10 @@ export default function AuthModal({ open, onOpenChange, role, initialTab }: Prop
           console.error('Profile creation error:', profileError);
         }
 
-        // Add user role
+        // Add user role - ensure enum matches
         const { error: roleError } = await supabase.from("user_roles").insert({
           user_id: userId,
-          role: selectedRole,
+          role: selectedRole === 'helpanion' ? 'helpanion' : 'walker',
         });
 
         if (roleError) {
