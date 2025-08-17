@@ -4,17 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateServiceDialog } from "@/components/dashboard/CreateServiceDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useServices } from "@/hooks/useServices";
+import { useProfile } from "@/hooks/useProfile";
 
 export const QuickActions = () => {
   const { toast } = useToast();
   const { services } = useServices();
+  const { profile } = useProfile();
   
   const handleShareProfile = () => {
-    const profileUrl = `${window.location.origin}/profile/helper`;
+    const origin = window.location.origin;
+    const profileUrl = profile?.username
+      ? `${origin}/${profile.username}`
+      : profile?.user_id
+      ? `${origin}/profile/${profile.user_id}` // back-compat; will redirect to /:username
+      : origin;
+
     navigator.clipboard.writeText(profileUrl);
     toast({
       title: "Link copied!",
-      description: "Your booking link has been copied to clipboard"
+      description: "Your profile link has been copied to clipboard"
     });
   };
 
@@ -30,7 +38,7 @@ export const QuickActions = () => {
       icon: Plus,
       label: 'Create Service',
       description: 'Add a new offering',
-      component: true // This will be handled specially
+      component: true // handled specially
     },
     {
       icon: Package,
@@ -41,7 +49,7 @@ export const QuickActions = () => {
     {
       icon: Share2,
       label: 'Share Profile',
-      description: 'Get your booking link',
+      description: 'Copy your public link',
       onClick: handleShareProfile
     },
     {
@@ -113,4 +121,4 @@ export const QuickActions = () => {
       </CardContent>
     </Card>
   );
-};
+}
