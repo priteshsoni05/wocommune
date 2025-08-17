@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { useProfile } from "@/hooks/useProfile";
 
 interface ProfileStatusProps {
   status: 'active' | 'in_review' | 'pending';
@@ -14,17 +15,21 @@ interface ProfileStatusProps {
 export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { profile } = useProfile();
   const { stats, loading } = useDashboardStats();
 
   const handleViewPublic = () => {
-    if (user) {
-      window.open(`/profile/${user.id}`, '_blank');
+    if (profile?.username) {
+      window.open(`/${profile.username}`, '_blank');
+    } else if (user?.id) {
+      window.open(`/profile/${user.id}`, '_blank'); // back-compat redirect
     }
   };
 
   const handleEditProfile = () => {
     navigate('/helpanion-dashboard');
   };
+
   const statusConfig = {
     active: {
       icon: CheckCircle,
@@ -75,7 +80,6 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
           </div>
         </div>
         
-        {/* Profile Completion */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Profile Completion</span>
@@ -102,9 +106,8 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
             Edit Profile
           </Button>
           <Button 
-            variant="outline" 
             size="sm" 
-            className="gap-2 flex-1"
+            className="gap-2 flex-1 text-white"
             onClick={handleViewPublic}
           >
             <Eye className="h-4 w-4" />
