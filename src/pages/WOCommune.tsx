@@ -1,7 +1,7 @@
 // src/pages/WOCommune.tsx
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ChevronDown, ArrowRight } from "lucide-react";
+import { Search, ChevronDown, ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
 import AuthModal from "./AuthModal";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
@@ -14,7 +14,6 @@ const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
 const CONVO_IMG = "/assets/convo-placeholder.jpg";
 const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
-const SOCIAL_ICON = "/assets/social-placeholder-24.png";
 
 const PINE = "#2C5F50";
 
@@ -77,7 +76,6 @@ export default function WOCommune(): JSX.Element {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = searchQuery.trim();
-    // Navigate to this page with a query param to avoid "broken" button feel
     navigate(`/get-help?query=${encodeURIComponent(q)}`);
   };
 
@@ -488,10 +486,10 @@ export default function WOCommune(): JSX.Element {
           <div className="border-t border-gray-200 mt-8 pt-6">
             <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
-              <div className="flex items-center gap-3">
-                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
-                <img src={SOCIAL_ICON} alt="" aria-hidden="true" className="w-5 h-5" />
+              <div className="flex items-center gap-3 text-[#2B2B2B]">
+                <Twitter size={20} aria-hidden="true" />
+                <Linkedin size={20} aria-hidden="true" />
+                <Instagram size={20} aria-hidden="true" />
               </div>
             </div>
           </div>
