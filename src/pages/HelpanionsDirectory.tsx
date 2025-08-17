@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import AuthModal from "./AuthModal";
 
-const PINE = "#01796F";
+const PINE = "#2C5F50";
 const SOCIALS = [
   { name: "LinkedIn", href: "https://linkedin.com" },
   { name: "Instagram", href: "https://instagram.com" },
