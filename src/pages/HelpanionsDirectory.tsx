@@ -374,7 +374,7 @@ export default function HelpanionsDirectory() {
       </section>
 
       {/* ===== Footer ===== */}
-      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200 mt-8">
+      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
           <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
             <div>
