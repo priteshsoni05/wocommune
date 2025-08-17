@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
 import PublicProfile from "./pages/PublicProfile";
@@ -13,8 +13,52 @@ import HelpanionDashboard from "./pages/HelpanionDashboard";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
+
+/**
+ * Back-compat redirect:
+ * - Handles older links like /profile/:id (where :id is the auth.user.id)
+ * - Looks up username by user_id and navigates to /:username
+ */
+function ProfileIdRedirect() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const go = async () => {
+      if (!id) {
+        navigate("/", { replace: true });
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("user_id", id)
+        .maybeSingle();
+
+      if (!isMounted) return;
+
+      if (data?.username) {
+        navigate(`/${encodeURIComponent(data.username)}`, { replace: true });
+      } else {
+        // Fallback home if we can't resolve
+        navigate("/", { replace: true });
+      }
+    };
+
+    void go();
+    return () => {
+      isMounted = false;
+    };
+  }, [id, navigate]);
+
+  return null;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -24,6 +68,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Static routes first */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/get-help" element={<WOCommune />} />
@@ -32,8 +77,17 @@ const App = () => (
             <Route path="/helpanions" element={<HelpanionsDirectory />} />
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
+
+            {/* Back-compat routes (older links) */}
+            {/* Old /p/:username links still work */}
+            <Route path="/p/:username" element={<PublicProfile />} />
+            {/* Old /profile/:id links get redirected to /:username */}
+            <Route path="/profile/:id" element={<ProfileIdRedirect />} />
+
+            {/* Top-level username profile route */}
             <Route path="/:username" element={<PublicProfile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+            {/* Keep catch-all at the end */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
