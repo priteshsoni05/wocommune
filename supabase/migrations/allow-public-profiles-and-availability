@@ -1,0 +1,49 @@
+-- Ensure RLS is enabled (safe if already enabled)
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.availability_slots ENABLE ROW LEVEL SECURITY;
+
+-- Cleanly recreate public read policies
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE schemaname = 'public' AND tablename = 'profiles' AND policyname = 'Anyone can view active public profiles'
+  ) THEN
+    DROP POLICY "Anyone can view active public profiles" ON public.profiles;
+  END IF;
+
+  IF EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE schemaname = 'public' AND tablename = 'availability_slots' AND policyname = 'Anyone can view available slots of active helpers'
+  ) THEN
+    DROP POLICY "Anyone can view available slots of active helpers" ON public.availability_slots;
+  END IF;
+END$$;
+
+-- Public can view active profiles that have a username
+CREATE POLICY "Anyone can view active public profiles"
+ON public.profiles
+FOR SELECT
+USING (
+  status = 'active'
+  AND username IS NOT NULL
+);
+
+-- Public can view available slots for active helpers
+CREATE POLICY "Anyone can view available slots of active helpers"
+ON public.availability_slots
+FOR SELECT
+USING (
+  is_available = true
+  AND EXISTS (
+    SELECT 1
+    FROM public.profiles p
+    WHERE p.user_id = availability_slots.helper_id
+      AND p.status = 'active'
+      AND p.username IS NOT NULL
+  )
+);
+
+-- Helpful index for case-insensitive username lookups
+CREATE INDEX IF NOT EXISTS profiles_username_lower_idx
+  ON public.profiles (lower(username));
