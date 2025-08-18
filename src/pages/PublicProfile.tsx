@@ -38,8 +38,9 @@ const PublicProfile = () => {
       try {
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
-          .select("*")
+          .select("user_id, display_name, bio, avatar_url, username, status, role, skills, linkedin_url, instagram_url, website_url, portfolio_url")
           .eq("username", username)
+          .eq("status", "active")
           .maybeSingle();
 
         if (profileError || !profile) throw profileError || new Error("No profile found");
