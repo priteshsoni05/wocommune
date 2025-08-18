@@ -1,3 +1,4 @@
+
 // src/pages/PublicProfile.tsx
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
@@ -35,16 +36,37 @@ const PublicProfile = () => {
         return;
       }
 
+      console.log("Fetching profile for username:", username);
+
       try {
+        // Try to fetch the profile - this should work with our new RLS policy
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("user_id, display_name, bio, avatar_url, username, status, role, skills, linkedin_url, instagram_url, website_url, portfolio_url")
           .eq("username", username)
-          .eq("status", "active")
           .maybeSingle();
 
-        if (profileError || !profile) throw profileError || new Error("No profile found");
+        console.log("Profile query result:", { profile, profileError });
 
+        if (profileError) {
+          console.error("Profile error:", profileError);
+          throw profileError;
+        }
+
+        if (!profile) {
+          console.log("No profile found for username:", username);
+          throw new Error("No profile found");
+        }
+
+        // Check if profile is active and has username
+        if (profile.status !== 'active' || !profile.username) {
+          console.log("Profile not active or missing username:", { status: profile.status, username: profile.username });
+          throw new Error("Profile not available");
+        }
+
+        console.log("Profile found:", profile);
+
+        // Fetch services
         const { data: services, error: servicesError } = await supabase
           .from("services")
           .select("*")
@@ -52,9 +74,14 @@ const PublicProfile = () => {
           .eq("is_active", true)
           .order("created_at", { ascending: false });
 
-        if (servicesError) throw servicesError;
+        if (servicesError) {
+          console.error("Services error:", servicesError);
+          // Don't throw here, just log and continue with empty services
+        }
 
-        // keep availability fetch (used by booking dialog)
+        console.log("Services found:", services);
+
+        // Fetch availability
         const { data: availability, error: availabilityError } = await supabase
           .from("availability_slots")
           .select("*")
@@ -63,14 +90,20 @@ const PublicProfile = () => {
           .order("day_of_week", { ascending: true })
           .order("start_time", { ascending: true });
 
-        if (availabilityError) throw availabilityError;
+        if (availabilityError) {
+          console.error("Availability error:", availabilityError);
+          // Don't throw here, just log and continue with empty availability
+        }
+
+        console.log("Availability found:", availability);
 
         setData({
           profile: profile as Profile,
           services: (services || []) as Service[],
           availability: (availability || []) as AvailabilitySlot[],
         });
-      } catch {
+      } catch (err) {
+        console.error("Failed to load profile:", err);
         setError("Failed to load profile");
       } finally {
         setLoading(false);
@@ -101,6 +134,8 @@ const PublicProfile = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center" style={{ color: TEXT }}>
         <h1 className="text-xl font-semibold">Profile Not Found</h1>
+        <p className="text-sm text-gray-500 mt-2">Username: {username}</p>
+        <p className="text-sm text-gray-500">Error: {error}</p>
         <Link
           to="/commune"
           className="mt-3 px-4 py-2 rounded-md text-white"
