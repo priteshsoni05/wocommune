@@ -128,21 +128,26 @@ const FeaturedHelpanions: React.FC<{ helpanions: Helpanion[] }> = ({ helpanions 
                 </p>
 
                 <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full h-10 font-medium"
-                    disabled={!hasSlug}
-                    aria-disabled={!hasSlug}
-                  >
-                    {hasSlug ? (
+                  {hasSlug ? (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full h-10 font-medium"
+                    >
                       <Link to={profilePath} aria-label={`View ${name} profile`}>
                         View Profile
                       </Link>
-                    ) : (
-                      <span>View Profile</span>
-                    )}
-                  </Button>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="w-full h-10 font-medium"
+                      disabled
+                      aria-disabled="true"
+                    >
+                      View Profile
+                    </Button>
+                  )}
 
                   <Button
                     className="w-full h-10 font-medium text-white"

@@ -187,7 +187,7 @@ function SubHeader() {
           </div>
         </div>
         <button
-          onClick={() => onLoginClick()}
+          onClick={() => {}}
           className="inline-block px-5 py-2 rounded-md font-semibold"
           style={{ backgroundColor: PINE, color: "#fff" }}
         >
