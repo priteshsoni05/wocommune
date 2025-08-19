@@ -86,7 +86,8 @@ export default function WOCommune(): JSX.Element {
       const { data, error } = await supabase
         .from("profiles")
         .select("id, display_name, bio, avatar_url, created_at, username")
-        .eq("status", "active");
+        .eq("status", "active")
+        .not("username", "is", null);
 
       if (error) {
         console.error("Error fetching Helpanions:", error);
