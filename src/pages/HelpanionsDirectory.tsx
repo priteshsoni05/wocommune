@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Search, ChevronDown, ArrowRight } from "lucide-react";
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import AuthModal from "./AuthModal";
+
 
 const PINE = "#2C5F50";
 const SOCIALS = [
@@ -56,8 +56,8 @@ export default function HelpanionsDirectory() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">("newest");
 
-  const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -219,7 +219,7 @@ export default function HelpanionsDirectory() {
             </div>
           ) : (
             <button
-              onClick={() => setAuthOpen(true)}
+              onClick={() => navigate('/auth?mode=login&role=walker')}
               className="inline-block px-5 py-2 rounded-md font-semibold"
               style={{ backgroundColor: PINE, color: "#fff" }}
             >
@@ -421,7 +421,7 @@ export default function HelpanionsDirectory() {
         </div>
       </footer>
 
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+      
     </div>
   );
 }

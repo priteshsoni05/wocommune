@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronDown, ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
-import AuthModal from "./AuthModal";
+
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
@@ -57,7 +57,6 @@ type Profile = {
 };
 
 export default function WOCommune(): JSX.Element {
-  const [authOpen, setAuthOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { helpanions } = useHelpanions();
   const navigate = useNavigate();
@@ -308,7 +307,7 @@ export default function WOCommune(): JSX.Element {
             </div>
           ) : (
             <button
-              onClick={() => setAuthOpen(true)}
+              onClick={() => navigate('/auth?mode=login&role=walker')}
               className="inline-block px-5 py-2 rounded-md font-semibold"
               style={{ backgroundColor: PINE, color: "#fff" }}
             >
@@ -497,7 +496,7 @@ export default function WOCommune(): JSX.Element {
         </div>
       </footer>
 
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
+      
     </div>
   );
 }

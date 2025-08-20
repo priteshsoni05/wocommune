@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import AuthModal from "./AuthModal";
+
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
@@ -16,8 +16,8 @@ const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
 const PINE = "#01796F";
 
 export default function WOCommunePage(): JSX.Element {
-  const [authOpen, setAuthOpen] = useState(false);
   const { helpanions } = useHelpanions();
+  const navigate = useNavigate();
 
   const [fetchedHelpanions, setFetchedHelpanions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +57,7 @@ export default function WOCommunePage(): JSX.Element {
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
       {/* ===== Header ===== */}
-      <Header onLoginClick={() => setAuthOpen(true)} />
+      <Header onLoginClick={() => navigate('/auth?mode=login&role=walker')} />
 
       <div className="h-16" />
 
@@ -131,8 +131,6 @@ export default function WOCommunePage(): JSX.Element {
       {/* ===== Footer ===== */}
       <Footer />
 
-      {/* ===== Auth Modal ===== */}
-      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </div>
   );
 }
@@ -163,6 +161,7 @@ function Header({ onLoginClick }: { onLoginClick: () => void }) {
 }
 
 function SubHeader() {
+  const navigate = useNavigate();
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
@@ -187,7 +186,7 @@ function SubHeader() {
           </div>
         </div>
         <button
-          onClick={() => {}}
+          onClick={() => navigate('/auth?mode=login&role=walker')}
           className="inline-block px-5 py-2 rounded-md font-semibold"
           style={{ backgroundColor: PINE, color: "#fff" }}
         >
