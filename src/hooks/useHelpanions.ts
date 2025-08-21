@@ -57,7 +57,7 @@ export const useHelpanions = () => {
         .from('profiles')
         .select(`
           *,
-          services!inner(
+          services!left(
             id,
             title,
             description,
