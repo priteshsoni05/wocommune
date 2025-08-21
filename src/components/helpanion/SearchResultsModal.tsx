@@ -111,7 +111,7 @@ export function SearchResultsModal({ isOpen, onClose, searchTerm, helpanions }: 
                       )}
 
                       <Button asChild size="sm" className="w-full">
-                        <Link to={`/profile/${helpanion.user_id}`}>
+                        <Link to={`/p/${helpanion.username || helpanion.user_id}`}>
                           View Profile
                         </Link>
                       </Button>

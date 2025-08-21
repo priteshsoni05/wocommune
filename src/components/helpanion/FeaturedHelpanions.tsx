@@ -79,7 +79,7 @@ const FeaturedHelpanions: React.FC<{ helpanions: Helpanion[] }> = ({ helpanions 
 
           const slug = h.username?.trim() || "";
           const hasSlug = slug.length > 0;
-          const profilePath = hasSlug ? `/${encodeURIComponent(slug)}` : "";
+          const profilePath = hasSlug ? `/p/${encodeURIComponent(slug)}` : "";
 
           const hasPrice = h.price_min != null;
           const hasRating = h.average_rating != null && Number.isFinite(Number(h.average_rating));

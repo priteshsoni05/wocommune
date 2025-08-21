@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 export interface HelpanionProfile {
   id: string;
   user_id: string;
+  username: string | null;
   display_name: string | null;
   email: string | null;
   phone: string | null;
@@ -67,7 +68,8 @@ export const useHelpanions = () => {
           )
         `)
         .eq('status', 'active')
-        .in('user_id', helpanionUserIds);
+        .in('user_id', helpanionUserIds)
+        .not('username', 'is', null);
 
       if (profilesError) {
         console.error('Error fetching helpanions:', profilesError);

@@ -255,7 +255,7 @@ function FeaturedHelpanionsList({ helpanions, loading }: { helpanions: any[]; lo
                 const rate: number | string | undefined = h?.rate ?? h?.price_min;
                 const bio: string = h?.bio || "";
                 const slug: string | number = h?.username || h?.user_id || h?.id;
-                const profileUrl = `/${encodeURIComponent(String(slug))}`;
+                const profileUrl = `/p/${encodeURIComponent(String(slug))}`;
 
                 return (
                   <div key={h.id} className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full p-4">
