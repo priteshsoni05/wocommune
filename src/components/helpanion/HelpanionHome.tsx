@@ -2,7 +2,7 @@ import { Profile } from "@/hooks/useProfile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight, Eye } from "lucide-react";
 import { GettingStartedChecklist } from "./GettingStartedChecklist";
 import { useBookings } from "@/hooks/useBookings";
 import { useServices } from "@/hooks/useServices";
@@ -26,16 +26,38 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile, o
     b.status === 'confirmed' && new Date(b.booking_date) >= new Date()
   ).length;
   
+  const handleViewPublic = () => {
+    if (profile?.username) {
+      window.open(`/p/${profile.username}`, '_blank');
+    }
+  };
+  
   return (
     <div className="p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-5">
       {/* Welcome Header */}
       <div className="space-y-1">
-        <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
-          Hi {firstName} 👋
-        </h1>
-        <p className="text-sm lg:text-base text-muted-foreground">
-          Welcome to your Helpanion dashboard
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
+              Hi {firstName} 👋
+            </h1>
+            <p className="text-sm lg:text-base text-muted-foreground">
+              Welcome to your Helpanion dashboard
+            </p>
+          </div>
+          {profile?.username && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleViewPublic}
+              className="gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              <span className="hidden sm:inline">View Public Profile</span>
+              <span className="sm:hidden">Public</span>
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Profile Progress Card */}
