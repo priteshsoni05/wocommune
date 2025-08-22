@@ -1,159 +1,185 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Star, MapPin, Clock, Eye, Calendar } from "lucide-react";
 
-type Helpanion = {
+interface HelpanionProfile {
   id: string;
   user_id?: string;
   username?: string;
   display_name?: string | null;
   bio?: string | null;
   avatar_url?: string | null;
-  price_min?: number | null;
-  average_rating?: number | null;
-  sessions_completed?: number | null;
-};
+  skills?: string | null;
+  services?: Array<{
+    id: string;
+    title: string;
+    price_per_hour: number | null;
+    category: string | null;
+  }>;
+  created_at?: string;
+}
 
-const PINE = "#2C5F50";
-const IMAGE_FALLBACK = "/assets/event-placeholder.jpg";
+interface FeaturedHelpanionsProps {
+  helpanions: HelpanionProfile[];
+}
 
-const formatINR = (n: number) =>
-  `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(n)}`;
-
-const safeInitials = (name?: string) => {
+const getInitials = (name?: string | null) => {
   if (!name) return "H";
   return name
     .split(" ")
     .filter(Boolean)
-    .map((p) => p[0]!)
+    .map((part) => part[0])
     .slice(0, 2)
     .join("")
     .toUpperCase();
 };
 
-const shortText = (text?: string, max = 220) => {
-  if (!text) return "";
-  const t = text.trim().replace(/\s+/g, " ");
-  return t.length > max ? `${t.slice(0, max - 3)}...` : t;
+const formatPrice = (price?: number | null) => {
+  if (!price) return "Contact for pricing";
+  return `₹${new Intl.NumberFormat("en-IN").format(price)}/hr`;
 };
 
-function HelpanionAvatar({ name, src }: { name: string; src?: string | null }) {
-  const [currentSrc, setCurrentSrc] = React.useState<string | undefined>(
-    src || IMAGE_FALLBACK
-  );
+const truncateText = (text?: string | null, maxLength = 120) => {
+  if (!text) return "Ready to help you achieve your goals.";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).trim() + "...";
+};
 
-  const handleError = () => {
-    if (currentSrc && currentSrc !== IMAGE_FALLBACK) {
-      setCurrentSrc(IMAGE_FALLBACK);
-    } else {
-      setCurrentSrc(undefined);
+const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion }) => {
+  const displayName = helpanion.display_name || "Helpanion";
+  const minPrice = helpanion.services?.reduce((min, service) => {
+    if (!service.price_per_hour) return min;
+    return min === null ? service.price_per_hour : Math.min(min, service.price_per_hour);
+  }, null as number | null);
+
+  const skillsArray = helpanion.skills ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 3) : [];
+
+  const handleViewProfile = () => {
+    if (helpanion.username) {
+      window.open(`/p/${helpanion.username}`, '_blank');
+    }
+  };
+
+  const handleBookSession = () => {
+    if (helpanion.username) {
+      window.open(`/p/${helpanion.username}#services`, '_blank');
     }
   };
 
   return (
-    <div className="w-24 h-24 rounded-full overflow-hidden bg-neutral-100 flex items-center justify-center border mb-4">
-      {currentSrc ? (
-        <img
-          src={currentSrc}
-          alt={`${name} avatar`}
-          className="w-full h-full object-cover"
-          onError={handleError}
-        />
-      ) : (
-        <div className="text-lg font-semibold text-neutral-700">
-          {safeInitials(name)}
-        </div>
-      )}
-    </div>
-  );
-}
-
-const FeaturedHelpanions: React.FC<{ helpanions: Helpanion[] }> = ({ helpanions }) => {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        {helpanions.map((h) => {
-          const name = h.display_name || "Helpanion";
-          const bio = shortText(h.bio || "Ready to help you on your journey.", 260);
-
-          const slug = h.username?.trim() || "";
-          const hasSlug = slug.length > 0;
-          const profilePath = hasSlug ? `/p/${encodeURIComponent(slug)}` : "";
-
-          const hasPrice = h.price_min != null;
-          const hasRating = h.average_rating != null && Number.isFinite(Number(h.average_rating));
-          const hasSessions = h.sessions_completed != null;
-
-          return (
-            <Card
-              key={h.id}
-              className="bg-white border rounded-lg shadow-sm overflow-hidden flex flex-col h-full min-h-[420px]"
+    <Card className="group h-full hover:shadow-lg transition-all duration-300 border border-border/60 hover:border-primary/30">
+      <CardContent className="p-6 flex flex-col h-full">
+        {/* Header with Avatar and Basic Info */}
+        <div className="flex items-start gap-4 mb-4">
+          <div className="relative">
+            {helpanion.avatar_url ? (
+              <img
+                src={helpanion.avatar_url}
+                alt={`${displayName}'s avatar`}
+                className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  const fallback = target.nextElementSibling as HTMLElement;
+                  target.style.display = 'none';
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div 
+              className={`w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold ${helpanion.avatar_url ? 'hidden' : 'flex'}`}
             >
-              <CardContent className="flex flex-col items-center text-center p-6 flex-1">
-                <HelpanionAvatar name={name} src={h.avatar_url || undefined} />
+              {getInitials(displayName)}
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-background"></div>
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-lg text-foreground mb-1 truncate">
+              {displayName}
+            </h3>
+            {helpanion.services && helpanion.services.length > 0 && (
+              <p className="text-sm text-muted-foreground mb-2">
+                {helpanion.services[0].category || "Professional Helper"}
+              </p>
+            )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="w-4 h-4" />
+              <span>Available</span>
+            </div>
+          </div>
+        </div>
 
-                <h3
-                  className="font-semibold text-lg mb-2"
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  {name}
-                </h3>
+        {/* Bio */}
+        <p className="text-sm text-muted-foreground mb-4 flex-1 leading-relaxed">
+          {truncateText(helpanion.bio)}
+        </p>
 
-                {(hasPrice || hasRating || hasSessions) && (
-                  <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-neutral-600 mb-3">
-                    {hasPrice && (
-                      <div className="px-3 py-1 rounded-md bg-neutral-100 text-sm">
-                        From {formatINR(h.price_min as number)}
-                      </div>
-                    )}
-                    {hasRating && (
-                      <div className="px-3 py-1 rounded-md bg-neutral-100 text-sm">
-                        ⭐ {Number(h.average_rating).toFixed(1)}
-                      </div>
-                    )}
-                    {hasSessions && (
-                      <div className="px-3 py-1 rounded-md bg-neutral-100 text-sm">
-                        {h.sessions_completed === 1 ? "1 session" : `${h.sessions_completed}+ sessions`}
-                      </div>
-                    )}
-                  </div>
-                )}
+        {/* Skills Tags */}
+        {skillsArray.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {skillsArray.map((skill, index) => (
+              <Badge key={index} variant="secondary" className="text-xs">
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        )}
 
-                <p
-                  className="text-sm text-gray-600 mb-6 flex-1 leading-relaxed"
-                  style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
-                >
-                  {bio}
-                </p>
+        {/* Pricing */}
+        <div className="mb-4 p-3 bg-muted/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Starting from</span>
+            <span className="font-medium text-primary">
+              {formatPrice(minPrice)}
+            </span>
+          </div>
+        </div>
 
-                <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full h-10 font-medium"
-                  >
-                    <Link to={profilePath} aria-label={`View ${name} profile`}>
-                      View Profile
-                    </Link>
-                  </Button>
+        {/* Action Buttons */}
+        <div className="space-y-2 mt-auto">
+          <Button
+            onClick={handleViewProfile}
+            variant="outline"
+            className="w-full gap-2 hover:bg-primary/5"
+            disabled={!helpanion.username}
+          >
+            <Eye className="w-4 h-4" />
+            View Profile
+          </Button>
+          <Button
+            onClick={handleBookSession}
+            className="w-full gap-2 bg-primary hover:bg-primary/90"
+            disabled={!helpanion.username}
+          >
+            <Calendar className="w-4 h-4" />
+            Book Session
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
-                  <Button
-                    className="w-full h-10 font-medium text-white"
-                    style={{ backgroundColor: PINE }}
-                    onClick={() => {
-                      // Booking popup to be implemented later
-                    }}
-                    aria-label={`Book a session with ${name}`}
-                  >
-                    Book Session
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) => {
+  if (helpanions.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+          <Star className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-medium text-foreground mb-2">No Helpanions Available</h3>
+        <p className="text-muted-foreground">Check back soon for featured helpers!</p>
       </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {helpanions.map((helpanion) => (
+        <HelpanionCard key={helpanion.id} helpanion={helpanion} />
+      ))}
     </div>
   );
 };
