@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 
 interface ProfileStatusProps {
@@ -14,11 +15,12 @@ interface ProfileStatusProps {
 export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { profile } = useProfile();
   const { stats, loading } = useDashboardStats();
 
   const handleViewPublic = () => {
-    if (user) {
-      window.open(`/profile/${user.id}`, '_blank');
+    if (profile?.username) {
+      window.open(`/p/${profile.username}`, '_blank');
     }
   };
 
