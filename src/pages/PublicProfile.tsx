@@ -39,10 +39,21 @@ const PublicProfile = () => {
       console.log("PublicProfile: Fetching profile for username:", username);
 
       try {
-        // Try to fetch the profile - this should work with our new RLS policy
+        // Use the working query pattern from WOCommune/useHelpanions
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
-          .select("user_id, display_name, bio, avatar_url, username, status, role, skills, linkedin_url, instagram_url, website_url, portfolio_url")
+          .select(`
+            *,
+            services!left(
+              id,
+              title,
+              description,
+              price_per_hour,
+              duration_minutes,
+              category,
+              is_active
+            )
+          `)
           .eq("username", username)
           .eq("status", "active")
           .maybeSingle();
@@ -67,18 +78,10 @@ const PublicProfile = () => {
 
         console.log("Profile found:", profile);
 
-        // Fetch services
-        const { data: services, error: servicesError } = await supabase
-          .from("services")
-          .select("*")
-          .eq("helper_id", profile.user_id)
-          .eq("is_active", true)
-          .order("created_at", { ascending: false });
-
-        if (servicesError) {
-          console.error("Services error:", servicesError);
-          // Don't throw here, just log and continue with empty services
-        }
+        // Use services from the joined query instead of separate fetch
+        const services = Array.isArray(profile.services) 
+          ? profile.services.filter(s => s.is_active) 
+          : [];
 
         console.log("Services found:", services);
 

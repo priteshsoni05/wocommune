@@ -36,12 +36,22 @@ export const useHelpanions = () => {
     try {
       console.log('useHelpanions: Starting to fetch helpanions...');
       
-      // Directly fetch profiles that have helpanion role and active services
-      // Using a public query that doesn't require authentication
+      // Use the exact same working query logic as WOCommune
       const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
+        .from("profiles")
         .select(`
-          *,
+          id, 
+          user_id,
+          display_name, 
+          bio, 
+          avatar_url, 
+          created_at, 
+          updated_at,
+          username,
+          email,
+          phone,
+          skills,
+          status,
           services!left(
             id,
             title,
@@ -52,14 +62,15 @@ export const useHelpanions = () => {
             is_active
           )
         `)
-        .eq('status', 'active')
-        .not('username', 'is', null)
-        .not('username', 'eq', '');
+        .eq("status", "active")
+        .not("username", "is", null)
+        .not("username", "eq", "");
 
       console.log('useHelpanions: Profile query result:', { profiles, profilesError });
 
       if (profilesError) {
         console.error('Error fetching helpanion profiles:', profilesError);
+        setHelpanions([]);
         return;
       }
 
@@ -87,10 +98,13 @@ export const useHelpanions = () => {
         return;
       }
 
-      // Filter profiles to only include those with helpanion role
-      const helpanionProfiles = profiles.filter(profile => 
-        helpanionUserIds.includes(profile.user_id)
-      );
+      // Filter profiles to only include those with helpanion role and active services
+      const helpanionProfiles = profiles.filter(profile => {
+        const hasRole = helpanionUserIds.includes(profile.user_id);
+        const hasActiveServices = Array.isArray(profile.services) && 
+                                profile.services.some(s => s.is_active);
+        return hasRole && hasActiveServices;
+      });
 
       // Transform the data to match our interface
       const transformedHelpanions: HelpanionProfile[] = helpanionProfiles.map(profile => ({
@@ -99,13 +113,11 @@ export const useHelpanions = () => {
         services: Array.isArray(profile.services) ? profile.services.filter(s => s.is_active) : []
       }));
 
-      // Filter out profiles without active services
-      const helpanionsWithServices = transformedHelpanions.filter(h => h.services.length > 0);
-
-      console.log('useHelpanions: Final helpanions with services:', helpanionsWithServices);
-      setHelpanions(helpanionsWithServices);
+      console.log('useHelpanions: Final helpanions with services:', transformedHelpanions);
+      setHelpanions(transformedHelpanions);
     } catch (error) {
       console.error('useHelpanions: Error fetching helpanions:', error);
+      setHelpanions([]);
     } finally {
       setLoading(false);
     }
