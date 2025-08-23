@@ -36,7 +36,7 @@ const PublicProfile = () => {
         return;
       }
 
-      console.log("Fetching profile for username:", username);
+      console.log("PublicProfile: Fetching profile for username:", username);
 
       try {
         // Try to fetch the profile - this should work with our new RLS policy
@@ -44,6 +44,7 @@ const PublicProfile = () => {
           .from("profiles")
           .select("user_id, display_name, bio, avatar_url, username, status, role, skills, linkedin_url, instagram_url, website_url, portfolio_url")
           .eq("username", username)
+          .eq("status", "active")
           .maybeSingle();
 
         console.log("Profile query result:", { profile, profileError });

@@ -34,25 +34,10 @@ export const useHelpanions = () => {
 
   const fetchHelpanions = async () => {
     try {
-      // First, get user IDs with helpanion role
-      const { data: helpanionRoles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id')
-        .eq('role', 'helpanion');
-
-      if (rolesError) {
-        console.error('Error fetching helpanion roles:', rolesError);
-        return;
-      }
-
-      const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
+      console.log('useHelpanions: Starting to fetch helpanions...');
       
-      if (helpanionUserIds.length === 0) {
-        setHelpanions([]);
-        return;
-      }
-
-      // Then fetch profiles that have helpanion role and active services
+      // Directly fetch profiles that have helpanion role and active services
+      // Using a public query that doesn't require authentication
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select(`
@@ -68,27 +53,59 @@ export const useHelpanions = () => {
           )
         `)
         .eq('status', 'active')
-        .in('user_id', helpanionUserIds)
-        .not('username', 'is', null);
+        .not('username', 'is', null)
+        .not('username', 'eq', '');
+
+      console.log('useHelpanions: Profile query result:', { profiles, profilesError });
 
       if (profilesError) {
-        console.error('Error fetching helpanions:', profilesError);
+        console.error('Error fetching helpanion profiles:', profilesError);
         return;
       }
 
+      if (!profiles || profiles.length === 0) {
+        console.log('useHelpanions: No profiles found');
+        setHelpanions([]);
+        return;
+      }
+
+      // Check which profiles have the helpanion role
+      const profileUserIds = profiles.map(p => p.user_id);
+      const { data: helpanionRoles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', 'helpanion')
+        .in('user_id', profileUserIds);
+
+      console.log('useHelpanions: Roles query result:', { helpanionRoles, rolesError });
+
+      const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
+      
+      if (helpanionUserIds.length === 0) {
+        console.log('useHelpanions: No helpanion roles found');
+        setHelpanions([]);
+        return;
+      }
+
+      // Filter profiles to only include those with helpanion role
+      const helpanionProfiles = profiles.filter(profile => 
+        helpanionUserIds.includes(profile.user_id)
+      );
+
       // Transform the data to match our interface
-      const transformedHelpanions: HelpanionProfile[] = profiles?.map(profile => ({
+      const transformedHelpanions: HelpanionProfile[] = helpanionProfiles.map(profile => ({
         ...profile,
         status: profile.status as 'pending' | 'active' | 'in_review',
         services: Array.isArray(profile.services) ? profile.services.filter(s => s.is_active) : []
-      })) || [];
+      }));
 
       // Filter out profiles without active services
       const helpanionsWithServices = transformedHelpanions.filter(h => h.services.length > 0);
 
+      console.log('useHelpanions: Final helpanions with services:', helpanionsWithServices);
       setHelpanions(helpanionsWithServices);
     } catch (error) {
-      console.error('Error fetching helpanions:', error);
+      console.error('useHelpanions: Error fetching helpanions:', error);
     } finally {
       setLoading(false);
     }

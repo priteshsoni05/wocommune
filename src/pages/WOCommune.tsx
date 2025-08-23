@@ -82,17 +82,76 @@ export default function WOCommune(): JSX.Element {
   useEffect(() => {
     const fetchHelpanions = async () => {
       setFetching(true);
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("id, display_name, bio, avatar_url, created_at, username")
-        .eq("status", "active")
-        .not("username", "is", null);
+      console.log('WOCommune: Starting to fetch helpanions...');
+      
+      try {
+        // First get profiles with basic info
+        const { data: profiles, error: profilesError } = await supabase
+          .from("profiles")
+          .select(`
+            id, 
+            user_id,
+            display_name, 
+            bio, 
+            avatar_url, 
+            created_at, 
+            username,
+            skills,
+            services!left(
+              id,
+              title,
+              description,
+              price_per_hour,
+              duration_minutes,
+              category,
+              is_active
+            )
+          `)
+          .eq("status", "active")
+          .not("username", "is", null)
+          .not("username", "eq", "");
 
-      if (error) {
-        console.error("Error fetching Helpanions:", error);
-      } else {
-        setFetchedHelpanions(data || []);
+        console.log('WOCommune: Profile query result:', { profiles, profilesError });
+
+        if (profilesError) {
+          console.error("Error fetching Helpanions:", profilesError);
+          setFetchedHelpanions([]);
+          return;
+        }
+
+        if (!profiles || profiles.length === 0) {
+          console.log('WOCommune: No profiles found');
+          setFetchedHelpanions([]);
+          return;
+        }
+
+        // Check which profiles have the helpanion role
+        const profileUserIds = profiles.map(p => p.user_id);
+        const { data: helpanionRoles, error: rolesError } = await supabase
+          .from('user_roles')
+          .select('user_id')
+          .eq('role', 'helpanion')
+          .in('user_id', profileUserIds);
+
+        console.log('WOCommune: Roles query result:', { helpanionRoles, rolesError });
+
+        const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
+        
+        // Filter profiles to only include those with helpanion role and active services
+        const helpanionProfiles = profiles.filter(profile => {
+          const hasRole = helpanionUserIds.includes(profile.user_id);
+          const hasActiveServices = Array.isArray(profile.services) && 
+                                  profile.services.some(s => s.is_active);
+          return hasRole && hasActiveServices;
+        });
+
+        console.log('WOCommune: Final helpanions:', helpanionProfiles);
+        setFetchedHelpanions(helpanionProfiles || []);
+      } catch (error) {
+        console.error('WOCommune: Error fetching helpanions:', error);
+        setFetchedHelpanions([]);
       }
+      
       setFetching(false);
     };
 
