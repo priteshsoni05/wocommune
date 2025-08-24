@@ -43,7 +43,26 @@ const PublicProfile = () => {
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select(`
-            *,
+            id, 
+            user_id,
+            display_name, 
+            bio, 
+            avatar_url, 
+            created_at, 
+            updated_at,
+            username,
+            email,
+            phone,
+            skills,
+            status,
+            role,
+            linkedin_url,
+            instagram_url,
+            website_url,
+            portfolio_url,
+            last_active_role,
+            school,
+            use_case,
             services!left(
               id,
               title,
