@@ -29,109 +29,117 @@ const PublicProfile = () => {
   const servicesRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchPublicProfile = async () => {
-      if (!username) {
-        setError("Profile not found");
-        setLoading(false);
-        return;
+  const fetchPublicProfile = async () => {
+    if (!username) {
+      setError("Profile not found");
+      setLoading(false);
+      return;
+    }
+
+    console.log("PublicProfile: Fetching profile for username:", username);
+
+    try {
+      // Use the EXACT same working query pattern as WOCommune that works without auth
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select(`
+          id, 
+          user_id,
+          display_name, 
+          bio, 
+          avatar_url, 
+          created_at, 
+          updated_at,
+          username,
+          email,
+          phone,
+          skills,
+          status,
+          role,
+          linkedin_url,
+          instagram_url,
+          website_url,
+          portfolio_url,
+          last_active_role,
+          school,
+          use_case,
+          services!left(
+            id,
+            title,
+            description,
+            price_per_hour,
+            duration_minutes,
+            category,
+            is_active
+          )
+        `)
+        .eq("status", "active")
+        .not("username", "is", null)
+        .not("username", "eq", "");
+
+      console.log("Profile query result:", { profiles, profilesError });
+
+      if (profilesError) {
+        console.error("Profile error:", profilesError);
+        throw profilesError;
       }
 
-      console.log("PublicProfile: Fetching profile for username:", username);
-
-      try {
-        // Use the working query pattern from WOCommune/useHelpanions  
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select(`
-            id, 
-            user_id,
-            display_name, 
-            bio, 
-            avatar_url, 
-            created_at, 
-            updated_at,
-            username,
-            email,
-            phone,
-            skills,
-            status,
-            role,
-            linkedin_url,
-            instagram_url,
-            website_url,
-            portfolio_url,
-            last_active_role,
-            school,
-            use_case,
-            services!left(
-              id,
-              title,
-              description,
-              price_per_hour,
-              duration_minutes,
-              category,
-              is_active
-            )
-          `)
-          .eq("username", username)
-          .eq("status", "active")
-          .maybeSingle();
-
-        console.log("Profile query result:", { profile, profileError });
-
-        if (profileError) {
-          console.error("Profile error:", profileError);
-          throw profileError;
-        }
-
-        if (!profile) {
-          console.log("No profile found for username:", username);
-          throw new Error("No profile found");
-        }
-
-        // Check if profile is active and has username
-        if (profile.status !== 'active' || !profile.username) {
-          console.log("Profile not active or missing username:", { status: profile.status, username: profile.username });
-          throw new Error("Profile not available");
-        }
-
-        console.log("Profile found:", profile);
-
-        // Use services from the joined query instead of separate fetch
-        const services = Array.isArray(profile.services) 
-          ? profile.services.filter(s => s.is_active) 
-          : [];
-
-        console.log("Services found:", services);
-
-        // Fetch availability
-        const { data: availability, error: availabilityError } = await supabase
-          .from("availability_slots")
-          .select("*")
-          .eq("helper_id", profile.user_id)
-          .eq("is_available", true)
-          .order("day_of_week", { ascending: true })
-          .order("start_time", { ascending: true });
-
-        if (availabilityError) {
-          console.error("Availability error:", availabilityError);
-          // Don't throw here, just log and continue with empty availability
-        }
-
-        console.log("Availability found:", availability);
-
-        setData({
-          profile: profile as Profile,
-          services: (services || []) as Service[],
-          availability: (availability || []) as AvailabilitySlot[],
-        });
-      } catch (err) {
-        console.error("Failed to load profile:", err);
-        setError("Failed to load profile");
-      } finally {
-        setLoading(false);
+      if (!profiles || profiles.length === 0) {
+        console.log("No profiles found");
+        throw new Error("No profiles found");
       }
-    };
+
+      // Find the specific profile by username from the results
+      const profile = profiles.find(p => p.username === username);
+
+      if (!profile) {
+        console.log("Profile not found for username:", username);
+        throw new Error("Profile not found");
+      }
+
+      // Check if profile is active and has username
+      if (profile.status !== 'active' || !profile.username) {
+        console.log("Profile not active or missing username:", { status: profile.status, username: profile.username });
+        throw new Error("Profile not available");
+      }
+
+      console.log("Profile found:", profile);
+
+      // Use services from the joined query instead of separate fetch
+      const services = Array.isArray(profile.services) 
+        ? profile.services.filter(s => s.is_active) 
+        : [];
+
+      console.log("Services found:", services);
+
+      // Fetch availability
+      const { data: availability, error: availabilityError } = await supabase
+        .from("availability_slots")
+        .select("*")
+        .eq("helper_id", profile.user_id)
+        .eq("is_available", true)
+        .order("day_of_week", { ascending: true })
+        .order("start_time", { ascending: true });
+
+      if (availabilityError) {
+        console.error("Availability error:", availabilityError);
+        // Don't throw here, just log and continue with empty availability
+      }
+
+      console.log("Availability found:", availability);
+
+      setData({
+        profile: profile as Profile,
+        services: (services || []) as Service[],
+        availability: (availability || []) as AvailabilitySlot[],
+      });
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+      setError("Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  };
 
     fetchPublicProfile();
   }, [username]);
