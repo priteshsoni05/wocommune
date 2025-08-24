@@ -39,7 +39,7 @@ const PublicProfile = () => {
       console.log("PublicProfile: Fetching profile for username:", username);
 
       try {
-        // Use the working query pattern from WOCommune/useHelpanions
+        // Use the working query pattern from WOCommune/useHelpanions  
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select(`

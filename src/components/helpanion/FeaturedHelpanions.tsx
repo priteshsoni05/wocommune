@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Clock, Eye, Calendar } from "lucide-react";
+import { Star, Clock, Eye, Calendar, CheckCircle } from "lucide-react";
 
 interface HelpanionProfile {
   id: string;
@@ -58,22 +58,24 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
 
   const handleViewProfile = () => {
     if (helpanion.username) {
-      window.open(`/p/${helpanion.username}`, '_blank');
+      // Use the correct route path that's defined in App.tsx
+      window.location.href = `/p/${helpanion.username}`;
     }
   };
 
   const handleBookSession = () => {
     if (helpanion.username) {
-      window.open(`/p/${helpanion.username}#services`, '_blank');
+      // Use the correct route path that's defined in App.tsx
+      window.location.href = `/p/${helpanion.username}#services`;
     }
   };
 
   return (
-    <Card className="group h-full hover:shadow-lg transition-all duration-300 border border-border/60 hover:border-primary/30">
+    <Card className="group h-full hover:shadow-xl transition-all duration-300 border border-border/60 hover:border-primary/40 bg-white">
       <CardContent className="p-6 flex flex-col h-full">
         {/* Header with Avatar and Basic Info */}
         <div className="flex items-start gap-4 mb-4">
-          <div className="relative">
+          <div className="relative shrink-0">
             {helpanion.avatar_url ? (
               <img
                 src={helpanion.avatar_url}
@@ -82,8 +84,10 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
                 onError={(e) => {
                   const target = e.currentTarget;
                   const fallback = target.nextElementSibling as HTMLElement;
-                  target.style.display = 'none';
-                  if (fallback) fallback.style.display = 'flex';
+                  if (fallback) {
+                    target.style.display = 'none';
+                    fallback.style.display = 'flex';
+                  }
                 }}
               />
             ) : null}
@@ -92,13 +96,16 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
             >
               {getInitials(displayName)}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-background"></div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
           
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg text-foreground mb-1 truncate">
-              {displayName}
-            </h3>
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="font-semibold text-lg text-foreground truncate">
+                {displayName}
+              </h3>
+              <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
+            </div>
             {helpanion.services && helpanion.services.length > 0 && (
               <p className="text-sm text-muted-foreground mb-2">
                 {helpanion.services[0].category || "Professional Helper"}
@@ -106,7 +113,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
             )}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="w-4 h-4" />
-              <span>Available</span>
+              <span>Available now</span>
             </div>
           </div>
         </div>
@@ -120,18 +127,29 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
         {skillsArray.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {skillsArray.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-xs">
+              <Badge key={index} variant="secondary" className="text-xs px-2 py-1">
                 {skill}
               </Badge>
             ))}
           </div>
         )}
 
+        {/* Rating & Stats */}
+        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="font-medium text-foreground">4.9</span>
+            <span>(24)</span>
+          </div>
+          <span>•</span>
+          <span>87 sessions</span>
+        </div>
+
         {/* Pricing */}
         <div className="mb-4 p-3 bg-muted/30 rounded-lg">
           <div className="flex items-center justify-between">
             <span className="text-sm text-muted-foreground">Starting from</span>
-            <span className="font-medium text-primary">
+            <span className="font-semibold text-primary text-lg">
               {formatPrice(minPrice)}
             </span>
           </div>
@@ -142,7 +160,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
           <Button
             onClick={handleViewProfile}
             variant="outline"
-            className="w-full gap-2 hover:bg-primary/5"
+            className="w-full gap-2 hover:bg-primary/5 border-primary/20"
             disabled={!helpanion.username}
           >
             <Eye className="w-4 h-4" />
@@ -150,7 +168,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
           </Button>
           <Button
             onClick={handleBookSession}
-            className="w-full gap-2 bg-primary hover:bg-primary/90"
+            className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
             disabled={!helpanion.username}
           >
             <Calendar className="w-4 h-4" />

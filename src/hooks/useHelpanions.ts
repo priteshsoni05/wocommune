@@ -13,6 +13,7 @@ export interface HelpanionProfile {
   status: 'pending' | 'active' | 'in_review';
   created_at: string;
   updated_at: string;
+  skills: string | null;
   services: Array<{
     id: string;
     title: string;
