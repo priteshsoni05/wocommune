@@ -39,30 +39,11 @@ const PublicProfile = () => {
     console.log("PublicProfile: Fetching profile for username:", username);
 
     try {
-      // Use the EXACT same working query pattern as WOCommune that works without auth
-      const { data: profiles, error: profilesError } = await supabase
+      // Now that RLS policies allow public access, use a direct query
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select(`
-          id, 
-          user_id,
-          display_name, 
-          bio, 
-          avatar_url, 
-          created_at, 
-          updated_at,
-          username,
-          email,
-          phone,
-          skills,
-          status,
-          role,
-          linkedin_url,
-          instagram_url,
-          website_url,
-          portfolio_url,
-          last_active_role,
-          school,
-          use_case,
+          *,
           services!left(
             id,
             title,
@@ -73,34 +54,20 @@ const PublicProfile = () => {
             is_active
           )
         `)
+        .eq("username", username)
         .eq("status", "active")
-        .not("username", "is", null)
-        .not("username", "eq", "");
+        .maybeSingle();
 
-      console.log("Profile query result:", { profiles, profilesError });
+      console.log("Profile query result:", { profile, profileError });
 
-      if (profilesError) {
-        console.error("Profile error:", profilesError);
-        throw profilesError;
+      if (profileError) {
+        console.error("Profile error:", profileError);
+        throw profileError;
       }
-
-      if (!profiles || profiles.length === 0) {
-        console.log("No profiles found");
-        throw new Error("No profiles found");
-      }
-
-      // Find the specific profile by username from the results
-      const profile = profiles.find(p => p.username === username);
 
       if (!profile) {
-        console.log("Profile not found for username:", username);
-        throw new Error("Profile not found");
-      }
-
-      // Check if profile is active and has username
-      if (profile.status !== 'active' || !profile.username) {
-        console.log("Profile not active or missing username:", { status: profile.status, username: profile.username });
-        throw new Error("Profile not available");
+        console.log("No profile found for username:", username);
+        throw new Error("No profile found");
       }
 
       console.log("Profile found:", profile);
