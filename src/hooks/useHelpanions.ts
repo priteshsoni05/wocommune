@@ -37,7 +37,7 @@ export const useHelpanions = () => {
     try {
       console.log('useHelpanions: Starting to fetch helpanions...');
       
-      // Use the exact same working query logic as WOCommune
+      // Use the exact same working query as WOCommune - no extra fields that might cause permission issues
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
@@ -47,12 +47,8 @@ export const useHelpanions = () => {
           bio, 
           avatar_url, 
           created_at, 
-          updated_at,
           username,
-          email,
-          phone,
           skills,
-          status,
           services!left(
             id,
             title,
@@ -110,7 +106,10 @@ export const useHelpanions = () => {
       // Transform the data to match our interface
       const transformedHelpanions: HelpanionProfile[] = helpanionProfiles.map(profile => ({
         ...profile,
-        status: profile.status as 'pending' | 'active' | 'in_review',
+        status: 'active' as const, // Set from the filter
+        updated_at: profile.created_at, // Use created_at for updated_at if not available
+        email: null, // Don't expose email in the hook
+        phone: null, // Don't expose phone in the hook
         services: Array.isArray(profile.services) ? profile.services.filter(s => s.is_active) : []
       }));
 

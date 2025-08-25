@@ -39,11 +39,18 @@ const PublicProfile = () => {
     console.log("PublicProfile: Fetching profile for username:", username);
 
     try {
-      // Now that RLS policies allow public access, use a direct query
-      const { data: profile, error: profileError } = await supabase
+      // Use the exact same working query pattern as WOCommune
+      const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
-          *,
+          id, 
+          user_id,
+          display_name, 
+          bio, 
+          avatar_url, 
+          created_at, 
+          username,
+          skills,
           services!left(
             id,
             title,
@@ -56,19 +63,22 @@ const PublicProfile = () => {
         `)
         .eq("username", username)
         .eq("status", "active")
-        .maybeSingle();
+        .not("username", "is", null)
+        .not("username", "eq", "");
 
-      console.log("Profile query result:", { profile, profileError });
+      console.log("Profile query result:", { profiles, profilesError });
 
-      if (profileError) {
-        console.error("Profile error:", profileError);
-        throw profileError;
+      if (profilesError) {
+        console.error("Profile error:", profilesError);
+        throw profilesError;
       }
 
-      if (!profile) {
+      if (!profiles || profiles.length === 0) {
         console.log("No profile found for username:", username);
         throw new Error("No profile found");
       }
+
+      const profile = profiles[0]; // Get the first (and only) profile
 
       console.log("Profile found:", profile);
 
@@ -95,8 +105,32 @@ const PublicProfile = () => {
 
       console.log("Availability found:", availability);
 
+      // Create a proper Profile object with all required fields
+      const profileData: Profile = {
+        id: profile.id,
+        user_id: profile.user_id,
+        display_name: profile.display_name,
+        bio: profile.bio,
+        avatar_url: profile.avatar_url,
+        username: profile.username,
+        skills: profile.skills,
+        created_at: profile.created_at,
+        updated_at: profile.created_at, // Use created_at as fallback
+        status: 'active',
+        email: null, // Don't expose email in public profiles
+        phone: null, // Don't expose phone in public profiles
+        role: null, // Not needed for display
+        last_active_role: null,
+        linkedin_url: null, // We'll fetch this separately if needed
+        instagram_url: null,
+        website_url: null,
+        portfolio_url: null,
+        school: null,
+        use_case: null
+      };
+
       setData({
-        profile: profile as Profile,
+        profile: profileData,
         services: (services || []) as Service[],
         availability: (availability || []) as AvailabilitySlot[],
       });
