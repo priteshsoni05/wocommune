@@ -40,6 +40,25 @@ export default function Auth() {
   const getRedirectPathByRole = (r: UserRole) =>
     r === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
 
+  // Redirect authenticated users to their dashboard
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: userRoles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id);
+        
+        const roles = userRoles?.map((r: any) => r.role) || [];
+        const redirectRole = roles.includes(role) ? role : (roles.includes('helpanion') ? 'helpanion' : 'walker');
+        navigate(getRedirectPathByRole(redirectRole));
+      }
+    };
+    
+    checkAuth();
+  }, [navigate, role]);
+
   const handleRoleJoin = async () => {
     if (!selectedRole) return;
 

@@ -9,12 +9,13 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChevronDown, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { SeekHelpModal } from './SeekHelpModal';
 import { SmartSearchBar } from './SmartSearchBar';
+import { AuthDropdown } from '@/components/ui/auth-dropdown';
 
 interface HelpanionHeaderProps {
   onFilteredSearch: (filters: string[]) => void;
@@ -88,29 +89,7 @@ export function HelpanionHeader({ onFilteredSearch }: HelpanionHeaderProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="text-xs px-2 py-1.5">
-                      Join/Login
-                      <ChevronDown className="h-3 w-3 ml-1" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="bg-background border-border z-50">
-                    <DropdownMenuItem asChild>
-                      <Link to="/auth?mode=signup&role=walker" className="cursor-pointer text-xs">Join as Walker</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/auth?mode=signup&role=helpanion" className="cursor-pointer text-xs">Join as Helpanion</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link to="/auth?mode=login&role=walker" className="cursor-pointer text-xs">Login as Walker</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/auth?mode=login&role=helpanion" className="cursor-pointer text-xs">Login as Helpanion</Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <AuthDropdown variant="mobile" />
               )}
             </div>
           </div>
@@ -186,42 +165,8 @@ export function HelpanionHeader({ onFilteredSearch }: HelpanionHeaderProps) {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : (
-                <>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="default" className="gap-2">
-                        Join the Commune
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-background border-border z-50">
-                      <DropdownMenuItem asChild>
-                        <Link to="/auth?mode=signup&role=walker" className="cursor-pointer">Walker</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/auth?mode=signup&role=helpanion" className="cursor-pointer">Helpanion</Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="gap-2">
-                        Already a Member
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-background border-border z-50">
-                      <DropdownMenuItem asChild>
-                        <Link to="/auth?mode=login&role=walker" className="cursor-pointer">Walker</Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/auth?mode=login&role=helpanion" className="cursor-pointer">Helpanion</Link>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </>
+               ) : (
+                <AuthDropdown variant="desktop" />
               )}
             </div>
           </div>
