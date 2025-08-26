@@ -4,7 +4,8 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Linkedin, Twitter } from "lucide-react";
+import { Newsletter } from '@/components/common/Newsletter';
+import { Footer } from '@/components/common/Footer';
 
 const PINE = "#2C5F50"; // Pine forest green
 const GOLD = "#C7A76C"; // Accent gold
@@ -146,96 +147,11 @@ const AboutPage: React.FC = () => {
         </h3>
       </section>
 
-      {/* ------------------------ Newsletter CTA (same as HomePage) ------------------------ */}
-      <section className="bg-[#F3F2EE] py-10">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="text-xl font-serif" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Walk with us
-            </h4>
-            <p className="text-sm text-gray-700">Stories, guidance, and events — straight to your inbox.</p>
-          </div>
-          <div className="flex gap-3 w-full md:w-auto">
-            <a
-              href="https://wocommune.substack.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Subscribe on Substack
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* Newsletter */}
+      <Newsletter />
 
-      {/* ------------------------ Footer (same as HomePage) ------------------------ */}
-      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
-          {/* Footer grid: brand + 3 columns */}
-          <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-            {/* Brand Column */}
-            <div>
-              <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                WALKER'S ODYSSEY
-              </h5>
-              <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
-                Your trusted companion for every step - connecting you with guidance, community, and inspiration to walk your path with purpose.
-              </p>
-            </div>
-
-            {/* Brand Links */}
-            <div>
-              <h6 className="font-semibold mb-3">Brand</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><Link to="#" className="hover:underline">Brand Story</Link></li>
-                <li><Link to="#" className="hover:underline">Vision</Link></li>
-              </ul>
-            </div>
-
-            {/* Commune Links */}
-            <div>
-              <h6 className="font-semibold mb-3">Commune</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
-                <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
-                <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
-                <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
-              </ul>
-            </div>
-
-            {/* Get in touch */}
-            <div>
-              <h6 className="font-semibold mb-3">Get in touch</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-                <li><Link to="#" className="hover:underline">Contact Us</Link></li>
-                <li><a href="#" className="hover:underline">LinkedIn</a></li>
-                <li><a href="#" className="hover:underline">Instagram</a></li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom row */}
-          <div className="border-t border-gray-200 mt-8 pt-6">
-            <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
-              <div className="flex items-center gap-3">
-                <a href="#" aria-label="Twitter" className="text-[#2B2B2B] hover:text-black">
-                  <Twitter size={20} />
-                </a>
-                <a href="#" aria-label="LinkedIn" className="text-[#2B2B2B] hover:text-black">
-                  <Linkedin size={20} />
-                </a>
-                <a href="#" aria-label="Instagram" className="text-[#2B2B2B] hover:text-black">
-                  <Instagram size={20} />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

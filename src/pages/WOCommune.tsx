@@ -300,6 +300,39 @@ export default function WOCommune(): JSX.Element {
             </div>
           </div>
 
+          {/* Social Icons */}
+          <div className="hidden md:flex items-center gap-3 mr-4">
+            <a 
+              href="https://www.linkedin.com/showcase/wo-commune" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="WO Commune LinkedIn"
+            >
+              <Linkedin size={18} />
+            </a>
+            <a 
+              href="https://www.instagram.com/wo_commune" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="WO Commune Instagram"
+            >
+              <Instagram size={18} />
+            </a>
+            <a 
+              href="https://wocommune.substack.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="WO Commune Substack"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.539 24V10.812H1.46zM22.539 0H1.46v2.836h21.08V0z"/>
+              </svg>
+            </a>
+          </div>
+
           {/* Right side: Auth */}
           {user ? (
             <div ref={menuRef} className="relative">

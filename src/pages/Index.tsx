@@ -7,6 +7,8 @@ import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { Newsletter } from "@/components/common/Newsletter";
+import { Footer } from "@/components/common/Footer";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -129,7 +131,7 @@ export default function WOCommunePage(): JSX.Element {
       <PodcastsAndStories />
 
       {/* ===== Footer ===== */}
-      <Footer />
+        <AppFooter />
 
     </div>
   );
@@ -369,101 +371,9 @@ function Card({
 }
 
 function PodcastsAndStories() {
-  return (
-    <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-      <div className="md:flex md:items-start md:gap-8">
-        <div className="md:flex-1">
-          <h2 className="text-2xl font-semibold mb-4">Podcasts & Stories</h2>
-          <p className="text-gray-600 mb-6">
-            Hear real stories from walkers, learn practical tips, and join the conversation.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="p-4 bg-gray-50 rounded-md border">
-                <div className="font-semibold">Episode {i} — Small Wins</div>
-                <div className="text-sm text-gray-600 mt-1">
-                  A short talk about how tiny daily wins compound into change.
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <aside className="mt-6 md:mt-0 md:w-[320px] p-6 bg-[#F3F2EE] rounded-md flex flex-col justify-between">
-          <div>
-            <h4
-              className="text-lg font-serif mb-2"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-            >
-              Walk with us
-            </h4>
-            <p className="text-sm text-gray-700 mb-4">
-              Stories, guidance, and events — straight to your inbox.
-            </p>
-          </div>
-          <a
-            href="https://wocommune.substack.com/"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-block text-center px-4 py-2 rounded-md font-medium"
-            style={{ backgroundColor: PINE, color: "#fff" }}
-          >
-            Subscribe on Substack
-          </a>
-        </aside>
-      </div>
-    </section>
-  );
+  return <Newsletter />;
 }
 
-function Footer() {
-  return (
-    <footer className="bg-[#FAF9F6] border-t border-gray-200 mt-8">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
-        <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              WALKER'S ODYSSEY
-            </h5>
-            <p className="text-sm text-gray-600 max-w-[320px]">
-              Your trusted companion for every step — connecting you with guidance, community, and inspiration to walk your path with purpose.
-            </p>
-          </div>
-          <div>
-            <h6 className="font-semibold mb-3">Brand</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link to="/about" className="hover:underline">About</Link></li>
-              <li><Link to="/brand-story" className="hover:underline">Brand Story</Link></li>
-              <li><Link to="/vision" className="hover:underline">Vision</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h6 className="font-semibold mb-3">Commune</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link to="/events" className="hover:underline">Events</Link></li>
-              <li><Link to="/conversations" className="hover:underline">Conversations</Link></li>
-              <li><Link to="/helpanions" className="hover:underline">Find Helpanion</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h6 className="font-semibold mb-3">Get in touch</h6>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-              <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
-              <li><a href="#" className="hover:underline">Instagram</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-gray-200 mt-8 pt-6">
-          <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved. <span className="text-gray-400">• Pipeline ✓</span></p>
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-              <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-              <div className="w-6 h-6 bg-gray-200 rounded-sm" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+function AppFooter() {
+  return <Footer />;
 }
