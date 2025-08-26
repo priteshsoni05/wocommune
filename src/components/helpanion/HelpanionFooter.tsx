@@ -33,8 +33,8 @@ export function HelpanionFooter() {
             <h4 className="font-semibold text-foreground">Commune</h4>
             <nav className="space-y-2 text-sm">
               <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">Know Commune</Link>
-              <Link to="/auth" className="block text-muted-foreground hover:text-foreground transition-colors">Join Commune</Link>
-              <Link to="/auth" className="block text-muted-foreground hover:text-foreground transition-colors">Become a Helpanion</Link>
+              <Link to="/auth?mode=signup&role=walker" className="block text-muted-foreground hover:text-foreground transition-colors">Join Commune</Link>
+              <Link to="/auth?mode=signup&role=helpanion" className="block text-muted-foreground hover:text-foreground transition-colors">Become a Helpanion</Link>
               <Link to="/guidelines" className="block text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</Link>
             </nav>
           </div>
