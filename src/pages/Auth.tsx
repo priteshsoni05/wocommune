@@ -390,27 +390,37 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
+        <CardHeader className="text-center space-y-4">
           <div className="flex items-center justify-center mb-4">
-            <Link to="/" className="text-primary hover:text-primary/80">
+            <Link to="/" className="text-brand hover:text-brand/80 mr-4">
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex-1">
-              <CardTitle className="text-2xl font-serif">{getTitle()}</CardTitle>
+              <CardTitle className="text-2xl font-serif text-foreground">{getTitle()}</CardTitle>
             </div>
           </div>
-          <CardDescription>{getDescription()}</CardDescription>
+          <CardDescription className="text-muted-foreground">{getDescription()}</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Social Login Buttons */}
-          <div className="space-y-2">
-            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
+          <div className="space-y-3">
+            <Button 
+              variant="outline" 
+              className="w-full border-border/60 hover:bg-accent/50 hover:border-accent" 
+              onClick={handleGoogleLogin} 
+              disabled={loading}
+            >
               <Mail className="w-4 h-4 mr-2" />
               Continue with Gmail
             </Button>
-            <Button variant="outline" className="w-full" onClick={handleLinkedInLogin} disabled={loading}>
+            <Button 
+              variant="outline" 
+              className="w-full border-border/60 hover:bg-accent/50 hover:border-accent" 
+              onClick={handleLinkedInLogin} 
+              disabled={loading}
+            >
               <LogIn className="w-4 h-4 mr-2" />
               Continue with LinkedIn
             </Button>
@@ -418,10 +428,10 @@ export default function Auth() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
+              <Separator className="w-full bg-border/60" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+              <span className="bg-card px-2 text-muted-foreground">Or continue with email</span>
             </div>
           </div>
 
@@ -429,7 +439,7 @@ export default function Auth() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'signup' && (
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName" className="text-foreground">Full Name</Label>
                 <Input
                   id="fullName"
                   type="text"
@@ -437,13 +447,14 @@ export default function Auth() {
                   onChange={(e) => setFullName(e.target.value)}
                   required
                   placeholder="Enter your full name"
+                  className="border-border/60 focus:border-brand focus:ring-brand/20"
                 />
               </div>
             )}
 
             {mode === 'signup' && role === 'helpanion' && (
               <div className="space-y-2">
-                <Label htmlFor="username">Username (Unique Public ID)</Label>
+                <Label htmlFor="username" className="text-foreground">Username (Unique Public ID)</Label>
                 <Input
                   id="username"
                   type="text"
@@ -451,12 +462,13 @@ export default function Auth() {
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   placeholder="Choose a unique username"
+                  className="border-border/60 focus:border-brand focus:ring-brand/20"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">
+              <Label htmlFor="email" className="text-foreground">
                 {mode === 'login' && role === 'helpanion' ? 'Email or Username' : 'Email Address'}
               </Label>
               <Input
@@ -472,11 +484,12 @@ export default function Auth() {
                 }}
                 required
                 placeholder={mode === 'login' && role === 'helpanion' ? 'Enter email or username' : 'Enter your email'}
+                className="border-border/60 focus:border-brand focus:ring-brand/20"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-foreground">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -485,6 +498,7 @@ export default function Auth() {
                 required
                 placeholder="Enter your password"
                 minLength={6}
+                className="border-border/60 focus:border-brand focus:ring-brand/20"
               />
             </div>
 
@@ -493,14 +507,18 @@ export default function Auth() {
                 <button
                   type="button"
                   onClick={() => setShowForgotPassword(true)}
-                  className="text-xs text-primary hover:underline"
+                  className="text-xs text-brand hover:text-brand/80 hover:underline"
                 >
                   Forgot Password?
                 </button>
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-brand hover:bg-brand/90 text-brand-foreground" 
+              disabled={loading}
+            >
               {loading ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
             </Button>
           </form>
@@ -509,14 +527,14 @@ export default function Auth() {
             {mode === 'login' ? (
               <>
                 Don't have an account?{' '}
-                <Link to={`/auth?mode=signup&role=${role}`} className="text-primary hover:underline">
+                <Link to={`/auth?mode=signup&role=${role}`} className="text-brand hover:text-brand/80 hover:underline">
                   Sign up
                 </Link>
               </>
             ) : (
               <>
                 Already have an account?{' '}
-                <Link to={`/auth?mode=login&role=${role}`} className="text-primary hover:underline">
+                <Link to={`/auth?mode=login&role=${role}`} className="text-brand hover:text-brand/80 hover:underline">
                   Sign in
                 </Link>
               </>
