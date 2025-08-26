@@ -9,6 +9,7 @@ import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { AuthDropdown } from "@/components/ui/auth-dropdown";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -365,13 +366,7 @@ export default function WOCommune(): JSX.Element {
               )}
             </div>
           ) : (
-            <button
-              onClick={() => navigate('/auth?mode=login&role=walker')}
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Login / Sign Up
-            </button>
+            <AuthDropdown variant="desktop" />
           )}
         </div>
       </div>
