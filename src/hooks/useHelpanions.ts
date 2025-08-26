@@ -37,6 +37,14 @@ export const useHelpanions = () => {
     try {
       console.log('useHelpanions: Starting to fetch helpanions...');
       
+      // First check if we can access profiles table at all
+      const { data: testProfiles, error: testError } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .limit(1);
+      
+      console.log('useHelpanions: Test query result:', { testProfiles, testError });
+      
       // Use the exact same working query as WOCommune - no extra fields that might cause permission issues
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
