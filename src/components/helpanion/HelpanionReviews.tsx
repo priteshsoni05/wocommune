@@ -2,48 +2,51 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Star, StarIcon, MessageSquare, TrendingUp } from "lucide-react";
-
-// Mock data - in real app this would come from useReviews hook
-const mockReviews = [
-  {
-    id: "1",
-    reviewer_name: "Sarah Chen",
-    reviewer_avatar: "",
-    rating: 5,
-    comment: "Amazing session! Really helped me understand UI/UX principles and gave me a clear roadmap for my career transition. Highly recommend!",
-    service_title: "Break into UI/UX Design",
-    created_at: "2024-01-15T10:00:00Z"
-  },
-  {
-    id: "2",
-    reviewer_name: "Mike Johnson",
-    reviewer_avatar: "",
-    rating: 5,
-    comment: "Very insightful and practical advice. The portfolio review was exactly what I needed to land my first design job.",
-    service_title: "Portfolio Review & Feedback",
-    created_at: "2024-01-10T14:30:00Z"
-  },
-  {
-    id: "3",
-    reviewer_name: "Priya Patel",
-    reviewer_avatar: "",
-    rating: 4,
-    comment: "Good session with valuable insights. Would have liked more time for questions but overall very helpful.",
-    service_title: "Career Planning Session",
-    created_at: "2024-01-05T16:45:00Z"
-  }
-];
+import { useReviews } from "@/hooks/useReviews";
 
 export const HelpanionReviews = () => {
-  const averageRating = mockReviews.length > 0 
-    ? mockReviews.reduce((sum, review) => sum + review.rating, 0) / mockReviews.length 
-    : 0;
+  const { reviews, loading, error, stats } = useReviews();
 
-  const ratingDistribution = [5, 4, 3, 2, 1].map(rating => ({
-    rating,
-    count: mockReviews.filter(review => review.rating === rating).length,
-    percentage: mockReviews.length > 0 ? (mockReviews.filter(review => review.rating === rating).length / mockReviews.length) * 100 : 0
-  }));
+  if (loading) {
+    return (
+      <div className="p-8 space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Reviews</h1>
+          <p className="text-lg text-muted-foreground">
+            See what people are saying about your sessions
+          </p>
+        </div>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading reviews...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Reviews</h1>
+          <p className="text-lg text-muted-foreground">
+            See what people are saying about your sessions
+          </p>
+        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <MessageSquare className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2">Error loading reviews</h3>
+              <p className="text-muted-foreground">{error}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -63,7 +66,7 @@ export const HelpanionReviews = () => {
         </p>
       </div>
 
-      {mockReviews.length === 0 ? (
+      {reviews.length === 0 ? (
         <Card>
           <CardContent className="pt-6">
             <div className="text-center py-8">
@@ -82,12 +85,12 @@ export const HelpanionReviews = () => {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary">{averageRating.toFixed(1)}</div>
+                  <div className="text-3xl font-bold text-primary">{stats.averageRating.toFixed(1)}</div>
                   <div className="flex justify-center items-center gap-1 mt-2">
-                    {renderStars(Math.round(averageRating))}
+                    {renderStars(Math.round(stats.averageRating))}
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Based on {mockReviews.length} review{mockReviews.length !== 1 ? 's' : ''}
+                    Based on {stats.totalReviews} review{stats.totalReviews !== 1 ? 's' : ''}
                   </p>
                 </div>
               </CardContent>
@@ -96,11 +99,13 @@ export const HelpanionReviews = () => {
             <Card>
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary">{mockReviews.length}</div>
+                  <div className="text-3xl font-bold text-primary">{stats.totalReviews}</div>
                   <p className="text-sm text-muted-foreground mt-2">Total Reviews</p>
                   <div className="flex items-center justify-center gap-1 mt-2 text-success">
                     <TrendingUp className="h-4 w-4" />
-                    <span className="text-sm">+2 this month</span>
+                    <span className="text-sm">
+                      {stats.monthlyGrowth > 0 ? '+' : ''}{stats.monthlyGrowth.toFixed(0)}% this month
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -110,7 +115,7 @@ export const HelpanionReviews = () => {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-primary">
-                    {ratingDistribution.find(r => r.rating === 5)?.percentage.toFixed(0) || 0}%
+                    {stats.ratingDistribution.find(r => r.rating === 5)?.percentage.toFixed(0) || 0}%
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">5-Star Reviews</p>
                   <div className="flex justify-center items-center gap-1 mt-2">
@@ -128,7 +133,7 @@ export const HelpanionReviews = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {ratingDistribution.map(({ rating, count, percentage }) => (
+                {stats.ratingDistribution.map(({ rating, count, percentage }) => (
                   <div key={rating} className="flex items-center gap-3">
                     <div className="flex items-center gap-1 w-20">
                       <span className="text-sm">{rating}</span>
@@ -154,7 +159,7 @@ export const HelpanionReviews = () => {
             <h2 className="text-xl font-semibold">Recent Reviews</h2>
             
             <div className="space-y-4">
-              {mockReviews.map((review) => (
+              {reviews.map((review) => (
                 <Card key={review.id}>
                   <CardContent className="pt-6">
                     <div className="flex gap-4">
@@ -198,29 +203,41 @@ export const HelpanionReviews = () => {
             </div>
           </div>
 
-          {/* Featured Testimonial */}
-          <Card className="bg-primary/5 border-primary/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                Featured Testimonial
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <blockquote className="text-lg italic text-muted-foreground mb-4">
-                "Amazing session! Really helped me understand UI/UX principles and gave me a clear roadmap for my career transition. Highly recommend!"
-              </blockquote>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="text-xs">SC</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-medium text-sm">Sarah Chen</p>
-                  <p className="text-xs text-muted-foreground">Break into UI/UX Design</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Featured Testimonial - Show highest rated recent review */}
+          {reviews.length > 0 && (() => {
+            const featuredReview = reviews
+              .filter(r => r.rating === 5)
+              .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0]
+              || reviews[0];
+            
+            return (
+              <Card className="bg-primary/5 border-primary/20">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                    Featured Testimonial
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <blockquote className="text-lg italic text-muted-foreground mb-4">
+                    "{featuredReview.comment || 'Great session!'}"
+                  </blockquote>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={featuredReview.reviewer_avatar || ""} />
+                      <AvatarFallback className="text-xs">
+                        {featuredReview.reviewer_name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-sm">{featuredReview.reviewer_name}</p>
+                      <p className="text-xs text-muted-foreground">{featuredReview.service_title}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
         </>
       )}
     </div>

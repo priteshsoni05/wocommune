@@ -263,6 +263,48 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          booking_id: string
+          comment: string | null
+          created_at: string
+          helper_id: string
+          id: string
+          rating: number
+          reviewer_avatar: string | null
+          reviewer_name: string
+          seeker_id: string
+          service_title: string
+          updated_at: string
+        }
+        Insert: {
+          booking_id: string
+          comment?: string | null
+          created_at?: string
+          helper_id: string
+          id?: string
+          rating: number
+          reviewer_avatar?: string | null
+          reviewer_name: string
+          seeker_id: string
+          service_title: string
+          updated_at?: string
+        }
+        Update: {
+          booking_id?: string
+          comment?: string | null
+          created_at?: string
+          helper_id?: string
+          id?: string
+          rating?: number
+          reviewer_avatar?: string | null
+          reviewer_name?: string
+          seeker_id?: string
+          service_title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           category: string | null
