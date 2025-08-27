@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
-import Contact from "./pages/Contact";
+
 import PublicProfile from "./pages/PublicProfile";
 import WOCommune from "./pages/WOCommune";
 import HelpanionsDirectory from "./pages/HelpanionsDirectory";
@@ -72,7 +72,7 @@ const App = () => (
             {/* Static routes first */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
+            
             <Route path="/get-help" element={<WOCommune />} />
             <Route path="/wo-commune" element={<WOCommune />} />
             <Route path="/auth" element={<Auth />} />

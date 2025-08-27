@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Linkedin, Instagram } from 'lucide-react';
+import { ContactModal } from './ContactModal';
 
 export function Footer() {
   const pipeline =
@@ -45,7 +46,11 @@ export function Footer() {
           <div>
             <h6 className="font-semibold mb-3">Get in touch</h6>
             <ul className="space-y-3 text-sm text-gray-700">
-              <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
+              <li>
+                <ContactModal>
+                  <button className="hover:underline cursor-pointer">Contact Us</button>
+                </ContactModal>
+              </li>
               <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">Write Us</a></li>
             </ul>
           </div>
