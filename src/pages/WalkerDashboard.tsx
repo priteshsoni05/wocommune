@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useProfile } from '@/hooks/useProfile';
+import { useOptimizedProfile as useProfile } from '@/hooks/useOptimizedProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useBookings } from '@/hooks/useBookings';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';

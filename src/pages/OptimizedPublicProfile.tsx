@@ -1,10 +1,8 @@
-
-// src/pages/PublicProfile.tsx
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog";
-import { Profile } from "@/hooks/useProfile";
+import { Profile } from "@/hooks/useOptimizedProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
 import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle } from "lucide-react";
@@ -18,7 +16,11 @@ interface PublicProfileData {
 const PINE = "#01796F";
 const TEXT = "#111111";
 
-const PublicProfile = () => {
+// Cache for public profiles
+const profileCache = new Map<string, { data: PublicProfileData; timestamp: number }>();
+const CACHE_DURATION = 300000; // 5 minutes
+
+const OptimizedPublicProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const [data, setData] = useState<PublicProfileData | null>(null);
@@ -28,18 +30,23 @@ const PublicProfile = () => {
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const servicesRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-  const fetchPublicProfile = async () => {
+  const fetchPublicProfile = useCallback(async () => {
     if (!username) {
       setError("Profile not found");
       setLoading(false);
       return;
     }
 
-    console.log("PublicProfile: Fetching profile for username:", username);
+    // Check cache first
+    const cached = profileCache.get(username);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      setData(cached.data);
+      setLoading(false);
+      return;
+    }
 
     try {
-      // Use the exact same working query pattern as WOCommune
+      // Optimized single query with joins
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
@@ -51,6 +58,10 @@ const PublicProfile = () => {
           created_at, 
           username,
           skills,
+          linkedin_url,
+          instagram_url,
+          website_url,
+          portfolio_url,
           services!left(
             id,
             title,
@@ -59,105 +70,126 @@ const PublicProfile = () => {
             duration_minutes,
             category,
             is_active
+          ),
+          availability_slots!left(
+            id,
+            day_of_week,
+            start_time,
+            end_time,
+            is_available
           )
         `)
         .eq("username", username)
         .eq("status", "active")
         .not("username", "is", null)
-        .not("username", "eq", "");
-
-      console.log("Profile query result:", { profiles, profilesError });
+        .not("username", "eq", "")
+        .maybeSingle();
 
       if (profilesError) {
-        console.error("Profile error:", profilesError);
         throw profilesError;
       }
 
-      if (!profiles || profiles.length === 0) {
-        console.log("No profile found for username:", username);
+      if (!profiles) {
         throw new Error("No profile found");
       }
 
-      const profile = profiles[0]; // Get the first (and only) profile
-
-      console.log("Profile found:", profile);
-
-      // Use services from the joined query instead of separate fetch
-      const services = Array.isArray(profile.services) 
-        ? profile.services.filter(s => s.is_active) 
+      // Process the data
+      const services = Array.isArray(profiles.services) 
+        ? profiles.services.filter(s => s.is_active) 
         : [];
 
-      console.log("Services found:", services);
+      const availability = Array.isArray(profiles.availability_slots)
+        ? profiles.availability_slots.filter(slot => slot.is_available)
+        : [];
 
-      // Fetch availability
-      const { data: availability, error: availabilityError } = await supabase
-        .from("availability_slots")
-        .select("*")
-        .eq("helper_id", profile.user_id)
-        .eq("is_available", true)
-        .order("day_of_week", { ascending: true })
-        .order("start_time", { ascending: true });
-
-      if (availabilityError) {
-        console.error("Availability error:", availabilityError);
-        // Don't throw here, just log and continue with empty availability
-      }
-
-      console.log("Availability found:", availability);
-
-      // Create a proper Profile object with all required fields
+      // Create profile object
       const profileData: Profile = {
-        id: profile.id,
-        user_id: profile.user_id,
-        display_name: profile.display_name,
-        bio: profile.bio,
-        avatar_url: profile.avatar_url,
-        username: profile.username,
-        skills: profile.skills,
-        created_at: profile.created_at,
-        updated_at: profile.created_at, // Use created_at as fallback
+        id: profiles.id,
+        user_id: profiles.user_id,
+        display_name: profiles.display_name,
+        bio: profiles.bio,
+        avatar_url: profiles.avatar_url,
+        username: profiles.username,
+        skills: profiles.skills,
+        created_at: profiles.created_at,
+        updated_at: profiles.created_at,
         status: 'active',
-        email: null, // Don't expose email in public profiles
-        phone: null, // Don't expose phone in public profiles
-        role: null, // Not needed for display
+        email: null,
+        phone: null,
+        role: null,
         last_active_role: null,
-        linkedin_url: null, // We'll fetch this separately if needed
-        instagram_url: null,
-        website_url: null,
-        portfolio_url: null,
+        linkedin_url: profiles.linkedin_url,
+        instagram_url: profiles.instagram_url,
+        website_url: profiles.website_url,
+        portfolio_url: profiles.portfolio_url,
         school: null,
         use_case: null
       };
 
-      setData({
+      const result = {
         profile: profileData,
-        services: (services || []) as Service[],
-        availability: (availability || []) as AvailabilitySlot[],
-      });
+        services: services as Service[],
+        availability: availability as AvailabilitySlot[],
+      };
+
+      // Cache the result
+      profileCache.set(username, { data: result, timestamp: Date.now() });
+      setData(result);
     } catch (err) {
       console.error("Failed to load profile:", err);
       setError("Failed to load profile");
     } finally {
       setLoading(false);
     }
-  };
-
-    fetchPublicProfile();
   }, [username]);
 
-  const handleServiceBook = (service: Service) => {
+  useEffect(() => {
+    fetchPublicProfile();
+  }, [fetchPublicProfile]);
+
+  const handleServiceBook = useCallback((service: Service) => {
     setSelectedService(service);
     setShowBookingDialog(true);
-  };
+  }, []);
 
-  const scrollToServices = () => {
+  const scrollToServices = useCallback(() => {
     servicesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  }, []);
+
+  // Memoize skills processing
+  const skillsArray = useMemo(() => {
+    return data?.profile.skills 
+      ? data.profile.skills.split(",").slice(0, 5).map(skill => skill.trim())
+      : [];
+  }, [data?.profile.skills]);
+
+  // Memoize social links
+  const socialLinks = useMemo(() => {
+    if (!data?.profile) return [];
+    
+    const links = [];
+    if (data.profile.instagram_url) {
+      links.push({ url: data.profile.instagram_url, icon: Instagram, label: "Instagram" });
+    }
+    if (data.profile.linkedin_url) {
+      links.push({ url: data.profile.linkedin_url, icon: Linkedin, label: "LinkedIn" });
+    }
+    if (data.profile.website_url) {
+      links.push({ url: data.profile.website_url, icon: Globe, label: "Website" });
+    }
+    if (data.profile.portfolio_url) {
+      links.push({ url: data.profile.portfolio_url, icon: FolderOpen, label: "Portfolio" });
+    }
+    return links;
+  }, [data?.profile]);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ color: TEXT }}>
-        Loading profile...
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto border-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading profile...</p>
+        </div>
       </div>
     );
   }
@@ -181,7 +213,7 @@ const PublicProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      {/* Header — simple, like WO Commune page */}
+      {/* Header */}
       <div className="w-full border-b bg-white">
         <div className="w-full mx-auto flex justify-between items-center px-4 md:px-6 py-3">
           <div className="font-semibold tracking-wide" style={{ color: TEXT }}>
@@ -197,7 +229,7 @@ const PublicProfile = () => {
         </div>
       </div>
 
-      {/* Main grid (full-width, minimal breathing on sides) */}
+      {/* Main grid */}
       <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 px-4 md:px-6">
         {/* Sidebar */}
         <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:min-h-[calc(100vh-56px)]">
@@ -206,6 +238,7 @@ const PublicProfile = () => {
               src={data.profile.avatar_url || "/placeholder.svg"}
               alt={data.profile.display_name || "Profile"}
               className="w-28 h-28 mx-auto rounded-full border-4 border-[#E6EDEB] object-cover"
+              loading="lazy"
             />
             <h1 className="text-xl font-bold flex items-center justify-center gap-1">
               {data.profile.display_name}
@@ -217,22 +250,19 @@ const PublicProfile = () => {
           </div>
 
           {/* Expertise */}
-          {data.profile.skills && (
+          {skillsArray.length > 0 && (
             <div className="mt-6" style={{ color: TEXT }}>
               <h3 className="text-sm font-medium mb-2">Expertise</h3>
               <div className="flex flex-wrap gap-2">
-                {data.profile.skills
-                  .split(",")
-                  .slice(0, 5)
-                  .map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 text-xs rounded-full border"
-                      style={{ borderColor: "#D1D5DB", color: TEXT, backgroundColor: "#FFFFFF" }}
-                    >
-                      {skill.trim()}
-                    </span>
-                  ))}
+                {skillsArray.map((skill, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 text-xs rounded-full border"
+                    style={{ borderColor: "#D1D5DB", color: TEXT, backgroundColor: "#FFFFFF" }}
+                  >
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
           )}
@@ -243,29 +273,16 @@ const PublicProfile = () => {
             <p className="text-sm">★ 4.9 (24 reviews) • 87 sessions completed</p>
           </div>
 
-          {/* Social icons (just below reviews) */}
-          <div className="mt-3 flex items-center justify-start gap-3" style={{ color: TEXT }}>
-            {data.profile.instagram_url && (
-              <a href={data.profile.instagram_url} target="_blank" rel="noreferrer" aria-label="Instagram">
-                <Instagram size={18} />
-              </a>
-            )}
-            {data.profile.linkedin_url && (
-              <a href={data.profile.linkedin_url} target="_blank" rel="noreferrer" aria-label="LinkedIn">
-                <Linkedin size={18} />
-              </a>
-            )}
-            {data.profile.website_url && (
-              <a href={data.profile.website_url} target="_blank" rel="noreferrer" aria-label="Website">
-                <Globe size={18} />
-              </a>
-            )}
-            {data.profile.portfolio_url && (
-              <a href={data.profile.portfolio_url} target="_blank" rel="noreferrer" aria-label="Portfolio">
-                <FolderOpen size={18} />
-              </a>
-            )}
-          </div>
+          {/* Social icons */}
+          {socialLinks.length > 0 && (
+            <div className="mt-3 flex items-center justify-start gap-3" style={{ color: TEXT }}>
+              {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                <a key={idx} href={url} target="_blank" rel="noreferrer" aria-label={label}>
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          )}
 
           {/* About */}
           {data.profile.bio && (
@@ -276,7 +293,7 @@ const PublicProfile = () => {
           )}
         </aside>
 
-        {/* Main Content — Services only */}
+        {/* Main Content */}
         <main className="lg:col-span-8 p-6" style={{ color: TEXT }}>
           <div ref={servicesRef}>
             <h2 className="text-2xl font-bold mb-6">Services</h2>
@@ -343,4 +360,4 @@ const PublicProfile = () => {
   );
 };
 
-export default PublicProfile;
+export default OptimizedPublicProfile;

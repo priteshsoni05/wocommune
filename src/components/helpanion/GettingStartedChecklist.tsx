@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ArrowRight } from "lucide-react";
-import { Profile } from "@/hooks/useProfile";
+import { Profile } from "@/hooks/useOptimizedProfile";
 import { useServices } from "@/hooks/useServices";
 import { useAvailabilitySlots } from "@/hooks/useAvailabilitySlots";
+import { useMemo } from "react";
 
 interface GettingStartedChecklistProps {
   profile: Profile;
@@ -21,13 +22,14 @@ export const GettingStartedChecklist = ({
   const { services } = useServices();
   const { slots } = useAvailabilitySlots();
 
-  // Check completion status for each step
-  const profileComplete = !!(profile.display_name && profile.email);
-  const bioComplete = !!(profile.bio && (profile.use_case || profile.skills));
-  const servicesComplete = services.length > 0;
-  const availabilityComplete = slots.length > 0;
+  // Memoize completion calculations for better performance
+  const { steps, completedCount, totalSteps, allComplete } = useMemo(() => {
+    const profileComplete = !!(profile.display_name && profile.email);
+    const bioComplete = !!(profile.bio && (profile.use_case || profile.skills));
+    const servicesComplete = services.length > 0;
+    const availabilityComplete = slots.length > 0;
 
-  const steps = [
+    const stepsArray = [
     {
       id: 1,
       title: "Complete your profile information",
@@ -56,11 +58,19 @@ export const GettingStartedChecklist = ({
       action: onNavigateToAvailability,
       description: "Choose when you're available to help"
     }
-  ];
+    ];
 
-  const completedCount = steps.filter(step => step.completed).length;
-  const totalSteps = steps.length;
-  const allComplete = completedCount === totalSteps;
+    const completed = stepsArray.filter(step => step.completed).length;
+    const total = stepsArray.length;
+    const complete = completed === total;
+
+    return {
+      steps: stepsArray,
+      completedCount: completed,
+      totalSteps: total,
+      allComplete: complete
+    };
+  }, [profile, services.length, slots.length, onNavigateToProfile, onNavigateToServices, onNavigateToAvailability]);
 
   return (
     <Card>

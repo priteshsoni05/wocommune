@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useProfile } from "@/hooks/useProfile";
-import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { useOptimizedProfile } from "@/hooks/useOptimizedProfile";
+import { useOptimizedDashboardStats } from "@/hooks/useOptimizedDashboardStats";
 
 interface ProfileStatusProps {
   status: 'active' | 'in_review' | 'pending';
@@ -15,8 +15,8 @@ interface ProfileStatusProps {
 export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { profile } = useProfile();
-  const { stats, loading } = useDashboardStats();
+  const { profile } = useOptimizedProfile();
+  const { stats, loading } = useOptimizedDashboardStats();
 
   const handleViewPublic = () => {
     if (profile?.username) {

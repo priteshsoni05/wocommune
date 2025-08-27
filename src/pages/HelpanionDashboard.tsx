@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useProfile } from "@/hooks/useProfile";
+import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
 import { useServices } from "@/hooks/useServices";
 import { useBookings } from "@/hooks/useBookings";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { OptimizedProgress as Progress } from "@/components/dashboard/OptimizedProgress";
 import { useToast } from "@/hooks/use-toast";
 import {
   Home,
@@ -32,12 +32,14 @@ import {
 import { cn } from "@/lib/utils";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { HelpanionHome } from "@/components/helpanion/HelpanionHome";
-import { HelpanionProfile } from "@/components/helpanion/HelpanionProfile";
-import { HelpanionServices } from "@/components/helpanion/HelpanionServices";
-import { HelpanionAvailability } from "@/components/helpanion/HelpanionAvailability";
-import { HelpanionBookings } from "@/components/helpanion/HelpanionBookings";
-import { HelpanionReviews } from "@/components/helpanion/HelpanionReviews";
-import { HelpanionSettings } from "@/components/helpanion/HelpanionSettings";
+import { 
+  HelpanionProfileWrapper,
+  HelpanionServicesWrapper,
+  HelpanionAvailabilityWrapper,
+  HelpanionBookingsWrapper,
+  HelpanionReviewsWrapper,
+  HelpanionSettingsWrapper
+} from "@/components/dashboard/LazyComponents";
 
 type TabKey =
   | "home"
@@ -114,17 +116,17 @@ const HelpanionDashboard = () => {
     return null;
   }
 
-  const calculateProfileProgress = () => {
+  const calculateProfileProgress = React.useMemo(() => {
     let completed = 0;
     const total = 6;
-    if (profile.display_name) completed++;
-    if (profile.bio) completed++;
-    if (profile.avatar_url) completed++;
-    if (profile.username) completed++;
+    if (profile?.display_name) completed++;
+    if (profile?.bio) completed++;
+    if (profile?.avatar_url) completed++;
+    if (profile?.username) completed++;
     if (services.length > 0) completed++;
     if (bookings.length > 0) completed++;
     return Math.round((completed / total) * 100);
-  };
+  }, [profile, services.length, bookings.length]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -159,8 +161,8 @@ const HelpanionDashboard = () => {
     }
   };
 
-  const renderContent = () => {
-    const profileProgress = calculateProfileProgress();
+  const renderContent = React.useMemo(() => {
+    const profileProgress = calculateProfileProgress;
     switch (activeTab) {
       case "home":
         return (
@@ -174,24 +176,24 @@ const HelpanionDashboard = () => {
         );
       case "profile":
         return (
-          <HelpanionProfile profile={profile} updateProfile={updateProfile} />
+          <HelpanionProfileWrapper profile={profile} updateProfile={updateProfile} />
         );
       case "services":
-        return <HelpanionServices profileProgress={profileProgress} />;
+        return <HelpanionServicesWrapper profileProgress={profileProgress} />;
       case "availability":
-        return <HelpanionAvailability profileProgress={profileProgress} />;
+        return <HelpanionAvailabilityWrapper profileProgress={profileProgress} />;
       case "bookings":
-        return <HelpanionBookings />;
+        return <HelpanionBookingsWrapper />;
       case "reviews":
-        return <HelpanionReviews />;
+        return <HelpanionReviewsWrapper />;
       case "settings":
         return (
-          <HelpanionSettings profile={profile} updateProfile={updateProfile} />
+          <HelpanionSettingsWrapper profile={profile} updateProfile={updateProfile} />
         );
       default:
         return null;
     }
-  };
+  }, [activeTab, profile, calculateProfileProgress]);
 
   const renderSidebar = () => (
     <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
@@ -220,10 +222,10 @@ const HelpanionDashboard = () => {
         <div className="mt-3">
           <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>Profile Progress</span>
-            <span>{calculateProfileProgress()}%</span>
+            <span>{calculateProfileProgress}%</span>
           </div>
           <Progress
-            value={calculateProfileProgress()}
+            value={calculateProfileProgress}
             className="h-2"
             style={{ backgroundColor: "#ddd" }}
           />
@@ -286,7 +288,7 @@ const HelpanionDashboard = () => {
   return (
     <>
       <DashboardLayout sidebar={renderSidebar()} header={renderHeader()}>
-        {renderContent()}
+        {renderContent}
       </DashboardLayout>
 
       <Dialog open={showWalkerModal} onOpenChange={setShowWalkerModal}>
