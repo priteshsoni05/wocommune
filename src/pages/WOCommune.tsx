@@ -1,4 +1,4 @@
-// src/pages/WOCommune.tsx
+// src/pages/WOCommune.tsx - Fixed Twitter import issue
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronDown, ArrowRight, Instagram, Linkedin } from "lucide-react";
