@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, useNavigate, useParams } from "react-rout
 import { AuthProvider } from "@/contexts/AuthContext";
 import Auth from "./pages/Auth";
 
-import OptimizedPublicProfile from "./pages/OptimizedPublicProfile";
+import PublicProfile from "./pages/PublicProfile";
 import WOCommune from "./pages/WOCommune";
 import HelpanionsDirectory from "./pages/HelpanionsDirectory";
 import WalkerDashboard from "./pages/WalkerDashboard";
@@ -82,12 +82,12 @@ const App = () => (
 
             {/* Back-compat routes (older links) */}
             {/* Old /p/:username links still work */}
-            <Route path="/p/:username" element={<OptimizedPublicProfile />} />
+            <Route path="/p/:username" element={<PublicProfile />} />
             {/* Old /profile/:id links get redirected to /:username */}
             <Route path="/profile/:id" element={<ProfileIdRedirect />} />
 
             {/* Top-level username profile route */}
-            <Route path="/:username" element={<OptimizedPublicProfile />} />
+            <Route path="/:username" element={<PublicProfile />} />
 
             {/* Keep catch-all at the end */}
             <Route path="*" element={<NotFound />} />
