@@ -33,8 +33,7 @@ const HomePage: React.FC = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="text-[20px] font-semibold tracking-widest"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+            className="text-[20px] font-semibold tracking-widest font-brand text-[#333]"
             aria-label="Walker’s Odyssey home"
           >
             WALKER'S ODYSSEY
@@ -77,8 +76,7 @@ const HomePage: React.FC = () => {
         <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
           {/* Headline */}
           <h1
-            className="text-white font-semibold leading-tight max-w-3xl text-[28px] sm:text-4xl md:text-5xl"
-            style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+            className="text-white font-semibold leading-tight max-w-3xl text-[28px] sm:text-4xl md:text-5xl font-heading"
           >
             Your trusted companion for every step
           </h1>
@@ -88,8 +86,7 @@ const HomePage: React.FC = () => {
 
           {/* Subtext */}
           <p
-            className="text-white max-w-2xl text-base md:text-lg"
-            style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
+            className="text-white max-w-2xl text-base md:text-lg font-body"
           >
             connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
@@ -118,10 +115,10 @@ const HomePage: React.FC = () => {
         <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left column: text */}
           <div className="px-2">
-            <h2 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-xl font-heading mb-4">
               Walking Beside You, Every Step of the Way
             </h2>
-            <p className="text-base leading-relaxed mb-6" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+            <p className="text-base leading-relaxed mb-6 font-body">
               At Walker’s Odyssey, we believe every journey is unique. Whether you’re taking your first step
               or navigating an unfamiliar path, we’re here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.

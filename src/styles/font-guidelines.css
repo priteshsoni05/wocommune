@@ -1,0 +1,28 @@
+/* 
+WALKER'S ODYSSEY FONT GUIDELINES
+================================
+
+Use these Tailwind classes for consistent typography across the site:
+
+HEADINGS & BRAND ELEMENTS (Cormorant Garamond - serif)
+- font-heading  -> For all h1, h2, h3, h4, h5, h6 elements
+- font-brand    -> For logo and brand text 
+- font-serif    -> Alternative alias for headings
+
+BODY TEXT & UI ELEMENTS (Source Sans Pro - sans-serif)  
+- font-body     -> For paragraphs, form inputs, buttons, and general UI text
+- font-sans     -> Default system fallback (already applies font-body)
+
+EXAMPLES:
+<h1 className="font-heading">Main Title</h1>
+<h2 className="font-heading">Section Header</h2>
+<p className="font-body">Body text content</p>
+<button className="font-body">Button Text</button>
+
+AVOID:
+- Inline style={{ fontFamily: ... }} (use classes instead)
+- font-futura (legacy, deprecated)
+- Direct font names in components
+
+The fonts are loaded via Google Fonts in index.html and configured in tailwind.config.ts
+*/

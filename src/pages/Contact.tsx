@@ -43,7 +43,7 @@ export default function Contact() {
       <main className="max-w-7xl mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-futura-bold text-foreground mb-4">Contact Us</h1>
+            <h1 className="text-4xl font-heading text-foreground mb-4">Contact Us</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Have a question or want to get in touch? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
             </p>

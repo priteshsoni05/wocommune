@@ -18,12 +18,20 @@ export default {
 			}
 		},
 		extend: {
-			fontFamily: {
-				'futura': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
-				'futura-bold': ['Futura', 'Trebuchet MS', 'Arial', 'sans-serif'],
-				body: ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
-				brand: ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
-			},
+		fontFamily: {
+			// UI and body text - Source Sans Pro
+			'sans': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+			'body': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+			
+			// Headings and brand elements - Cormorant Garamond
+			'serif': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
+			'brand': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
+			'heading': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
+			
+			// Legacy support
+			'futura': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+			'futura-bold': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+		},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

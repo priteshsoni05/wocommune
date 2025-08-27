@@ -15,7 +15,7 @@ I'm passionate about sharing knowledge and helping others succeed. Let's work to
   return (
     <section className="py-12 border-b border-border">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl font-futura-bold text-foreground mb-6 text-center">
+        <h2 className="text-3xl font-heading text-foreground mb-6 text-center">
           About {profile.display_name?.split(' ')[0] || 'Me'}
         </h2>
         <div className="prose prose-lg max-w-none text-muted-foreground">

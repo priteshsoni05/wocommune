@@ -112,29 +112,39 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-body;
-    font-size: 0.95rem; /* slightly refined base */
+    font-family: 'Source Sans Pro', system-ui, ui-sans-serif, sans-serif;
+    font-size: 0.95rem;
     line-height: 1.6;
   }
 
-  /* Headings */
+  /* Headings use Cormorant Garamond (serif) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  }
+
   h1 {
-    @apply text-3xl md:text-5xl font-semibold leading-tight font-body;
+    @apply text-3xl md:text-5xl font-semibold leading-tight;
   }
 
   h2 {
-    @apply text-2xl md:text-3xl font-semibold leading-tight font-body;
+    @apply text-2xl md:text-3xl font-semibold leading-tight;
   }
 
   h3 {
-    @apply text-xl md:text-2xl font-semibold leading-tight font-body;
+    @apply text-xl md:text-2xl font-semibold leading-tight;
   }
 
   h4 {
-    @apply text-lg font-semibold leading-tight font-body;
+    @apply text-lg font-semibold leading-tight;
+  }
+
+  /* Body text and UI elements use Source Sans Pro */
+  p, span, div, button, input, textarea, label {
+    font-family: 'Source Sans Pro', system-ui, ui-sans-serif, sans-serif;
   }
 
   p {
-    @apply text-sm leading-relaxed font-body;
+    @apply text-sm leading-relaxed;
   }
 
   /* Refined button sizing */

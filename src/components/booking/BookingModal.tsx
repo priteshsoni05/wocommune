@@ -109,7 +109,7 @@ export function BookingModal({ open, onOpenChange, helpanion }: BookingModalProp
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <DialogTitle className="text-xl font-heading">
             Book a Session with {helpanion.display_name}
           </DialogTitle>
         </DialogHeader>

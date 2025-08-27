@@ -243,7 +243,7 @@ export default function WOCommune(): JSX.Element {
   }, [helpanions, fetchedHelpanions]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#222]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+    <div className="min-h-screen bg-[#FAF9F6] text-[#222] font-body">
       {/* ===== Main Header ===== */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
@@ -282,8 +282,7 @@ export default function WOCommune(): JSX.Element {
           <div className="flex items-center gap-3">
             <Link
               to="/get-help"
-              className="font-semibold tracking-widest text-[15px]"
-              style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+              className="font-semibold tracking-widest text-[15px] font-brand text-[#333]"
             >
               WO COMMUNE
             </Link>
@@ -456,8 +455,7 @@ export default function WOCommune(): JSX.Element {
       {/* ===== Featured Helpanions ===== */}
       <div className="max-w-7xl mx-auto px-4 py-10">
         <h2
-          className="text-2xl font-bold mb-8 text-center"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+          className="text-2xl font-bold mb-8 text-center font-heading"
         >
           Featured Helpanions
         </h2>
@@ -527,7 +525,7 @@ export default function WOCommune(): JSX.Element {
 // Small Tab button
 function TabButton({ children }: { children: React.ReactNode }) {
   return (
-    <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+    <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm font-body">
       {children}
     </button>
   );
@@ -537,7 +535,7 @@ function TabButton({ children }: { children: React.ReactNode }) {
 function StatBlock({ number, label }: { number: string; label: string }) {
   return (
     <div className="text-center">
-      <div className="text-xl font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{number}</div>
+      <div className="text-xl font-semibold font-heading">{number}</div>
       <div className="text-sm text-gray-600">{label}</div>
     </div>
   );
@@ -549,8 +547,8 @@ function Card({ image, title, desc, btn, secondary }: { image: string; title: st
     <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full min-h-[420px]">
       <img src={image} alt={title} className="w-full h-44 object-cover" loading="lazy" />
       <div className="p-6 flex flex-col flex-1">
-        <h3 className="font-semibold mt-1 text-2xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{title}</h3>
-        <p className="text-sm text-gray-600 mt-3" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>{desc}</p>
+        <h3 className="font-semibold mt-1 text-2xl font-heading">{title}</h3>
+        <p className="text-sm text-gray-600 mt-3 font-body">{desc}</p>
 
         {secondary ? (
           <div className="mt-auto flex items-center justify-between pt-4">

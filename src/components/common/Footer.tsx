@@ -12,7 +12,7 @@ export function Footer() {
         <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
           {/* Brand block */}
           <div>
-            <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h5 className="text-xl font-heading mb-4">
               WALKER'S ODYSSEY
             </h5>
             <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
