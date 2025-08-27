@@ -401,7 +401,7 @@ export default function WOCommune(): JSX.Element {
                     className="block px-4 py-2 text-sm hover:bg-gray-50"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Profile
+                    Dashboard
                   </Link>
                   <button
                     onClick={async () => {
