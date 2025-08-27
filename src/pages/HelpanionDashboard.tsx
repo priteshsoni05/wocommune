@@ -114,7 +114,7 @@ const HelpanionDashboard = () => {
     return null;
   }
 
-  const calculateProfileProgress = React.useCallback(() => {
+  const calculateProfileProgress = () => {
     if (!profile) return 0;
     let completed = 0;
     const total = 6;
@@ -125,7 +125,7 @@ const HelpanionDashboard = () => {
     if (services.length > 0) completed++;
     if (bookings.length > 0) completed++;
     return Math.round((completed / total) * 100);
-  }, [profile, services.length, bookings.length]);
+  };
 
   const handleSignOut = async () => {
     await signOut();
