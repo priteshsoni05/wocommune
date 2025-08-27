@@ -8,10 +8,12 @@ import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthDropdown } from "@/components/ui/auth-dropdown";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
+import { RoleDebugInfo } from "@/components/debug/RoleDebugInfo";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -63,6 +65,7 @@ type Profile = {
 
 export default function WOCommune(): JSX.Element {
   const { user, signOut } = useAuth();
+  const { role: activeRole, getDashboardPath, clearRoleData, handleCorruptedData, hasValidRole } = useRolePersistence();
   const { helpanions } = useHelpanions();
   const navigate = useNavigate();
 
@@ -226,12 +229,23 @@ export default function WOCommune(): JSX.Element {
     return { type: "initial", value: initial };
   }, [profile, user]);
 
-  // Dynamic dashboard route based on last_active_role for persistence
+  // Dynamic dashboard route based on stored role for persistence
   const dashboardPath = useMemo(() => {
-    // Use last_active_role if available for proper persistence
-    const activeRole = profile?.last_active_role || roleLabel;
-    return activeRole === "helpanion" ? "/helpanion-dashboard" : "/walker-dashboard";
-  }, [profile?.last_active_role, roleLabel]);
+    if (!user) return '/';
+    
+    // Check if user has valid role in storage
+    if (!hasValidRole) {
+      console.warn('No valid role found for authenticated user');
+      // Force logout as fallback
+      setTimeout(() => {
+        handleCorruptedData();
+        signOut();
+      }, 100);
+      return '/wo-commune';
+    }
+    
+    return getDashboardPath();
+  }, [user, hasValidRole, getDashboardPath, handleCorruptedData, signOut]);
 
   // Featured Helpanions (top 3)
   const topHelpanions = useMemo(() => {
@@ -246,6 +260,7 @@ export default function WOCommune(): JSX.Element {
     });
     return sorted.slice(0, 3);
   }, [helpanions, fetchedHelpanions]);
+
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222] font-body">
@@ -395,6 +410,8 @@ export default function WOCommune(): JSX.Element {
                   <button
                     onClick={() => {
                       setMenuOpen(false);
+                      // Clear role data and sign out
+                      clearRoleData();
                       signOut();
                     }}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
@@ -521,8 +538,7 @@ export default function WOCommune(): JSX.Element {
 
       {/* Footer */}
       <Footer />
-
-      
+      <RoleDebugInfo />
     </div>
   );
 }

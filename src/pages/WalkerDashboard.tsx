@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOptimizedProfile as useProfile } from '@/hooks/useOptimizedProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
+import { useServices } from '@/hooks/useServices';
+import { useRolePersistence } from '@/hooks/useRolePersistence';
 import { useBookings } from '@/hooks/useBookings';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,7 +35,12 @@ export default function WalkerDashboard() {
   const { user, signOut } = useAuth();
   const { profile, updateProfile } = useProfile();
   const { hasRole, addRole, loading: rolesLoading } = useUserRoles();
+  const { services } = useServices();
   const { bookings, loading: bookingsLoading } = useBookings();
+  
+  // Role persistence
+  const { setActiveRole, clearRoleData, handleCorruptedData } = useRolePersistence();
+  
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -59,7 +66,16 @@ export default function WalkerDashboard() {
 
   useEffect(() => {
     if (profile && user) {
-      // Update last active role
+      // Set active role in storage for persistence
+      const success = setActiveRole('walker');
+      if (!success) {
+        console.error('Failed to set role, forcing logout');
+        handleCorruptedData();
+        navigate('/wo-commune');
+        return;
+      }
+      
+      // Update database as backup and form data
       updateProfile({ last_active_role: 'walker' });
       setFormData({
         display_name: profile.display_name || '',
@@ -72,7 +88,7 @@ export default function WalkerDashboard() {
         username: "",
       });
     }
-  }, [profile, user, updateProfile]);
+  }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
   const upcomingBookings = bookings.filter(booking =>
     booking.status === 'confirmed' && new Date(booking.booking_date) >= new Date()
@@ -88,6 +104,8 @@ export default function WalkerDashboard() {
   };
 
   const handleSignOut = async () => {
+    // Clear role data and sign out
+    clearRoleData();
     await signOut();
     navigate('/wo-commune');
   };

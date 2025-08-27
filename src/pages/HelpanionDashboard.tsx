@@ -5,6 +5,7 @@ import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
 import { useServices } from "@/hooks/useServices";
 import { useBookings } from "@/hooks/useBookings";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
 import { useProfileProgress } from "@/hooks/useProfileProgress";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -71,6 +72,9 @@ const HelpanionDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
+  // Role persistence
+  const { setActiveRole, clearRoleData, handleCorruptedData } = useRolePersistence();
+  
   // Use the unified profile progress hook
   const profileProgress = useProfileProgress(profile);
 
@@ -89,13 +93,23 @@ const HelpanionDashboard = () => {
 
   useEffect(() => {
     if (profile && user) {
+      // Set active role in storage for persistence
+      const success = setActiveRole('helpanion');
+      if (!success) {
+        console.error('Failed to set role, forcing logout');
+        handleCorruptedData();
+        navigate('/wo-commune');
+        return;
+      }
+      
+      // Update database as backup
       updateProfile({ last_active_role: "helpanion" });
       setWalkerFormData({
         fullName: profile.display_name || "",
         email: profile.email || ""
       });
     }
-  }, [profile, user]);
+  }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
   if (authLoading || profileLoading) {
     return (
@@ -121,6 +135,8 @@ const HelpanionDashboard = () => {
   // Remove the old calculateProfileProgress function - using unified hook now
 
   const handleSignOut = async () => {
+    // Clear role data and sign out
+    clearRoleData();
     await signOut();
     navigate("/wo-commune");
   };

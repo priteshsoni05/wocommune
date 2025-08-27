@@ -73,6 +73,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     console.log('AuthContext: signOut called');
+    // Clear role data from localStorage before signing out
+    try {
+      localStorage.removeItem('wo_commune_user_role');
+      localStorage.removeItem('wo_commune_role_timestamp');
+    } catch (error) {
+      console.error('Error clearing role data:', error);
+    }
+    
     await supabase.auth.signOut();
   };
 
