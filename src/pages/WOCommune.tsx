@@ -1,7 +1,7 @@
 // src/pages/WOCommune.tsx
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ChevronDown, ArrowRight, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Search, ChevronDown, ArrowRight, Instagram, Linkedin } from "lucide-react";
 
 import { useHelpanions } from "@/hooks/useHelpanions";
 import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
@@ -10,6 +10,8 @@ import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHe
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthDropdown } from "@/components/ui/auth-dropdown";
+import { Newsletter } from "@/components/common/Newsletter";
+import { Footer } from "@/components/common/Footer";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -511,77 +513,11 @@ export default function WOCommune(): JSX.Element {
       </section>
 
 
-      {/* ===== Newsletter CTA (match Home.tsx design) ===== */}
-      <section className="bg-[#F3F2EE] py-10">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h4 className="text-xl font-serif mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Walk with us</h4>
-            <p className="text-sm text-gray-700 mb-4">Stories, guidance, and events — straight to your inbox.</p>
-          </div>
-          <a
-            href="https://wocommune.substack.com/"
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-block text-center px-4 py-2 rounded-md font-medium"
-            style={{ backgroundColor: PINE, color: "#fff" }}
-          >
-            Subscribe on Substack
-          </a>
-        </div>
-      </section>
+      {/* Newsletter */}
+      <Newsletter />
 
-      {/* ===== Footer ===== */}
-      <footer className="bg-[#FAF9F6] text-[#2B2B2B] border-t border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
-          <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-            <div>
-              <h5 className="text-xl font-serif mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                WALKER'S ODYSSEY
-              </h5>
-              <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
-                Your trusted companion for every step — connecting you with guidance, community, and inspiration to walk your path with purpose.
-              </p>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Brand</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><Link to="/about" className="hover:underline">About</Link></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Brand Story</span></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Vision</span></li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Commune</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
-                <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
-                <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Community Guidelines</span></li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-3">Get in touch</h6>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">commune@walkersodyssey.com</a></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Contact Us</span></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">LinkedIn</span></li>
-                <li><span className="text-gray-400 cursor-not-allowed" aria-disabled="true" title="Coming soon">Instagram</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 mt-8 pt-6">
-            <div className="max-w-[1140px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
-              <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
-              <div className="flex items-center gap-3 text-[#2B2B2B]">
-                <Twitter size={20} aria-hidden="true" />
-                <Linkedin size={20} aria-hidden="true" />
-                <Instagram size={20} aria-hidden="true" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
 
       
     </div>
