@@ -89,7 +89,7 @@ export default function WalkerDashboard() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
+    navigate('/wo-commune');
   };
 
   const handleRoleToggle = (checked: boolean) => {
