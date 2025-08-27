@@ -48,6 +48,7 @@ const deriveFirstName = (profile: any, user: any) => {
 
 type Profile = {
   id?: string;
+  user_id?: string;
   display_name?: string | null;
   bio?: string | null;
   avatar_url?: string | null;
@@ -57,6 +58,7 @@ type Profile = {
   account_type?: string | null;
   user_type?: string | null;
   is_helpanion?: boolean | null;
+  last_active_role?: string | null;
 };
 
 export default function WOCommune(): JSX.Element {
@@ -171,9 +173,9 @@ export default function WOCommune(): JSX.Element {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at"
+          "id, user_id, display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at, last_active_role"
         )
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .single();
 
       if (error) {
@@ -224,9 +226,12 @@ export default function WOCommune(): JSX.Element {
     return { type: "initial", value: initial };
   }, [profile, user]);
 
-  // Dynamic dashboard route (no universal /dashboard route in this app)
-  const dashboardPath =
-    roleLabel === "Helpanion" ? "/helpanion-dashboard" : "/walker-dashboard";
+  // Dynamic dashboard route based on last_active_role for persistence
+  const dashboardPath = useMemo(() => {
+    // Use last_active_role if available for proper persistence
+    const activeRole = profile?.last_active_role || roleLabel;
+    return activeRole === "helpanion" ? "/helpanion-dashboard" : "/walker-dashboard";
+  }, [profile?.last_active_role, roleLabel]);
 
   // Featured Helpanions (top 3)
   const topHelpanions = useMemo(() => {
@@ -385,7 +390,7 @@ export default function WOCommune(): JSX.Element {
                     className="block px-4 py-2 text-sm hover:bg-gray-50"
                     onClick={() => setMenuOpen(false)}
                   >
-                    Dashboard
+                    Profile
                   </Link>
                   <button
                     onClick={() => {
