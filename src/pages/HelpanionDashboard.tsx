@@ -5,6 +5,7 @@ import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
 import { useServices } from "@/hooks/useServices";
 import { useBookings } from "@/hooks/useBookings";
+import { useProfileProgress } from "@/hooks/useProfileProgress";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -69,6 +70,9 @@ const HelpanionDashboard = () => {
   const { bookings } = useBookings();
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  // Use the unified profile progress hook
+  const profileProgress = useProfileProgress(profile);
 
   const [activeTab, setActiveTab] = useState<TabKey>("home");
   const [showWalkerModal, setShowWalkerModal] = useState(false);
@@ -114,18 +118,7 @@ const HelpanionDashboard = () => {
     return null;
   }
 
-  const calculateProfileProgress = () => {
-    if (!profile) return 0;
-    let completed = 0;
-    const total = 6;
-    if (profile.display_name) completed++;
-    if (profile.bio) completed++;
-    if (profile.avatar_url) completed++;
-    if (profile.username) completed++;
-    if (services.length > 0) completed++;
-    if (bookings.length > 0) completed++;
-    return Math.round((completed / total) * 100);
-  };
+  // Remove the old calculateProfileProgress function - using unified hook now
 
   const handleSignOut = async () => {
     await signOut();
@@ -161,13 +154,12 @@ const HelpanionDashboard = () => {
   };
 
   const renderContent = () => {
-    const profileProgress = calculateProfileProgress();
     switch (activeTab) {
       case "home":
         return (
           <HelpanionHome
             profile={profile}
-            profileProgress={profileProgress}
+            profileProgress={profileProgress.completion}
             onNavigateToProfile={() => setActiveTab("profile")}
             onNavigateToServices={() => setActiveTab("services")}
             onNavigateToAvailability={() => setActiveTab("availability")}
@@ -178,9 +170,9 @@ const HelpanionDashboard = () => {
           <HelpanionProfile profile={profile} updateProfile={updateProfile} />
         );
       case "services":
-        return <HelpanionServices profileProgress={profileProgress} />;
+        return <HelpanionServices profileProgress={profileProgress.completion} isProfileComplete={profileProgress.isComplete} />;
       case "availability":
-        return <HelpanionAvailability profileProgress={profileProgress} />;
+        return <HelpanionAvailability profileProgress={profileProgress.completion} isProfileComplete={profileProgress.isComplete} />;
       case "bookings":
         return <HelpanionBookings />;
       case "reviews":
@@ -221,13 +213,18 @@ const HelpanionDashboard = () => {
         <div className="mt-3">
           <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>Profile Progress</span>
-            <span>{calculateProfileProgress()}%</span>
+            <span>{profileProgress.completion}%</span>
           </div>
           <Progress
-            value={calculateProfileProgress()}
+            value={profileProgress.completion}
             className="h-2"
             style={{ backgroundColor: "#ddd" }}
           />
+          {!profileProgress.isComplete && profileProgress.missingFields.length > 0 && (
+            <p className="text-xs text-gray-500 mt-1">
+              Missing: {profileProgress.missingFields.join(", ")}
+            </p>
+          )}
         </div>
       </div>
 

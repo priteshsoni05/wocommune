@@ -11,6 +11,7 @@ import { Clock, Calendar, Plus, Trash2, AlertCircle } from "lucide-react";
 
 interface HelpanionAvailabilityProps {
   profileProgress: number;
+  isProfileComplete: boolean;
 }
 
 const daysOfWeek = [
@@ -37,7 +38,7 @@ const timeSlots = Array.from({ length: 24 * 4 }, (_, i) => {
   };
 });
 
-export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailabilityProps) => {
+export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: HelpanionAvailabilityProps) => {
   const { slots, createSlot, deleteSlot, loading } = useAvailabilitySlots();
   const { toast } = useToast();
   
@@ -49,7 +50,7 @@ export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailability
     is_available: true
   });
 
-  const isProfileIncomplete = profileProgress < 60;
+  const isProfileIncomplete = !isProfileComplete;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +58,7 @@ export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailability
     if (isProfileIncomplete) {
       toast({
         title: "Profile Incomplete",
-        description: "Please complete at least 60% of your profile before setting availability.",
+        description: "Please complete your profile (display name, username, bio, profile photo, and skills) before setting availability.",
         variant: "destructive",
       });
       return;
@@ -139,7 +140,7 @@ export const HelpanionAvailability = ({ profileProgress }: HelpanionAvailability
               <div>
                 <p className="font-medium text-foreground">Profile Incomplete</p>
                 <p className="text-sm text-muted-foreground">
-                  Complete at least 60% of your profile before setting availability. Current progress: {profileProgress}%
+                  Complete your profile (display name, username, bio, profile photo, and skills) before setting availability.
                 </p>
               </div>
             </div>

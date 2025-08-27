@@ -348,14 +348,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         </p>
       </div>
 
-      {/* --- Enhancement: Completion meter --- */}
-      <div className="mb-4 flex items-center gap-2">
-        <span className="font-semibold">Profile Completion:</span>
-        <span>{completion}%</span>
-        <div className="w-32 h-2 bg-gray-200 rounded">
-          <div className="h-2 bg-blue-500 rounded" style={{ width: `${completion}%` }} />
-        </div>
-      </div>
+      {/* Remove duplicate progress bar - using unified one in sidebar only */}
 
       <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
         <Card>
