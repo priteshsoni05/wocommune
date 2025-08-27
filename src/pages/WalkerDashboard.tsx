@@ -19,6 +19,9 @@ import { cn } from '@/lib/utils';
 
 type TabKey = 'sessions' | 'notifications' | 'history' | 'settings';
 
+const PRIMARY_GREEN = "#01796F";
+const BG_NEUTRAL = "#FAF9F6";
+
 const navigationTabs = [
   { key: 'sessions' as TabKey, label: 'Sessions', icon: Calendar },
   { key: 'notifications' as TabKey, label: 'Notifications', icon: Bell },
@@ -145,28 +148,26 @@ export default function WalkerDashboard() {
   };
 
   const renderSidebar = () => (
-    <div className="h-full bg-card flex flex-col">
+    <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
       {/* Header */}
-      <div className="p-3 lg:p-6 border-b border-border">
-        <div className="mb-3 lg:mb-4">
-          <h1 className="text-base lg:text-xl font-semibold text-foreground">
-            WO Commune
-          </h1>
-        </div>
-        
-        <div className="flex items-center justify-between">
+      <div className="p-4 border-b" style={{ borderColor: "#ddd" }}>
+        <h1 className="text-lg font-semibold text-gray-900">WO Commune</h1>
+        <div className="flex items-center justify-between mt-2">
           <div>
-            <p className="text-xs lg:text-sm text-muted-foreground">Hi {profile?.display_name || 'Walker'}</p>
-            <p className="text-xs text-muted-foreground">(Walker)</p>
+            <p className="text-sm text-gray-600">
+              Hi {profile?.display_name || "Walker"}
+            </p>
+            <p className="text-xs text-gray-500">(Walker)</p>
           </div>
-          
           {hasRole('helpanion') && (
-            <div className="flex items-center gap-1 lg:gap-2">
-              <span className="text-xs text-muted-foreground">Helpanion</span>
-              <Switch 
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-600">Helpanion</span>
+              <Switch
                 checked={false}
                 onCheckedChange={handleRoleToggle}
-                className="scale-75 lg:scale-100"
+                style={{
+                  "--switch-color": PRIMARY_GREEN
+                } as React.CSSProperties}
               />
             </div>
           )}
@@ -174,69 +175,66 @@ export default function WalkerDashboard() {
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="flex-1 p-2 lg:p-4">
-        <div className="space-y-0.5 lg:space-y-1">
+      <nav className="flex-1 p-3">
+        <div className="space-y-1">
           {navigationTabs.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => {
-                setActiveTab(tab.key);
-                // Auto-close sidebar on mobile when tab is selected
-                if (window.innerWidth < 1024) {
-                  // Use setTimeout to ensure state update happens
-                  setTimeout(() => {
-                    const event = new CustomEvent('closeMobileSidebar');
-                    window.dispatchEvent(event);
-                  }, 100);
-                }
-              }}
+              onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "w-full flex items-center gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg transition-colors touch-manipulation min-h-[44px]",
+                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
                 activeTab === tab.key
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  ? "text-white"
+                  : "text-gray-600 hover:bg-gray-200"
               )}
+              style={
+                activeTab === tab.key
+                  ? { backgroundColor: PRIMARY_GREEN }
+                  : undefined
+              }
             >
-              <tab.icon className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
-              <span className="text-sm lg:text-sm font-medium">{tab.label}</span>
-              {activeTab === tab.key && (
-                <ChevronRight className="h-3 w-3 lg:h-3 lg:w-3 ml-auto" />
-              )}
+              <tab.icon className="h-4 w-4" />
+              <span className="text-sm font-medium">{tab.label}</span>
             </button>
           ))}
         </div>
 
         {/* Browse Helpanions button */}
-        <div className="mt-4 pt-4 border-t border-border">
-          <p className="text-xs text-muted-foreground mb-2 uppercase font-medium">Quick Actions</p>
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-2 lg:gap-3 px-2 lg:px-3 py-2 lg:py-2.5 text-left rounded-md lg:rounded-lg"
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: "#ddd" }}>
+          <p className="text-xs text-gray-500 mb-2 uppercase font-medium">Quick Actions</p>
+          <button
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-200 transition-colors"
             onClick={() => navigate('/helpanion')}
           >
-            <Calendar className="h-4 w-4 lg:h-4 lg:w-4 flex-shrink-0" />
-            <span className="text-sm lg:text-sm font-medium">Browse Helpanions</span>
-          </Button>
+            <Calendar className="h-4 w-4" />
+            <span className="text-sm font-medium">Browse Helpanions</span>
+          </button>
         </div>
       </nav>
 
       {/* Become Helpanion CTA */}
       {!hasRole('helpanion') && (
-        <div className="p-3 lg:p-4 border-t border-border">
-          <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 lg:p-4">
-            <h3 className="text-xs lg:text-sm font-medium text-foreground mb-1">
+        <div className="p-4 border-t" style={{ borderColor: "#ddd" }}>
+          <div 
+            className="border rounded-lg p-4"
+            style={{ 
+              backgroundColor: `${PRIMARY_GREEN}0D`, 
+              borderColor: `${PRIMARY_GREEN}33` 
+            }}
+          >
+            <h3 className="text-sm font-medium text-gray-900 mb-1">
               Want to help others too?
             </h3>
-            <p className="text-xs text-muted-foreground mb-2 lg:mb-3">
+            <p className="text-xs text-gray-600 mb-3">
               Become a Helpanion and share your expertise.
             </p>
-            <Button 
-              size="sm" 
-              className="w-full text-xs h-7 lg:h-8"
+            <button 
+              className="w-full text-xs py-2 px-3 rounded-md text-white font-medium transition-colors hover:opacity-90"
+              style={{ backgroundColor: PRIMARY_GREEN }}
               onClick={() => setShowHelpanionModal(true)}
             >
               Become a Helpanion →
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -246,17 +244,25 @@ export default function WalkerDashboard() {
   // Header rendering (Home and Logout remain here)
   const renderHeader = () => (
     <div className="flex items-center justify-between">
-      <h1 className="text-xl font-semibold text-foreground">
-        WO Commune
-      </h1>
+      <h1 className="text-xl font-semibold text-gray-900">WO Commune</h1>
       <div className="flex gap-2">
-        <Button asChild variant="ghost" size="sm">
+        <Button
+          asChild
+          size="sm"
+          style={{ backgroundColor: "transparent" }}
+          className="hover:bg-gray-200"
+        >
           <Link to="/" aria-label="Home">
-            <Home className="h-4 w-4" />
+            <Home className="h-4 w-4 text-gray-700" />
           </Link>
         </Button>
-        <Button variant="ghost" size="sm" onClick={handleSignOut}>
-          <LogOut className="h-4 w-4" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleSignOut}
+          className="hover:bg-gray-200"
+        >
+          <LogOut className="h-4 w-4 text-gray-700" />
         </Button>
       </div>
     </div>
@@ -497,9 +503,22 @@ export default function WalkerDashboard() {
                 }
               />
             </div>
-            <Button className="w-full" onClick={handleBecomeHelpanion}>
-              Become Helpanion
-            </Button>
+            <div className="flex gap-2 pt-4">
+              <Button 
+                className="flex-1 text-white"
+                style={{ backgroundColor: PRIMARY_GREEN }}
+                onClick={handleBecomeHelpanion}
+              >
+                Yes, Join as Helpanion
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowHelpanionModal(false)}
+                className="flex-1"
+              >
+                Not now
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
