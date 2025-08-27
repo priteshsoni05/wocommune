@@ -384,7 +384,7 @@ export default function WOCommune(): JSX.Element {
                 <div className="hidden sm:flex flex-col items-start leading-4">
                   <span className="text-xs text-gray-500">Hi</span>
                   <span className="text-sm font-medium">
-                    {displayName} ({roleLabel})
+                    {displayName}
                   </span>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-500" />
