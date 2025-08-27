@@ -121,7 +121,7 @@ export const useRolePersistence = () => {
 
   // Handle corrupted data fallback
   const handleCorruptedData = useCallback(() => {
-    console.warn('Role data corrupted or missing, forcing logout');
+    console.warn('Role data corrupted or missing, clearing role data');
     clearRoleData();
     return null;
   }, [clearRoleData]);

@@ -96,10 +96,8 @@ const HelpanionDashboard = () => {
       // Set active role in storage for persistence
       const success = setActiveRole('helpanion');
       if (!success) {
-        console.error('Failed to set role, forcing logout');
+        console.error('Failed to set role');
         handleCorruptedData();
-        navigate('/wo-commune');
-        return;
       }
       
       // Update database as backup

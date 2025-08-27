@@ -231,21 +231,17 @@ export default function WOCommune(): JSX.Element {
 
   // Dynamic dashboard route based on stored role for persistence
   const dashboardPath = useMemo(() => {
-    if (!user) return '/';
+    if (!user) return '/wo-commune';
     
-    // Check if user has valid role in storage
+    // Always try to get dashboard path for logged-in user
+    // If no valid role found, default to helpanion dashboard
     if (!hasValidRole) {
-      console.warn('No valid role found for authenticated user');
-      // Force logout as fallback
-      setTimeout(() => {
-        handleCorruptedData();
-        signOut();
-      }, 100);
-      return '/wo-commune';
+      console.warn('No valid role found, defaulting to helpanion dashboard');
+      return '/helpanion-dashboard';
     }
     
     return getDashboardPath();
-  }, [user, hasValidRole, getDashboardPath, handleCorruptedData, signOut]);
+  }, [user, hasValidRole, getDashboardPath]);
 
   // Featured Helpanions (top 3)
   const topHelpanions = useMemo(() => {
@@ -408,11 +404,12 @@ export default function WOCommune(): JSX.Element {
                     Profile
                   </Link>
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       setMenuOpen(false);
                       // Clear role data and sign out
                       clearRoleData();
-                      signOut();
+                      await signOut();
+                      navigate('/wo-commune');
                     }}
                     className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
                   >
