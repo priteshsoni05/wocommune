@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Newsletter } from '@/components/common/Newsletter';
 import { Footer } from '@/components/common/Footer';
+import GlobalHeader from '@/components/common/GlobalHeader';
 
 /* ---------- Real images (from src/assets) ---------- */
 import HERO_IMG from "../assets/hero-placeholder.jpg";
@@ -27,8 +28,8 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
-      {/* ------------------------ Header / Nav ------------------------ */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
+      {/* ------------------------ Global Header ------------------------ */}
+      <GlobalHeader />
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
           {/* Logo */}
           <Link
@@ -39,26 +40,10 @@ const HomePage: React.FC = () => {
             WALKER'S ODYSSEY
           </Link>
 
-          {/* Right side / simple menu */}
-          <nav className="text-sm">
-            <ul className="flex items-center gap-4">
-              <li>
-                <Link to="/about" className="hover:underline">About</Link>
-              </li>
-              <li>
-                <Link to="/get-help" className="hover:underline">Commune</Link>
-              </li>
-              <li>
-                <Link to="#" className="hidden md:inline hover:underline">Shop</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
 
       {/* ------------------------ Hero Section ------------------------ */}
       <section
-        className="relative w-full h-[82vh] md:h-screen mt-16"
+        className="relative w-full h-[82vh] md:h-screen mt-14"
         aria-label="Hero: Your trusted companion"
       >
         {/* Background image */}

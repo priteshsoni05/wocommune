@@ -6,6 +6,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Newsletter } from '@/components/common/Newsletter';
 import { Footer } from '@/components/common/Footer';
+import GlobalHeader from '@/components/common/GlobalHeader';
 
 const PINE = "#2C5F50"; // Pine forest green
 const GOLD = "#C7A76C"; // Accent gold
@@ -13,40 +14,11 @@ const GOLD = "#C7A76C"; // Accent gold
 const AboutPage: React.FC = () => {
   return (
     <div className="bg-[#FAF9F6] text-[#2B2B2B] min-h-screen">
-      {/* ------------------------ Header ------------------------ */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
-          <Link
-            to="/"
-            className="text-[20px] font-semibold tracking-widest"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
-          >
-            WALKER'S ODYSSEY
-          </Link>
-          <nav className="text-sm">
-            <ul className="flex items-center gap-4">
-              <li>
-                <Link to="/about" className="hover:underline">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link to="/get-help" className="hover:underline">
-                  Commune
-                </Link>
-              </li>
-              <li>
-                <Link to="/shop" className="hidden md:inline hover:underline">
-                  Shop
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      {/* ------------------------ Global Header ------------------------ */}
+      <GlobalHeader />
 
       {/* ------------------------ Hero / Intro ------------------------ */}
-      <section className="pt-24 pb-16 text-center max-w-[900px] mx-auto px-4">
+      <section className="pt-20 pb-16 text-center max-w-[900px] mx-auto px-4">
         <h1
           className="text-3xl sm:text-4xl font-serif mb-6"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}

@@ -12,7 +12,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
 import { RoleDebugInfo } from "@/components/debug/RoleDebugInfo";
-import BurgerMenu from "@/components/common/BurgerMenu";
+import GlobalHeader from "@/components/common/GlobalHeader";
+import WOCommuneSlate from "@/components/common/WOCommuneSlate";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -231,82 +232,21 @@ export default function WOCommune(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222] font-body">
-      {/* ===== Main Header ===== */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-12">
-          {/* Logo - Centered */}
-          <div className="flex-1" />
-          <Link
-            to="/"
-            className="text-lg font-semibold tracking-[0.2em]"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
-            aria-label="Walker's Odyssey home"
-          >
-            WALKER'S ODYSSEY
-          </Link>
-          <div className="flex-1 flex justify-end">
-            <BurgerMenu user={user} displayName={displayName} avatarContent={avatarContent} dashboardPath={dashboardPath} clearRoleData={clearRoleData} signOut={signOut} navigate={navigate} />
-          </div>
-        </div>
-      </header>
+      {/* ===== Global Header ===== */}
+      <GlobalHeader 
+        user={user} 
+        displayName={displayName} 
+        avatarContent={avatarContent} 
+        dashboardPath={dashboardPath} 
+        clearRoleData={clearRoleData} 
+        signOut={signOut} 
+        navigate={navigate} 
+      />
 
-      <div className="h-12" />
+      <div className="h-14" />
 
       {/* ===== WO COMMUNE Active Slate ===== */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
-          {/* Get Help */}
-          <Link
-            to="/get-help"
-            className="font-medium text-sm text-[#333] hover:text-[#2C5F50] transition-colors"
-          >
-            Get Help
-          </Link>
-
-          {/* Center Text */}
-          <div className="text-center">
-            <span className="font-semibold text-sm tracking-wider text-[#333]">
-              WO COMMUNE
-            </span>
-            <span className="text-sm text-gray-600 ml-2">
-              – Connecting walkers with helpanions
-            </span>
-          </div>
-
-          {/* Social Icons */}
-          <div className="flex items-center gap-3">
-            <a 
-              href="https://www.linkedin.com/showcase/wo-commune" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
-              aria-label="WO Commune LinkedIn"
-            >
-              <Linkedin size={16} />
-            </a>
-            <a 
-              href="https://www.instagram.com/wo_commune" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
-              aria-label="WO Commune Instagram"
-            >
-              <Instagram size={16} />
-            </a>
-            <a 
-              href="https://wocommune.substack.com/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
-              aria-label="WO Commune Substack"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.539 24V10.812H1.46zM22.539 0H1.46v2.836h21.08V0z"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
+      <WOCommuneSlate />
 
       {/* ===== HERO — RESTORED AS REQUESTED (long hero with search & image) ===== */}
       <section
