@@ -1,19 +1,18 @@
-// src/pages/WOCommune.tsx - Fixed Twitter import issue
-import React, { useState, useMemo, useEffect, useRef } from "react";
+// src/pages/WOCommune.tsx - Minimal navigation implementation
+import React, { useState, useMemo, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ChevronDown, ArrowRight, Instagram, Linkedin } from "lucide-react";
+import { Search, ArrowRight, Instagram, Linkedin } from "lucide-react";
 
 import { useHelpanions } from "@/hooks/useHelpanions";
-import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { default as FeaturedHelpanions } from "@/components/helpanion/FeaturedHelpanions";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRolePersistence } from "@/hooks/useRolePersistence";
 import { supabase } from "@/integrations/supabase/client";
-import { AuthDropdown } from "@/components/ui/auth-dropdown";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
 import { RoleDebugInfo } from "@/components/debug/RoleDebugInfo";
+import BurgerMenu from "@/components/common/BurgerMenu";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
 const EVENT_IMG = "/assets/event-placeholder.jpg";
@@ -74,8 +73,6 @@ export default function WOCommune(): JSX.Element {
 
   // Current user's profile (for avatar/name/role)
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Simple search state + handler for hero
   const [searchQuery, setSearchQuery] = useState("");
@@ -192,41 +189,15 @@ export default function WOCommune(): JSX.Element {
     loadProfile();
   }, [user]);
 
-  // Close user menu on outside click
-  useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (!menuRef.current) return;
-      if (!menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-    if (menuOpen) document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
-  }, [menuOpen]);
-
-  // Role label derivation
-  const roleLabel = useMemo(() => {
-    const src =
-      profile?.role ||
-      profile?.account_type ||
-      profile?.user_type ||
-      (profile?.is_helpanion ? "helpaNion" : "");
-    if (!src) return "Walker";
-    const val = String(src).toLowerCase();
-    if (val.includes("help")) return "Helpanion";
-    if (val.includes("walker")) return "Walker";
-    return val.charAt(0).toUpperCase() + val.slice(1);
-  }, [profile]);
-
   // Clean first name for header
   const displayName = useMemo(() => deriveFirstName(profile, user), [profile, user]);
 
   // Avatar content (image or initial)
-  const avatarContent = useMemo(() => {
-    if (profile?.avatar_url) return { type: "image", value: profile.avatar_url };
+  const avatarContent = useMemo((): { type: "image" | "initial"; value: string } => {
+    if (profile?.avatar_url) return { type: "image" as const, value: profile.avatar_url };
     const initial =
       (profile?.display_name?.[0] || user?.email?.[0] || "U").toUpperCase();
-    return { type: "initial", value: initial };
+    return { type: "initial" as const, value: initial };
   }, [profile, user]);
 
   // Dynamic dashboard route based on stored role for persistence
@@ -261,166 +232,79 @@ export default function WOCommune(): JSX.Element {
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#222] font-body">
       {/* ===== Main Header ===== */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-12">
+          {/* Logo - Centered */}
+          <div className="flex-1" />
           <Link
             to="/"
-            className="text-[20px] font-semibold tracking-widest"
+            className="text-lg font-semibold tracking-[0.2em]"
             style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
-            aria-label="Walker’s Odyssey home"
+            aria-label="Walker's Odyssey home"
           >
             WALKER'S ODYSSEY
           </Link>
-          <nav className="text-sm">
-            <ul className="flex items-center gap-4">
-              <li><Link to="/about" className="hover:underline">About</Link></li>
-              <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
-              {/* Disabled placeholder instead of broken "#" link */}
-              <li>
-                <span
-                  className="hidden md:inline text-gray-400 cursor-not-allowed"
-                  aria-disabled="true"
-                  title="Shop is coming soon"
-                >
-                  Shop
-                </span>
-              </li>
-            </ul>
-          </nav>
+          <div className="flex-1 flex justify-end">
+            <BurgerMenu user={user} displayName={displayName} avatarContent={avatarContent} dashboardPath={dashboardPath} clearRoleData={clearRoleData} signOut={signOut} navigate={navigate} />
+          </div>
         </div>
       </header>
 
-      <div className="h-16" />
+      <div className="h-12" />
 
-      {/* ===== Sub-header ===== */}
+      {/* ===== WO COMMUNE Active Slate ===== */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link
-              to="/get-help"
-              className="font-semibold tracking-widest text-[15px] font-brand text-[#333]"
-            >
-              WO COMMUNE
-            </Link>
-            <GetHelpMegaMenu />
-          </div>
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+          {/* Get Help */}
+          <Link
+            to="/get-help"
+            className="font-medium text-sm text-[#333] hover:text-[#2C5F50] transition-colors"
+          >
+            Get Help
+          </Link>
 
-          <div className="flex-1 hidden md:flex items-center justify-center">
-            <div className="relative w-full max-w-md">
-              <input
-                type="text"
-                placeholder="Search events, help topics or podcasts..."
-                className="w-full pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
-                aria-label="Search events, help topics or podcasts"
-              />
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-            </div>
+          {/* Center Text */}
+          <div className="text-center">
+            <span className="font-semibold text-sm tracking-wider text-[#333]">
+              WO COMMUNE
+            </span>
+            <span className="text-sm text-gray-600 ml-2">
+              – Connecting walkers with helpanions
+            </span>
           </div>
 
           {/* Social Icons */}
-          <div className="hidden md:flex items-center gap-3 mr-4">
+          <div className="flex items-center gap-3">
             <a 
               href="https://www.linkedin.com/showcase/wo-commune" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
               aria-label="WO Commune LinkedIn"
             >
-              <Linkedin size={18} />
+              <Linkedin size={16} />
             </a>
             <a 
               href="https://www.instagram.com/wo_commune" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
               aria-label="WO Commune Instagram"
             >
-              <Instagram size={18} />
+              <Instagram size={16} />
             </a>
             <a 
               href="https://wocommune.substack.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:text-[#2C5F50] hover:bg-gray-200 transition-colors"
               aria-label="WO Commune Substack"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.539 24V10.812H1.46zM22.539 0H1.46v2.836h21.08V0z"/>
               </svg>
             </a>
           </div>
-
-          {/* Right side: Auth */}
-          {user ? (
-            <div ref={menuRef} className="relative">
-              <button
-                onClick={() => setMenuOpen((v) => !v)}
-                onKeyDown={(e) => {
-                  if (e.key === "Escape") setMenuOpen(false);
-                }}
-                className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-50"
-                aria-haspopup="dialog"
-                aria-expanded={menuOpen}
-                aria-controls="user-menu"
-              >
-                {/* Avatar */}
-                {avatarContent.type === "image" ? (
-                  <img
-                    src={avatarContent.value}
-                    alt={`${displayName} avatar`}
-                    className="w-8 h-8 rounded-full object-cover border border-gray-200"
-                  />
-                ) : (
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
-                    style={{ backgroundColor: PINE }}
-                    aria-hidden
-                  >
-                    {avatarContent.value}
-                  </div>
-                )}
-
-                {/* Greeting */}
-                <div className="hidden sm:flex flex-col items-start leading-4">
-                  <span className="text-xs text-gray-500">Hi</span>
-                  <span className="text-sm font-medium">
-                    {displayName}
-                  </span>
-                </div>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </button>
-
-              {/* Dropdown (no menu roles to avoid implying unsupported keyboard model) */}
-              {menuOpen && (
-                <div
-                  id="user-menu"
-                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
-                >
-                  <Link
-                    to={dashboardPath}
-                    className="block px-4 py-2 text-sm hover:bg-gray-50"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      setMenuOpen(false);
-                      // Clear role data and sign out
-                      clearRoleData();
-                      await signOut();
-                      navigate('/wo-commune');
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <AuthDropdown variant="desktop" />
-          )}
         </div>
       </div>
 
