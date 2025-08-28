@@ -30,16 +30,6 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
       {/* ------------------------ Global Header ------------------------ */}
       <GlobalHeader />
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            to="/"
-            className="text-[20px] font-semibold tracking-widest font-brand text-[#333]"
-            aria-label="Walker’s Odyssey home"
-          >
-            WALKER'S ODYSSEY
-          </Link>
-
 
       {/* ------------------------ Hero Section ------------------------ */}
       <section
@@ -104,8 +94,8 @@ const HomePage: React.FC = () => {
               Walking Beside You, Every Step of the Way
             </h2>
             <p className="text-base leading-relaxed mb-6 font-body">
-              At Walker’s Odyssey, we believe every journey is unique. Whether you’re taking your first step
-              or navigating an unfamiliar path, we’re here to walk alongside you — offering guidance,
+              At Walker's Odyssey, we believe every journey is unique. Whether you're taking your first step
+              or navigating an unfamiliar path, we're here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.
             </p>
             <Link to="/about" className="inline-flex items-center gap-2 text-sm font-medium text-[#444] hover:underline">
