@@ -73,9 +73,9 @@ export default function BurgerMenu({
           <div className="fixed inset-0 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-64 max-w-[80vw] bg-white shadow-xl z-50 flex flex-col" style={{ backgroundColor: '#ffffff' }}>
+          <div className="fixed top-0 right-0 h-full w-64 max-w-[80vw] shadow-xl z-50 flex flex-col" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200" style={{ backgroundColor: '#ffffff' }}>
               <span className="font-semibold text-gray-900">Menu</span>
               <button
                 onClick={() => setIsOpen(false)}
@@ -87,13 +87,13 @@ export default function BurgerMenu({
             </div>
 
             {/* Navigation Items */}
-            <nav className="flex-1 p-4">
+            <nav className="flex-1 p-4" style={{ backgroundColor: '#ffffff' }}>
               <ul className="space-y-1">
                 <li>
                   <Link
                     to="/"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                   >
                     Home
                   </Link>
@@ -102,7 +102,7 @@ export default function BurgerMenu({
                   <Link
                     to="/wo-commune"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                   >
                     WO COMMUNE
                   </Link>
@@ -144,7 +144,7 @@ export default function BurgerMenu({
                       <Link
                         to={dashboardPath}
                         onClick={handleLinkClick}
-                        className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                       >
                         Dashboard
                       </Link>
@@ -152,7 +152,7 @@ export default function BurgerMenu({
                     <li>
                       <button
                         onClick={handleSignOut}
-                        className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        className="w-full text-left px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                       >
                         Sign Out
                       </button>
@@ -165,7 +165,7 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=login"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                     >
                       <LogIn size={16} />
                       Login
@@ -175,7 +175,7 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=signup"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
                     >
                       <UserPlus size={16} />
                       Sign Up
