@@ -60,7 +60,7 @@ export default function BurgerMenu({
       {/* Burger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-1 sm:p-1.5 text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
+        className="p-0.5 sm:p-1 text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
         aria-label="Menu"
       >
         {isOpen ? <X size={18} className="sm:w-5 sm:h-5" /> : <Menu size={18} className="sm:w-5 sm:h-5" />}
