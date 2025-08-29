@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { AuthDropdown } from '@/components/ui/auth-dropdown';
 
 interface BurgerMenuProps {
   user: any;
@@ -74,7 +73,7 @@ export default function BurgerMenu({
           <div className="fixed inset-0 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col">
+          <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-md border-l border-gray-200 shadow-xl z-50 flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <span className="font-semibold text-gray-900">Menu</span>
@@ -161,9 +160,28 @@ export default function BurgerMenu({
                   </ul>
                 </div>
               ) : (
-                <div className="px-3">
-                  <AuthDropdown variant="mobile" />
-                </div>
+                <ul className="space-y-1">
+                  <li>
+                    <Link
+                      to="/auth?mode=login"
+                      onClick={handleLinkClick}
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    >
+                      <LogIn size={16} />
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/auth?mode=signup"
+                      onClick={handleLinkClick}
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    >
+                      <UserPlus size={16} />
+                      Sign Up
+                    </Link>
+                  </li>
+                </ul>
               )}
             </nav>
           </div>
