@@ -73,7 +73,7 @@ export default function BurgerMenu({
           <div className="fixed inset-0 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white/95 backdrop-blur-md border-l border-gray-200 shadow-xl z-50 flex flex-col">
+          <div className="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white border-l border-gray-200 shadow-xl z-50 flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <span className="font-semibold text-gray-900">Menu</span>
