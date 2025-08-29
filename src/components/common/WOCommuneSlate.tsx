@@ -15,13 +15,15 @@ export default function WOCommuneSlate() {
         </Link>
 
         {/* Center Text - Responsive positioning */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 text-center px-2">
-          <span className="font-semibold text-xs sm:text-sm tracking-wider text-[#333] block sm:inline">
-            WO COMMUNE
-          </span>
-          <span className="text-xs sm:text-sm text-gray-600 ml-0 sm:ml-1 block sm:inline">
-            <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
-          </span>
+        <div className="absolute inset-x-0 flex justify-center items-center px-2 pointer-events-none">
+          <div className="text-center">
+            <span className="font-semibold text-xs sm:text-sm tracking-wider text-[#333] block sm:inline">
+              WO COMMUNE
+            </span>
+            <span className="text-xs sm:text-sm text-gray-600 ml-0 sm:ml-1 block sm:inline">
+              <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
+            </span>
+          </div>
         </div>
 
         {/* Social Icons - Responsive sizing */}
