@@ -5,29 +5,29 @@ import { Instagram, Linkedin } from 'lucide-react';
 export default function WOCommuneSlate() {
   return (
     <div className="bg-white border-b border-[#2C5F50] safe-area-x">
-      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 flex items-center justify-between h-8 md:h-10 relative">
+      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 flex items-center justify-between h-8 md:h-10">
         {/* Get Help */}
-        <Link
-          to="/get-help"
-          className="font-medium text-xs sm:text-sm text-[#333] hover:text-[#2C5F50] transition-colors whitespace-nowrap"
-        >
-          Get Help
-        </Link>
+        <div className="flex-1">
+          <Link
+            to="/get-help"
+            className="font-medium text-xs sm:text-sm text-[#333] hover:text-[#2C5F50] transition-colors whitespace-nowrap"
+          >
+            Get Help
+          </Link>
+        </div>
 
-        {/* Center Text - Responsive positioning */}
-        <div className="absolute inset-x-0 flex justify-center items-center px-2 pointer-events-none">
-          <div className="text-center">
-            <span className="font-semibold text-xs sm:text-sm tracking-wider text-[#333] block sm:inline">
-              WO COMMUNE
-            </span>
-            <span className="text-xs sm:text-sm text-gray-600 ml-0 sm:ml-1 block sm:inline">
-              <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
-            </span>
-          </div>
+        {/* Center Text - Aligned with logo */}
+        <div className="text-center">
+          <span className="font-semibold text-xs sm:text-sm tracking-wider text-[#333] block sm:inline">
+            WO COMMUNE
+          </span>
+          <span className="text-xs sm:text-sm text-gray-600 ml-0 sm:ml-1 block sm:inline">
+            <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
+          </span>
         </div>
 
         {/* Social Icons - Responsive sizing */}
-        <div className="flex items-center gap-1 sm:gap-2 -mr-2 sm:-mr-3">
+        <div className="flex-1 flex justify-end items-center gap-1 sm:gap-2 -mr-2 sm:-mr-3">
           <a 
             href="https://www.linkedin.com/showcase/wo-commune" 
             target="_blank" 
