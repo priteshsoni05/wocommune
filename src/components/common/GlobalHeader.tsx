@@ -23,12 +23,12 @@ export default function GlobalHeader({
 }: GlobalHeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-12">
+      <div className="max-w-7xl mx-auto px-2 flex items-center justify-between h-8">
         {/* Logo - Centered */}
         <div className="flex-1" />
         <Link
           to="/"
-          className="text-xl font-semibold tracking-[0.15em]"
+          className="text-lg font-semibold tracking-[0.15em]"
           style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
           aria-label="Walker's Odyssey home"
         >
