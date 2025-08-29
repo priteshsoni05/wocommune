@@ -243,7 +243,7 @@ export default function WOCommune(): JSX.Element {
         navigate={navigate} 
       />
 
-      <div className="h-8" />
+      <div className="h-8 md:h-10" />
 
       {/* ===== WO COMMUNE Active Slate ===== */}
       <WOCommuneSlate />
