@@ -5,7 +5,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 export default function WOCommuneSlate() {
   return (
     <div className="bg-white border-b border-[#2C5F50] safe-area-x">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 flex items-center justify-between h-8 md:h-10 relative">
+      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 flex items-center justify-between h-8 md:h-10 relative">
         {/* Get Help */}
         <Link
           to="/get-help"
@@ -25,7 +25,7 @@ export default function WOCommuneSlate() {
         </div>
 
         {/* Social Icons - Responsive sizing */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-1 sm:gap-2 -mr-2 sm:-mr-3">
           <a 
             href="https://www.linkedin.com/showcase/wo-commune" 
             target="_blank" 
