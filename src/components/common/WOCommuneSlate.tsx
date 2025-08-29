@@ -4,8 +4,8 @@ import { Instagram, Linkedin } from 'lucide-react';
 
 export default function WOCommuneSlate() {
   return (
-    <div className="bg-white border-b border-[#2C5F50]">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between h-10 sm:h-12 relative">
+    <div className="bg-white border-b border-[#2C5F50] safe-area-x">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 flex items-center justify-between h-8 md:h-10 relative">
         {/* Get Help */}
         <Link
           to="/get-help"

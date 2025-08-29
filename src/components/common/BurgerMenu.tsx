@@ -60,10 +60,10 @@ export default function BurgerMenu({
       {/* Burger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+        className="p-1.5 sm:p-2 text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
         aria-label="Menu"
       >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
+        {isOpen ? <X size={18} className="sm:w-5 sm:h-5" /> : <Menu size={18} className="sm:w-5 sm:h-5" />}
       </button>
 
       {/* Mobile/Desktop Slide-in Menu */}
@@ -73,7 +73,7 @@ export default function BurgerMenu({
           <div className="fixed inset-0 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-72 max-w-[85vw] shadow-xl z-50 flex flex-col" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
+          <div className="fixed top-0 right-0 h-full w-64 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 flex flex-col safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200" style={{ backgroundColor: '#ffffff' }}>
               <span className="font-semibold text-gray-900">Menu</span>
