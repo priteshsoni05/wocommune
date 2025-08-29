@@ -22,13 +22,13 @@ export default function GlobalHeader({
   navigate 
 }: GlobalHeaderProps) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 safe-area-top">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 flex items-center justify-between h-8 md:h-10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between h-10 sm:h-12">
         {/* Logo - Centered */}
         <div className="flex-1" />
         <Link
           to="/"
-          className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.15em] truncate max-w-[200px] sm:max-w-none"
+          className="text-base sm:text-lg md:text-xl font-semibold tracking-[0.15em]"
           style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
           aria-label="Walker's Odyssey home"
         >

@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
 
       {/* ------------------------ Hero Section ------------------------ */}
       <section
-        className="relative w-full h-[85vh] sm:h-[90vh] md:h-screen mt-8 md:mt-10"
+        className="relative w-full h-[80vh] sm:h-[85vh] md:h-screen mt-10 sm:mt-12"
         aria-label="Hero: Your trusted companion"
       >
         {/* Background image */}
