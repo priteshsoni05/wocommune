@@ -23,7 +23,7 @@ export default function GlobalHeader({
 }: GlobalHeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 safe-area-top">
-      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 pr-0 flex items-center justify-between h-8 md:h-10">
+      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 flex items-center justify-between h-8 md:h-10">
         {/* Logo - Centered */}
         <div className="flex-1" />
         <Link
@@ -34,7 +34,7 @@ export default function GlobalHeader({
         >
           WALKER'S ODYSSEY
         </Link>
-        <div className="flex-1 flex justify-end items-center -mr-1">
+        <div className="flex-1 flex justify-end items-center -mr-2 sm:-mr-3">
           <BurgerMenu 
             user={user} 
             displayName={displayName || "Friend"} 
