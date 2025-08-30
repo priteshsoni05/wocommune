@@ -220,7 +220,7 @@ const OptimizedPublicProfile = () => {
       {/* Main grid */}
       <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 mt-8 md:mt-10">
         {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:min-h-[calc(100vh-72px)]">
+        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:h-[calc(100vh-72px)] lg:sticky lg:top-[72px]">
           <div className="text-center space-y-3" style={{ color: TEXT }}>
             <img
               src={data.profile.avatar_url || "/placeholder.svg"}
