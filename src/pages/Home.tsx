@@ -86,7 +86,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ About Section (2-column) ------------------------ */}
-      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-12">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-20">
         <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left column: text */}
           <div className="px-2">
@@ -118,7 +118,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="bg-[#2C5F50] text-white py-16">
+      <section className="bg-[#2C5F50] text-white py-20">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-semibold mb-3 font-heading">Find your helpanion in 3 steps</h3>
@@ -166,7 +166,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Upcoming Event Strip ------------------------ */}
-      <section className="bg-[#F3F2EE] py-6">
+      <section className="bg-[#F3F2EE] py-8">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex-1 text-left sm:text-left">
@@ -191,7 +191,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Podcasts & Stories ------------------------ */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
+      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-20">
         <h3 className="text-lg font-semibold mb-6">Podcasts & Stories</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
