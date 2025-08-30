@@ -53,7 +53,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md max-w-[90vw] mx-4">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-xl font-serif text-foreground">
+          <DialogTitle className="text-xl font-bold text-foreground">
             Reset Password
           </DialogTitle>
         </DialogHeader>

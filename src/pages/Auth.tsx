@@ -154,7 +154,7 @@ export default function Auth() {
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div className="flex-1">
-                <CardTitle className="text-2xl font-serif text-foreground">
+                <CardTitle className="text-2xl font-bold text-foreground">
                   Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
                 </CardTitle>
               </div>
@@ -187,7 +187,7 @@ export default function Auth() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex-1">
-              <CardTitle className="text-2xl font-serif text-foreground">
+              <CardTitle className="text-2xl font-bold text-foreground">
                 {getMainTitle()}
               </CardTitle>
             </div>

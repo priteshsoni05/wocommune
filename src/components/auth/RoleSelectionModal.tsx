@@ -42,7 +42,7 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md max-w-[90vw] mx-4">
         <DialogHeader className="space-y-4 text-center">
-          <DialogTitle className="text-2xl font-serif text-foreground">
+          <DialogTitle className="text-2xl font-bold text-foreground">
             {title}
           </DialogTitle>
           <p className="text-muted-foreground text-sm px-2">
@@ -65,7 +65,7 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
                       <IconComponent className="h-6 w-6 text-foreground" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg font-serif font-semibold text-foreground">
+                      <CardTitle className="text-lg font-bold text-foreground">
                         {role.name}
                       </CardTitle>
                       <CardDescription className="text-sm text-muted-foreground leading-relaxed">
