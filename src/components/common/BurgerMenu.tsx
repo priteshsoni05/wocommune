@@ -73,21 +73,9 @@ export default function BurgerMenu({
           <div className="fixed inset-0 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-64 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 flex flex-col safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200" style={{ backgroundColor: '#ffffff' }}>
-              <span className="font-semibold text-gray-900">Menu</span>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1 text-gray-500 hover:text-gray-700 transition-colors"
-                aria-label="Close menu"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
+          <div className="fixed top-0 right-0 h-full w-48 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 flex flex-col safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
             {/* Navigation Items */}
-            <nav className="flex-1 p-4" style={{ backgroundColor: '#ffffff' }}>
+            <nav className="flex-1 p-4 pt-6" style={{ backgroundColor: '#ffffff' }}>
               <ul className="space-y-1">
                 <li>
                   <Link
