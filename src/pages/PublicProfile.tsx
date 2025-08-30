@@ -217,10 +217,10 @@ const OptimizedPublicProfile = () => {
       {/* Global Header */}
       <GlobalHeader />
 
-      {/* Main grid */}
-      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 mt-8 md:mt-10">
+      {/* Main grid - full height container */}
+      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 h-[calc(100vh-72px)]">
         {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:h-[calc(100vh-72px)] lg:sticky lg:top-[72px]">
+        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 h-full lg:overflow-y-auto">
           <div className="text-center space-y-3" style={{ color: TEXT }}>
             <img
               src={data.profile.avatar_url || "/placeholder.svg"}
@@ -283,7 +283,7 @@ const OptimizedPublicProfile = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="lg:col-span-8 p-6" style={{ color: TEXT }}>
+        <main className="lg:col-span-8 p-6 h-full lg:overflow-y-auto" style={{ color: TEXT }}>
           <div ref={servicesRef}>
             <h2 className="text-2xl font-bold mb-6">Services</h2>
 
