@@ -5,12 +5,13 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useRolePersistence } from '@/hooks/useRolePersistence';
 
 export type UserRole = 'walker' | 'helpanion';
 
 interface SignupFormProps {
   selectedRole: UserRole;
-  onSuccess: () => void;
+  onSuccess: (role: UserRole) => void;
   onCancel: () => void;
 }
 
@@ -36,6 +37,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   const [error, setError] = useState('');
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameError, setUsernameError] = useState('');
+  const { setActiveRole } = useRolePersistence();
 
   const checkUsernameAvailability = async (username: string) => {
     if (!username || username.length < 3) {
@@ -159,7 +161,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               }
             }
 
-            onSuccess();
+            // Set the active role immediately after role addition
+            setActiveRole(selectedRole);
+            onSuccess(selectedRole);
             return;
           }
         } else {
@@ -195,7 +199,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           }
         }
 
-        onSuccess();
+        // Set the active role immediately after successful signup
+        setActiveRole(selectedRole);
+        onSuccess(selectedRole);
       }
     } catch (error: any) {
       console.error('Signup error:', error);

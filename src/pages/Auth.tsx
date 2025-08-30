@@ -109,10 +109,12 @@ export default function Auth() {
     navigate(`/auth?mode=signup&role=${role}`, { replace: true });
   };
 
-  const handleSignupSuccess = () => {
+  const handleSignupSuccess = (role: UserRole) => {
     setShowSignupForm(false);
-    toast.success('Account created successfully! Welcome!');
-    // The signup form handles navigation
+    // Navigate directly to the role-specific dashboard
+    const dashboardPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+    navigate(dashboardPath);
+    toast.success(`Welcome! Your ${role} account is ready.`);
   };
 
   const handleBackToMain = () => {
