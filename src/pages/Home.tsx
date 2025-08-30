@@ -152,37 +152,26 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* ------------------------ Community & Events ------------------------ */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-        <h3 className="text-lg font-semibold mb-4">Community & Events</h3>
-
-        {/* Make all three cards the same size */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {/* Card 1: Upcoming events (text card) */}
-          <div className="bg-white rounded-md p-4 shadow-sm h-56 flex flex-col">
-            <h4 className="font-medium mb-2">Upcoming Events</h4>
-            <div className="text-sm text-gray-600 flex-1">
-              <div className="mb-4">
-                <div className="font-semibold">Networking Dinner</div>
-                <div className="text-xs text-gray-500">24 Aug 2025 — 7:00 PM</div>
-                <div className="text-xs mt-2">
-                  Cafe Veritas — Downtown. An evening of conversation and community.
-                </div>
+      {/* ------------------------ Upcoming Event Strip ------------------------ */}
+      <section className="bg-[#2C5F50] text-white py-6">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex-1 text-left sm:text-left">
+              <h3 className="font-semibold text-lg mb-1">Upcoming Event</h3>
+              <div className="text-white/90">
+                <div className="font-medium">Networking Dinner</div>
+                <div className="text-sm text-white/80">24 Aug 2025 — 7:00 PM • Cafe Veritas, Downtown</div>
+                <div className="text-sm text-white/80 mt-1">An evening of conversation and community.</div>
               </div>
             </div>
-            <a className="text-sm inline-block" style={{ color: PINE }} href="#">
-              See all events →
-            </a>
-          </div>
-
-          {/* Card 2: Image */}
-          <div className="rounded-md overflow-hidden shadow-sm h-56 bg-gray-100">
-            <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
-          </div>
-
-          {/* Card 3: Image */}
-          <div className="rounded-md overflow-hidden shadow-sm h-56 bg-gray-100">
-            <img src={EVENT_PLACEHOLDER} alt="Past event" className="w-full h-full object-cover" />
+            <div className="flex-shrink-0">
+              <Link
+                to="#"
+                className="inline-block px-5 py-2 rounded-md font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors"
+              >
+                Learn More
+              </Link>
+            </div>
           </div>
         </div>
       </section>
