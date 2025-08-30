@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOptimizedProfile as useProfile } from '@/hooks/useOptimizedProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
@@ -37,6 +37,7 @@ export default function WalkerDashboard() {
   const { hasRole, addRole, loading: rolesLoading } = useUserRoles();
   const { services } = useServices();
   const { bookings, loading: bookingsLoading } = useBookings();
+  const { userId } = useParams();
   
   // Role persistence
   const { setActiveRole, clearRoleData, handleCorruptedData } = useRolePersistence();
@@ -60,9 +61,16 @@ export default function WalkerDashboard() {
 
   useEffect(() => {
     if (!user) {
-      navigate('/');
+      navigate('/auth');
+      return;
     }
-  }, [user, navigate]);
+    
+    // Check if user is accessing their own dashboard
+    if (userId && user.id !== userId) {
+      navigate('/auth');
+      return;
+    }
+  }, [user, navigate, userId]);
 
   useEffect(() => {
     if (profile && user) {
@@ -112,7 +120,7 @@ export default function WalkerDashboard() {
     if (checked && !rolesLoading) {
       // User wants to switch to Helpanion
       if (hasRole('helpanion')) {
-        navigate('/helpanion-dashboard');
+        navigate(`/helpanion/${user?.id}`);
       } else {
         setShowHelpanionModal(true);
       }
@@ -150,7 +158,7 @@ export default function WalkerDashboard() {
         description: "You can now provide guidance to Walkers.",
       });
       setShowHelpanionModal(false);
-      navigate('/helpanion-dashboard');
+      navigate(`/helpanion/${user?.id}`);
     }
   };
 

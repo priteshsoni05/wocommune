@@ -58,13 +58,15 @@ export default function Auth() {
   }, [user, navigate, getDashboardPath]);
 
   const handleRoleSwitch = (selectedRole: UserRole, rememberChoice: boolean) => {
+    if (!user) return;
+    
     setActiveRole(selectedRole);
     
     if (rememberChoice) {
       localStorage.setItem('wo_commune_preferred_role', selectedRole);
     }
     
-    const dashboardPath = selectedRole === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+    const dashboardPath = selectedRole === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
     navigate(dashboardPath);
     
     setShowRoleSwitch(false);
@@ -72,11 +74,13 @@ export default function Auth() {
   };
 
   const handleLoginSuccess = (userRoles: UserRole[]) => {
+    if (!user) return;
+    
     if (userRoles.length === 1) {
       // Single role - redirect directly
       const role = userRoles[0];
       setActiveRole(role);
-      const dashboardPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+      const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
       navigate(dashboardPath);
       toast.success(`Welcome back!`);
     } else if (userRoles.length > 1) {
@@ -85,7 +89,7 @@ export default function Auth() {
       if (preferredRole && userRoles.includes(preferredRole)) {
         // Use preferred role if available
         setActiveRole(preferredRole);
-        const dashboardPath = preferredRole === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+        const dashboardPath = preferredRole === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
         navigate(dashboardPath);
         toast.success(`Welcome back to your ${preferredRole} dashboard!`);
       } else {
@@ -110,9 +114,11 @@ export default function Auth() {
   };
 
   const handleSignupSuccess = (role: UserRole) => {
+    if (!user) return;
+    
     setShowSignupForm(false);
-    // Navigate directly to the role-specific dashboard
-    const dashboardPath = role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
+    // Navigate directly to the role-specific dashboard with user ID
+    const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
     navigate(dashboardPath);
     toast.success(`Welcome! Your ${role} account is ready.`);
   };

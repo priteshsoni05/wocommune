@@ -103,11 +103,15 @@ export const useRolePersistence = () => {
     return state.role;
   }, [state.role]);
 
-  // Get dashboard path for current role
+  // Get dashboard path for current role and user
   const getDashboardPath = useCallback((): string => {
+    if (!user) return '/auth';
+    
     const role = getCurrentRole();
-    return role === 'helpanion' ? '/helpanion-dashboard' : '/walker-dashboard';
-  }, [getCurrentRole]);
+    if (!role) return '/auth';
+    
+    return role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+  }, [getCurrentRole, user]);
 
   // Initialize role from storage
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
@@ -71,6 +71,7 @@ const HelpanionDashboard = () => {
   const { bookings } = useBookings();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { userId } = useParams();
   
   // Role persistence
   const { setActiveRole, clearRoleData, handleCorruptedData } = useRolePersistence();
@@ -87,9 +88,16 @@ const HelpanionDashboard = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate("/");
+      navigate("/auth");
+      return;
     }
-  }, [user, authLoading, navigate]);
+    
+    // Check if user is accessing their own dashboard
+    if (user && userId && user.id !== userId) {
+      navigate("/auth");
+      return;
+    }
+  }, [user, authLoading, navigate, userId]);
 
   useEffect(() => {
     if (profile && user) {
@@ -142,7 +150,7 @@ const HelpanionDashboard = () => {
   const handleRoleToggle = (checked: boolean) => {
     if (checked) {
       if (hasRole("walker")) {
-        navigate("/walker-dashboard");
+        navigate(`/walker/${user?.id}`);
       } else {
         setShowWalkerModal(true);
       }
@@ -163,7 +171,7 @@ const HelpanionDashboard = () => {
         description: "You can now seek help from Helpanions."
       });
       setShowWalkerModal(false);
-      navigate("/walker-dashboard");
+      navigate(`/walker/${user?.id}`);
     }
   };
 

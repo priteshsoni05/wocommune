@@ -77,6 +77,11 @@ const App = () => (
             <Route path="/wo-commune" element={<WOCommune />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanions" element={<HelpanionsDirectory />} />
+            {/* User-specific dashboard routes */}
+            <Route path="/walker/:userId" element={<WalkerDashboard />} />
+            <Route path="/helpanion/:userId" element={<HelpanionDashboard />} />
+            
+            {/* Legacy dashboard routes (redirect to user-specific) */}
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
 
