@@ -22,7 +22,7 @@ export default function GlobalHeader({
   navigate 
 }: GlobalHeaderProps) {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 safe-area-top">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 safe-area-top">
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 flex items-center justify-between h-8 md:h-10">
         {/* Logo - Centered */}
         <div className="flex-1" />
