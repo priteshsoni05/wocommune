@@ -73,7 +73,7 @@ export default function BurgerMenu({
           <div className="fixed inset-0 top-12 bg-black/20 z-40" />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-48 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 flex flex-col safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
+          <div className="fixed top-0 right-4 h-full w-48 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 flex flex-col safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
             {/* Navigation Items */}
             <nav className="flex-1 p-4 pt-6" style={{ backgroundColor: '#ffffff' }}>
               <ul className="space-y-1">
