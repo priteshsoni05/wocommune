@@ -36,53 +36,24 @@ export function AuthDropdown({ variant = 'desktop' }: AuthDropdownProps) {
         className="w-48 bg-card border-border shadow-lg z-[9999] min-w-48"
         sideOffset={4}
       >
-        <DropdownMenuLabel className="text-xs font-medium text-muted-foreground px-3 py-2">
-          Login to Existing Account
-        </DropdownMenuLabel>
         <DropdownMenuItem asChild className="hover:bg-accent cursor-pointer focus:bg-accent">
           <Link 
-            to="/auth?mode=login&role=walker" 
+            to="/auth?mode=login" 
             className="flex items-center px-3 py-2 w-full"
-            onClick={() => console.log('Walker login clicked')}
+            onClick={() => console.log('Login clicked')}
           >
             <LogIn className="h-4 w-4 mr-2" />
-            Login as Walker
+            Sign In
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="hover:bg-accent cursor-pointer focus:bg-accent">
           <Link 
-            to="/auth?mode=login&role=helpanion" 
+            to="/auth?mode=signup" 
             className="flex items-center px-3 py-2 w-full"
-            onClick={() => console.log('Helpanion login clicked')}
-          >
-            <LogIn className="h-4 w-4 mr-2" />
-            Login as Helpanion
-          </Link>
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator className="bg-border my-1" />
-        
-        <DropdownMenuLabel className="text-xs font-medium text-muted-foreground px-3 py-2">
-          Create New Account
-        </DropdownMenuLabel>
-        <DropdownMenuItem asChild className="hover:bg-accent cursor-pointer focus:bg-accent">
-          <Link 
-            to="/auth?mode=signup&role=walker" 
-            className="flex items-center px-3 py-2 w-full"
-            onClick={() => console.log('Walker signup clicked')}
+            onClick={() => console.log('Signup clicked')}
           >
             <UserPlus className="h-4 w-4 mr-2" />
-            Join as Walker
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild className="hover:bg-accent cursor-pointer focus:bg-accent">
-          <Link 
-            to="/auth?mode=signup&role=helpanion" 
-            className="flex items-center px-3 py-2 w-full"
-            onClick={() => console.log('Helpanion signup clicked')}
-          >
-            <UserPlus className="h-4 w-4 mr-2" />
-            Join as Helpanion
+            Sign Up
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -77,6 +77,7 @@ export const useRolePersistence = () => {
     try {
       localStorage.removeItem(ROLE_STORAGE_KEY);
       localStorage.removeItem(ROLE_TIMESTAMP_KEY);
+      localStorage.removeItem('wo_commune_preferred_role');
       setState({ role: null, isLoading: false });
       return true;
     } catch (error) {

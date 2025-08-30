@@ -385,11 +385,23 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"][]
       }
+      get_user_roles_by_email: {
+        Args: { _email: string }
+        Returns: Database["public"]["Enums"]["app_role"][]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_username_available: {
+        Args: { _username: string }
+        Returns: boolean
+      }
+      user_has_role: {
+        Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
       }
     }

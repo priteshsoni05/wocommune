@@ -77,6 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       localStorage.removeItem('wo_commune_user_role');
       localStorage.removeItem('wo_commune_role_timestamp');
+      localStorage.removeItem('wo_commune_preferred_role');
     } catch (error) {
       console.error('Error clearing role data:', error);
     }
