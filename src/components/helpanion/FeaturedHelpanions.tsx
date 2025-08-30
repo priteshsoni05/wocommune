@@ -43,7 +43,7 @@ const truncateText = (text?: string | null, maxLength = 100) => {
 
 const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion }) => {
   const displayName = helpanion.display_name || "Helpanion";
-  const skillsArray = helpanion.skills ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 3) : [];
+  const skillsArray = helpanion.skills ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 5) : [];
 
   const handleViewProfile = () => {
     if (helpanion.username) {
