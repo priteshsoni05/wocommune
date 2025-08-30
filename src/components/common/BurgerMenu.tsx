@@ -96,6 +96,15 @@ export default function BurgerMenu({
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    to="/helpanions"
+                    onClick={handleLinkClick}
+                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                  >
+                    Meet your Helpanion
+                  </Link>
+                </li>
+                <li>
                   <span className="block px-3 py-2 text-gray-400 cursor-not-allowed">
                     Shop
                   </span>
