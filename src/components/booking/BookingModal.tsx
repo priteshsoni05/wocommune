@@ -87,18 +87,22 @@ export function BookingModal({ open, onOpenChange, helpanion }: BookingModalProp
               step === stepName 
                 ? 'bg-[#01796F] text-white' 
                 : index < ['service', 'availability', 'details', 'confirm'].indexOf(step)
-                  ? 'bg-green-500 text-white'
+                  ? 'text-white'
                   : 'bg-gray-200 text-gray-500'
             }`}
+            style={index < ['service', 'availability', 'details', 'confirm'].indexOf(step) ? { backgroundColor: '#193232' } : {}}
           >
             {index + 1}
           </div>
           {index < 3 && (
-            <div className={`w-8 h-0.5 ${
-              index < ['service', 'availability', 'details', 'confirm'].indexOf(step)
-                ? 'bg-green-500'
-                : 'bg-gray-200'
-            }`} />
+            <div 
+              className={`w-8 h-0.5 ${
+                index < ['service', 'availability', 'details', 'confirm'].indexOf(step)
+                  ? ''
+                  : 'bg-gray-200'
+              }`}
+              style={index < ['service', 'availability', 'details', 'confirm'].indexOf(step) ? { backgroundColor: '#193232' } : {}}
+            />
           )}
         </div>
       ))}
@@ -238,8 +242,8 @@ export function BookingModal({ open, onOpenChange, helpanion }: BookingModalProp
 
         {step === 'confirm' && (
           <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto" style={{ backgroundColor: 'rgba(25, 50, 50, 0.1)' }}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#193232' }}>
                 <span className="text-white text-lg">✓</span>
               </div>
             </div>

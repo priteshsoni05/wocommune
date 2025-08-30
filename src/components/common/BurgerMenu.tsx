@@ -81,7 +81,7 @@ export default function BurgerMenu({
                   <Link
                     to="/"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     Home
                   </Link>
@@ -90,7 +90,7 @@ export default function BurgerMenu({
                   <Link
                     to="/wo-commune"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     WO COMMUNE
                   </Link>
@@ -99,7 +99,7 @@ export default function BurgerMenu({
                   <Link
                     to="/helpanions"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     Meet your Helpanion
                   </Link>
@@ -126,7 +126,7 @@ export default function BurgerMenu({
                         className="w-8 h-8 rounded-full object-cover border border-gray-200"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-[#2C5F50] flex items-center justify-center text-white text-sm font-semibold">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold" style={{ backgroundColor: "#193232" }}>
                         {avatarContent.value}
                       </div>
                     )}
@@ -141,7 +141,7 @@ export default function BurgerMenu({
                       <Link
                         to={dashboardPath}
                         onClick={handleLinkClick}
-                        className="block px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                        className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                       >
                         Dashboard
                       </Link>
@@ -149,7 +149,7 @@ export default function BurgerMenu({
                     <li>
                       <button
                         onClick={handleSignOut}
-                        className="w-full text-left px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                        className="w-full text-left px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                       >
                         Sign Out
                       </button>
@@ -162,7 +162,7 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=login"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                     >
                       <LogIn size={16} />
                       Login
@@ -172,7 +172,7 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=signup"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-[#2C5F50] hover:text-white rounded-md transition-all duration-200 font-medium"
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                     >
                       <UserPlus size={16} />
                       Sign Up

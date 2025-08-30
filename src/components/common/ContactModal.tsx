@@ -109,7 +109,7 @@ export function ContactModal({ children }: ContactModalProps) {
                 type="submit" 
                 className="w-full" 
                 disabled={isSubmitting}
-                style={{ backgroundColor: "#2C5F50" }}
+                style={{ backgroundColor: "#193232" }}
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>

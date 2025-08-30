@@ -96,7 +96,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
             >
               {getInitials(displayName)}
             </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white" style={{ backgroundColor: '#193232' }}></div>
           </div>
           
           <div className="flex-1 min-w-0">
@@ -104,7 +104,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
               <h3 className="font-semibold text-foreground truncate">
                 {displayName}
               </h3>
-              <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
+              <CheckCircle className="w-4 h-4 shrink-0" style={{ color: '#193232' }} />
             </div>
             {helpanion.services && helpanion.services.length > 0 && (
               <p className="text-secondary mb-2">

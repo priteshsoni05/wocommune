@@ -36,8 +36,8 @@ All colors MUST be HSL.
     --success: 142 71% 45%;
     --success-foreground: 40 20% 98%;
 
-    /* Brand green (matches Explore Helpanions CTA) */
-    --brand: 175 98% 24%;
+    /* Brand green - consistent across all elements */
+    --brand: 180 33% 15%;
     --brand-foreground: 40 20% 98%;
 
     --warning: 43 96% 56%;
@@ -162,13 +162,13 @@ All colors MUST be HSL.
   /* Supporting/Secondary Text */
   .text-secondary {
     @apply text-base leading-relaxed;
-    color: hsl(var(--brand));
+    color: #193232;
   }
 
   /* Caption/Footnote Text */
   .text-caption {
     @apply text-xs leading-normal;
-    color: hsl(var(--brand));
+    color: #193232;
   }
 
   /* Button Text */

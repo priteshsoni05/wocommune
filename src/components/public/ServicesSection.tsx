@@ -30,7 +30,7 @@ export const ServicesSection = ({ services, helperId, onServiceBook }: ServicesS
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
       'career': 'bg-blue-100 text-blue-800',
-      'business': 'bg-green-100 text-green-800',
+      'business': 'text-white',
       'personal': 'bg-purple-100 text-purple-800',
       'education': 'bg-orange-100 text-orange-800',
       'other': 'bg-gray-100 text-gray-800'

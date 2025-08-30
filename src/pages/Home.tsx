@@ -16,7 +16,7 @@ import EVENT_PLACEHOLDER from "../assets/event-placeholder.jpg";
 import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
 
 /* ---------- Brand color tokens (used inline for clarity) ---------- */
-const PINE = "#2C5F50"; // pine forest green
+const PINE = "#193232"; // pine forest green
 const GOLD = "#f2f2f2"; // accent gold
 
 const HomePage: React.FC = () => {
@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
               or navigating an unfamiliar path, we're here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.
             </p>
-            <Link to="/about" className="inline-flex items-center gap-2 hover:underline" style={{ color: "hsl(175, 98%, 24%)" }}>
+            <Link to="/about" className="inline-flex items-center gap-2 hover:underline" style={{ color: "#193232" }}>
               Our Story →
             </Link>
           </div>
@@ -114,7 +114,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="bg-[#2C5F50] text-white py-20">
+      <section className="text-white py-20" style={{ backgroundColor: "#193232" }}>
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
             <h3 className="mb-3">Find your helpanion in 3 steps</h3>
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
               Short takes and stories about walking, learning, and the tiny steps that shape a life.
             </p>
             <div className="mt-4">
-              <Link to="/about" className="font-normal" style={{ color: "hsl(175, 98%, 24%)" }}>
+              <Link to="/about" className="font-normal" style={{ color: "#193232" }}>
                 Our Story →
               </Link>
             </div>

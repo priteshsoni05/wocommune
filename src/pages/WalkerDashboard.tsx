@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 type TabKey = 'sessions' | 'notifications' | 'history' | 'settings';
 
-const PRIMARY_GREEN = "#01796F";
+const PRIMARY_GREEN = "#193232";
 const BG_NEUTRAL = "#FAF9F6";
 
 const navigationTabs = [
@@ -156,11 +156,18 @@ export default function WalkerDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800';
+      case 'confirmed': return 'text-white';
       case 'pending': return 'bg-yellow-100 text-yellow-800';
       case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const getStatusStyle = (status: string) => {
+    if (status === 'confirmed') {
+      return { backgroundColor: '#193232' };
+    }
+    return {};
   };
 
   const renderSidebar = () => (
@@ -313,7 +320,10 @@ export default function WalkerDashboard() {
                           {format(new Date(booking.booking_date), 'PPpp')}
                         </div>
                       </div>
-                      <Badge className={getStatusColor(booking.status)}>
+                      <Badge 
+                        className={getStatusColor(booking.status)}
+                        style={getStatusStyle(booking.status)}
+                      >
                         {booking.status}
                       </Badge>
                     </div>
@@ -364,7 +374,10 @@ export default function WalkerDashboard() {
                           {format(new Date(booking.booking_date), 'PPpp')}
                         </div>
                       </div>
-                      <Badge className={getStatusColor(booking.status)}>
+                      <Badge 
+                        className={getStatusColor(booking.status)}
+                        style={getStatusStyle(booking.status)}
+                      >
                         {booking.status}
                       </Badge>
                     </div>

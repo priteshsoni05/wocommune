@@ -1,12 +1,12 @@
 export function Newsletter() {
-  const PINE = "#2C5F50";
+  const PINE = "#193232";
   
   return (
     <section className="bg-[#F3F2EE] py-10">
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <h4>Walk with us</h4>
-          <p style={{ color: "hsl(175, 98%, 24%)" }}>Stories, guidance, and events — straight to your inbox.</p>
+          <p style={{ color: "#193232" }}>Stories, guidance, and events — straight to your inbox.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
           <a

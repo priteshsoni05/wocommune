@@ -40,7 +40,7 @@ export const BookingSuccessDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-green-600">
+          <DialogTitle className="flex items-center space-x-2" style={{ color: '#193232' }}>
             <CheckCircle className="w-6 h-6" />
             <span>Booking Confirmed!</span>
           </DialogTitle>
@@ -51,22 +51,22 @@ export const BookingSuccessDialog = ({
 
         <div className="space-y-6">
           {/* Session Details */}
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
-            <h4 className="font-medium text-green-800">Session Details</h4>
+          <div className="rounded-lg p-4 space-y-3" style={{ backgroundColor: 'rgba(25, 50, 50, 0.05)', border: '1px solid rgba(25, 50, 50, 0.2)' }}>
+            <h4 className="font-medium" style={{ color: '#193232' }}>Session Details</h4>
             <div className="space-y-2 text-sm">
-              <div className="flex items-center space-x-2 text-green-700">
+              <div className="flex items-center space-x-2" style={{ color: '#193232' }}>
                 <span className="font-medium">Service:</span>
                 <span>{bookingDetails.serviceName}</span>
               </div>
-              <div className="flex items-center space-x-2 text-green-700">
+              <div className="flex items-center space-x-2" style={{ color: '#193232' }}>
                 <Calendar className="w-4 h-4" />
                 <span>{format(bookingDetails.date, 'EEEE, MMMM do, yyyy')}</span>
               </div>
-              <div className="flex items-center space-x-2 text-green-700">
+              <div className="flex items-center space-x-2" style={{ color: '#193232' }}>
                 <Clock className="w-4 h-4" />
                 <span>{bookingDetails.time} ({bookingDetails.duration} minutes)</span>
               </div>
-              <div className="flex items-center space-x-2 text-green-700">
+              <div className="flex items-center space-x-2" style={{ color: '#193232' }}>
                 <span className="font-medium">Helpanion:</span>
                 <span>{bookingDetails.helperName}</span>
               </div>

@@ -50,7 +50,7 @@ type TabKey =
   | "reviews"
   | "settings";
 
-const PRIMARY_GREEN = "#01796F";
+const PRIMARY_GREEN = "#193232";
 const BG_NEUTRAL = "#FAF9F6";
 
 const navigationTabs = [
