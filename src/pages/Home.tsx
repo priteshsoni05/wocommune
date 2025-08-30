@@ -153,21 +153,22 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Upcoming Event Strip ------------------------ */}
-      <section className="bg-[#2C5F50] text-white py-6">
+      <section className="bg-[#F3F2EE] py-6">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex-1 text-left sm:text-left">
-              <h3 className="font-semibold text-lg mb-1">Upcoming Event</h3>
-              <div className="text-white/90">
+              <h3 className="font-semibold text-lg mb-1 text-[#333]">Upcoming Event</h3>
+              <div className="text-gray-700">
                 <div className="font-medium">Networking Dinner</div>
-                <div className="text-sm text-white/80">24 Aug 2025 — 7:00 PM • Cafe Veritas, Downtown</div>
-                <div className="text-sm text-white/80 mt-1">An evening of conversation and community.</div>
+                <div className="text-sm text-gray-600">24 Aug 2025 — 7:00 PM • Cafe Veritas, Downtown</div>
+                <div className="text-sm text-gray-600 mt-1">An evening of conversation and community.</div>
               </div>
             </div>
             <div className="flex-shrink-0">
               <Link
                 to="#"
-                className="inline-block px-5 py-2 rounded-md font-semibold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors"
+                className="inline-block px-5 py-2 rounded-md font-semibold"
+                style={{ backgroundColor: PINE, color: "white" }}
               >
                 Learn More
               </Link>
