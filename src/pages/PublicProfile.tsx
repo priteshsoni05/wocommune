@@ -6,6 +6,7 @@ import { Profile } from "@/hooks/useOptimizedProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
 import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle } from "lucide-react";
+import GlobalHeader from '@/components/common/GlobalHeader';
 
 interface PublicProfileData {
   profile: Profile;
@@ -13,7 +14,7 @@ interface PublicProfileData {
   availability: AvailabilitySlot[];
 }
 
-const PINE = "#01796F";
+const PINE = "#193232";
 const TEXT = "#111111";
 
 // Cache for public profiles
@@ -201,9 +202,9 @@ const OptimizedPublicProfile = () => {
         <p className="text-sm text-gray-500 mt-2">Username: {username}</p>
         <p className="text-sm text-gray-500">Error: {error}</p>
         <Link
-          to="/commune"
+          to="/wo-commune"
           className="mt-3 px-4 py-2 rounded-md text-white"
-          style={{ backgroundColor: PINE }}
+          style={{ backgroundColor: "#193232" }}
         >
           Back to WO Commune
         </Link>
@@ -213,36 +214,24 @@ const OptimizedPublicProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      {/* Header */}
-      <div className="w-full border-b bg-white">
-        <div className="w-full mx-auto flex justify-between items-center px-4 md:px-6 py-3">
-          <div className="font-semibold tracking-wide" style={{ color: TEXT }}>
-            WO COMMUNE
-          </div>
-          <button
-            onClick={() => navigate("/commune")}
-            className="px-4 py-2 rounded-md text-white font-medium"
-            style={{ backgroundColor: PINE }}
-          >
-            Get Help
-          </button>
-        </div>
-      </div>
+      {/* Global Header */}
+      <GlobalHeader />
 
       {/* Main grid */}
-      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 px-4 md:px-6">
+      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 mt-8 md:mt-10">
         {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:min-h-[calc(100vh-56px)]">
+        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 lg:min-h-[calc(100vh-72px)]">
           <div className="text-center space-y-3" style={{ color: TEXT }}>
             <img
               src={data.profile.avatar_url || "/placeholder.svg"}
               alt={data.profile.display_name || "Profile"}
-              className="w-28 h-28 mx-auto rounded-full border-4 border-[#E6EDEB] object-cover"
+              className="w-28 h-28 mx-auto rounded-full object-cover"
+              style={{ border: "4px solid #193232" }}
               loading="lazy"
             />
             <h1 className="text-xl font-bold flex items-center justify-center gap-1">
               {data.profile.display_name}
-              <CheckCircle size={18} color={PINE} aria-label="Verified" />
+              <CheckCircle size={18} style={{ color: "#193232" }} aria-label="Verified" />
             </h1>
             <p className="text-sm">
               I help with {data.profile.role || "Professional Services"}
@@ -257,8 +246,8 @@ const OptimizedPublicProfile = () => {
                 {skillsArray.map((skill, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 text-xs rounded-full border"
-                    style={{ borderColor: "#D1D5DB", color: TEXT, backgroundColor: "#FFFFFF" }}
+                    className="px-3 py-1 text-xs rounded-full border text-white"
+                    style={{ borderColor: "#193232", backgroundColor: "#193232" }}
                   >
                     {skill}
                   </span>
@@ -317,7 +306,7 @@ const OptimizedPublicProfile = () => {
                       <button
                         onClick={() => handleServiceBook(service)}
                         className="mt-2 inline-flex items-center justify-center rounded-md text-white text-sm px-3 py-1.5"
-                        style={{ backgroundColor: PINE }}
+                        style={{ backgroundColor: "#193232" }}
                       >
                         Book Now
                       </button>
@@ -339,7 +328,7 @@ const OptimizedPublicProfile = () => {
         <button
           onClick={scrollToServices}
           className="w-full py-3 rounded-lg font-medium text-white"
-          style={{ backgroundColor: PINE }}
+          style={{ backgroundColor: "#193232" }}
         >
           Book a Session
         </button>
