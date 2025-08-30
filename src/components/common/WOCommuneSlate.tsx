@@ -4,13 +4,13 @@ import { Instagram, Linkedin } from 'lucide-react';
 
 export default function WOCommuneSlate() {
   return (
-    <div className="bg-white safe-area-x" style={{ borderBottom: "1px solid #193232" }}>
+    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 flex items-center justify-between h-8 md:h-10">
         {/* Left section - matches logo layout */}
         <div className="flex-1">
           <Link
             to="/get-help"
-            className="font-medium text-xs sm:text-sm text-[#333] transition-colors whitespace-nowrap" onMouseEnter={(e) => e.currentTarget.style.color = "#193232"} onMouseLeave={(e) => e.currentTarget.style.color = "#333"}
+            className="font-medium text-xs sm:text-sm transition-colors whitespace-nowrap" style={{ color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)"} onMouseLeave={(e) => e.currentTarget.style.color = "hsl(40, 20%, 98%)"}
           >
             Get Help
           </Link>
@@ -18,10 +18,10 @@ export default function WOCommuneSlate() {
         
         {/* Center Text - Exactly aligned with logo */}
         <div className="text-center">
-          <span className="font-semibold text-xs sm:text-sm tracking-wider text-[#333] block sm:inline">
+          <span className="font-semibold text-xs sm:text-sm tracking-wider block sm:inline" style={{ color: "hsl(40, 20%, 98%)" }}>
             WO COMMUNE
           </span>
-          <span className="text-xs sm:text-sm text-gray-600 ml-0 sm:ml-1 block sm:inline">
+          <span className="text-xs sm:text-sm ml-0 sm:ml-1 block sm:inline" style={{ color: "rgba(255, 255, 255, 0.8)" }}>
             <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
           </span>
         </div>
@@ -33,7 +33,7 @@ export default function WOCommuneSlate() {
               href="https://www.linkedin.com/showcase/wo-commune" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors" onMouseEnter={(e) => e.currentTarget.style.color = "#193232"} onMouseLeave={(e) => e.currentTarget.style.color = "#6b7280"}
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-colors" style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune LinkedIn"
             >
               <Linkedin size={10} className="sm:w-3 sm:h-3" />
@@ -42,7 +42,7 @@ export default function WOCommuneSlate() {
               href="https://www.instagram.com/wo_commune" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors" onMouseEnter={(e) => e.currentTarget.style.color = "#193232"} onMouseLeave={(e) => e.currentTarget.style.color = "#6b7280"}
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-colors" style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune Instagram"
             >
               <Instagram size={10} className="sm:w-3 sm:h-3" />
@@ -51,7 +51,7 @@ export default function WOCommuneSlate() {
               href="https://wocommune.substack.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors" onMouseEnter={(e) => e.currentTarget.style.color = "#193232"} onMouseLeave={(e) => e.currentTarget.style.color = "#6b7280"}
+              className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-colors" style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune Substack"
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" className="sm:w-3 sm:h-3">
