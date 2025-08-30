@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
               or navigating an unfamiliar path, we're here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.
             </p>
-            <Link to="/about" className="inline-flex items-center gap-2 text-secondary hover:underline">
+            <Link to="/about" className="inline-flex items-center gap-2 hover:underline" style={{ color: "hsl(175, 98%, 24%)" }}>
               Our Story →
             </Link>
           </div>
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
               Short takes and stories about walking, learning, and the tiny steps that shape a life.
             </p>
             <div className="mt-4">
-              <Link to="/about" className="text-sm font-medium" style={{ color: PINE }}>
+              <Link to="/about" className="font-normal" style={{ color: "hsl(175, 98%, 24%)" }}>
                 Our Story →
               </Link>
             </div>

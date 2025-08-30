@@ -57,15 +57,15 @@ const AboutPage: React.FC = () => {
       {/* ------------------------ Our Story ------------------------ */}
       <section className="py-12">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <h3 style={{ color: PINE }}>
+          <h3 className="font-normal" style={{ color: "hsl(175, 98%, 24%)" }}>
             Our Story
           </h3>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4 font-normal" style={{ color: "hsl(175, 98%, 24%)" }}>
             In a world where social media often pressures us to rush and compare our lives with
             others, we wanted to create a space where individuals can embrace their own pace, cherish
             their unique paths, and uncover joy in every step of their journey.
           </p>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
+          <p className="leading-relaxed mb-4 font-normal" style={{ color: "hsl(175, 98%, 24%)" }}>
             At Walker's Odyssey, we rise above being just a brand. We aim to build a community of
             like-minded individuals who recognize that every step—whether success or setbacks—is a
             vital part of growth. Failure isn’t a setback; it emerges only when we measure our
