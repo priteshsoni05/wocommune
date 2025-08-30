@@ -118,33 +118,46 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="bg-[#2C5F50] text-white py-12">
+      <section className="bg-[#2C5F50] text-white py-16">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <h3 className="text-lg font-semibold mb-6">Find your helpanion in 3 steps</h3>
+          <div className="text-center mb-12">
+            <h3 className="text-2xl md:text-3xl font-semibold mb-3 font-heading">Find your helpanion in 3 steps</h3>
+            <p className="text-white/80 text-lg">Connect with guidance that understands your journey</p>
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {/* Step 1 */}
-            <div className="bg-white/8 rounded-md p-6">
-              <h4 className="font-semibold mb-2">Discover Your Helpanion</h4>
-              <p className="text-sm text-white/90">Search our network and find someone who understands your journey and goals.</p>
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
+                1
+              </div>
+              <h4 className="font-semibold text-lg mb-3">Discover Your Helpanion</h4>
+              <p className="text-white/80 leading-relaxed">Search our network and find someone who understands your journey and goals.</p>
             </div>
+            
             {/* Step 2 */}
-            <div className="bg-white/8 rounded-md p-6">
-              <h4 className="font-semibold mb-2">Schedule the meeting</h4>
-              <p className="text-sm text-white/90">Check for availability, book an appointment and share your goals.</p>
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
+                2
+              </div>
+              <h4 className="font-semibold text-lg mb-3">Schedule the Meeting</h4>
+              <p className="text-white/80 leading-relaxed">Check for availability, book an appointment and share your goals.</p>
             </div>
+            
             {/* Step 3 */}
-            <div className="bg-white/8 rounded-md p-6">
-              <h4 className="font-semibold mb-2">Connect & Converse</h4>
-              <p className="text-sm text-white/90">Get real advice and guidance that helps you take the next step.</p>
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
+                3
+              </div>
+              <h4 className="font-semibold text-lg mb-3">Connect & Converse</h4>
+              <p className="text-white/80 leading-relaxed">Get real advice and guidance that helps you take the next step.</p>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end">
+          <div className="text-center">
             <Link
               to="/get-help"
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: GOLD, color: "#111" }}
+              className="inline-flex items-center px-6 py-3 rounded-md font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
             >
               Find your helpanion →
             </Link>
