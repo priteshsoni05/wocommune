@@ -220,8 +220,8 @@ const OptimizedPublicProfile = () => {
       {/* Main grid - full height container */}
       <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 h-[calc(100vh-72px)]">
         {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-6 h-full lg:overflow-y-auto">
-          <div className="text-center space-y-3" style={{ color: TEXT }}>
+        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-4 h-full lg:overflow-y-auto">
+          <div className="text-center space-y-2" style={{ color: TEXT }}>
             <img
               src={data.profile.avatar_url || "/placeholder.svg"}
               alt={data.profile.display_name || "Profile"}
@@ -240,7 +240,7 @@ const OptimizedPublicProfile = () => {
 
           {/* Expertise */}
           {skillsArray.length > 0 && (
-            <div className="mt-6" style={{ color: TEXT }}>
+            <div className="mt-4" style={{ color: TEXT }}>
               <h3 className="text-sm font-medium mb-2">Expertise</h3>
               <div className="flex flex-wrap gap-2">
                 {skillsArray.map((skill, idx) => (
@@ -257,14 +257,14 @@ const OptimizedPublicProfile = () => {
           )}
 
           {/* Reviews */}
-          <div className="mt-6" style={{ color: TEXT }}>
+          <div className="mt-4" style={{ color: TEXT }}>
             <h3 className="text-sm font-medium mb-1">Reviews</h3>
             <p className="text-sm">★ 4.9 (24 reviews) • 87 sessions completed</p>
           </div>
 
           {/* Social icons */}
           {socialLinks.length > 0 && (
-            <div className="mt-3 flex items-center justify-start gap-3" style={{ color: TEXT }}>
+            <div className="mt-2 flex items-center justify-start gap-3" style={{ color: TEXT }}>
               {socialLinks.map(({ url, icon: Icon, label }, idx) => (
                 <a key={idx} href={url} target="_blank" rel="noreferrer" aria-label={label}>
                   <Icon size={18} />
@@ -275,7 +275,7 @@ const OptimizedPublicProfile = () => {
 
           {/* About */}
           {data.profile.bio && (
-            <div className="mt-6" style={{ color: TEXT }}>
+            <div className="mt-4" style={{ color: TEXT }}>
               <h3 className="text-sm font-medium mb-2">About</h3>
               <p className="text-sm leading-relaxed">{data.profile.bio}</p>
             </div>
@@ -283,15 +283,15 @@ const OptimizedPublicProfile = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="lg:col-span-8 p-6 h-full lg:overflow-y-auto" style={{ color: TEXT }}>
+        <main className="lg:col-span-8 p-4 h-full lg:overflow-y-auto" style={{ color: TEXT }}>
           <div ref={servicesRef}>
-            <h2 className="text-2xl font-bold mb-6">Services</h2>
+            <h2 className="text-2xl font-bold mb-4">Services</h2>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {data.services.map((service) => (
                 <div
                   key={service.id}
-                  className="bg-white border border-gray-200 rounded-xl p-6"
+                  className="bg-white border border-gray-200 rounded-xl p-4"
                 >
                   <div className="flex items-start justify-between gap-6">
                     <div className="min-w-0">
