@@ -1,8 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Clock, Eye, Calendar, CheckCircle } from "lucide-react";
+import { CheckCircle, ArrowUpRight, Star } from "lucide-react";
 
 interface HelpanionProfile {
   id: string;
@@ -36,12 +35,7 @@ const getInitials = (name?: string | null) => {
     .toUpperCase();
 };
 
-const formatPrice = (price?: number | null) => {
-  if (!price) return "Contact for pricing";
-  return `₹${new Intl.NumberFormat("en-IN").format(price)}/hr`;
-};
-
-const truncateText = (text?: string | null, maxLength = 120) => {
+const truncateText = (text?: string | null, maxLength = 100) => {
   if (!text) return "Ready to help you achieve your goals.";
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength).trim() + "...";
@@ -49,132 +43,78 @@ const truncateText = (text?: string | null, maxLength = 120) => {
 
 const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion }) => {
   const displayName = helpanion.display_name || "Helpanion";
-  const minPrice = helpanion.services?.reduce((min, service) => {
-    if (!service.price_per_hour) return min;
-    return min === null ? service.price_per_hour : Math.min(min, service.price_per_hour);
-  }, null as number | null);
-
   const skillsArray = helpanion.skills ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 3) : [];
 
   const handleViewProfile = () => {
     if (helpanion.username) {
-      // Use the correct route path that's defined in App.tsx
       window.location.href = `/p/${helpanion.username}`;
     }
   };
 
-  const handleBookSession = () => {
-    if (helpanion.username) {
-      // Use the correct route path that's defined in App.tsx
-      window.location.href = `/p/${helpanion.username}#services`;
-    }
-  };
-
   return (
-    <Card className="group h-full hover:shadow-xl transition-all duration-300 border border-border/60 hover:border-primary/40 bg-white">
+    <Card className="group h-full hover:shadow-lg transition-all duration-300 border border-border/30 hover:border-primary/30 bg-white relative">
       <CardContent className="p-6 flex flex-col h-full">
-        {/* Header with Avatar and Basic Info */}
-        <div className="flex items-start gap-4 mb-4">
-          <div className="relative shrink-0">
-            {helpanion.avatar_url ? (
-              <img
-                src={helpanion.avatar_url}
-                alt={`${displayName}'s avatar`}
-                className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  const fallback = target.nextElementSibling as HTMLElement;
-                  if (fallback) {
-                    target.style.display = 'none';
-                    fallback.style.display = 'flex';
-                  }
-                }}
-              />
-            ) : null}
-            <div 
-              className={`w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold ${helpanion.avatar_url ? 'hidden' : 'flex'}`}
-            >
-              {getInitials(displayName)}
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white" style={{ backgroundColor: '#193232' }}></div>
-          </div>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-foreground truncate">
-                {displayName}
-              </h3>
-              <CheckCircle className="w-4 h-4 shrink-0" style={{ color: '#193232' }} />
-            </div>
-            {helpanion.services && helpanion.services.length > 0 && (
-              <p className="text-secondary mb-2">
-                {helpanion.services[0].category || "Professional Helper"}
-              </p>
-            )}
-            <div className="flex items-center gap-2 text-secondary">
-              <Clock className="w-4 h-4" />
-              <span>Available now</span>
-            </div>
+        {/* Avatar */}
+        <div className="relative w-20 h-20 mx-auto mb-4">
+          {helpanion.avatar_url ? (
+            <img
+              src={helpanion.avatar_url}
+              alt={`${displayName}'s avatar`}
+              className="w-20 h-20 rounded-full object-cover"
+              onError={(e) => {
+                const target = e.currentTarget;
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) {
+                  target.style.display = 'none';
+                  fallback.style.display = 'flex';
+                }
+              }}
+            />
+          ) : null}
+          <div 
+            className={`w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-lg ${helpanion.avatar_url ? 'hidden' : 'flex'}`}
+          >
+            {getInitials(displayName)}
           </div>
         </div>
 
+        {/* Name with Verification */}
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <h3 className="font-semibold text-foreground text-lg text-center">
+            {displayName}
+          </h3>
+          <CheckCircle className="w-5 h-5 shrink-0" style={{ color: '#193232' }} />
+        </div>
+
         {/* Bio */}
-        <p className="text-secondary mb-4 flex-1 leading-relaxed">
+        <p className="text-muted-foreground text-sm text-center mb-4 leading-relaxed flex-1">
           {truncateText(helpanion.bio)}
         </p>
 
-        {/* Skills Tags */}
+        {/* Expertise Tags */}
         {skillsArray.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
             {skillsArray.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-caption px-2 py-1">
+              <Badge 
+                key={index} 
+                variant="secondary" 
+                className="text-xs px-3 py-1 bg-primary/10 text-primary border-primary/20"
+              >
                 {skill}
               </Badge>
             ))}
           </div>
         )}
 
-        {/* Rating & Stats */}
-        <div className="flex items-center gap-4 mb-4 text-secondary">
-          <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-            <span className="font-medium text-foreground">4.9</span>
-            <span>(24)</span>
-          </div>
-          <span>•</span>
-          <span>87 sessions</span>
-        </div>
-
-        {/* Pricing */}
-        <div className="mb-4 p-3 bg-muted/30 rounded-lg">
-          <div className="flex items-center justify-between">
-            <span className="text-secondary">Starting from</span>
-            <span className="font-semibold text-primary">
-              {formatPrice(minPrice)}
-            </span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="space-y-2 mt-auto">
-          <Button
-            onClick={handleViewProfile}
-            variant="outline"
-            className="w-full gap-2 hover:bg-primary/5 border-primary/20"
-            disabled={!helpanion.username}
-          >
-            <Eye className="w-4 h-4" />
-            View Profile
-          </Button>
-          <Button
-            onClick={handleBookSession}
-            className="w-full gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-            disabled={!helpanion.username}
-          >
-            <Calendar className="w-4 h-4" />
-            Book Session
-          </Button>
-        </div>
+        {/* View Profile Link */}
+        <button
+          onClick={handleViewProfile}
+          disabled={!helpanion.username}
+          className="absolute bottom-4 right-4 flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group"
+        >
+          View Profile
+          <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
       </CardContent>
     </Card>
   );
