@@ -50,9 +50,7 @@ const HomePage: React.FC = () => {
         {/* Hero content (centered) */}
         <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
           {/* Headline */}
-          <h1
-            className="text-white font-semibold leading-tight max-w-3xl text-[28px] sm:text-4xl md:text-5xl font-heading"
-          >
+          <h1 className="text-white text-hero max-w-3xl">
             Your trusted companion for every step
           </h1>
 
@@ -60,9 +58,7 @@ const HomePage: React.FC = () => {
           <div className="w-12 border-t-2 border-white my-4" />
 
           {/* Subtext */}
-          <p
-            className="text-white max-w-2xl text-base md:text-lg font-body"
-          >
+          <p className="text-white max-w-2xl text-lg md:text-xl leading-relaxed">
             connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
 
@@ -90,15 +86,15 @@ const HomePage: React.FC = () => {
         <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left column: text */}
           <div className="px-2">
-            <h2 className="text-xl font-heading mb-4">
+            <h2 className="mb-6">
               Walking Beside You, Every Step of the Way
             </h2>
-            <p className="text-base leading-relaxed mb-6 font-body">
+            <p className="mb-6">
               At Walker's Odyssey, we believe every journey is unique. Whether you're taking your first step
               or navigating an unfamiliar path, we're here to walk alongside you — offering guidance,
               inspiration, and a community that celebrates your pace, your way.
             </p>
-            <Link to="/about" className="inline-flex items-center gap-2 text-sm font-medium text-[#444] hover:underline">
+            <Link to="/about" className="inline-flex items-center gap-2 text-secondary hover:underline">
               Our Story →
             </Link>
           </div>
@@ -121,8 +117,8 @@ const HomePage: React.FC = () => {
       <section className="bg-[#2C5F50] text-white py-20">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-2xl md:text-3xl font-semibold mb-3 font-heading">Find your helpanion in 3 steps</h3>
-            <p className="text-white/80 text-lg">Connect with guidance that understands your journey</p>
+            <h3 className="mb-3">Find your helpanion in 3 steps</h3>
+            <p className="text-white/80">Connect with guidance that understands your journey</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

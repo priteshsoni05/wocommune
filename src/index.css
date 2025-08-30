@@ -117,34 +117,71 @@ All colors MUST be HSL.
     line-height: 1.6;
   }
 
-  /* Headings use Cormorant Garamond (serif) */
-  h1, h2, h3, h4, h5, h6 {
+  /* UNIFIED TYPOGRAPHY SYSTEM */
+  
+  /* Logo only uses Cormorant Garamond */
+  .font-logo {
     font-family: 'Cormorant Garamond', ui-serif, Georgia, serif;
   }
 
-  h1 {
-    @apply text-3xl md:text-5xl font-semibold leading-tight;
-  }
-
-  h2 {
-    @apply text-2xl md:text-3xl font-semibold leading-tight;
-  }
-
-  h3 {
-    @apply text-xl md:text-2xl font-semibold leading-tight;
-  }
-
-  h4 {
-    @apply text-lg font-semibold leading-tight;
-  }
-
-  /* Body text and UI elements use Source Sans Pro */
-  p, span, div, button, input, textarea, label {
+  /* Everything else uses Source Sans Pro */
+  *, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
     font-family: 'Source Sans Pro', system-ui, ui-sans-serif, sans-serif;
   }
 
+  /* Header Scale - Premium, minimal sizing with consistent scale */
+  h1 {
+    @apply text-2xl md:text-3xl font-bold leading-tight tracking-tight;
+  }
+
+  h2 {
+    @apply text-xl md:text-2xl font-semibold leading-tight tracking-tight;
+  }
+
+  h3 {
+    @apply text-lg md:text-xl font-semibold leading-tight;
+  }
+
+  h4 {
+    @apply text-base md:text-lg font-semibold leading-tight;
+  }
+
+  h5 {
+    @apply text-base font-semibold leading-tight;
+  }
+
+  h6 {
+    @apply text-sm font-semibold leading-tight uppercase tracking-wide;
+  }
+
+  /* Body Text Scale */
   p {
-    @apply text-sm leading-relaxed;
+    @apply text-base leading-relaxed;
+  }
+
+  /* Supporting/Secondary Text */
+  .text-secondary {
+    @apply text-sm text-muted-foreground leading-relaxed;
+  }
+
+  /* Caption/Footnote Text */
+  .text-caption {
+    @apply text-xs text-muted-foreground leading-normal;
+  }
+
+  /* Button Text */
+  button {
+    @apply font-semibold;
+  }
+
+  /* Large Text (for hero sections, etc.) */
+  .text-hero {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight;
+  }
+
+  /* Display Text (for large featured content) */
+  .text-display {
+    @apply text-2xl md:text-3xl font-bold leading-tight tracking-tight;
   }
 
   /* Refined button sizing */

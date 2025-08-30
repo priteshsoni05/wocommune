@@ -1,28 +1,36 @@
 /* 
-WALKER'S ODYSSEY FONT GUIDELINES
-================================
+WALKER'S ODYSSEY UNIFIED TYPOGRAPHY SYSTEM
+==========================================
 
-Use these Tailwind classes for consistent typography across the site:
+IMPORTANT: Typography is now globally unified in index.css. 
+Only use these classes for specific exceptions:
 
-HEADINGS & BRAND ELEMENTS (Cormorant Garamond - serif)
-- font-heading  -> For all h1, h2, h3, h4, h5, h6 elements
-- font-brand    -> For logo and brand text 
-- font-serif    -> Alternative alias for headings
+LOGO ONLY (Cormorant Garamond - serif)
+- font-logo     -> ONLY for the Walker's Odyssey logo/brand text
 
-BODY TEXT & UI ELEMENTS (Source Sans Pro - sans-serif)  
-- font-body     -> For paragraphs, form inputs, buttons, and general UI text
-- font-sans     -> Default system fallback (already applies font-body)
+EVERYTHING ELSE (Source Sans Pro - sans-serif)
+- Default fonts are automatically applied via CSS
+- Headers: Use h1, h2, h3, h4, h5, h6 tags directly
+- Body: Use p tags and utility classes (text-secondary, text-caption)
+
+TYPOGRAPHY SCALE:
+- text-hero     -> For hero headlines (large, bold)
+- text-display  -> For featured content headlines
+- text-secondary -> For supporting/muted text  
+- text-caption  -> For footnotes/captions (smallest)
 
 EXAMPLES:
-<h1 className="font-heading">Main Title</h1>
-<h2 className="font-heading">Section Header</h2>
-<p className="font-body">Body text content</p>
-<button className="font-body">Button Text</button>
+<div className="font-logo">WALKER'S ODYSSEY</div> <!-- LOGO ONLY -->
+<h1>Main Title</h1> <!-- Auto-styled -->
+<h2>Section Header</h2> <!-- Auto-styled -->
+<p>Body text content</p> <!-- Auto-styled -->
+<p className="text-secondary">Supporting text</p>
+<p className="text-caption">Footnote text</p>
 
 AVOID:
-- Inline style={{ fontFamily: ... }} (use classes instead)
-- font-futura (legacy, deprecated)
-- Direct font names in components
+- font-heading, font-brand, font-body (deprecated)
+- Inline style={{ fontFamily: ... }}
+- Custom font sizing outside the unified scale
 
-The fonts are loaded via Google Fonts in index.html and configured in tailwind.config.ts
+All typography is now globally consistent across every page and component.
 */

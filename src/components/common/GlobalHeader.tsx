@@ -28,8 +28,8 @@ export default function GlobalHeader({
         <div className="flex-1" />
         <Link
           to="/"
-          className="text-sm sm:text-base md:text-lg font-semibold tracking-[0.15em] truncate max-w-[200px] sm:max-w-none"
-          style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+          className="text-sm sm:text-base md:text-lg font-logo font-semibold tracking-[0.15em] truncate max-w-[200px] sm:max-w-none"
+          style={{ color: "#333" }}
           aria-label="Walker's Odyssey home"
         >
           WALKER'S ODYSSEY
