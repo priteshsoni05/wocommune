@@ -72,9 +72,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-foreground font-semibold">Email</Label>
         <Input
           id="email"
           type="email"
@@ -82,11 +82,12 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="Enter your email"
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className="text-foreground font-semibold">Password</Label>
         <Input
           id="password"
           type="password"
@@ -94,20 +95,23 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter your password"
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
       </div>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="text-destructive font-medium">
+            {error}
+          </AlertDescription>
         </Alert>
       )}
 
       <Button
         type="submit"
         disabled={loading}
-        className="w-full"
+        className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Sign In

@@ -217,9 +217,9 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
-        <Label htmlFor="name">Full Name</Label>
+        <Label htmlFor="name" className="text-foreground font-semibold">Full Name</Label>
         <Input
           id="name"
           type="text"
@@ -227,11 +227,12 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
           required
           placeholder="Enter your full name"
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className="text-foreground font-semibold">Email</Label>
         <Input
           id="email"
           type="email"
@@ -239,11 +240,12 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
           required
           placeholder="Enter your email"
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className="text-foreground font-semibold">Password</Label>
         <Input
           id="password"
           type="password"
@@ -252,12 +254,13 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           required
           placeholder="Create a password"
           minLength={6}
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
       </div>
 
       {selectedRole === 'helpanion' && (
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username" className="text-foreground font-semibold">Username</Label>
           <div className="relative">
             <Input
               id="username"
@@ -267,33 +270,35 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               onBlur={handleUsernameBlur}
               required
               placeholder="Choose a unique username"
-              className={usernameError ? 'border-red-500' : ''}
+              className={`h-11 pr-10 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation ${usernameError ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : ''}`}
             />
             {usernameLoading && (
-              <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin" />
+              <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
             )}
           </div>
           {usernameError && (
-            <p className="text-sm text-red-600 flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {usernameError}
+            <p className="text-sm text-destructive flex items-center gap-1.5">
+              <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+              <span>{usernameError}</span>
             </p>
           )}
         </div>
       )}
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription className="text-destructive font-medium">
+            {error}
+          </AlertDescription>
         </Alert>
       )}
 
-      <div className="flex space-x-3">
+      <div className="flex space-x-3 pt-2">
         <Button
           type="submit"
           disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError)}
-          className="flex-1"
+          className="flex-1 h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Create Account
@@ -303,6 +308,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           variant="outline"
           onClick={onCancel}
           disabled={loading}
+          className="px-6 h-11 font-semibold touch-manipulation"
         >
           Cancel
         </Button>

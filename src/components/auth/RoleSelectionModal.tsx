@@ -40,35 +40,35 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader className="space-y-4">
-          <DialogTitle className="text-xl font-semibold text-center">
+      <DialogContent className="sm:max-w-md max-w-[90vw] mx-4">
+        <DialogHeader className="space-y-4 text-center">
+          <DialogTitle className="text-2xl font-serif text-foreground">
             {title}
           </DialogTitle>
-          <p className="text-muted-foreground text-center text-sm">
+          <p className="text-muted-foreground text-sm px-2">
             {description}
           </p>
         </DialogHeader>
         
-        <div className="space-y-3 mt-6">
+        <div className="space-y-3 mt-6 px-2">
           {roles.map((role) => {
             const IconComponent = role.icon;
             return (
               <Card
                 key={role.id}
-                className={`cursor-pointer transition-all duration-200 ${role.color}`}
+                className={`cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${role.color}`}
                 onClick={() => onSelectRole(role.id)}
               >
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 px-4 py-4">
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
                       <IconComponent className="h-6 w-6 text-foreground" />
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-base font-medium">
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-lg font-serif font-semibold text-foreground">
                         {role.name}
                       </CardTitle>
-                      <CardDescription className="text-sm">
+                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">
                         {role.description}
                       </CardDescription>
                     </div>
@@ -79,11 +79,11 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
           })}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 px-2">
           <Button 
             variant="outline" 
             onClick={onClose} 
-            className="w-full"
+            className="w-full touch-manipulation font-semibold"
           >
             Cancel
           </Button>

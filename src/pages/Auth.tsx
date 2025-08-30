@@ -142,13 +142,14 @@ export default function Auth() {
   // If showing signup form for specific role
   if (showSignupForm && selectedRole) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
         <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-          <CardHeader className="text-center space-y-4">
+          <CardHeader className="text-center space-y-4 px-6 py-6">
             <div className="flex items-center justify-center mb-4">
               <button
                 onClick={handleBackToMain}
-                className="text-brand hover:text-brand/80 mr-4"
+                className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1"
+                aria-label="Go back"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
@@ -158,14 +159,14 @@ export default function Auth() {
                 </CardTitle>
               </div>
             </div>
-            <CardDescription className="text-muted-foreground">
+            <CardDescription className="text-muted-foreground leading-relaxed">
               {selectedRole === 'helpanion' 
                 ? 'Share your experiences and guide others' 
                 : 'Seek guidance and connect with helpanions'
               }
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-6 pb-6">
             <SignupForm
               selectedRole={selectedRole}
               onSuccess={handleSignupSuccess}
@@ -178,11 +179,11 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
       <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-        <CardHeader className="text-center space-y-4">
+        <CardHeader className="text-center space-y-4 px-6 py-6">
           <div className="flex items-center justify-center mb-4">
-            <Link to="/" className="text-brand hover:text-brand/80 mr-4">
+            <Link to="/" className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1">
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="flex-1">
@@ -191,18 +192,18 @@ export default function Auth() {
               </CardTitle>
             </div>
           </div>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground leading-relaxed">
             {getMainDescription()}
           </CardDescription>
         </CardHeader>
         
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-6 pb-6">
           {authMode === 'login' ? (
             <>
               {noRoleMessage && (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
+                <Alert className="border-brand/20 bg-brand/5">
+                  <AlertCircle className="h-4 w-4 text-brand" />
+                  <AlertDescription className="text-brand font-medium">
                     {noRoleMessage}
                   </AlertDescription>
                 </Alert>
@@ -216,7 +217,7 @@ export default function Auth() {
               <div className="space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full"
+                  className="w-full h-11 font-semibold touch-manipulation"
                   onClick={() => setShowForgotPassword(true)}
                 >
                   Forgot Password?
@@ -225,7 +226,7 @@ export default function Auth() {
                 {noRoleMessage && (
                   <Button
                     variant="default"
-                    className="w-full"
+                    className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
                     onClick={handleCreateAccount}
                   >
                     Create New Profile
@@ -237,7 +238,7 @@ export default function Auth() {
                 Don't have an account?{' '}
                 <button
                   onClick={handleCreateAccount}
-                  className="text-brand hover:text-brand/80 hover:underline"
+                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
                 >
                   Sign up
                 </button>
@@ -245,7 +246,7 @@ export default function Auth() {
             </>
           ) : (
             <div className="text-center">
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground mb-6 leading-relaxed">
                 Please select your role to continue with signup
               </p>
               <div className="text-center text-sm text-muted-foreground">
@@ -255,7 +256,7 @@ export default function Auth() {
                     setAuthMode('login');
                     setShowRoleSelection(false);
                   }}
-                  className="text-brand hover:text-brand/80 hover:underline"
+                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
                 >
                   Sign in
                 </button>

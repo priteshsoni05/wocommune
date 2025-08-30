@@ -51,27 +51,32 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Reset Password</DialogTitle>
+      <DialogContent className="sm:max-w-md max-w-[90vw] mx-4">
+        <DialogHeader className="text-center">
+          <DialogTitle className="text-xl font-serif text-foreground">
+            Reset Password
+          </DialogTitle>
         </DialogHeader>
         
         {success ? (
-          <div className="space-y-4">
-            <Alert>
-              <CheckCircle className="h-4 w-4" />
-              <AlertDescription>
+          <div className="space-y-4 px-2">
+            <Alert className="border-success/20 bg-success/5">
+              <CheckCircle className="h-4 w-4 text-success" />
+              <AlertDescription className="text-success font-medium">
                 Password reset instructions have been sent to your email address.
               </AlertDescription>
             </Alert>
-            <Button onClick={handleClose} className="w-full">
+            <Button 
+              onClick={handleClose} 
+              className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
+            >
               Close
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5 px-2">
             <div className="space-y-2">
-              <Label htmlFor="reset-email">Email</Label>
+              <Label htmlFor="reset-email" className="text-foreground font-semibold">Email</Label>
               <Input
                 id="reset-email"
                 type="email"
@@ -79,13 +84,16 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="Enter your email address"
+                className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
               />
             </div>
 
             {error && (
-              <Alert variant="destructive">
+              <Alert variant="destructive" className="border-destructive/20 bg-destructive/5">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="text-destructive font-medium">
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
 
@@ -93,7 +101,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1"
+                className="flex-1 h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
               >
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Send Reset Email
@@ -103,6 +111,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 variant="outline"
                 onClick={handleClose}
                 disabled={loading}
+                className="px-6 h-11 font-semibold touch-manipulation"
               >
                 Cancel
               </Button>
