@@ -5,7 +5,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 export default function WOCommuneSlate() {
   return (
     <div className="bg-white border-b border-[#2C5F50] safe-area-x">
-      <div className="max-w-7xl mx-auto pl-2 sm:pl-4 md:pl-6 flex items-center justify-between h-8 md:h-10">
+      <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 flex items-center justify-between h-8 md:h-10">
         {/* Left section - matches logo layout */}
         <div className="flex-1">
           <Link
