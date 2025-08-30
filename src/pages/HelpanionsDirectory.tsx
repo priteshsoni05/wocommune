@@ -1,10 +1,7 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { Search, ChevronDown, ArrowRight } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 import { useHelpanions } from "@/hooks/useHelpanions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/AuthContext";
@@ -13,14 +10,7 @@ import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
 import GlobalHeader from "@/components/common/GlobalHeader";
 import WOCommuneSlate from "@/components/common/WOCommuneSlate";
-
-
-const PINE = "#2C5F50";
-const SOCIALS = [
-  { name: "LinkedIn", href: "https://linkedin.com" },
-  { name: "Instagram", href: "https://instagram.com" },
-  { name: "Twitter", href: "https://twitter.com" },
-];
+import { DirectoryHelpanionCard } from "@/components/helpanion/DirectoryHelpanionCard";
 
 // ------------ Helpers ------------
 const titleCase = (s: string) =>
@@ -57,14 +47,11 @@ export default function HelpanionsDirectory() {
   const { helpanions, loading } = useHelpanions();
   const [searchParams] = useSearchParams();
   const [directorySearchTerm, setDirectorySearchTerm] = useState(searchParams.get("search") || "");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">("newest");
 
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch current user profile
   useEffect(() => {
@@ -201,90 +188,15 @@ export default function HelpanionsDirectory() {
           <div className="text-center py-16 text-gray-600">No helpanions found.</div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {filteredHelpanions.map((h: any) => {
-              const slug = h.username || h.user_id;
-              const minPrice = getMinPrice(h.services);
-
-              return (
-                <Card
-                  key={h.id}
-                  className="border bg-white rounded-2xl hover:shadow-md transition-all duration-200 h-full flex flex-col"
-                >
-                  <CardContent className="p-6 flex flex-col h-full">
-                    {/* Header with avatar and basic info */}
-                    <div className="flex items-start gap-4 mb-4">
-                      <div className="w-16 h-16 rounded-full overflow-hidden bg-neutral-100 flex items-center justify-center flex-shrink-0">
-                        {h.avatar_url ? (
-                          <img
-                            src={h.avatar_url}
-                            alt={h.display_name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="font-semibold text-neutral-600">
-                            {getInitials(h.display_name || "H")}
-                          </span>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-xl truncate mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                          {h.display_name}
-                        </h3>
-                        {minPrice && (
-                          <p className="text-sm font-medium" style={{ color: PINE }}>
-                            From ₹{minPrice}/hr
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Bio section */}
-                    <div className="flex-1 mb-4">
-                      <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                        {h.bio || "Helping through shared experience and practical guidance."}
-                      </p>
-                    </div>
-
-                    {/* Skills/Services count */}
-                    {h.services && h.services.length > 0 && (
-                      <div className="mb-4">
-                        <Badge variant="secondary" className="text-xs">
-                          {h.services.length} service{h.services.length !== 1 ? 's' : ''} available
-                        </Badge>
-                      </div>
-                    )}
-
-                    {/* Action buttons */}
-                    <div className="flex gap-3 mt-auto">
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="flex-1 h-10 rounded-lg border-neutral-300 hover:border-neutral-400"
-                      >
-                        <Link to={`/p/${slug}`}>View Profile</Link>
-                      </Button>
-                      <Button
-                        asChild
-                        className="flex-1 h-10 rounded-lg text-white hover:opacity-90"
-                        style={{ backgroundColor: PINE }}
-                      >
-                        <Link to={`/p/${slug}`}>
-                          Book Now <ArrowRight className="ml-1 h-4 w-4" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {filteredHelpanions.map((helpanion: any) => (
+              <DirectoryHelpanionCard key={helpanion.id} helpanion={helpanion} />
+            ))}
           </div>
         )}
       </div>
 
       <Newsletter />
       <Footer />
-
-      
     </div>
   );
 }
