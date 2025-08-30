@@ -40,14 +40,14 @@ export const EarningsSummary = () => {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">Total Sessions</p>
-            <p className="text-2xl font-light">{totalSessions}</p>
+            <p className="text-secondary">Total Sessions</p>
+            <p className="text-display">{totalSessions}</p>
           </div>
           
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">This Month</p>
+            <p className="text-secondary">This Month</p>
             <div className="flex items-center gap-2">
-              <p className="text-2xl font-light">${thisMonth.toFixed(2)}</p>
+              <p className="text-display">${thisMonth.toFixed(2)}</p>
               <TrendingUp className="h-4 w-4 text-success" />
             </div>
           </div>
@@ -55,12 +55,12 @@ export const EarningsSummary = () => {
         
         <div className="border-t pt-4 space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Total Earned</span>
+            <span className="text-secondary">Total Earned</span>
             <span className="font-medium">${totalPayout.toFixed(2)}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Pending Payout</span>
+            <span className="text-secondary">Pending Payout</span>
             <span className="font-medium text-warning">${pendingPayout.toFixed(2)}</span>
           </div>
         </div>

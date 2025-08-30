@@ -71,7 +71,7 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
                 {config.label}
               </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-secondary">
               {config.description}
             </p>
           </div>
@@ -80,14 +80,14 @@ export const ProfileStatus = ({ status = 'active' }: ProfileStatusProps) => {
         {/* Profile Completion */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Profile Completion</span>
-            <span className="text-sm font-medium">
+            <span className="text-secondary">Profile Completion</span>
+            <span className="font-medium">
               {loading ? "..." : `${stats.profileCompletion}%`}
             </span>
           </div>
           <Progress value={loading ? 0 : stats.profileCompletion} className="h-2" />
           {(!loading && stats.profileCompletion < 100) && (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-caption">
               Complete your profile to attract more bookings
             </p>
           )}

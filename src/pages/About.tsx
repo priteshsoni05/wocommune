@@ -19,16 +19,10 @@ const AboutPage: React.FC = () => {
 
       {/* ------------------------ Hero / Intro ------------------------ */}
       <section className="pt-20 pb-16 text-center max-w-[900px] mx-auto px-4">
-        <h1
-          className="text-3xl sm:text-4xl font-serif mb-6"
-          style={{ fontFamily: "'Cormorant Garamond', serif" }}
-        >
+        <h1 className="font-logo mb-6">
           About Us
         </h1>
-        <p
-          className="text-base text-gray-700 leading-relaxed"
-          style={{ fontFamily: "'Source Sans Pro', sans-serif" }}
-        >
+        <p className="leading-relaxed">
           Walker's Odyssey helps each walker and explorer find a sense of fulfilment in their path,
           whether chosen or still being discovered.
         </p>
@@ -39,20 +33,20 @@ const AboutPage: React.FC = () => {
         <div className="max-w-[1140px] mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mission */}
           <div>
-            <h2 className="text-xl font-serif mb-3" style={{ color: PINE }}>
+            <h3 style={{ color: PINE }}>
               Our Mission
-            </h2>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            </h3>
+            <p className="text-secondary leading-relaxed">
               To equip individuals with our products and services offerings, take their first step
               or continue walking on their unique path.
             </p>
           </div>
           {/* Vision */}
           <div>
-            <h2 className="text-xl font-serif mb-3" style={{ color: PINE }}>
+            <h3 style={{ color: PINE }}>
               Our Vision
-            </h2>
-            <p className="text-sm text-gray-700 leading-relaxed">
+            </h3>
+            <p className="text-secondary leading-relaxed">
               To be the trusted companion empowering and supporting walkers as they navigate their
               unique paths to fulfilment.
             </p>
@@ -63,9 +57,9 @@ const AboutPage: React.FC = () => {
       {/* ------------------------ Our Story ------------------------ */}
       <section className="py-12">
         <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <h2 className="text-xl font-serif mb-4" style={{ color: PINE }}>
+          <h3 style={{ color: PINE }}>
             Our Story
-          </h2>
+          </h3>
           <p className="text-sm text-gray-700 leading-relaxed mb-4">
             In a world where social media often pressures us to rush and compare our lives with
             others, we wanted to create a space where individuals can embrace their own pace, cherish
@@ -111,12 +105,9 @@ const AboutPage: React.FC = () => {
 
       {/* ------------------------ Tagline ------------------------ */}
       <section className="py-12 text-center">
-        <h3
-          className="text-2xl font-serif"
-          style={{ fontFamily: "'Cormorant Garamond', serif", color: GOLD }}
-        >
+        <h2 className="font-logo" style={{ color: GOLD }}>
           Keep Walking
-        </h3>
+        </h2>
       </section>
 
       {/* Newsletter */}

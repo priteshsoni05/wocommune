@@ -21,7 +21,7 @@ export const MyServices = () => {
           <div className="flex items-center justify-center py-8">
             <div className="text-center space-y-2">
               <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p className="text-sm text-muted-foreground">Loading services...</p>
+              <p className="text-secondary">Loading services...</p>
             </div>
           </div>
         </CardContent>
@@ -41,7 +41,7 @@ export const MyServices = () => {
               <Package className="h-5 w-5" />
               My Services
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-secondary mt-1">
               {services.length > 0 ? (
                 <>
                   {services.length} service{services.length === 1 ? '' : 's'} • {activeServices.length} active
@@ -67,7 +67,7 @@ export const MyServices = () => {
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">No services yet</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              <p className="text-secondary max-w-sm mx-auto">
                 Create your first service to start helping others and earning money.
               </p>
             </div>
@@ -82,9 +82,9 @@ export const MyServices = () => {
           <div className="space-y-6">
             {activeServices.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-medium text-sm text-muted-foreground">
+                <h6>
                   Active Services ({activeServices.length})
-                </h3>
+                </h6>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {activeServices.map((service) => (
                     <ServiceCard key={service.id} service={service} />
@@ -95,9 +95,9 @@ export const MyServices = () => {
             
             {inactiveServices.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-medium text-sm text-muted-foreground">
+                <h6>
                   Inactive Services ({inactiveServices.length})
-                </h3>
+                </h6>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {inactiveServices.map((service) => (
                     <ServiceCard key={service.id} service={service} />

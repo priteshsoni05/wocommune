@@ -28,14 +28,14 @@ export const WelcomeHeader = ({ userName }: WelcomeHeaderProps) => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-light text-foreground mb-2">
+          <h1>
             {getGreeting()}, {userName} ✨
           </h1>
-          <p className="text-muted-foreground flex items-center gap-2">
+          <p className="text-secondary flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             {currentDate}
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-secondary mt-1">
             Let's get you helping today
           </p>
         </div>
@@ -57,8 +57,8 @@ export const WelcomeHeader = ({ userName }: WelcomeHeaderProps) => {
                 <Users className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Active Services</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-secondary">Active Services</p>
+                <p className="text-display">
                   {loading ? "..." : stats.activeServices}
                 </p>
               </div>
@@ -73,8 +73,8 @@ export const WelcomeHeader = ({ userName }: WelcomeHeaderProps) => {
                 <Clock className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-secondary">This Week</p>
+                <p className="text-display">
                   {loading ? "..." : stats.thisWeekBookings} sessions
                 </p>
               </div>
@@ -89,8 +89,8 @@ export const WelcomeHeader = ({ userName }: WelcomeHeaderProps) => {
                 <TrendingUp className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">This Month</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-secondary">This Month</p>
+                <p className="text-display">
                   {loading ? "..." : `$${stats.thisMonthEarnings.toFixed(2)}`}
                 </p>
               </div>

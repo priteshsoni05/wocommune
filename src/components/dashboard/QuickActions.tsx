@@ -68,7 +68,7 @@ export const QuickActions = () => {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle>Quick Actions</CardTitle>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-secondary">
           Everything you need at your fingertips
         </p>
       </CardHeader>
@@ -86,8 +86,8 @@ export const QuickActions = () => {
                   >
                     <Icon className="h-5 w-5" />
                     <div className="text-left">
-                      <div className="font-medium text-sm">{action.label}</div>
-                      <div className="text-xs text-muted-foreground">{action.description}</div>
+                      <div className="font-medium">{action.label}</div>
+                      <div className="text-caption">{action.description}</div>
                     </div>
                   </Button>
                 </CreateServiceDialog>
@@ -103,8 +103,8 @@ export const QuickActions = () => {
               >
                 <Icon className="h-5 w-5" />
                 <div className="text-left">
-                  <div className="font-medium text-sm">{action.label}</div>
-                  <div className="text-xs text-muted-foreground">{action.description}</div>
+                  <div className="font-medium">{action.label}</div>
+                  <div className="text-caption">{action.description}</div>
                 </div>
               </Button>
             );

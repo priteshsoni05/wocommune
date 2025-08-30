@@ -342,8 +342,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   return (
     <div className="p-3 sm:p-4 lg:p-8 space-y-4 lg:space-y-6">
       <div className="space-y-1 lg:space-y-2">
-        <h1 className="text-lg sm:text-xl lg:text-3xl font-bold text-foreground">My Profile</h1>
-        <p className="text-sm lg:text-lg text-muted-foreground">
+        <h1>My Profile</h1>
+        <p className="text-secondary">
           Complete your profile to start helping others
         </p>
       </div>
@@ -353,11 +353,11 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm lg:text-base">
+            <CardTitle className="flex items-center gap-2">
               Upload Profile Photo
               {formData.avatar_url && <CheckCircle className="h-4 w-4 lg:h-5 lg:w-5 text-success" />}
             </CardTitle>
-            <CardDescription className="text-xs lg:text-sm">
+            <CardDescription className="text-secondary">
               Add a professional photo to build trust with those you'll help
             </CardDescription>
           </CardHeader>

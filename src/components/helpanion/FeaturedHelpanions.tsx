@@ -101,17 +101,17 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-lg text-foreground truncate">
+              <h3 className="font-semibold text-foreground truncate">
                 {displayName}
               </h3>
               <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />
             </div>
             {helpanion.services && helpanion.services.length > 0 && (
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-secondary mb-2">
                 {helpanion.services[0].category || "Professional Helper"}
               </p>
             )}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-secondary">
               <Clock className="w-4 h-4" />
               <span>Available now</span>
             </div>
@@ -119,7 +119,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
         </div>
 
         {/* Bio */}
-        <p className="text-sm text-muted-foreground mb-4 flex-1 leading-relaxed">
+        <p className="text-secondary mb-4 flex-1 leading-relaxed">
           {truncateText(helpanion.bio)}
         </p>
 
@@ -127,7 +127,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
         {skillsArray.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {skillsArray.map((skill, index) => (
-              <Badge key={index} variant="secondary" className="text-xs px-2 py-1">
+              <Badge key={index} variant="secondary" className="text-caption px-2 py-1">
                 {skill}
               </Badge>
             ))}
@@ -135,7 +135,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
         )}
 
         {/* Rating & Stats */}
-        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-4 mb-4 text-secondary">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             <span className="font-medium text-foreground">4.9</span>
@@ -148,8 +148,8 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
         {/* Pricing */}
         <div className="mb-4 p-3 bg-muted/30 rounded-lg">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Starting from</span>
-            <span className="font-semibold text-primary text-lg">
+            <span className="text-secondary">Starting from</span>
+            <span className="font-semibold text-primary">
               {formatPrice(minPrice)}
             </span>
           </div>
@@ -187,8 +187,8 @@ const FeaturedHelpanions: React.FC<FeaturedHelpanionsProps> = ({ helpanions }) =
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
           <Star className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">No Helpanions Available</h3>
-        <p className="text-muted-foreground">Check back soon for featured helpers!</p>
+        <h3>No Helpanions Available</h3>
+        <p className="text-secondary">Check back soon for featured helpers!</p>
       </div>
     );
   }
