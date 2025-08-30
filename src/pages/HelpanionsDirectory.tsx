@@ -11,6 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
+import GlobalHeader from "@/components/common/GlobalHeader";
+import WOCommuneSlate from "@/components/common/WOCommuneSlate";
 
 
 const PINE = "#2C5F50";
@@ -123,113 +125,24 @@ export default function HelpanionsDirectory() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
-      {/* ===== Main Header ===== */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
-          <Link
-            to="/"
-            className="text-[20px] font-semibold tracking-widest"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
-            aria-label="Walker's Odyssey home"
-          >
-            WALKER'S ODYSSEY
-          </Link>
-          <nav className="text-sm">
-            <ul className="flex items-center gap-4">
-              <li><Link to="/about" className="hover:underline">About</Link></li>
-              <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
-              <li><Link to="#" className="hidden md:inline hover:underline">Shop</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      {/* ===== Global Header (same as home page) ===== */}
+      <GlobalHeader 
+        user={user}
+        displayName={deriveFirstName(profile, user)}
+        avatarContent={{
+          type: profile?.avatar_url ? 'image' : 'initial',
+          value: profile?.avatar_url || getInitials(deriveFirstName(profile, user))
+        }}
+        dashboardPath="/helpanion-dashboard"
+        clearRoleData={() => {}}
+        signOut={signOut}
+        navigate={navigate}
+      />
 
-      <div className="h-16" />
+      {/* ===== WO Commune Slate ===== */}
+      <WOCommuneSlate />
 
-      {/* ===== Sub-header ===== */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
-          <div className="flex items-center gap-3">
-            <Link
-              to="/get-help"
-              className="font-semibold tracking-widest text-[15px]"
-              style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
-            >
-              WO COMMUNE
-            </Link>
-          </div>
-
-          <div className="flex-1 hidden md:flex items-center justify-center">
-            <div className="relative w-full max-w-md">
-              <input
-                type="text"
-                placeholder="Search helpanions..."
-                value={directorySearchTerm}
-                onChange={(e) => setDirectorySearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
-              />
-              <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-            </div>
-          </div>
-
-          {/* Right side: Auth */}
-          {user ? (
-            <div ref={menuRef} className="relative">
-              <button
-                onClick={() => setMenuOpen((v) => !v)}
-                className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-50"
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-              >
-                {/* Avatar */}
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold text-white"
-                  style={{ backgroundColor: PINE }}
-                  aria-hidden
-                >
-                  {(profile?.display_name?.[0] || user?.email?.[0] || "U").toUpperCase()}
-                </div>
-
-                {/* Greeting */}
-                <div className="hidden sm:flex flex-col items-start leading-4">
-                  <span className="text-xs text-gray-500">Hi</span>
-                  <span className="text-sm font-medium">
-                    {deriveFirstName(profile, user)}
-                  </span>
-                </div>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </button>
-
-              {/* Dropdown */}
-              {menuOpen && (
-                <div
-                  role="menu"
-                  className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden z-50"
-                >
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      signOut();
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50"
-                    role="menuitem"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={() => navigate('/auth?mode=login&role=walker')}
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "#fff" }}
-            >
-              Login / Sign Up
-            </button>
-          )}
-        </div>
-      </div>
+      <div className="h-8 md:h-10" />
 
       {/* ===== Hero Section ===== */}
       <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16">
