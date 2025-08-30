@@ -161,12 +161,14 @@ All colors MUST be HSL.
 
   /* Supporting/Secondary Text */
   .text-secondary {
-    @apply text-sm text-muted-foreground leading-relaxed;
+    @apply text-base leading-relaxed;
+    color: hsl(var(--brand));
   }
 
   /* Caption/Footnote Text */
   .text-caption {
-    @apply text-xs text-muted-foreground leading-normal;
+    @apply text-xs leading-normal;
+    color: hsl(var(--brand));
   }
 
   /* Button Text */
