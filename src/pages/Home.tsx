@@ -105,8 +105,8 @@ const HomePage: React.FC = () => {
 
           {/* Right column: portrait image (3:4) */}
           <div className="px-2 flex justify-center md:justify-end">
-            {/* Reduced by ~25% width and height */}
-            <div className="w-[262px] sm:w-[315px] md:w-[390px] lg:w-[412px] h-[525px] rounded-md overflow-hidden shadow-sm">
+            {/* Reversed ratio - now landscape instead of portrait */}
+            <div className="w-[350px] sm:w-[420px] md:w-[520px] lg:w-[550px] h-[262px] sm:h-[315px] md:h-[390px] lg:h-[412px] rounded-md overflow-hidden shadow-sm">
               <img
                 src={ABOUT_IMG}
                 alt="Two people walking on a forest path (symbolic, non-romantic)"
