@@ -134,8 +134,124 @@ const HelpanionDashboard = () => {
     );
   }
 
-  if (!user || !profile) {
+  if (!user) {
     return null;
+  }
+
+  const renderSidebar = () => (
+    <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
+      <div className="p-4 border-b" style={{ borderColor: "#ddd" }}>
+        <h1 className="text-lg font-semibold text-gray-900">WO Commune</h1>
+        <div className="flex items-center justify-between mt-2">
+          <div>
+            <p className="text-sm text-gray-600">
+              Hi {profile?.display_name || "Helpanion"}
+            </p>
+            <p className="text-xs text-gray-500">(Helpanion)</p>
+          </div>
+          {hasRole("walker") && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-600">Walker</span>
+              <Switch
+                checked={false}
+                onCheckedChange={handleRoleToggle}
+                style={{
+                  "--switch-color": PRIMARY_GREEN
+                } as React.CSSProperties}
+              />
+            </div>
+          )}
+        </div>
+        {profile && (
+          <div className="mt-3">
+            <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <span>Profile Progress</span>
+              <span>{profileProgress.completion}%</span>
+            </div>
+            <Progress
+              value={profileProgress.completion}
+              className="h-2"
+              style={{ backgroundColor: "#ddd" }}
+            />
+            {!profileProgress.isComplete && profileProgress.missingFields.length > 0 && (
+              <p className="text-xs text-gray-500 mt-1">
+                Missing: {profileProgress.missingFields.join(", ")}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <nav className="flex-1 p-3">
+        <div className="space-y-1">
+          {navigationTabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                activeTab === tab.key
+                  ? "text-white"
+                  : "text-gray-600 hover:bg-gray-200"
+              )}
+              style={
+                activeTab === tab.key
+                  ? { backgroundColor: PRIMARY_GREEN }
+                  : undefined
+              }
+            >
+              <tab.icon className="h-4 w-4" />
+              <span className="text-sm font-medium">{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-gray-900">WO Commune</h1>
+      <div className="flex gap-2">
+        <Button
+          asChild
+          size="sm"
+          style={{ backgroundColor: "transparent" }}
+          className="hover:bg-gray-200"
+        >
+          <Link to="/" aria-label="Home">
+            <Home className="h-4 w-4 text-gray-700" />
+          </Link>
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleSignOut}
+          className="hover:bg-gray-200"
+        >
+          <LogOut className="h-4 w-4 text-gray-700" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  // Show a basic dashboard even if profile is missing (with create profile prompt)
+  if (!profile && !profileLoading) {
+    return (
+      <DashboardLayout sidebar={renderSidebar()} header={renderHeader()}>
+        <div className="p-3 sm:p-4 lg:p-6 space-y-4">
+          <div className="text-center space-y-4">
+            <h2 className="text-xl font-bold text-foreground">Welcome to WO Commune!</h2>
+            <p className="text-muted-foreground">
+              We're setting up your profile. Please refresh the page if this doesn't load automatically.
+            </p>
+            <Button onClick={() => window.location.reload()} className="mt-4">
+              Refresh Page
+            </Button>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
   }
 
   // Remove the old calculateProfileProgress function - using unified hook now
@@ -265,9 +381,9 @@ const HelpanionDashboard = () => {
           </div>
         );
       case "profile":
-        return (
+        return profile ? (
           <HelpanionProfile profile={profile} updateProfile={updateProfile} />
-        );
+        ) : null;
       case "services":
         return <HelpanionServices profileProgress={profileProgress.completion} isProfileComplete={profileProgress.isComplete} />;
       case "availability":
@@ -277,108 +393,14 @@ const HelpanionDashboard = () => {
       case "reviews":
         return <HelpanionReviews />;
       case "settings":
-        return (
+        return profile ? (
           <HelpanionSettings profile={profile} updateProfile={updateProfile} />
-        );
+        ) : null;
       default:
         return null;
     }
   };
 
-  const renderSidebar = () => (
-    <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
-      <div className="p-4 border-b" style={{ borderColor: "#ddd" }}>
-        <h1 className="text-lg font-semibold text-gray-900">WO Commune</h1>
-        <div className="flex items-center justify-between mt-2">
-          <div>
-            <p className="text-sm text-gray-600">
-              Hi {profile.display_name || "Helpanion"}
-            </p>
-            <p className="text-xs text-gray-500">(Helpanion)</p>
-          </div>
-          {hasRole("walker") && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-600">Walker</span>
-              <Switch
-                checked={false}
-                onCheckedChange={handleRoleToggle}
-                style={{
-                  "--switch-color": PRIMARY_GREEN
-                } as React.CSSProperties}
-              />
-            </div>
-          )}
-        </div>
-        <div className="mt-3">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
-            <span>Profile Progress</span>
-            <span>{profileProgress.completion}%</span>
-          </div>
-          <Progress
-            value={profileProgress.completion}
-            className="h-2"
-            style={{ backgroundColor: "#ddd" }}
-          />
-          {!profileProgress.isComplete && profileProgress.missingFields.length > 0 && (
-            <p className="text-xs text-gray-500 mt-1">
-              Missing: {profileProgress.missingFields.join(", ")}
-            </p>
-          )}
-        </div>
-      </div>
-
-      <nav className="flex-1 p-3">
-        <div className="space-y-1">
-          {navigationTabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
-                activeTab === tab.key
-                  ? "text-white"
-                  : "text-gray-600 hover:bg-gray-200"
-              )}
-              style={
-                activeTab === tab.key
-                  ? { backgroundColor: PRIMARY_GREEN }
-                  : undefined
-              }
-            >
-              <tab.icon className="h-4 w-4" />
-              <span className="text-sm font-medium">{tab.label}</span>
-            </button>
-          ))}
-        </div>
-      </nav>
-    </div>
-  );
-
-  const renderHeader = () => (
-    <div className="flex items-center justify-between">
-      <h1 className="text-xl font-semibold text-gray-900">WO Commune</h1>
-      <div className="flex gap-2">
-        <Button
-          asChild
-          size="sm"
-          style={{ backgroundColor: "transparent" }}
-          className="hover:bg-gray-200"
-        >
-          <Link to="/" aria-label="Home">
-            <Home className="h-4 w-4 text-gray-700" />
-          </Link>
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={handleSignOut}
-          className="hover:bg-gray-200"
-        >
-          <LogOut className="h-4 w-4 text-gray-700" />
-        </Button>
-      </div>
-    </div>
-  );
 
   return (
     <>
