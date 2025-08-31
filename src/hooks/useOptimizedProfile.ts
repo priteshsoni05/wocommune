@@ -54,11 +54,36 @@ export const useOptimizedProfile = () => {
         .from('profiles')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching profile:', error);
         setProfile(null);
+      } else if (!data) {
+        // No profile exists, create one
+        console.log('No profile found, creating one for user:', user.id);
+        const newProfile = {
+          user_id: user.id,
+          display_name: user.user_metadata?.display_name || user.user_metadata?.name || null,
+          email: user.email || null,
+          status: 'pending' as const,
+          last_active_role: 'helpanion'
+        };
+
+        const { data: createdProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert(newProfile)
+          .select()
+          .single();
+
+        if (createError) {
+          console.error('Error creating profile:', createError);
+          setProfile(null);
+        } else {
+          profileCache = createdProfile as Profile;
+          lastFetchTime = now;
+          setProfile(profileCache);
+        }
       } else {
         profileCache = data as Profile;
         lastFetchTime = now;
