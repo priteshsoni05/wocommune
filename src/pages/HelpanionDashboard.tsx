@@ -138,6 +138,43 @@ const HelpanionDashboard = () => {
     return null;
   }
 
+  // Define all handler functions first
+  const handleSignOut = async () => {
+    // Clear role data and sign out
+    clearRoleData();
+    await signOut();
+    navigate("/wo-commune");
+  };
+
+  const handleRoleToggle = (checked: boolean) => {
+    if (checked) {
+      if (hasRole("walker")) {
+        navigate(`/walker/${user?.id}`);
+      } else {
+        setShowWalkerModal(true);
+      }
+    }
+  };
+
+  const handleBecomeWalker = async () => {
+    const result = await addRole("walker");
+    if (result?.error) {
+      toast({
+        title: "Error",
+        description: "Failed to add Walker role. Please try again.",
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Welcome to Walkers!",
+        description: "You can now seek help from Helpanions."
+      });
+      setShowWalkerModal(false);
+      navigate(`/walker/${user?.id}`);
+    }
+  };
+
+  // Define render functions after handlers
   const renderSidebar = () => (
     <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
       <div className="p-4 border-b" style={{ borderColor: "#ddd" }}>
@@ -256,40 +293,6 @@ const HelpanionDashboard = () => {
 
   // Remove the old calculateProfileProgress function - using unified hook now
 
-  const handleSignOut = async () => {
-    // Clear role data and sign out
-    clearRoleData();
-    await signOut();
-    navigate("/wo-commune");
-  };
-
-  const handleRoleToggle = (checked: boolean) => {
-    if (checked) {
-      if (hasRole("walker")) {
-        navigate(`/walker/${user?.id}`);
-      } else {
-        setShowWalkerModal(true);
-      }
-    }
-  };
-
-  const handleBecomeWalker = async () => {
-    const result = await addRole("walker");
-    if (result?.error) {
-      toast({
-        title: "Error",
-        description: "Failed to add Walker role. Please try again.",
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Welcome to Walkers!",
-        description: "You can now seek help from Helpanions."
-      });
-      setShowWalkerModal(false);
-      navigate(`/walker/${user?.id}`);
-    }
-  };
 
   const renderContent = () => {
     switch (activeTab) {
