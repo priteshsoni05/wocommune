@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { HelpanionHome } from "@/components/helpanion/HelpanionHome";
+// HelpanionHome component is defined inline now
 import { HelpanionProfile } from "@/components/helpanion/HelpanionProfile";
 import { HelpanionServices } from "@/components/helpanion/HelpanionServices";
 import { HelpanionAvailability } from "@/components/helpanion/HelpanionAvailability";
@@ -179,13 +179,90 @@ const HelpanionDashboard = () => {
     switch (activeTab) {
       case "home":
         return (
-          <HelpanionHome
-            profile={profile}
-            profileProgress={profileProgress.completion}
-            onNavigateToProfile={() => setActiveTab("profile")}
-            onNavigateToServices={() => setActiveTab("services")}
-            onNavigateToAvailability={() => setActiveTab("availability")}
-          />
+          <div className="p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-5">
+            {/* Welcome Header */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
+                    Hi {profile.display_name?.split(' ')[0] || 'Helpanion'} 👋
+                  </h1>
+                  <p className="text-sm lg:text-base text-muted-foreground">
+                    Welcome to your Helpanion dashboard
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Progress Card */}
+            <div className="border border-primary/20 bg-primary/5 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="text-sm lg:text-base font-semibold">Profile Progress</h3>
+                  <p className="text-xs lg:text-sm text-muted-foreground">
+                    Complete your profile to start offering help
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-lg lg:text-xl font-bold text-primary">{profileProgress.completion}%</span>
+                  <p className="text-xs text-muted-foreground">Complete</p>
+                </div>
+              </div>
+              <Progress value={profileProgress.completion} className="h-1.5 lg:h-2" />
+              <div className="mt-4">
+                {profileProgress.completion < 80 ? (
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <p className="text-xs lg:text-sm text-muted-foreground">
+                      Complete your profile to start offering help to the community
+                    </p>
+                    <Button onClick={() => setActiveTab("profile")} size="sm" className="w-full sm:w-auto text-xs h-8">
+                      Complete Profile
+                      <ChevronRight className="ml-2 h-3 w-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-green-600">
+                    <span className="text-sm font-medium">
+                      Your profile is ready! You can now start offering help.
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("profile")}>
+                <div className="flex items-center gap-3">
+                  <User className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Update Profile</h3>
+                    <p className="text-sm text-muted-foreground">Manage your profile information</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("services")}>
+                <div className="flex items-center gap-3">
+                  <Lightbulb className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Create Services</h3>
+                    <p className="text-sm text-muted-foreground">Offer your expertise</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("availability")}>
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Set Availability</h3>
+                    <p className="text-sm text-muted-foreground">Manage your schedule</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         );
       case "profile":
         return (
