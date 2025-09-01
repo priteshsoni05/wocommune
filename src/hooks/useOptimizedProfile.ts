@@ -60,14 +60,8 @@ export const useOptimizedProfile = () => {
         console.error('Error fetching profile:', error);
         setProfile(null);
       } else if (!data) {
-        // Profile should be created by the database trigger, but let's wait a moment and retry
-        console.log('No profile found, waiting for automatic creation...');
-        
-        // Wait a moment for the trigger to complete and then retry
-        setTimeout(() => {
-          fetchProfile(true);
-        }, 1000);
-        
+        // Profile should be created by the database trigger
+        console.log('No profile found for user:', user.id);
         setProfile(null);
       } else {
         profileCache = data as Profile;
