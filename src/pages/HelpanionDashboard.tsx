@@ -273,6 +273,11 @@ const HelpanionDashboard = () => {
   );
 
 
+  // Don't render dashboard if profile is not loaded
+  if (!profile) {
+    return null;
+  }
+
   // Remove the old calculateProfileProgress function - using unified hook now
 
 
