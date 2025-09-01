@@ -272,24 +272,6 @@ const HelpanionDashboard = () => {
     </div>
   );
 
-  // Show a basic dashboard even if profile is missing (with create profile prompt)
-  if (!profile && !profileLoading) {
-    return (
-      <DashboardLayout sidebar={renderSidebar()} header={renderHeader()}>
-        <div className="p-3 sm:p-4 lg:p-6 space-y-4">
-          <div className="text-center space-y-4">
-            <h2 className="text-xl font-bold text-foreground">Welcome to WO Commune!</h2>
-            <p className="text-muted-foreground">
-              We're setting up your profile. Please refresh the page if this doesn't load automatically.
-            </p>
-            <Button onClick={() => window.location.reload()} className="mt-4">
-              Refresh Page
-            </Button>
-          </div>
-        </div>
-      </DashboardLayout>
-    );
-  }
 
   // Remove the old calculateProfileProgress function - using unified hook now
 
