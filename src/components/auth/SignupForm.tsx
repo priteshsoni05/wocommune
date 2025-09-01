@@ -135,15 +135,26 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           // Get current user and add role
           const { data: { user } } = await supabase.auth.getUser();
           if (user) {
-            const { error: roleError } = await supabase
+            // Check if user already has this role
+            const { data: existingRole } = await supabase
               .from('user_roles')
-              .insert({ user_id: user.id, role: selectedRole });
+              .select('id')
+              .eq('user_id', user.id)
+              .eq('role', selectedRole)
+              .single();
 
-            if (roleError) {
-              console.error('Error adding role:', roleError);
-              setError('Error adding role to your account');
-              setLoading(false);
-              return;
+            if (!existingRole) {
+              // Add role to existing user only if they don't have it
+              const { error: roleError } = await supabase
+                .from('user_roles')
+                .insert({ user_id: user.id, role: selectedRole });
+
+              if (roleError) {
+                console.error('Error adding role:', roleError);
+                setError('Error adding role to your account');
+                setLoading(false);
+                return;
+              }
             }
 
             // Update profile for Helpanions
