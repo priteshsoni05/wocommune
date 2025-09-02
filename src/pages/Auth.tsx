@@ -240,19 +240,19 @@ export default function Auth() {
           <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
             
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-12 text-foreground">
+            <h1 className="text-lg md:text-xl font-medium mb-6 text-foreground tracking-wide">
               JOIN WO COMMUNE AS
             </h1>
             
             {/* Divider */}
-            <div className="w-12 border-t-2 border-foreground mx-auto mb-12" />
+            <div className="w-12 border-t border-foreground mx-auto mb-8" />
             
             {/* Role Selection Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center max-w-xs mx-auto">
               {/* Walker Button */}
               <Button 
                 onClick={() => handleRoleSelection('walker')}
-                className="w-full sm:w-32 h-12 rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium"
+                className="w-full sm:w-28 h-10 rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium text-sm"
               >
                 Walker
               </Button>
@@ -260,7 +260,7 @@ export default function Auth() {
               {/* Helpanion Button */}
               <Button 
                 onClick={() => handleRoleSelection('helpanion')}
-                className="w-full sm:w-32 h-12 rounded-full font-medium"
+                className="w-full sm:w-28 h-10 rounded-full font-medium text-sm"
                 style={{ backgroundColor: PINE, color: "white" }}
               >
                 Helpanion
