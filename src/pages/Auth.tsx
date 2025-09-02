@@ -232,79 +232,44 @@ export default function Auth() {
   // Signup Flow - Step 1: Role Selection
   if (mode === 'signup' && !selectedRole) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+      <div className="min-h-screen bg-background text-foreground">
         <GlobalHeader />
         
-        {/* Hero-style section for role selection */}
-        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
-          <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
-          
-          <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
-            {/* Hero content */}
-            <h1 className="text-white text-hero max-w-3xl mb-4">
-              Choose Your Path
+        {/* Clean role selection section */}
+        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10 flex items-center justify-center">
+          <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
+            
+            {/* Title */}
+            <h1 className="text-4xl md:text-5xl font-bold mb-12 text-foreground">
+              JOIN WO COMMUNE AS
             </h1>
             
             {/* Divider */}
-            <div className="w-12 border-t-2 border-white my-4" />
+            <div className="w-12 border-t-2 border-foreground mx-auto mb-12" />
             
-            {/* Subtitle */}
-            <p className="text-white max-w-2xl text-lg md:text-xl leading-relaxed mb-12">
-              Join our community as a Walker seeking guidance or a Helpanion ready to support others
-            </p>
-            
-            {/* Role Selection Cards */}
-            <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
-              {/* Walker Card */}
-              <Card 
-                className="p-8 text-center hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+            {/* Role Selection Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
+              {/* Walker Button */}
+              <Button 
                 onClick={() => handleRoleSelection('walker')}
+                className="w-full sm:w-32 h-12 rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium"
               >
-                <CardContent className="space-y-6">
-                  <div className="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center mx-auto">
-                    <User className="w-10 h-10 text-brand" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-brand">I'm a Walker</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Seeking guidance, support, and connection on my journey. 
-                    Ready to find a helpanion who understands my path.
-                  </p>
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
-                  >
-                    Continue as Walker
-                  </Button>
-                </CardContent>
-              </Card>
+                Walker
+              </Button>
 
-              {/* Helpanion Card */}
-              <Card 
-                className="p-8 text-center hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+              {/* Helpanion Button */}
+              <Button 
                 onClick={() => handleRoleSelection('helpanion')}
+                className="w-full sm:w-32 h-12 rounded-full font-medium"
+                style={{ backgroundColor: PINE, color: "white" }}
               >
-                <CardContent className="space-y-6">
-                  <div className="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center mx-auto">
-                    <Heart className="w-10 h-10 text-brand" />
-                  </div>
-                  <h3 className="text-2xl font-semibold text-brand">I'm a Helpanion</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    Ready to share my experience and support others on their journey. 
-                    I want to help walkers find their way.
-                  </p>
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
-                  >
-                    Continue as Helpanion
-                  </Button>
-                </CardContent>
-              </Card>
+                Helpanion
+              </Button>
             </div>
             
             {/* Back to login */}
-            <div className="mt-8">
-              <Link to="/auth?mode=login" className="text-white/80 hover:text-white">
+            <div className="mt-12">
+              <Link to="/auth?mode=login" className="text-muted-foreground hover:text-foreground text-sm">
                 Already have an account? Sign in
               </Link>
             </div>
