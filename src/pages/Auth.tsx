@@ -283,64 +283,63 @@ export default function Auth() {
 
   // Signup Flow - Step 2: Form
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+    <div className="min-h-screen bg-background text-foreground">
       <GlobalHeader />
       
-      {/* Hero-style background for signup form */}
-      <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
-        <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
-        
-        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center">
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-            {/* Header with role info */}
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center mb-4">
-                <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mr-3">
-                  {selectedRole === 'walker' ? (
-                    <User className="w-6 h-6 text-brand" />
-                  ) : (
-                    <Heart className="w-6 h-6 text-brand" />
-                  )}
-                </div>
-                <h1 className="text-2xl font-bold" style={{ color: PINE }}>
-                  Join as {selectedRole === 'walker' ? 'Walker' : 'Helpanion'}
-                </h1>
-              </div>
-              <p className="text-gray-600">
-                {selectedRole === 'walker' 
-                  ? 'Create your account to find guidance and support'
-                  : 'Create your account to help and guide others'
-                }
-              </p>
+      {/* Clean minimal form section */}
+      <section className="relative w-full min-h-[85vh] mt-8 md:mt-10 flex items-center justify-center">
+        <div className="max-w-md mx-auto px-4 md:px-8 w-full">
+          
+          {/* Role indicator */}
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              {selectedRole === 'walker' ? (
+                <User className="w-8 h-8 text-muted-foreground" />
+              ) : (
+                <Heart className="w-8 h-8 text-muted-foreground" />
+              )}
             </div>
-            
-            {/* Back button */}
-            <Button
-              variant="ghost"
-              onClick={handleBackToRoleSelection}
-              className="mb-4 p-0 h-auto text-gray-600 hover:text-gray-800"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Change role
-            </Button>
-            
-            {/* Signup Form */}
-            <form onSubmit={handleSignup} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="displayName">Display Name</Label>
+            <h1 className="text-xl font-medium text-foreground mb-2">
+              {selectedRole === 'walker' ? 'Join as Walker' : 'Join as Helpanion'}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Create your account to get started
+            </p>
+          </div>
+          
+          {/* Back button */}
+          <Button
+            variant="ghost"
+            onClick={handleBackToRoleSelection}
+            className="mb-6 p-0 h-auto text-muted-foreground hover:text-foreground text-sm"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to role selection
+          </Button>
+          
+          {/* Clean signup form */}
+          <form onSubmit={handleSignup} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="displayName" className="text-sm font-medium text-foreground">
+                  Display Name
+                </Label>
                 <Input
                   id="displayName"
                   name="displayName"
                   type="text"
                   value={formData.displayName}
                   onChange={handleInputChange}
-                  placeholder="How should we call you?"
+                  placeholder="Enter your display name"
+                  className="mt-1 h-11 border-border focus:border-foreground"
                   required
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   name="email"
@@ -348,25 +347,31 @@ export default function Auth() {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter your email"
+                  className="mt-1 h-11 border-border focus:border-foreground"
                   required
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div>
+                <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                  Password
+                </Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
+                  className="mt-1 h-11 border-border focus:border-foreground"
                   required
                 />
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div>
+                <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
+                  Confirm Password
+                </Label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -374,35 +379,36 @@ export default function Auth() {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="Confirm your password"
+                  className="mt-1 h-11 border-border focus:border-foreground"
                   required
                 />
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full"
-                style={{ backgroundColor: PINE, color: "white" }}
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating Account...
-                  </>
-                ) : (
-                  'Create Account'
-                )}
-              </Button>
-            </form>
-            
-            <div className="text-center text-sm mt-6">
-              <p>
-                Already have an account?{' '}
-                <Link to="/auth?mode=login" className="hover:underline" style={{ color: PINE }}>
-                  Sign in
-                </Link>
-              </p>
             </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full h-11 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-md"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </Button>
+          </form>
+          
+          {/* Sign in link */}
+          <div className="text-center mt-6">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link to="/auth?mode=login" className="text-foreground hover:underline font-medium">
+                Sign in
+              </Link>
+            </p>
           </div>
         </div>
       </section>
