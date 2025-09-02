@@ -7,13 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function WOCommune() {
+  console.log('WOCommune page is rendering');
   return (
     <div className="min-h-screen bg-background">
       {/* Global Header */}
       <GlobalHeader />
       
       {/* WO Commune Slate Header */}
-      <WOCommuneSlate />
+      <div className="mt-8 md:mt-10">
+        <WOCommuneSlate />
+      </div>
       
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 max-w-4xl">
