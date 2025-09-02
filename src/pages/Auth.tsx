@@ -1,94 +1,131 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import GlobalHeader from '@/components/common/GlobalHeader';
-import { Footer } from '@/components/common/Footer';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { toast } from 'sonner';
-import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import GlobalHeader from '@/components/common/GlobalHeader';
+import { Footer } from '@/components/common/Footer';
+import { Loader2, User, Heart } from 'lucide-react';
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const mode = searchParams.get('mode') || 'signin';
+  const { toast } = useToast();
+  const mode = searchParams.get('mode') || 'login';
   
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'walker' | 'helpanion'>('walker');
   const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<'walker' | 'helpanion'>('walker');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    displayName: '',
+    confirmPassword: ''
+  });
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-    
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
-    
     setLoading(true);
-    
+
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: {
-            display_name: displayName,
-            selected_role: selectedRole
-          }
-        }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
       });
 
-      if (error) {
-        toast.error(error.message);
-        return;
-      }
+      if (error) throw error;
 
-      if (data.user) {
-        toast.success('Account created! Please check your email to verify your account.');
-        // Navigate to WO Commune after successful signup
-        navigate('/wo-commune');
-      }
-    } catch (error) {
-      toast.error('An unexpected error occurred');
+      toast({
+        title: "Welcome back!",
+        description: "You have been successfully logged in.",
+      });
+
+      navigate('/wo-commune');
+    } catch (error: any) {
+      toast({
+        title: "Login failed",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password mismatch",
+        description: "Passwords do not match. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const redirectUrl = `${window.location.origin}/wo-commune`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            display_name: formData.displayName,
+            initial_role: selectedRole
+          }
+        }
       });
 
-      if (error) {
-        toast.error(error.message);
-        return;
+      if (error) throw error;
+
+      if (data.user) {
+        // Insert the selected role for the new user
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: data.user.id,
+            role: selectedRole
+          });
+
+        if (roleError) {
+          console.error('Error adding role:', roleError);
+        }
       }
 
-      toast.success('Welcome back!');
-      navigate('/wo-commune');
-    } catch (error) {
-      toast.error('An unexpected error occurred');
+      toast({
+        title: "Account created!",
+        description: "Please check your email to verify your account.",
+      });
+
+      // Clear form
+      setFormData({
+        email: '',
+        password: '',
+        displayName: '',
+        confirmPassword: ''
+      });
+    } catch (error: any) {
+      toast({
+        title: "Signup failed",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -106,7 +143,7 @@ export default function Auth() {
             </CardTitle>
             <p className="text-muted-foreground">
               {mode === 'signup' 
-                ? 'Choose your role and create your account' 
+                ? 'Connect with walkers and helpanions' 
                 : 'Sign in to your account'
               }
             </p>
@@ -114,156 +151,149 @@ export default function Auth() {
           
           <CardContent className="space-y-6">
             {mode === 'signup' && (
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">Choose Your Role</Label>
-                <Tabs value={selectedRole} onValueChange={(value) => setSelectedRole(value as 'walker' | 'helpanion')}>
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="walker" className="flex items-center gap-2">
-                      <span>🚶</span>
-                      Walker
-                    </TabsTrigger>
-                    <TabsTrigger value="helpanion" className="flex items-center gap-2">
-                      <span>🤝</span>
-                      Helpanion
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="walker" className="mt-4">
-                    <div className="text-center p-4 bg-muted/50 rounded-lg">
-                      <h3 className="font-semibold text-brand mb-2">I'm a Walker</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Seeking guidance, support, and connection on my journey. 
-                        Ready to find a helpanion who understands my path.
-                      </p>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="helpanion" className="mt-4">
-                    <div className="text-center p-4 bg-muted/50 rounded-lg">
-                      <h3 className="font-semibold text-brand mb-2">I'm a Helpanion</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Ready to share my experience and support others on their journey. 
-                        I want to help walkers find their way.
-                      </p>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
+              <>
+                {/* Role Selection */}
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium">Choose your role</Label>
+                  <Tabs value={selectedRole} onValueChange={(value) => setSelectedRole(value as 'walker' | 'helpanion')}>
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="walker">
+                        <User className="w-4 h-4 mr-2" />
+                        Walker
+                      </TabsTrigger>
+                      <TabsTrigger value="helpanion">
+                        <Heart className="w-4 h-4 mr-2" />
+                        Helpanion
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="walker" className="mt-4">
+                      <div className="p-4 bg-brand/5 rounded-lg text-center">
+                        <User className="w-8 h-8 mx-auto mb-2 text-brand" />
+                        <h4 className="font-semibold text-brand">I'm a Walker</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Seeking guidance and support on my journey
+                        </p>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="helpanion" className="mt-4">
+                      <div className="p-4 bg-brand/5 rounded-lg text-center">
+                        <Heart className="w-8 h-8 mx-auto mb-2 text-brand" />
+                        <h4 className="font-semibold text-brand">I'm a Helpanion</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Ready to help and guide others on their path
+                        </p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+                
+                <Separator />
+              </>
             )}
-
-            <form onSubmit={mode === 'signup' ? handleSignUp : handleSignIn} className="space-y-4">
+            
+            {/* Auth Form */}
+            <form onSubmit={mode === 'signup' ? handleSignup : handleLogin} className="space-y-4">
               {mode === 'signup' && (
                 <div className="space-y-2">
                   <Label htmlFor="displayName">Display Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="displayName"
-                      type="text"
-                      placeholder="Enter your display name"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      className="pl-10"
-                      required
-                    />
-                  </div>
+                  <Input
+                    id="displayName"
+                    name="displayName"
+                    type="text"
+                    value={formData.displayName}
+                    onChange={handleInputChange}
+                    placeholder="How should we call you?"
+                    required
+                  />
                 </div>
               )}
-
+              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                  required
+                />
               </div>
-
+              
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Enter your password"
+                  required
+                />
               </div>
-
+              
               {mode === 'signup' && (
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirm your password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Confirm your password"
+                    required
+                  />
                 </div>
               )}
-
+              
               <Button 
                 type="submit" 
                 className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
                 disabled={loading}
               >
-                {loading ? 'Please wait...' : (mode === 'signup' ? 'Create Account' : 'Sign In')}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {mode === 'signup' ? 'Creating Account...' : 'Signing In...'}
+                  </>
+                ) : (
+                  mode === 'signup' ? 'Create Account' : 'Sign In'
+                )}
               </Button>
             </form>
-
+            
             <div className="text-center text-sm">
               {mode === 'signup' ? (
-                <>
+                <p>
                   Already have an account?{' '}
-                  <Link to="/auth?mode=signin" className="text-brand hover:underline">
+                  <Link to="/auth?mode=login" className="text-brand hover:underline">
                     Sign in
                   </Link>
-                </>
+                </p>
               ) : (
-                <>
+                <p>
                   Don't have an account?{' '}
                   <Link to="/auth?mode=signup" className="text-brand hover:underline">
                     Sign up
                   </Link>
-                </>
+                </p>
               )}
+            </div>
+            
+            <div className="text-center">
+              <Link to="/" className="text-sm text-muted-foreground hover:text-brand">
+                ← Back to Home
+              </Link>
             </div>
           </CardContent>
         </Card>
       </div>
-
+      
       <Footer />
     </div>
   );

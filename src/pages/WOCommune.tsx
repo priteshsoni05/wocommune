@@ -45,7 +45,7 @@ export default function WOCommune() {
                 Seeking guidance, support, and connection on my journey. 
                 Ready to find a helpanion who understands my path.
               </p>
-              <Link to="/auth">
+              <Link to="/auth?mode=signup">
                 <Button size="lg" className="w-full bg-brand hover:bg-brand/90 text-brand-foreground">
                   Find a Helpanion
                 </Button>
@@ -64,7 +64,7 @@ export default function WOCommune() {
                 Ready to share my experience and support others on their journey. 
                 I want to help walkers find their way.
               </p>
-              <Link to="/auth">
+              <Link to="/auth?mode=signup">
                 <Button size="lg" className="w-full bg-brand hover:bg-brand/90 text-brand-foreground">
                   Become a Helpanion
                 </Button>
@@ -114,12 +114,12 @@ export default function WOCommune() {
             Join thousands of walkers and helpanions who have found their path through community.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <Button size="lg" variant="outline" className="border-brand text-brand hover:bg-brand hover:text-brand-foreground">
                 I Need Guidance
               </Button>
             </Link>
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <Button size="lg" className="bg-brand hover:bg-brand/90 text-brand-foreground">
                 I Want to Help
               </Button>
