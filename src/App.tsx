@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import WOCommune from "./pages/WOCommune";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/wo-commune" element={<WOCommune />} />
+          <Route path="/auth" element={<Auth />} />
           
           {/* Keep catch-all at the end */}
           <Route path="*" element={<NotFound />} />
