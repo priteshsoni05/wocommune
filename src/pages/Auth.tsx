@@ -136,7 +136,7 @@ export default function Auth() {
 
       // Redirect to appropriate dashboard based on role
       if (selectedRole === 'helpanion' && formData.username) {
-        navigate(`/helpanion-${formData.username}-dashboard`);
+        navigate(`/helpanion/${formData.username}/dashboard`);
       } else {
         navigate('/wo-commune');
       }

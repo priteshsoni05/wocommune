@@ -48,6 +48,7 @@ export default function HelpanionDashboard() {
     activeServices: 0
   });
   const [currentUser, setCurrentUser] = useState<any>(null);
+  console.log('HelpanionDashboard: username from params:', username);
 
   useEffect(() => {
     checkAuth();
