@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { Instagram, Linkedin } from 'lucide-react';
 
 export default function WOCommuneSlate() {
-  console.log('WOCommuneSlate is rendering');
   return (
-    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", minHeight: "40px" }}>
+    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 flex items-center justify-between h-8 md:h-10">
         {/* Left section - matches logo layout */}
         <div className="flex-1">

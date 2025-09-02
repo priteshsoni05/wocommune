@@ -1,368 +1,461 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import GlobalHeader from '@/components/common/GlobalHeader';
-import { Footer } from '@/components/common/Footer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  User, 
-  Heart, 
-  Calendar, 
-  DollarSign, 
-  Star, 
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
+import { useUserRoles } from "@/hooks/useUserRoles";
+import { useServices } from "@/hooks/useServices";
+import { useBookings } from "@/hooks/useBookings";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
+import { useProfileProgress } from "@/hooks/useProfileProgress";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Home,
+  User,
+  Lightbulb,
+  Calendar,
+  BookOpen,
+  Star,
   Settings,
-  Plus,
-  Users,
-  BarChart3
-} from 'lucide-react';
+  ChevronRight,
+  LogOut
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+// HelpanionHome component is defined inline now
+import { HelpanionProfile } from "@/components/helpanion/HelpanionProfile";
+import { HelpanionServices } from "@/components/helpanion/HelpanionServices";
+import { HelpanionAvailability } from "@/components/helpanion/HelpanionAvailability";
+import { HelpanionBookings } from "@/components/helpanion/HelpanionBookings";
+import { HelpanionReviews } from "@/components/helpanion/HelpanionReviews";
+import { HelpanionSettings } from "@/components/helpanion/HelpanionSettings";
 
-interface Profile {
-  user_id: string;
-  display_name: string;
-  username: string;
-  bio: string;
-  avatar_url: string;
-}
+type TabKey =
+  | "home"
+  | "profile"
+  | "services"
+  | "availability"
+  | "bookings"
+  | "reviews"
+  | "settings";
 
-interface DashboardStats {
-  totalBookings: number;
-  totalEarnings: number;
-  averageRating: number;
-  activeServices: number;
-}
+const PRIMARY_GREEN = "#193232";
+const BG_NEUTRAL = "#FAF9F6";
 
-export default function HelpanionDashboard() {
-  const { username } = useParams<{ username: string }>();
+const navigationTabs = [
+  { key: "home" as TabKey, label: "Home", icon: Home },
+  { key: "profile" as TabKey, label: "My Profile", icon: User },
+  { key: "services" as TabKey, label: "Create Service", icon: Lightbulb },
+  { key: "availability" as TabKey, label: "Availability", icon: Calendar },
+  { key: "bookings" as TabKey, label: "Bookings", icon: BookOpen },
+  { key: "reviews" as TabKey, label: "Reviews", icon: Star },
+  { key: "settings" as TabKey, label: "Settings", icon: Settings }
+];
+
+const HelpanionDashboard = () => {
+  const { user, loading: authLoading, signOut } = useAuth();
+  const { profile, loading: profileLoading, updateProfile } = useProfile();
+  const { hasRole, addRole } = useUserRoles();
+  const { services } = useServices();
+  const { bookings } = useBookings();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { userId } = useParams();
   
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalBookings: 0,
-    totalEarnings: 0,
-    averageRating: 0,
-    activeServices: 0
+  // Role persistence
+  const { setActiveRole, clearRoleData, handleCorruptedData } = useRolePersistence();
+  
+  // Use the unified profile progress hook
+  const profileProgress = useProfileProgress(profile);
+
+  const [activeTab, setActiveTab] = useState<TabKey>("home");
+  const [showWalkerModal, setShowWalkerModal] = useState(false);
+  const [walkerFormData, setWalkerFormData] = useState({
+    fullName: "",
+    email: ""
   });
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  console.log('HelpanionDashboard: username from params:', username);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (username && currentUser) {
-      fetchProfile();
-      fetchStats();
-    }
-  }, [username, currentUser]);
-
-  const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      navigate('/auth?mode=login');
+    if (!authLoading && !user) {
+      navigate("/auth");
       return;
     }
     
-    setCurrentUser(session.user);
-  };
+    // Check if user is accessing their own dashboard
+    if (user && userId && user.id !== userId) {
+      navigate("/auth");
+      return;
+    }
+  }, [user, authLoading, navigate, userId]);
 
-  const fetchProfile = async () => {
-    try {
-      console.log('Fetching profile for username:', username);
+  useEffect(() => {
+    if (profile && user) {
+      // Set active role in storage for persistence
+      const success = setActiveRole('helpanion');
+      if (!success) {
+        console.error('Failed to set role');
+        handleCorruptedData();
+      }
       
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('username', username)
-        .maybeSingle();
-
-      console.log('Profile query result:', { data, error });
-
-      if (error) {
-        console.error('Profile fetch error:', error);
-        throw error;
-      }
-
-      if (!data) {
-        console.log('No profile found for username:', username);
-        toast({
-          title: "Profile not found",
-          description: "This helpanion profile doesn't exist.",
-          variant: "destructive",
-        });
-        navigate('/');
-        return;
-      }
-
-      // Check if current user owns this profile
-      if (currentUser && data.user_id !== currentUser.id) {
-        console.log('Access denied - user does not own this profile');
-        toast({
-          title: "Access denied", 
-          description: "You can only access your own dashboard.",
-          variant: "destructive",
-        });
-        navigate('/');
-        return;
-      }
-
-      console.log('Profile loaded successfully:', data);
-      setProfile(data);
-    } catch (error: any) {
-      toast({
-        title: "Error loading profile",
-        description: error.message,
-        variant: "destructive",
+      // Update database as backup
+      updateProfile({ last_active_role: "helpanion" });
+      setWalkerFormData({
+        fullName: profile.display_name || "",
+        email: profile.email || ""
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
-  const fetchStats = async () => {
-    if (!currentUser) return;
+  if (authLoading || profileLoading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: BG_NEUTRAL }}
+      >
+        <div className="text-center space-y-4">
+          <div
+            className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto"
+            style={{ borderColor: `${PRIMARY_GREEN} transparent transparent transparent` }}
+          ></div>
+          <p className="text-gray-500">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
-    try {
-      // Fetch booking stats
-      const { data: bookings } = await supabase
-        .from('bookings')
-        .select('*')
-        .eq('helper_id', currentUser.id);
+  if (!user) {
+    return null;
+  }
 
-      // Fetch earnings
-      const { data: earnings } = await supabase
-        .from('earnings')
-        .select('amount')
-        .eq('helper_id', currentUser.id);
-
-      // Fetch services
-      const { data: services } = await supabase
-        .from('services')
-        .select('*')
-        .eq('helper_id', currentUser.id)
-        .eq('is_active', true);
-
-      // Fetch reviews for rating
-      const { data: reviews } = await supabase
-        .from('reviews')
-        .select('rating')
-        .eq('helper_id', currentUser.id);
-
-      const totalEarnings = earnings?.reduce((sum, earning) => sum + Number(earning.amount), 0) || 0;
-      const averageRating = reviews?.length > 0 
-        ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length 
-        : 0;
-
-      setStats({
-        totalBookings: bookings?.length || 0,
-        totalEarnings,
-        averageRating: Math.round(averageRating * 10) / 10,
-        activeServices: services?.length || 0
-      });
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    }
-  };
-
+  // Define all handler functions first
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
+    // Clear role data and sign out
+    clearRoleData();
+    await signOut();
+    navigate("/wo-commune");
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+  const handleRoleToggle = (checked: boolean) => {
+    if (checked) {
+      if (hasRole("walker")) {
+        navigate(`/walker/${user?.id}`);
+      } else {
+        setShowWalkerModal(true);
+      }
+    }
+  };
 
-  if (!profile) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground">Profile not found</p>
-        </div>
-      </div>
-    );
-  }
+  const handleBecomeWalker = async () => {
+    const result = await addRole("walker");
+    if (result?.error) {
+      toast({
+        title: "Error",
+        description: "Failed to add Walker role. Please try again.",
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Welcome to Walkers!",
+        description: "You can now seek help from Helpanions."
+      });
+      setShowWalkerModal(false);
+      navigate(`/walker/${user?.id}`);
+    }
+  };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <GlobalHeader />
-      
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 mt-16">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-              {profile.avatar_url ? (
-                <img 
-                  src={profile.avatar_url} 
-                  alt={profile.display_name}
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-              ) : (
-                <Heart className="w-8 h-8 text-primary" />
+  // Define render functions after handlers
+  const renderSidebar = () => (
+    <div className="h-full flex flex-col" style={{ backgroundColor: BG_NEUTRAL }}>
+      <div className="p-4 border-b" style={{ borderColor: "#ddd" }}>
+        <h1 className="text-lg font-semibold text-gray-900">WO Commune</h1>
+        <div className="flex items-center justify-between mt-2">
+          <div>
+            <p className="text-sm text-gray-600">
+              Hi {profile?.display_name || "Helpanion"}
+            </p>
+            <p className="text-xs text-gray-500">(Helpanion)</p>
+          </div>
+          {hasRole("walker") && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-600">Walker</span>
+              <Switch
+                checked={false}
+                onCheckedChange={handleRoleToggle}
+                style={{
+                  "--switch-color": PRIMARY_GREEN
+                } as React.CSSProperties}
+              />
+            </div>
+          )}
+        </div>
+        {profile && (
+          <div className="mt-3">
+            <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <span>Profile Progress</span>
+              <span>{profileProgress.completion}%</span>
+            </div>
+            <Progress
+              value={profileProgress.completion}
+              className="h-2"
+              style={{ backgroundColor: "#ddd" }}
+            />
+            {!profileProgress.isComplete && profileProgress.missingFields.length > 0 && (
+              <p className="text-xs text-gray-500 mt-1">
+                Missing: {profileProgress.missingFields.join(", ")}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+
+      <nav className="flex-1 p-3">
+        <div className="space-y-1">
+          {navigationTabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                activeTab === tab.key
+                  ? "text-white"
+                  : "text-gray-600 hover:bg-gray-200"
               )}
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                Welcome back, {profile.display_name}
-              </h1>
-              <p className="text-muted-foreground">@{profile.username}</p>
-              <Badge variant="secondary" className="mt-1">
-                <Heart className="w-3 h-3 mr-1" />
-                Helpanion
-              </Badge>
-            </div>
-          </div>
-          
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              Sign Out
-            </Button>
-          </div>
+              style={
+                activeTab === tab.key
+                  ? { backgroundColor: PRIMARY_GREEN }
+                  : undefined
+              }
+            >
+              <tab.icon className="h-4 w-4" />
+              <span className="text-sm font-medium">{tab.label}</span>
+            </button>
+          ))}
         </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-              <Calendar className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalBookings}</div>
-              <p className="text-xs text-muted-foreground">
-                Lifetime bookings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-              <DollarSign className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">${stats.totalEarnings.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">
-                Lifetime earnings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
-              <Star className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.averageRating || 'N/A'}</div>
-              <p className="text-xs text-muted-foreground">
-                From client reviews
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Services</CardTitle>
-              <Users className="w-4 h-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.activeServices}</div>
-              <p className="text-xs text-muted-foreground">
-                Currently offering
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Plus className="w-5 h-5 mr-2" />
-                Create New Service
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add a new service to help more walkers
-              </p>
-              <Button className="w-full">
-                Add Service
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Calendar className="w-5 h-5 mr-2" />
-                Manage Availability
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Set your available time slots
-              </p>
-              <Button variant="outline" className="w-full">
-                Update Schedule
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2" />
-                View Analytics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Track your performance and growth
-              </p>
-              <Button variant="outline" className="w-full">
-                View Reports
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-muted-foreground">
-              <Calendar className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No recent activity</p>
-              <p className="text-sm">Your bookings and interactions will appear here</p>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-
-      <Footer />
+      </nav>
     </div>
   );
-}
+
+  const renderHeader = () => (
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-gray-900">WO Commune</h1>
+      <div className="flex gap-2">
+        <Button
+          asChild
+          size="sm"
+          style={{ backgroundColor: "transparent" }}
+          className="hover:bg-gray-200"
+        >
+          <Link to="/" aria-label="Home">
+            <Home className="h-4 w-4 text-gray-700" />
+          </Link>
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={handleSignOut}
+          className="hover:bg-gray-200"
+        >
+          <LogOut className="h-4 w-4 text-gray-700" />
+        </Button>
+      </div>
+    </div>
+  );
+
+
+  // Don't render dashboard if profile is not loaded
+  if (!profile) {
+    return null;
+  }
+
+  // Remove the old calculateProfileProgress function - using unified hook now
+
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "home":
+        return (
+          <div className="p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-5">
+            {/* Welcome Header */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground">
+                    Hi {profile.display_name?.split(' ')[0] || 'Helpanion'} 👋
+                  </h1>
+                  <p className="text-sm lg:text-base text-muted-foreground">
+                    Welcome to your Helpanion dashboard
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Progress Card */}
+            <div className="border border-primary/20 bg-primary/5 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="text-sm lg:text-base font-semibold">Profile Progress</h3>
+                  <p className="text-xs lg:text-sm text-muted-foreground">
+                    Complete your profile to start offering help
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-lg lg:text-xl font-bold text-primary">{profileProgress.completion}%</span>
+                  <p className="text-xs text-muted-foreground">Complete</p>
+                </div>
+              </div>
+              <Progress value={profileProgress.completion} className="h-1.5 lg:h-2" />
+              <div className="mt-4">
+                {profileProgress.completion < 80 ? (
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <p className="text-xs lg:text-sm text-muted-foreground">
+                      Complete your profile to start offering help to the community
+                    </p>
+                    <Button onClick={() => setActiveTab("profile")} size="sm" className="w-full sm:w-auto text-xs h-8">
+                      Complete Profile
+                      <ChevronRight className="ml-2 h-3 w-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-green-600">
+                    <span className="text-sm font-medium">
+                      Your profile is ready! You can now start offering help.
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("profile")}>
+                <div className="flex items-center gap-3">
+                  <User className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Update Profile</h3>
+                    <p className="text-sm text-muted-foreground">Manage your profile information</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("services")}>
+                <div className="flex items-center gap-3">
+                  <Lightbulb className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Create Services</h3>
+                    <p className="text-sm text-muted-foreground">Offer your expertise</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="border rounded-lg p-4 hover:bg-muted/50 cursor-pointer" onClick={() => setActiveTab("availability")}>
+                <div className="flex items-center gap-3">
+                  <Calendar className="h-8 w-8 text-primary" />
+                  <div>
+                    <h3 className="font-semibold">Set Availability</h3>
+                    <p className="text-sm text-muted-foreground">Manage your schedule</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "profile":
+        return profile ? (
+          <HelpanionProfile profile={profile} updateProfile={updateProfile} />
+        ) : null;
+      case "services":
+        return <HelpanionServices profileProgress={profileProgress.completion} isProfileComplete={profileProgress.isComplete} />;
+      case "availability":
+        return <HelpanionAvailability profileProgress={profileProgress.completion} isProfileComplete={profileProgress.isComplete} />;
+      case "bookings":
+        return <HelpanionBookings />;
+      case "reviews":
+        return <HelpanionReviews />;
+      case "settings":
+        return profile ? (
+          <HelpanionSettings profile={profile} updateProfile={updateProfile} />
+        ) : null;
+      default:
+        return null;
+    }
+  };
+
+
+  return (
+    <>
+      <DashboardLayout sidebar={renderSidebar()} header={renderHeader()}>
+        {renderContent()}
+      </DashboardLayout>
+
+      <Dialog open={showWalkerModal} onOpenChange={setShowWalkerModal}>
+        <DialogContent className="mx-4 max-w-md">
+          <DialogHeader>
+            <DialogTitle>Join as a Walker</DialogTitle>
+            <DialogDescription>
+              You haven't joined as a Walker yet. Want to join now and start
+              seeking help from other Helpanions?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="walker-name">Full Name</Label>
+              <Input
+                id="walker-name"
+                value={walkerFormData.fullName}
+                onChange={(e) =>
+                  setWalkerFormData((prev) => ({
+                    ...prev,
+                    fullName: e.target.value
+                  }))
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="walker-email">Email</Label>
+              <Input
+                id="walker-email"
+                type="email"
+                value={walkerFormData.email}
+                onChange={(e) =>
+                  setWalkerFormData((prev) => ({
+                    ...prev,
+                    email: e.target.value
+                  }))
+                }
+              />
+            </div>
+            <div className="flex gap-2 pt-4">
+              <Button
+                onClick={handleBecomeWalker}
+                className="flex-1 text-white"
+                style={{ backgroundColor: PRIMARY_GREEN }}
+              >
+                Yes, Join as Walker
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setShowWalkerModal(false)}
+                className="flex-1"
+              >
+                Not now
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export default HelpanionDashboard;

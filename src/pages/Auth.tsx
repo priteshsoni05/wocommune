@@ -1,457 +1,304 @@
-import React, { useState } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import GlobalHeader from '@/components/common/GlobalHeader';
-import { Footer } from '@/components/common/Footer';
-import { Loader2, User, Heart, ArrowLeft } from 'lucide-react';
-
-/* Brand colors matching home page */
-const PINE = "#193232";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRolePersistence } from '@/hooks/useRolePersistence';
+import { RoleSelectionModal, UserRole } from '@/components/auth/RoleSelectionModal';
+import { RoleSwitchModal } from '@/components/auth/RoleSwitchModal';
+import { SignupForm } from '@/components/auth/SignupForm';
+import { LoginForm } from '@/components/auth/LoginForm';
+import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
+import { toast } from 'sonner';
 
 export default function Auth() {
-  const [searchParams] = useSearchParams();
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const [showRoleSelection, setShowRoleSelection] = useState(false);
+  const [showRoleSwitch, setShowRoleSwitch] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showSignupForm, setShowSignupForm] = useState(false);
+  const [availableRoles, setAvailableRoles] = useState<UserRole[]>([]);
+  const [userEmail, setUserEmail] = useState('');
+  const [noRoleMessage, setNoRoleMessage] = useState('');
+
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const mode = searchParams.get('mode') || 'login';
-  
-  const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'walker' | 'helpanion' | null>(null);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    displayName: '',
-    username: '',
-    confirmPassword: ''
-  });
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+  const { setActiveRole, getDashboardPath } = useRolePersistence();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+  const mode = searchParams.get('mode') as 'login' | 'signup' | null;
+  const role = searchParams.get('role') as UserRole | null;
 
-  const handleRoleSelection = (role: 'walker' | 'helpanion') => {
-    setSelectedRole(role);
-  };
-
-  const handleBackToRoleSelection = () => {
-    setSelectedRole(null);
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Welcome back!",
-        description: "You have been successfully logged in.",
-      });
-
-      navigate('/wo-commune');
-    } catch (error: any) {
-      toast({
-        title: "Login failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Password mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate username for Helpanion users
-    if (selectedRole === 'helpanion' && !formData.username) {
-      toast({
-        title: "Username required",
-        description: "Please enter a username for your public profile.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const redirectUrl = `${window.location.origin}/wo-commune`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            display_name: formData.displayName,
-            username: selectedRole === 'helpanion' ? formData.username : null,
-            initial_role: selectedRole
-          }
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.user && selectedRole) {
-        // Insert the selected role for the new user
-        const { error: roleError } = await supabase
-          .from('user_roles')
-          .insert({
-            user_id: data.user.id,
-            role: selectedRole
-          });
-
-        if (roleError) {
-          console.error('Error adding role:', roleError);
-        }
-      }
-
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
-
-      // Redirect to appropriate dashboard based on role
-      if (selectedRole === 'helpanion' && formData.username) {
-        navigate(`/helpanion/${formData.username}/dashboard`);
+  // Initialize auth mode from URL
+  useEffect(() => {
+    if (mode === 'signup') {
+      setAuthMode('signup');
+      if (role) {
+        setSelectedRole(role);
+        setShowSignupForm(true);
       } else {
-        navigate('/wo-commune');
+        setShowRoleSelection(true);
       }
+    } else {
+      setAuthMode('login');
+    }
+  }, [mode, role]);
 
-      // Clear form and reset to role selection
-      setFormData({
-        email: '',
-        password: '',
-        displayName: '',
-        username: '',
-        confirmPassword: ''
-      });
-      setSelectedRole(null);
-    } catch (error: any) {
-      toast({
-        title: "Signup failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+  // Redirect authenticated users
+  useEffect(() => {
+    if (user) {
+      const dashboardPath = getDashboardPath();
+      if (dashboardPath !== '/auth') {
+        navigate(dashboardPath);
+      }
+    }
+  }, [user, navigate, getDashboardPath]);
+
+  const handleRoleSwitch = (selectedRole: UserRole, rememberChoice: boolean) => {
+    if (!user) return;
+    
+    setActiveRole(selectedRole);
+    
+    if (rememberChoice) {
+      localStorage.setItem('wo_commune_preferred_role', selectedRole);
+    }
+    
+    const dashboardPath = selectedRole === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+    navigate(dashboardPath);
+    
+    setShowRoleSwitch(false);
+    toast.success(`Welcome back to your ${selectedRole} dashboard!`);
+  };
+
+  const handleLoginSuccess = (userRoles: UserRole[]) => {
+    if (!user) return;
+    
+    if (userRoles.length === 1) {
+      // Single role - redirect directly
+      const role = userRoles[0];
+      setActiveRole(role);
+      const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+      navigate(dashboardPath);
+      toast.success(`Welcome back!`);
+    } else if (userRoles.length > 1) {
+      // Multiple roles - show role switch modal
+      const preferredRole = localStorage.getItem('wo_commune_preferred_role') as UserRole;
+      if (preferredRole && userRoles.includes(preferredRole)) {
+        // Use preferred role if available
+        setActiveRole(preferredRole);
+        const dashboardPath = preferredRole === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+        navigate(dashboardPath);
+        toast.success(`Welcome back to your ${preferredRole} dashboard!`);
+      } else {
+        // Show role selection
+        setAvailableRoles(userRoles);
+        setShowRoleSwitch(true);
+      }
     }
   };
 
-  // Login Form
-  if (mode === 'login') {
+  const handleLoginNoRole = (email: string) => {
+    setUserEmail(email);
+    setNoRoleMessage(`You don't have any active profiles yet. Would you like to create one?`);
+  };
+
+  const handleSignupForRole = (role: UserRole) => {
+    setSelectedRole(role);
+    setShowRoleSelection(false);
+    setShowSignupForm(true);
+    // Update URL to reflect the signup flow
+    navigate(`/auth?mode=signup&role=${role}`, { replace: true });
+  };
+
+  const handleSignupSuccess = (role: UserRole) => {
+    if (!user) return;
+    
+    setShowSignupForm(false);
+    // Navigate directly to the role-specific dashboard with user ID
+    const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+    navigate(dashboardPath);
+    toast.success(`Welcome! Your ${role} account is ready.`);
+  };
+
+  const handleBackToMain = () => {
+    setShowSignupForm(false);
+    setShowRoleSelection(false);
+    setSelectedRole(null);
+    setNoRoleMessage('');
+    setAuthMode('login');
+    navigate('/auth', { replace: true });
+  };
+
+  const handleCreateAccount = () => {
+    setAuthMode('signup');
+    setShowRoleSelection(true);
+  };
+
+  const getMainTitle = () => {
+    return authMode === 'login' ? 'Welcome Back' : 'Create Your Account';
+  };
+
+  const getMainDescription = () => {
+    return authMode === 'login' 
+      ? 'Sign in to access your dashboard' 
+      : 'Choose your role to get started';
+  };
+
+  // If showing signup form for specific role
+  if (showSignupForm && selectedRole) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
-        <GlobalHeader />
-        
-        {/* Hero-style background for login */}
-        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
-          <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
-          
-          <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-              <div className="text-center mb-6">
-                <h1 className="text-3xl font-bold mb-2" style={{ color: PINE }}>
-                  Welcome Back
-                </h1>
-                <p className="text-gray-600">
-                  Sign in to continue your journey
-                </p>
-              </div>
-              
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  style={{ backgroundColor: PINE, color: "white" }}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Signing In...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
-                </Button>
-              </form>
-              
-              <div className="text-center text-sm mt-6">
-                <p>
-                  Don't have an account?{' '}
-                  <Link to="/auth?mode=signup" className="hover:underline" style={{ color: PINE }}>
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-              
-              <div className="text-center mt-4">
-                <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">
-                  ← Back to Home
-                </Link>
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
+        <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
+          <CardHeader className="text-center space-y-4 px-6 py-6">
+            <div className="flex items-center justify-center mb-4">
+              <button
+                onClick={handleBackToMain}
+                className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div className="flex-1">
+                <CardTitle className="text-2xl font-bold text-foreground">
+                  Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
+                </CardTitle>
               </div>
             </div>
-          </div>
-        </section>
-        
-        <Footer />
+            <CardDescription className="text-muted-foreground leading-relaxed">
+              {selectedRole === 'helpanion' 
+                ? 'Share your experiences and guide others' 
+                : 'Seek guidance and connect with helpanions'
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-6 pb-6">
+            <SignupForm
+              selectedRole={selectedRole}
+              onSuccess={handleSignupSuccess}
+              onCancel={handleBackToMain}
+            />
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
-  // Signup Flow - Step 1: Role Selection
-  if (mode === 'signup' && !selectedRole) {
-    return (
-      <div className="min-h-screen bg-background text-foreground">
-        <GlobalHeader />
-        
-        {/* Clean role selection section */}
-        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10 flex items-center justify-center">
-          <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
-            
-            {/* Title */}
-            <h1 className="text-lg md:text-xl font-medium mb-6 text-foreground tracking-wide">
-              JOIN WO COMMUNE AS
-            </h1>
-            
-            {/* Divider */}
-            <div className="w-12 border-t border-foreground mx-auto mb-8" />
-            
-            {/* Role Selection Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center max-w-xs mx-auto">
-              {/* Walker Button */}
-              <Button 
-                onClick={() => handleRoleSelection('walker')}
-                className="w-full sm:w-28 h-10 rounded-full bg-foreground text-background hover:bg-foreground/90 font-medium text-sm"
-              >
-                Walker
-              </Button>
-
-              {/* Helpanion Button */}
-              <Button 
-                onClick={() => handleRoleSelection('helpanion')}
-                className="w-full sm:w-28 h-10 rounded-full font-medium text-sm"
-                style={{ backgroundColor: PINE, color: "white" }}
-              >
-                Helpanion
-              </Button>
-            </div>
-            
-            {/* Back to login */}
-            <div className="mt-12">
-              <Link to="/auth?mode=login" className="text-muted-foreground hover:text-foreground text-sm">
-                Already have an account? Sign in
-              </Link>
-            </div>
-          </div>
-        </section>
-        
-        <Footer />
-      </div>
-    );
-  }
-
-  // Signup Flow - Step 2: Form
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <GlobalHeader />
-      
-      {/* Clean minimal form section */}
-      <section className="relative w-full py-16 flex items-center justify-center">
-        <div className="max-w-md mx-auto px-4 md:px-8 w-full">
-          
-          {/* Role indicator */}
-          <div className="text-center mb-10">
-            <h1 className="text-xl font-medium text-foreground mb-2">
-              {selectedRole === 'walker' ? 'Join as Walker' : 'Join as Helpanion'}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Create your account to get started
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
+      <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
+        <CardHeader className="text-center space-y-4 px-6 py-6">
+          <div className="flex items-center justify-center mb-4">
+            <Link to="/" className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1">
+              <ArrowLeft className="w-5 h-5" />
+            </Link>
+            <div className="flex-1">
+              <CardTitle className="text-2xl font-bold text-foreground">
+                {getMainTitle()}
+              </CardTitle>
+            </div>
           </div>
-          
-          {/* Back button */}
-          <Button
-            variant="ghost"
-            onClick={handleBackToRoleSelection}
-            className="mb-6 p-0 h-auto text-muted-foreground hover:text-foreground text-sm"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to role selection
-          </Button>
-          
-          {/* Clean signup form */}
-          <form onSubmit={handleSignup} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="displayName" className="text-sm font-medium text-foreground">
-                  Display Name
-                </Label>
-                <Input
-                  id="displayName"
-                  name="displayName"
-                  type="text"
-                  value={formData.displayName}
-                  onChange={handleInputChange}
-                  placeholder="Enter your display name"
-                  className="mt-1 h-11 border-border focus:border-foreground"
-                  required
-                />
-              </div>
-              
-              {/* Username field - only for Helpanion users */}
-              {selectedRole === 'helpanion' && (
-                <div>
-                  <Label htmlFor="username" className="text-sm font-medium text-foreground">
-                    Username
-                  </Label>
-                  <Input
-                    id="username"
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    placeholder="Choose a unique username"
-                    className="mt-1 h-11 border-border focus:border-foreground"
-                    pattern="^[a-zA-Z0-9_]+$"
-                    minLength={3}
-                    maxLength={30}
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    3-30 characters, letters, numbers, and underscores only
-                  </p>
-                </div>
+          <CardDescription className="text-muted-foreground leading-relaxed">
+            {getMainDescription()}
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6 px-6 pb-6">
+          {authMode === 'login' ? (
+            <>
+              {noRoleMessage && (
+                <Alert className="border-brand/20 bg-brand/5">
+                  <AlertCircle className="h-4 w-4 text-brand" />
+                  <AlertDescription className="text-brand font-medium">
+                    {noRoleMessage}
+                  </AlertDescription>
+                </Alert>
               )}
               
-              <div>
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter your email"
-                  className="mt-1 h-11 border-border focus:border-foreground"
-                  required
-                />
+              <LoginForm
+                onSuccess={handleLoginSuccess}
+                onNoRoleFound={handleLoginNoRole}
+              />
+              
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full h-11 font-semibold touch-manipulation"
+                  onClick={() => setShowForgotPassword(true)}
+                >
+                  Forgot Password?
+                </Button>
+                
+                {noRoleMessage && (
+                  <Button
+                    variant="default"
+                    className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
+                    onClick={handleCreateAccount}
+                  >
+                    Create New Profile
+                  </Button>
+                )}
               </div>
               
-              <div>
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Create a password"
-                  className="mt-1 h-11 border-border focus:border-foreground"
-                  required
-                />
+              <div className="text-center text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <button
+                  onClick={handleCreateAccount}
+                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
+                >
+                  Sign up
+                </button>
               </div>
-              
-              <div>
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
-                  Confirm Password
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="Confirm your password"
-                  className="mt-1 h-11 border-border focus:border-foreground"
-                  required
-                />
+            </>
+          ) : (
+            <div className="text-center">
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Please select your role to continue with signup
+              </p>
+              <div className="text-center text-sm text-muted-foreground">
+                Already have an account?{' '}
+                <button
+                  onClick={() => {
+                    setAuthMode('login');
+                    setShowRoleSelection(false);
+                  }}
+                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
+                >
+                  Sign in
+                </button>
               </div>
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full h-11 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-md"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                'Create Account'
-              )}
-            </Button>
-          </form>
-          
-          {/* Sign in link */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{' '}
-              <Link to="/auth?mode=login" className="text-foreground hover:underline font-medium">
-                Sign in
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      <Footer />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Role Selection Modal for Signup */}
+      <RoleSelectionModal
+        isOpen={showRoleSelection}
+        onClose={() => {
+          setShowRoleSelection(false);
+          setAuthMode('login');
+        }}
+        onSelectRole={handleSignupForRole}
+        title="Choose Your Role"
+        description="Select how you'd like to participate in the WO Commune community."
+      />
+
+      {/* Role Switch Modal for Multi-Role Users */}
+      <RoleSwitchModal
+        isOpen={showRoleSwitch}
+        onClose={() => setShowRoleSwitch(false)}
+        availableRoles={availableRoles}
+        onSelectRole={handleRoleSwitch}
+      />
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
     </div>
   );
 }
