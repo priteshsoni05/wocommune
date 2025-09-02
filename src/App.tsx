@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import WOCommune from "./pages/WOCommune";
 import Auth from "./pages/Auth";
+import HelpanionDashboard from "./pages/HelpanionDashboard";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/wo-commune" element={<WOCommune />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/helpanion-:username-dashboard" element={<HelpanionDashboard />} />
           
           {/* Keep catch-all at the end */}
           <Route path="*" element={<NotFound />} />

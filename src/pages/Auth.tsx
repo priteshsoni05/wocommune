@@ -134,6 +134,13 @@ export default function Auth() {
         description: "Please check your email to verify your account.",
       });
 
+      // Redirect to appropriate dashboard based on role
+      if (selectedRole === 'helpanion' && formData.username) {
+        navigate(`/helpanion-${formData.username}-dashboard`);
+      } else {
+        navigate('/wo-commune');
+      }
+
       // Clear form and reset to role selection
       setFormData({
         email: '',
