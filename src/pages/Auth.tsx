@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import GlobalHeader from '@/components/common/GlobalHeader';
 import { Footer } from '@/components/common/Footer';
-import { Loader2, User, Heart } from 'lucide-react';
+import { Loader2, User, Heart, ArrowLeft } from 'lucide-react';
+
+/* Brand colors matching home page */
+const PINE = "#193232";
 
 export default function Auth() {
   const [searchParams] = useSearchParams();
@@ -19,7 +20,7 @@ export default function Auth() {
   const mode = searchParams.get('mode') || 'login';
   
   const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'walker' | 'helpanion'>('walker');
+  const [selectedRole, setSelectedRole] = useState<'walker' | 'helpanion' | null>(null);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,6 +33,14 @@ export default function Auth() {
       ...prev,
       [e.target.name]: e.target.value
     }));
+  };
+
+  const handleRoleSelection = (role: 'walker' | 'helpanion') => {
+    setSelectedRole(role);
+  };
+
+  const handleBackToRoleSelection = () => {
+    setSelectedRole(null);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -94,7 +103,7 @@ export default function Auth() {
 
       if (error) throw error;
 
-      if (data.user) {
+      if (data.user && selectedRole) {
         // Insert the selected role for the new user
         const { error: roleError } = await supabase
           .from('user_roles')
@@ -113,13 +122,14 @@ export default function Auth() {
         description: "Please check your email to verify your account.",
       });
 
-      // Clear form
+      // Clear form and reset to role selection
       setFormData({
         email: '',
         password: '',
         displayName: '',
         confirmPassword: ''
       });
+      setSelectedRole(null);
     } catch (error: any) {
       toast({
         title: "Signup failed",
@@ -131,84 +141,238 @@ export default function Auth() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <GlobalHeader />
-      
-      <div className="container mx-auto px-4 py-8 max-w-md mt-8 md:mt-10">
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-brand">
-              {mode === 'signup' ? 'Join WO Commune' : 'Welcome Back'}
-            </CardTitle>
-            <p className="text-muted-foreground">
-              {mode === 'signup' 
-                ? 'Connect with walkers and helpanions' 
-                : 'Sign in to your account'
-              }
-            </p>
-          </CardHeader>
+  // Login Form
+  if (mode === 'login') {
+    return (
+      <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+        <GlobalHeader />
+        
+        {/* Hero-style background for login */}
+        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
+          <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
           
-          <CardContent className="space-y-6">
-            {mode === 'signup' && (
-              <>
-                {/* Role Selection */}
-                <div className="space-y-4">
-                  <Label className="text-sm font-medium">Choose your role</Label>
-                  <Tabs value={selectedRole} onValueChange={(value) => setSelectedRole(value as 'walker' | 'helpanion')}>
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="walker">
-                        <User className="w-4 h-4 mr-2" />
-                        Walker
-                      </TabsTrigger>
-                      <TabsTrigger value="helpanion">
-                        <Heart className="w-4 h-4 mr-2" />
-                        Helpanion
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="walker" className="mt-4">
-                      <div className="p-4 bg-brand/5 rounded-lg text-center">
-                        <User className="w-8 h-8 mx-auto mb-2 text-brand" />
-                        <h4 className="font-semibold text-brand">I'm a Walker</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Seeking guidance and support on my journey
-                        </p>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="helpanion" className="mt-4">
-                      <div className="p-4 bg-brand/5 rounded-lg text-center">
-                        <Heart className="w-8 h-8 mx-auto mb-2 text-brand" />
-                        <h4 className="font-semibold text-brand">I'm a Helpanion</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Ready to help and guide others on their path
-                        </p>
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                </div>
-                
-                <Separator />
-              </>
-            )}
-            
-            {/* Auth Form */}
-            <form onSubmit={mode === 'signup' ? handleSignup : handleLogin} className="space-y-4">
-              {mode === 'signup' && (
+          <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center">
+            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold mb-2" style={{ color: PINE }}>
+                  Welcome Back
+                </h1>
+                <p className="text-gray-600">
+                  Sign in to continue your journey
+                </p>
+              </div>
+              
+              <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="displayName"
-                    name="displayName"
-                    type="text"
-                    value={formData.displayName}
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="How should we call you?"
+                    placeholder="Enter your email"
                     required
                   />
                 </div>
-              )}
+                
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  style={{ backgroundColor: PINE, color: "white" }}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Signing In...
+                    </>
+                  ) : (
+                    'Sign In'
+                  )}
+                </Button>
+              </form>
+              
+              <div className="text-center text-sm mt-6">
+                <p>
+                  Don't have an account?{' '}
+                  <Link to="/auth?mode=signup" className="hover:underline" style={{ color: PINE }}>
+                    Sign up
+                  </Link>
+                </p>
+              </div>
+              
+              <div className="text-center mt-4">
+                <Link to="/" className="text-sm text-gray-500 hover:text-gray-700">
+                  ← Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <Footer />
+      </div>
+    );
+  }
+
+  // Signup Flow - Step 1: Role Selection
+  if (mode === 'signup' && !selectedRole) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+        <GlobalHeader />
+        
+        {/* Hero-style section for role selection */}
+        <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
+          <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
+          
+          <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
+            {/* Hero content */}
+            <h1 className="text-white text-hero max-w-3xl mb-4">
+              Choose Your Path
+            </h1>
+            
+            {/* Divider */}
+            <div className="w-12 border-t-2 border-white my-4" />
+            
+            {/* Subtitle */}
+            <p className="text-white max-w-2xl text-lg md:text-xl leading-relaxed mb-12">
+              Join our community as a Walker seeking guidance or a Helpanion ready to support others
+            </p>
+            
+            {/* Role Selection Cards */}
+            <div className="grid md:grid-cols-2 gap-8 w-full max-w-4xl">
+              {/* Walker Card */}
+              <Card 
+                className="p-8 text-center hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+                onClick={() => handleRoleSelection('walker')}
+              >
+                <CardContent className="space-y-6">
+                  <div className="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center mx-auto">
+                    <User className="w-10 h-10 text-brand" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-brand">I'm a Walker</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Seeking guidance, support, and connection on my journey. 
+                    Ready to find a helpanion who understands my path.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
+                  >
+                    Continue as Walker
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Helpanion Card */}
+              <Card 
+                className="p-8 text-center hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+                onClick={() => handleRoleSelection('helpanion')}
+              >
+                <CardContent className="space-y-6">
+                  <div className="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center mx-auto">
+                    <Heart className="w-10 h-10 text-brand" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-brand">I'm a Helpanion</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Ready to share my experience and support others on their journey. 
+                    I want to help walkers find their way.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
+                  >
+                    Continue as Helpanion
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Back to login */}
+            <div className="mt-8">
+              <Link to="/auth?mode=login" className="text-white/80 hover:text-white">
+                Already have an account? Sign in
+              </Link>
+            </div>
+          </div>
+        </section>
+        
+        <Footer />
+      </div>
+    );
+  }
+
+  // Signup Flow - Step 2: Form
+  return (
+    <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+      <GlobalHeader />
+      
+      {/* Hero-style background for signup form */}
+      <section className="relative w-full min-h-[85vh] mt-8 md:mt-10">
+        <div className="absolute inset-0" style={{ backgroundColor: PINE }} />
+        
+        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+            {/* Header with role info */}
+            <div className="text-center mb-6">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mr-3">
+                  {selectedRole === 'walker' ? (
+                    <User className="w-6 h-6 text-brand" />
+                  ) : (
+                    <Heart className="w-6 h-6 text-brand" />
+                  )}
+                </div>
+                <h1 className="text-2xl font-bold" style={{ color: PINE }}>
+                  Join as {selectedRole === 'walker' ? 'Walker' : 'Helpanion'}
+                </h1>
+              </div>
+              <p className="text-gray-600">
+                {selectedRole === 'walker' 
+                  ? 'Create your account to find guidance and support'
+                  : 'Create your account to help and guide others'
+                }
+              </p>
+            </div>
+            
+            {/* Back button */}
+            <Button
+              variant="ghost"
+              onClick={handleBackToRoleSelection}
+              className="mb-4 p-0 h-auto text-gray-600 hover:text-gray-800"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Change role
+            </Button>
+            
+            {/* Signup Form */}
+            <form onSubmit={handleSignup} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input
+                  id="displayName"
+                  name="displayName"
+                  type="text"
+                  value={formData.displayName}
+                  onChange={handleInputChange}
+                  placeholder="How should we call you?"
+                  required
+                />
+              </div>
               
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -236,63 +400,47 @@ export default function Auth() {
                 />
               </div>
               
-              {mode === 'signup' && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm your password"
-                    required
-                  />
-                </div>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm your password"
+                  required
+                />
+              </div>
               
               <Button 
                 type="submit" 
-                className="w-full bg-brand hover:bg-brand/90 text-brand-foreground"
+                className="w-full"
+                style={{ backgroundColor: PINE, color: "white" }}
                 disabled={loading}
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {mode === 'signup' ? 'Creating Account...' : 'Signing In...'}
+                    Creating Account...
                   </>
                 ) : (
-                  mode === 'signup' ? 'Create Account' : 'Sign In'
+                  'Create Account'
                 )}
               </Button>
             </form>
             
-            <div className="text-center text-sm">
-              {mode === 'signup' ? (
-                <p>
-                  Already have an account?{' '}
-                  <Link to="/auth?mode=login" className="text-brand hover:underline">
-                    Sign in
-                  </Link>
-                </p>
-              ) : (
-                <p>
-                  Don't have an account?{' '}
-                  <Link to="/auth?mode=signup" className="text-brand hover:underline">
-                    Sign up
-                  </Link>
-                </p>
-              )}
+            <div className="text-center text-sm mt-6">
+              <p>
+                Already have an account?{' '}
+                <Link to="/auth?mode=login" className="hover:underline" style={{ color: PINE }}>
+                  Sign in
+                </Link>
+              </p>
             </div>
-            
-            <div className="text-center">
-              <Link to="/" className="text-sm text-muted-foreground hover:text-brand">
-                ← Back to Home
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
+      </section>
       
       <Footer />
     </div>
