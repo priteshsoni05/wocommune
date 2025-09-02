@@ -287,18 +287,11 @@ export default function Auth() {
       <GlobalHeader />
       
       {/* Clean minimal form section */}
-      <section className="relative w-full min-h-[85vh] mt-8 md:mt-10 flex items-center justify-center">
+      <section className="relative w-full py-16 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 md:px-8 w-full">
           
           {/* Role indicator */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              {selectedRole === 'walker' ? (
-                <User className="w-8 h-8 text-muted-foreground" />
-              ) : (
-                <Heart className="w-8 h-8 text-muted-foreground" />
-              )}
-            </div>
+          <div className="text-center mb-10">
             <h1 className="text-xl font-medium text-foreground mb-2">
               {selectedRole === 'walker' ? 'Join as Walker' : 'Join as Helpanion'}
             </h1>
