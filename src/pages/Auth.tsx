@@ -25,6 +25,7 @@ export default function Auth() {
     email: '',
     password: '',
     displayName: '',
+    username: '',
     confirmPassword: ''
   });
 
@@ -84,6 +85,16 @@ export default function Auth() {
       return;
     }
 
+    // Validate username for Helpanion users
+    if (selectedRole === 'helpanion' && !formData.username) {
+      toast({
+        title: "Username required",
+        description: "Please enter a username for your public profile.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -96,6 +107,7 @@ export default function Auth() {
           emailRedirectTo: redirectUrl,
           data: {
             display_name: formData.displayName,
+            username: selectedRole === 'helpanion' ? formData.username : null,
             initial_role: selectedRole
           }
         }
@@ -127,6 +139,7 @@ export default function Auth() {
         email: '',
         password: '',
         displayName: '',
+        username: '',
         confirmPassword: ''
       });
       setSelectedRole(null);
@@ -328,6 +341,31 @@ export default function Auth() {
                   required
                 />
               </div>
+              
+              {/* Username field - only for Helpanion users */}
+              {selectedRole === 'helpanion' && (
+                <div>
+                  <Label htmlFor="username" className="text-sm font-medium text-foreground">
+                    Username
+                  </Label>
+                  <Input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    placeholder="Choose a unique username"
+                    className="mt-1 h-11 border-border focus:border-foreground"
+                    pattern="^[a-zA-Z0-9_]+$"
+                    minLength={3}
+                    maxLength={30}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    3-30 characters, letters, numbers, and underscores only
+                  </p>
+                </div>
+              )}
               
               <div>
                 <Label htmlFor="email" className="text-sm font-medium text-foreground">
