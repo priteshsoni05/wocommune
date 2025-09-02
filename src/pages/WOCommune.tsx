@@ -1,17 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import WOCommuneSlate from '@/components/common/WOCommuneSlate';
+import GlobalHeader from '@/components/common/GlobalHeader';
+import { Footer } from '@/components/common/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function WOCommune() {
   return (
     <div className="min-h-screen bg-background">
+      {/* Global Header */}
+      <GlobalHeader />
+      
       {/* WO Commune Slate Header */}
       <WOCommuneSlate />
       
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-4xl mt-8 md:mt-10">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4 text-brand">WO COMMUNE</h1>
           <p className="text-xl text-muted-foreground mb-8">
@@ -119,6 +124,9 @@ export default function WOCommune() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
