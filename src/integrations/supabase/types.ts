@@ -42,15 +42,7 @@ export type Database = {
           is_available?: boolean | null
           start_time?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "availability_slots_helper_id_fkey"
-            columns: ["helper_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
+        Relationships: []
       }
       bookings: {
         Row: {
@@ -102,20 +94,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "bookings_helper_id_fkey"
-            columns: ["helper_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "bookings_seeker_id_fkey"
-            columns: ["seeker_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
           {
             foreignKeyName: "bookings_service_id_fkey"
             columns: ["service_id"]
@@ -185,83 +163,7 @@ export type Database = {
             referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "earnings_helper_id_fkey"
-            columns: ["helper_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
         ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          bio: string | null
-          created_at: string
-          display_name: string | null
-          email: string | null
-          id: string
-          instagram_url: string | null
-          last_active_role: string | null
-          linkedin_url: string | null
-          phone: string | null
-          portfolio_url: string | null
-          role: string | null
-          school: string | null
-          skills: string | null
-          status: string | null
-          updated_at: string
-          use_case: string | null
-          user_id: string
-          username: string | null
-          website_url: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
-          id?: string
-          instagram_url?: string | null
-          last_active_role?: string | null
-          linkedin_url?: string | null
-          phone?: string | null
-          portfolio_url?: string | null
-          role?: string | null
-          school?: string | null
-          skills?: string | null
-          status?: string | null
-          updated_at?: string
-          use_case?: string | null
-          user_id: string
-          username?: string | null
-          website_url?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
-          id?: string
-          instagram_url?: string | null
-          last_active_role?: string | null
-          linkedin_url?: string | null
-          phone?: string | null
-          portfolio_url?: string | null
-          role?: string | null
-          school?: string | null
-          skills?: string | null
-          status?: string | null
-          updated_at?: string
-          use_case?: string | null
-          user_id?: string
-          username?: string | null
-          website_url?: string | null
-        }
-        Relationships: []
       }
       reviews: {
         Row: {
@@ -345,35 +247,6 @@ export type Database = {
           title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "services_helper_id_fkey"
-            columns: ["helper_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-        ]
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
         Relationships: []
       }
     }
@@ -381,32 +254,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_roles: {
-        Args: { _user_id: string }
-        Returns: Database["public"]["Enums"]["app_role"][]
-      }
-      get_user_roles_by_email: {
-        Args: { _email: string }
-        Returns: Database["public"]["Enums"]["app_role"][]
-      }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_username_available: {
-        Args: { _username: string }
-        Returns: boolean
-      }
-      user_has_role: {
-        Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "walker" | "helpanion" | "admin"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -533,8 +384,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["walker", "helpanion", "admin"],
-    },
+    Enums: {},
   },
 } as const
