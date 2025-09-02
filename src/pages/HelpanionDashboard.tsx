@@ -74,29 +74,37 @@ export default function HelpanionDashboard() {
 
   const fetchProfile = async () => {
     try {
+      console.log('Fetching profile for username:', username);
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('username', username)
-        .single();
+        .maybeSingle();
+
+      console.log('Profile query result:', { data, error });
 
       if (error) {
-        if (error.code === 'PGRST116') {
-          toast({
-            title: "Profile not found",
-            description: "This helpanion profile doesn't exist.",
-            variant: "destructive",
-          });
-          navigate('/');
-          return;
-        }
+        console.error('Profile fetch error:', error);
         throw error;
+      }
+
+      if (!data) {
+        console.log('No profile found for username:', username);
+        toast({
+          title: "Profile not found",
+          description: "This helpanion profile doesn't exist.",
+          variant: "destructive",
+        });
+        navigate('/');
+        return;
       }
 
       // Check if current user owns this profile
       if (currentUser && data.user_id !== currentUser.id) {
+        console.log('Access denied - user does not own this profile');
         toast({
-          title: "Access denied",
+          title: "Access denied", 
           description: "You can only access your own dashboard.",
           variant: "destructive",
         });
@@ -104,6 +112,7 @@ export default function HelpanionDashboard() {
         return;
       }
 
+      console.log('Profile loaded successfully:', data);
       setProfile(data);
     } catch (error: any) {
       toast({
