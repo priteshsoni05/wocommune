@@ -171,12 +171,17 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
+          email: string | null
           id: string
           instagram_url: string | null
+          last_active_role: Database["public"]["Enums"]["app_role"] | null
           linkedin_url: string | null
+          phone: string | null
           portfolio_url: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
           school: string | null
           skills: string[] | null
+          status: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -187,12 +192,17 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id?: string
           instagram_url?: string | null
+          last_active_role?: Database["public"]["Enums"]["app_role"] | null
           linkedin_url?: string | null
+          phone?: string | null
           portfolio_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
           school?: string | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -203,12 +213,17 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id?: string
           instagram_url?: string | null
+          last_active_role?: Database["public"]["Enums"]["app_role"] | null
           linkedin_url?: string | null
+          phone?: string | null
           portfolio_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
           school?: string | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
