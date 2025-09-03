@@ -125,13 +125,19 @@ export default function Auth() {
   };
 
   const handleSignupSuccess = (role: UserRole) => {
-    if (!user) return;
-    
     setShowSignupForm(false);
-    // Navigate directly to the role-specific dashboard with user ID
-    const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
-    navigate(dashboardPath);
-    toast.success(`Welcome! Your ${role} account is ready.`);
+    
+    if (user) {
+      // User is authenticated (email confirmation disabled) - navigate directly
+      const dashboardPath = role === 'helpanion' ? `/helpanion/${user.id}` : `/walker/${user.id}`;
+      navigate(dashboardPath);
+      toast.success(`Welcome! Your ${role} account is ready.`);
+    } else {
+      // Email confirmation required - show success message and redirect to login
+      setAuthMode('login');
+      navigate('/auth?mode=login', { replace: true });
+      toast.success(`Account created successfully! Please check your email to verify your account, then sign in.`);
+    }
   };
 
   const handleBackToMain = () => {
