@@ -268,7 +268,7 @@ export default function Auth() {
           </Card>
         ) : (
           <div className="w-full max-w-lg text-center">
-            <h3 className="text-3xl font-bold text-foreground mb-8">
+            <h3 className="text-lg font-bold text-foreground mb-8">
               JOIN WO COMMUNE AS
             </h3>
             
