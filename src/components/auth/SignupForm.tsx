@@ -19,6 +19,7 @@ interface FormData {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
   username: string;
 }
 
@@ -31,6 +32,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
     username: ''
   });
   const [loading, setLoading] = useState(false);
@@ -85,6 +87,13 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Validate password confirmation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
 
     try {
       // Check if user already has this role
@@ -270,6 +279,20 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
           required
           placeholder="Create a password"
+          minLength={6}
+          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword" className="text-foreground font-semibold">Confirm Password</Label>
+        <Input
+          id="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+          required
+          placeholder="Confirm your password"
           minLength={6}
           className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
         />
