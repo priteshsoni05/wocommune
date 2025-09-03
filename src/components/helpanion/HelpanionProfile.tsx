@@ -47,12 +47,12 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
+  const [formInitialized, setFormInitialized] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [customSchool, setCustomSchool] = useState("");
   const [customRole, setCustomRole] = useState("");
   const [showCustomSchool, setShowCustomSchool] = useState(false);
   const [showCustomRole, setShowCustomRole] = useState(false);
-  const [formInitialized, setFormInitialized] = useState(false);
   const [usernameError, setUsernameError] = useState("");
 
   // Custom options hooks
@@ -94,6 +94,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
   useEffect(() => {
     if (profile && !formInitialized) {
+      console.log('Initializing form with profile data:', profile);
       setFormData({
         display_name: profile.display_name || "",
         username: profile.username || "",
@@ -104,7 +105,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         school: profile.school || "",
         role: profile.role || "",
         use_case: profile.use_case || "",
-        skills: profile.skills || "",
+        skills: Array.isArray(profile.skills) ? profile.skills.join(', ') : profile.skills || "",
         linkedin_url: profile.linkedin_url || "",
         instagram_url: profile.instagram_url || "",
         portfolio_url: profile.portfolio_url || "",
@@ -321,6 +322,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           title: "Success",
           description: "Profile updated successfully!",
         });
+        // Profile data will be updated automatically by the parent component
+        // Update form data with the latest values
         setFormData(prev => ({
           ...prev,
           school: schoolValue,

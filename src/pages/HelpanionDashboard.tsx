@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useOptimizedProfile as useProfile } from "@/hooks/useOptimizedProfile";
+import { useOptimizedProfile } from "@/hooks/useOptimizedProfile";
 import { useUserRoles } from "@/hooks/useUserRoles";
 import { useServices } from "@/hooks/useServices";
 import { useBookings } from "@/hooks/useBookings";
@@ -65,7 +65,7 @@ const navigationTabs = [
 
 const HelpanionDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
-  const { profile, loading: profileLoading, updateProfile } = useProfile();
+  const { profile, loading: profileLoading, updateProfile, refetch } = useOptimizedProfile();
   const { hasRole, addRole } = useUserRoles();
   const { services } = useServices();
   const { bookings } = useBookings();
