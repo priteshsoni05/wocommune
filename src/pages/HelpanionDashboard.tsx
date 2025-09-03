@@ -29,7 +29,8 @@ import {
   Star,
   Settings,
   ChevronRight,
-  LogOut
+  LogOut,
+  Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
@@ -299,8 +300,48 @@ const HelpanionDashboard = () => {
                     Welcome to your Helpanion dashboard
                   </p>
                 </div>
+                {profile?.username && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => window.open(`/p/${profile.username}`, '_blank')}
+                    className="gap-2"
+                  >
+                    <Eye className="h-4 w-4" />
+                    <span className="hidden sm:inline">View Public Profile</span>
+                    <span className="sm:hidden">Public</span>
+                  </Button>
+                )}
               </div>
             </div>
+
+            {/* Public Profile Preview Card */}
+            {profile?.username && (
+              <div className="border border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className="text-sm lg:text-base font-semibold flex items-center gap-2">
+                      <Eye className="h-4 w-4" />
+                      Public Profile
+                    </h3>
+                    <p className="text-xs lg:text-sm text-muted-foreground">
+                      See how your profile appears to people seeking help
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => window.open(`/p/${profile.username}`, '_blank')}
+                    size="sm"
+                    className="gap-2"
+                  >
+                    <Eye className="h-4 w-4" />
+                    View Profile
+                  </Button>
+                </div>
+                <div className="text-xs lg:text-sm text-muted-foreground">
+                  Your public URL: <span className="font-mono text-primary">lovable.app/p/{profile.username}</span>
+                </div>
+              </div>
+            )}
 
             {/* Profile Progress Card */}
             <div className="border border-primary/20 bg-primary/5 rounded-lg p-4">
