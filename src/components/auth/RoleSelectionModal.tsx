@@ -40,53 +40,36 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md max-w-[90vw] mx-4">
-        <DialogHeader className="space-y-4 text-center">
-          <DialogTitle className="text-2xl font-bold text-foreground">
-            {title}
-          </DialogTitle>
-          <p className="text-muted-foreground text-sm px-2">
-            {description}
-          </p>
-        </DialogHeader>
-        
-        <div className="space-y-3 mt-6 px-2">
-          {roles.map((role) => {
-            const IconComponent = role.icon;
-            return (
-              <Card
-                key={role.id}
-                className={`cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] touch-manipulation ${role.color}`}
-                onClick={() => onSelectRole(role.id)}
+      <DialogContent className="sm:max-w-lg max-w-[90vw] mx-4 border-none shadow-none bg-transparent">
+        <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 -m-6">
+          <div className="w-full max-w-md text-center space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                JOIN WO COMMUNE AS
+              </h1>
+            </div>
+            
+            <div className="flex justify-center gap-4">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => onSelectRole('walker')}
+                className="px-8 py-3 bg-background border-border text-foreground hover:bg-muted/50 transition-all duration-200 touch-manipulation font-medium rounded-full"
               >
-                <CardHeader className="pb-3 px-4 py-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <IconComponent className="h-6 w-6 text-foreground" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg font-bold text-foreground">
-                        {role.name}
-                      </CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">
-                        {role.description}
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            );
-          })}
-        </div>
-
-        <div className="mt-6 px-2">
-          <Button 
-            variant="outline" 
-            onClick={onClose} 
-            className="w-full touch-manipulation font-semibold"
-          >
-            Cancel
-          </Button>
+                Walker
+              </Button>
+              <Button
+                size="lg"
+                onClick={() => onSelectRole('helpanion')}
+                className="px-8 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-200 touch-manipulation font-medium rounded-full"
+                style={{ backgroundColor: '#193232', color: 'white' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0f2626'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#193232'}
+              >
+                Helpanion
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
