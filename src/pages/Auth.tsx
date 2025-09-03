@@ -139,8 +139,8 @@ export default function Auth() {
     setShowRoleSelection(false);
     setSelectedRole(null);
     setNoRoleMessage('');
-    setAuthMode('login');
-    navigate('/auth', { replace: true });
+    setAuthMode('signup');
+    navigate('/auth?mode=signup', { replace: true });
   };
 
   const handleCreateAccount = () => {
