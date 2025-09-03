@@ -207,25 +207,8 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex flex-col">
       <GlobalHeader />
-      
-      {/* Green Banner */}
-      <div className="bg-emerald-600 text-white px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <button className="bg-white/10 px-3 py-1 rounded text-sm font-medium">
-            GET HELP
-          </button>
-          <span className="text-sm">
-            WO COMMUNE - Connecting walkers with helpanions
-          </span>
-        </div>
-        <div className="flex space-x-2">
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-          <div className="w-2 h-2 bg-white rounded-full"></div>
-        </div>
-      </div>
 
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4 pt-16">
         {authMode === 'login' ? (
           <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
             <CardHeader className="text-center space-y-4 px-6 py-6">
@@ -301,7 +284,7 @@ export default function Auth() {
               
               <Button
                 size="lg"
-                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold bg-brand hover:bg-brand/90 text-brand-foreground"
                 onClick={() => handleSignupForRole('helpanion')}
               >
                 Helpanion
