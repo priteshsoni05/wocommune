@@ -46,6 +46,7 @@ const OptimizedPublicProfile = () => {
       return;
     }
 
+    console.log('Fetching public profile for username:', username);
     try {
       // Optimized single query with joins
       const { data: profiles, error: profilesError } = await supabase
@@ -86,11 +87,15 @@ const OptimizedPublicProfile = () => {
         .not("username", "eq", "")
         .maybeSingle();
 
+      console.log('Profile query result:', { profiles, profilesError });
+
       if (profilesError) {
+        console.error('Profile query error:', profilesError);
         throw profilesError;
       }
 
       if (!profiles) {
+        console.log('No profile found for username:', username);
         throw new Error("No profile found");
       }
 
@@ -133,12 +138,14 @@ const OptimizedPublicProfile = () => {
         availability: availability as AvailabilitySlot[],
       };
 
+      console.log('Public profile data loaded successfully:', result);
+
       // Cache the result
       profileCache.set(username, { data: result, timestamp: Date.now() });
       setData(result);
     } catch (err) {
       console.error("Failed to load profile:", err);
-      setError("Failed to load profile");
+      setError(`Failed to load profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
