@@ -304,7 +304,7 @@ const HelpanionDashboard = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    onClick={() => window.open(`/p/${profile.username}`, '_blank')}
+                    onClick={() => window.open(`/${profile.username}`, '_blank')}
                     className="gap-2"
                   >
                     <Eye className="h-4 w-4" />
