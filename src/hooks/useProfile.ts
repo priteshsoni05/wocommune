@@ -11,12 +11,12 @@ export interface Profile {
   bio: string | null;
   avatar_url: string | null;
   username: string | null;
-  last_active_role: string | null;
+  last_active_role: 'walker' | 'helpanion' | null;
   status: 'pending' | 'active' | 'in_review';
   school: string | null;
-  role: string | null;
+  role: 'walker' | 'helpanion' | null;
   use_case: string | null;
-  skills: string | null;
+  skills: string[] | null;
   linkedin_url: string | null;
   instagram_url: string | null;
   portfolio_url: string | null;

@@ -84,7 +84,11 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
   // --- Enhancement: Profile completion calculation ---
   const completion = Math.round(
-    REQUIRED_FIELDS.filter((key) => !!formData[key as keyof typeof formData]?.trim()).length /
+    REQUIRED_FIELDS.filter((key) => {
+      const value = formData[key as keyof typeof formData];
+      if (Array.isArray(value)) return value.length > 0;
+      return value && typeof value === 'string' && value.trim();
+    }).length /
     REQUIRED_FIELDS.length * 100
   );
 
@@ -209,7 +213,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
 
     // --- Enhancement: Check all required fields ---
     for (const field of REQUIRED_FIELDS) {
-      if (!formData[field as keyof typeof formData]?.trim()) {
+      const value = formData[field as keyof typeof formData];
+      const isEmpty = Array.isArray(value) ? value.length === 0 : !value || (typeof value === 'string' && !value.trim());
+      if (isEmpty) {
         toast({
           title: "Missing required field",
           description: `Please fill out your ${field.replace("_", " ")}.`,
@@ -296,9 +302,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         phone: formData.phone,
         avatar_url: formData.avatar_url,
         school: schoolValue,
-        role: roleValue,
+        role: (roleValue as 'walker' | 'helpanion' | null),
         use_case: useCaseValue,
-        skills: formData.skills,
+        skills: typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()) : formData.skills,
         linkedin_url: formData.linkedin_url,
         instagram_url: formData.instagram_url,
         portfolio_url: formData.portfolio_url,

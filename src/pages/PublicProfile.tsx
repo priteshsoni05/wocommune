@@ -159,9 +159,11 @@ const OptimizedPublicProfile = () => {
 
   // Memoize skills processing
   const skillsArray = useMemo(() => {
-    return data?.profile.skills 
-      ? data.profile.skills.split(",").slice(0, 5).map(skill => skill.trim())
-      : [];
+    const skills = data?.profile.skills;
+    if (!skills) return [];
+    if (Array.isArray(skills)) return skills.slice(0, 5);
+    if (typeof skills === 'string') return String(skills).split(",").slice(0, 5).map(skill => skill.trim());
+    return [];
   }, [data?.profile.skills]);
 
   // Memoize social links

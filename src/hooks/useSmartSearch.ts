@@ -136,16 +136,17 @@ export const useSmartSearch = () => {
 
           // Add skill tags
           if (profile.skills) {
-            const skills = profile.skills.split(',').map(s => s.trim());
+            const skills = Array.isArray(profile.skills) ? profile.skills : (profile.skills ? String(profile.skills).split(',') : []);
             skills.forEach(skill => {
-              if (skill.toLowerCase().includes(query)) {
-                const skillKey = `tag-${skill.toLowerCase()}`;
+              const skillTrimmed = typeof skill === 'string' ? skill.trim() : skill;
+              if (skillTrimmed.toLowerCase().includes(query)) {
+                const skillKey = `tag-${skillTrimmed.toLowerCase()}`;
                 if (!seen.has(skillKey)) {
                   seen.add(skillKey);
                   suggestionsList.push({
                     id: skillKey,
                     type: 'tag',
-                    text: skill,
+                    text: skillTrimmed,
                     subtext: 'Skill Tag'
                   });
                 }
@@ -163,8 +164,8 @@ export const useSmartSearch = () => {
               id: serviceKey,
               type: 'service',
               text: service.title,
-              subtext: `by ${service.profiles?.display_name || 'Helpanion'}`,
-              userId: service.profiles?.user_id,
+              subtext: `by ${service.profiles ? (service.profiles as any).display_name || 'Helpanion' : 'Helpanion'}`,
+              userId: service.profiles ? (service.profiles as any).user_id : undefined,
               category: service.category || undefined
             });
           }

@@ -13,8 +13,8 @@ export interface Profile {
   status: 'pending' | 'active' | 'in_review' | null;
   email: string | null;
   phone: string | null;
-  role: string | null;
-  last_active_role: string | null;
+  role: 'walker' | 'helpanion' | null;
+  last_active_role: 'walker' | 'helpanion' | null;
   linkedin_url: string | null;
   instagram_url: string | null;
   website_url: string | null;
@@ -22,7 +22,7 @@ export interface Profile {
   school: string | null;
   use_case: string | null;
   username: string | null;
-  skills: string | null;
+  skills: string[] | null;
 }
 
 let profileCache: Profile | null = null;

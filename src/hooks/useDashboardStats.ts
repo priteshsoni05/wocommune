@@ -61,7 +61,10 @@ export const useDashboardStats = () => {
         profile.skills,
         profile.avatar_url
       ];
-      const completedFields = profileFields.filter(field => field && field.trim()).length;
+      const completedFields = profileFields.filter(field => {
+        if (Array.isArray(field)) return field.length > 0;
+        return field && field.trim();
+      }).length;
       const profileCompletion = Math.round((completedFields / profileFields.length) * 100);
 
       // Calculate service stats

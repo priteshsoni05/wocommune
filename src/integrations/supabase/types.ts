@@ -183,6 +183,7 @@ export type Database = {
           skills: string[] | null
           status: string | null
           updated_at: string
+          use_case: string | null
           user_id: string
           username: string | null
           website_url: string | null
@@ -204,6 +205,7 @@ export type Database = {
           skills?: string[] | null
           status?: string | null
           updated_at?: string
+          use_case?: string | null
           user_id: string
           username?: string | null
           website_url?: string | null
@@ -225,6 +227,7 @@ export type Database = {
           skills?: string[] | null
           status?: string | null
           updated_at?: string
+          use_case?: string | null
           user_id?: string
           username?: string | null
           website_url?: string | null
