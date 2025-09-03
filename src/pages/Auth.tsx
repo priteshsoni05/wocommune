@@ -11,6 +11,8 @@ import { RoleSwitchModal } from '@/components/auth/RoleSwitchModal';
 import { SignupForm } from '@/components/auth/SignupForm';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
+import GlobalHeader from '@/components/common/GlobalHeader';
+import { Footer } from '@/components/common/Footer';
 import { toast } from 'sonner';
 
 export default function Auth() {
@@ -162,72 +164,80 @@ export default function Auth() {
   // If showing signup form for specific role
   if (showSignupForm && selectedRole) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
-        <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-          <CardHeader className="text-center space-y-4 px-6 py-6">
-            <div className="flex items-center justify-center mb-4">
-              <button
-                onClick={handleBackToMain}
-                className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1"
-                aria-label="Go back"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <div className="flex-1">
-                <CardTitle className="text-2xl font-bold text-foreground">
-                  Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
-                </CardTitle>
+      <div className="min-h-screen flex flex-col">
+        <GlobalHeader />
+        <div className="flex-1 flex items-center justify-center p-4 pt-16">
+          <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
+            <CardHeader className="text-center space-y-4 px-6 py-6">
+              <div className="flex items-center justify-center mb-4">
+                <button
+                  onClick={handleBackToMain}
+                  className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1"
+                  aria-label="Go back"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <div className="flex-1">
+                  <CardTitle className="text-2xl font-bold text-foreground">
+                    Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
+                  </CardTitle>
+                </div>
               </div>
-            </div>
-            <CardDescription className="text-muted-foreground leading-relaxed">
-              {selectedRole === 'helpanion' 
-                ? 'Share your experiences and guide others' 
-                : 'Seek guidance and connect with helpanions'
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-6 pb-6">
-            <SignupForm
-              selectedRole={selectedRole}
-              onSuccess={handleSignupSuccess}
-              onCancel={handleBackToMain}
-            />
-          </CardContent>
-        </Card>
+              <CardDescription className="text-muted-foreground leading-relaxed">
+                {selectedRole === 'helpanion' 
+                  ? 'Share your experiences and guide others' 
+                  : 'Seek guidance and connect with helpanions'
+                }
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="px-6 pb-6">
+              <SignupForm
+                selectedRole={selectedRole}
+                onSuccess={handleSignupSuccess}
+                onCancel={handleBackToMain}
+              />
+            </CardContent>
+          </Card>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20 flex items-center justify-center p-4 safe-area-y">
-      <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-        <CardHeader className="text-center space-y-4 px-6 py-6">
-          <div className="flex items-center justify-center mb-4">
-            <Link to="/" className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1">
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div className="flex-1">
+    <div className="min-h-screen flex flex-col">
+      <GlobalHeader />
+      
+      {/* Green Banner */}
+      <div className="bg-emerald-600 text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <button className="bg-white/10 px-3 py-1 rounded text-sm font-medium">
+            GET HELP
+          </button>
+          <span className="text-sm">
+            WO COMMUNE - Connecting walkers with helpanions
+          </span>
+        </div>
+        <div className="flex space-x-2">
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+        </div>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-4">
+        {authMode === 'login' ? (
+          <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
+            <CardHeader className="text-center space-y-4 px-6 py-6">
               <CardTitle className="text-2xl font-bold text-foreground">
-                {getMainTitle()}
+                Welcome Back
               </CardTitle>
-            </div>
-          </div>
-          <CardDescription className="text-muted-foreground leading-relaxed">
-            {getMainDescription()}
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent className="space-y-6 px-6 pb-6">
-          {(() => {
-            console.log('Rendering Auth content - authMode:', authMode, 'showSignupForm:', showSignupForm, 'showRoleSelection:', showRoleSelection);
-            return null;
-          })()}
-          {authMode === 'login' ? (
-            <>
-              {(() => {
-                console.log('Rendering login form');
-                return null;
-              })()}
+              <CardDescription className="text-muted-foreground leading-relaxed">
+                Sign in to access your dashboard
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent className="space-y-6 px-6 pb-6">
               {noRoleMessage && (
                 <Alert className="border-brand/20 bg-brand/5">
                   <AlertCircle className="h-4 w-4 text-brand" />
@@ -271,48 +281,51 @@ export default function Auth() {
                   Sign up
                 </button>
               </div>
-            </>
-          ) : (
-            <>
-              {(() => {
-                console.log('Rendering signup content');
-                return null;
-              })()}
-              <div className="text-center">
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  Please select your role to continue with signup
-                </p>
-                <div className="text-center text-sm text-muted-foreground">
-                  Already have an account?{' '}
-                  <button
-                    onClick={() => {
-                      console.log('Switching to login mode');
-                      setAuthMode('login');
-                      setShowRoleSelection(false);
-                    }}
-                    className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
-                  >
-                    Sign in
-                  </button>
-                </div>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Role Selection Modal for Signup */}
-      <RoleSelectionModal
-        isOpen={showRoleSelection}
-        onClose={() => {
-          setShowRoleSelection(false);
-          setAuthMode('login');
-        }}
-        onSelectRole={handleSignupForRole}
-        title="Choose Your Role"
-        description="Select how you'd like to participate in the WO Commune community."
-      />
-
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="w-full max-w-lg text-center">
+            <h1 className="text-3xl font-bold text-foreground mb-8">
+              JOIN WO COMMUNE AS
+            </h1>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold border-2 hover:bg-muted/10"
+                onClick={() => handleSignupForRole('walker')}
+              >
+                Walker
+              </Button>
+              
+              <Button
+                size="lg"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                onClick={() => handleSignupForRole('helpanion')}
+              >
+                Helpanion
+              </Button>
+            </div>
+            
+            <div className="mt-8 text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <button
+                onClick={() => {
+                  setAuthMode('login');
+                  setShowRoleSelection(false);
+                }}
+                className="text-brand hover:text-brand/80 hover:underline font-semibold"
+              >
+                Sign in
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <Footer />
+      
       {/* Role Switch Modal for Multi-Role Users */}
       <RoleSwitchModal
         isOpen={showRoleSwitch}
