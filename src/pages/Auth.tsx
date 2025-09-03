@@ -284,7 +284,8 @@ export default function Auth() {
               
               <Button
                 size="lg"
-                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold bg-brand hover:bg-brand/90 text-brand-foreground"
+                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold text-white"
+                style={{ backgroundColor: '#193232' }}
                 onClick={() => handleSignupForRole('helpanion')}
               >
                 Helpanion
