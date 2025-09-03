@@ -108,8 +108,10 @@ const HelpanionDashboard = () => {
         handleCorruptedData();
       }
       
-      // Update database as backup
-      updateProfile({ last_active_role: "helpanion" });
+      // Update database as backup only if role is different
+      if (profile.last_active_role !== "helpanion") {
+        updateProfile({ last_active_role: "helpanion" });
+      }
       setWalkerFormData({
         fullName: profile.display_name || "",
         email: profile.email || ""
