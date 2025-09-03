@@ -81,7 +81,12 @@ export const useOptimizedProfile = () => {
   }, [fetchProfile]);
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
-    if (!user || !profile) return;
+    if (!user || !profile) {
+      console.error('Cannot update profile: missing user or profile', { user: !!user, profile: !!profile });
+      return { error: new Error('User or profile not available') };
+    }
+
+    console.log('Updating profile for user:', user.id, 'with updates:', updates);
 
     try {
       const { data, error } = await supabase
@@ -92,9 +97,10 @@ export const useOptimizedProfile = () => {
         .single();
 
       if (error) {
-        console.error('Error updating profile:', error);
+        console.error('Supabase error updating profile:', error);
         return { error };
       } else {
+        console.log('Profile update successful:', data);
         const updatedProfile = data as Profile;
         profileCache = updatedProfile;
         lastFetchTime = Date.now();
@@ -102,7 +108,7 @@ export const useOptimizedProfile = () => {
         return { data: updatedProfile };
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Unexpected error updating profile:', error);
       return { error };
     }
   }, [user, profile]);

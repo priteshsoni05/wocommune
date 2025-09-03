@@ -310,14 +310,20 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         portfolio_url: formData.portfolio_url,
         website_url: formData.website_url,
       };
+      
+      console.log('Attempting to update profile with data:', updateData);
       const result = await updateProfile(updateData);
-      if (result.error) {
+      console.log('Update profile result:', result);
+      
+      if (result?.error) {
+        console.error('Profile update error details:', result.error);
         toast({
           title: "Error",
-          description: "Failed to update profile. Please try again.",
+          description: `Failed to update profile: ${result.error.message || 'Please try again.'}`,
           variant: "destructive",
         });
       } else {
+        console.log('Profile updated successfully');
         toast({
           title: "Success",
           description: "Profile updated successfully!",
@@ -330,9 +336,10 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         }));
       }
     } catch (error) {
+      console.error('Unexpected error during profile update:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred.",
+        description: `An unexpected error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: "destructive",
       });
     } finally {
