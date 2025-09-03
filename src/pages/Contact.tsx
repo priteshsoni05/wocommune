@@ -35,7 +35,7 @@ export default function Contact() {
           <nav className="flex items-center gap-6 text-sm">
             <a href="/" className="text-muted-foreground hover:text-foreground transition-colors">Home</a>
             <a href="/about" className="text-muted-foreground hover:text-foreground transition-colors">About</a>
-            <a href="/get-help" className="text-muted-foreground hover:text-foreground transition-colors">Commune</a>
+            <a href="/wo-commune" className="text-muted-foreground hover:text-foreground transition-colors">Commune</a>
           </nav>
         </div>
       </header>

@@ -73,7 +73,6 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             
-            <Route path="/get-help" element={<WOCommune />} />
             <Route path="/wo-commune" element={<WOCommune />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/helpanions" element={<HelpanionsDirectory />} />

@@ -35,8 +35,8 @@ export function Footer() {
           <div>
             <h6 className="font-semibold mb-3">Commune</h6>
             <ul className="space-y-3 text-sm text-gray-700">
-              <li><Link to="/get-help" className="hover:underline">Know Commune</Link></li>
-              <li><Link to="/get-help" className="hover:underline">Join Commune</Link></li>
+              <li><Link to="/wo-commune" className="hover:underline">Know Commune</Link></li>
+              <li><Link to="/wo-commune" className="hover:underline">Join Commune</Link></li>
               <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
               <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
             </ul>

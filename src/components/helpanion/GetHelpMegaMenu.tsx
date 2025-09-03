@@ -111,7 +111,7 @@ export function GetHelpMegaMenu() {
                           {grp.items.map((it) => (
                             <li key={it}>
                               <Link
-                                to={`/get-help?category=${slugify(grp.label)}&topic=${slugify(it)}`}
+                                to={`/wo-commune?category=${slugify(grp.label)}&topic=${slugify(it)}`}
                                 className="text-sm text-foreground/80 hover:text-primary transition-colors"
                               >
                                 {it}

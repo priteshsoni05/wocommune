@@ -9,7 +9,7 @@ export default function WOCommuneSlate() {
         {/* Left section - matches logo layout */}
         <div className="flex-1">
           <Link
-            to="/get-help"
+            to="/wo-commune"
             className="font-medium text-xs sm:text-sm transition-colors whitespace-nowrap" style={{ color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)"} onMouseLeave={(e) => e.currentTarget.style.color = "hsl(40, 20%, 98%)"}
           >
             Get Help

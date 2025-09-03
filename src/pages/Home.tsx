@@ -65,14 +65,14 @@ const HomePage: React.FC = () => {
           {/* CTA buttons */}
           <div className="mt-6 flex gap-3">
             <Link
-              to="/get-help"
+              to="/wo-commune"
               className="inline-block px-5 py-2 rounded-md font-semibold"
               style={{ backgroundColor: PINE, color: "white" }}
             >
               Start Your Journey
             </Link>
             <Link
-              to="/get-help"
+              to="/wo-commune"
               className="inline-block px-5 py-2 rounded-md font-medium border border-white/60 text-white bg-white/10 hover:bg-white/20"
             >
               Join the Community
@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
 
           <div className="text-center">
             <Link
-              to="/get-help"
+              to="/wo-commune"
               className="inline-flex items-center px-6 py-3 rounded-md font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
             >
               Find your helpanion →

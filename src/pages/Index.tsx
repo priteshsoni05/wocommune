@@ -153,7 +153,7 @@ function Header({ onLoginClick }: { onLoginClick: () => void }) {
         <nav className="text-sm">
           <ul className="flex items-center gap-4">
             <li><Link to="/about" className="hover:underline">About</Link></li>
-            <li><Link to="/get-help" className="hover:underline">Commune</Link></li>
+            <li><Link to="/wo-commune" className="hover:underline">Commune</Link></li>
             <li><Link to="#" className="hidden md:inline hover:underline">Shop</Link></li>
           </ul>
         </nav>
@@ -169,7 +169,7 @@ function SubHeader() {
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-14">
         <div className="flex items-center gap-3">
           <Link
-            to="/get-help"
+            to="/wo-commune"
             className="font-semibold tracking-widest text-[15px]"
             style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
           >
