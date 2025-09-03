@@ -84,10 +84,7 @@ const App = () => (
             <Route path="/walker-dashboard" element={<WalkerDashboard />} />
             <Route path="/helpanion-dashboard" element={<HelpanionDashboard />} />
 
-            {/* Back-compat routes (older links) */}
-            {/* Old /p/:username links still work */}
-            <Route path="/p/:username" element={<PublicProfile />} />
-            {/* Old /profile/:id links get redirected to /:username */}
+            {/* Legacy /profile/:id links get redirected to /:username */}
             <Route path="/profile/:id" element={<ProfileIdRedirect />} />
 
             {/* Top-level username profile route */}
