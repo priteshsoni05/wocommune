@@ -29,7 +29,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
       if (error) throw error;
       // Filter out admin role from the UI
-      return (data || []).filter((role: any) => role === 'walker' || role === 'helpanion') as UserRole[];
+      return (data || []).map((item: any) => item.role) as UserRole[];
     } catch (error) {
       console.error('Error fetching user roles:', error);
       return [];
