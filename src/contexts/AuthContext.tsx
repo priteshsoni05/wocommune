@@ -9,6 +9,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, displayName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  clearAuthCache: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,17 +72,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signOut = async () => {
-    console.log('AuthContext: signOut called');
-    // Clear role data from localStorage before signing out
+  const clearAuthCache = () => {
     try {
+      // Clear all authentication-related localStorage data
       localStorage.removeItem('wo_commune_user_role');
       localStorage.removeItem('wo_commune_role_timestamp');
       localStorage.removeItem('wo_commune_preferred_role');
+      
+      // Clear any form data that might be cached
+      const formKeys = Object.keys(localStorage).filter(key => 
+        key.includes('form_') || key.includes('auth_') || key.includes('login_') || key.includes('signup_')
+      );
+      formKeys.forEach(key => localStorage.removeItem(key));
+      
+      console.log('Auth cache cleared successfully');
     } catch (error) {
-      console.error('Error clearing role data:', error);
+      console.error('Error clearing auth cache:', error);
     }
-    
+  };
+
+  const signOut = async () => {
+    console.log('AuthContext: signOut called');
+    clearAuthCache();
     await supabase.auth.signOut();
   };
 
@@ -91,7 +103,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signUp,
     signIn,
-    signOut
+    signOut,
+    clearAuthCache
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
