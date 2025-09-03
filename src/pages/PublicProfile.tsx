@@ -48,94 +48,76 @@ const OptimizedPublicProfile = () => {
 
     console.log('Fetching public profile for username:', username);
     try {
-      // Optimized single query with joins
-      const { data: profiles, error: profilesError } = await supabase
+      // First get the profile
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select(`
-          id, 
-          user_id,
-          display_name, 
-          bio, 
-          avatar_url, 
-          created_at, 
-          username,
-          skills,
-          linkedin_url,
-          instagram_url,
-          website_url,
-          portfolio_url,
-          services!left(
-            id,
-            title,
-            description,
-            price_per_hour,
-            duration_minutes,
-            category,
-            is_active
-          ),
-          availability_slots!left(
-            id,
-            day_of_week,
-            start_time,
-            end_time,
-            is_available
-          )
-        `)
+        .select("*")
         .eq("username", username)
         .eq("status", "active")
-        .not("username", "is", null)
-        .not("username", "eq", "")
         .maybeSingle();
 
-      console.log('Profile query result:', { profiles, profilesError });
+      console.log('Profile query result:', { profile, profileError });
 
-      if (profilesError) {
-        console.error('Profile query error:', profilesError);
-        throw profilesError;
+      if (profileError) {
+        console.error('Profile query error:', profileError);
+        throw profileError;
       }
 
-      if (!profiles) {
+      if (!profile) {
         console.log('No profile found for username:', username);
         throw new Error("No profile found");
       }
 
-      // Process the data
-      const services = Array.isArray(profiles.services) 
-        ? profiles.services.filter(s => s.is_active) 
-        : [];
+      // Then get services separately
+      const { data: services, error: servicesError } = await supabase
+        .from("services")
+        .select("*")
+        .eq("helper_id", profile.user_id)
+        .eq("is_active", true);
 
-      const availability = Array.isArray(profiles.availability_slots)
-        ? profiles.availability_slots.filter(slot => slot.is_available)
-        : [];
+      console.log('Services query result:', { services, servicesError });
+
+      // Then get availability separately
+      const { data: availability, error: availabilityError } = await supabase
+        .from("availability_slots")
+        .select("*")
+        .eq("helper_id", profile.user_id)
+        .eq("is_available", true);
+
+      console.log('Availability query result:', { availability, availabilityError });
+
+      // Process the data - use the fetched data directly
+      const processedServices = services || [];
+      const processedAvailability = availability || [];
 
       // Create profile object
       const profileData: Profile = {
-        id: profiles.id,
-        user_id: profiles.user_id,
-        display_name: profiles.display_name,
-        bio: profiles.bio,
-        avatar_url: profiles.avatar_url,
-        username: profiles.username,
-        skills: profiles.skills,
-        created_at: profiles.created_at,
-        updated_at: profiles.created_at,
-        status: 'active',
-        email: null,
-        phone: null,
-        role: null,
-        last_active_role: null,
-        linkedin_url: profiles.linkedin_url,
-        instagram_url: profiles.instagram_url,
-        website_url: profiles.website_url,
-        portfolio_url: profiles.portfolio_url,
-        school: null,
-        use_case: null
+        id: profile.id,
+        user_id: profile.user_id,
+        display_name: profile.display_name,
+        bio: profile.bio,
+        avatar_url: profile.avatar_url,
+        created_at: profile.created_at,
+        updated_at: profile.updated_at || profile.created_at,
+        username: profile.username,
+        skills: profile.skills,
+        linkedin_url: profile.linkedin_url,
+        instagram_url: profile.instagram_url,
+        website_url: profile.website_url,
+        portfolio_url: profile.portfolio_url,
+        role: profile.role,
+        email: profile.email,
+        phone: profile.phone,
+        status: profile.status as 'active' | 'pending' | 'in_review',
+        last_active_role: profile.last_active_role,
+        school: profile.school,
+        use_case: profile.use_case
       };
 
-      const result = {
+      const result: PublicProfileData = {
         profile: profileData,
-        services: services as Service[],
-        availability: availability as AvailabilitySlot[],
+        services: processedServices,
+        availability: processedAvailability
       };
 
       console.log('Public profile data loaded successfully:', result);
