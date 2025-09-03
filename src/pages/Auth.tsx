@@ -34,16 +34,25 @@ export default function Auth() {
 
   // Initialize auth mode from URL
   useEffect(() => {
+    console.log('Auth page URL params:', { mode, role });
     if (mode === 'signup') {
+      console.log('Setting signup mode');
       setAuthMode('signup');
       if (role) {
         setSelectedRole(role);
         setShowSignupForm(true);
+        console.log('Showing signup form for role:', role);
       } else {
         setShowRoleSelection(true);
+        console.log('Showing role selection modal');
       }
     } else {
+      console.log('Setting login mode');
       setAuthMode('login');
+      // Reset signup states when switching to login
+      setShowRoleSelection(false);
+      setShowSignupForm(false);
+      setSelectedRole(null);
     }
   }, [mode, role]);
 
@@ -133,8 +142,11 @@ export default function Auth() {
   };
 
   const handleCreateAccount = () => {
+    console.log('handleCreateAccount called');
     setAuthMode('signup');
     setShowRoleSelection(true);
+    setShowSignupForm(false);
+    setSelectedRole(null);
   };
 
   const getMainTitle = () => {
@@ -206,8 +218,16 @@ export default function Auth() {
         </CardHeader>
         
         <CardContent className="space-y-6 px-6 pb-6">
+          {(() => {
+            console.log('Rendering Auth content - authMode:', authMode, 'showSignupForm:', showSignupForm, 'showRoleSelection:', showRoleSelection);
+            return null;
+          })()}
           {authMode === 'login' ? (
             <>
+              {(() => {
+                console.log('Rendering login form');
+                return null;
+              })()}
               {noRoleMessage && (
                 <Alert className="border-brand/20 bg-brand/5">
                   <AlertCircle className="h-4 w-4 text-brand" />
@@ -253,23 +273,30 @@ export default function Auth() {
               </div>
             </>
           ) : (
-            <div className="text-center">
-              <p className="text-muted-foreground mb-6 leading-relaxed">
-                Please select your role to continue with signup
-              </p>
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{' '}
-                <button
-                  onClick={() => {
-                    setAuthMode('login');
-                    setShowRoleSelection(false);
-                  }}
-                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
-                >
-                  Sign in
-                </button>
+            <>
+              {(() => {
+                console.log('Rendering signup content');
+                return null;
+              })()}
+              <div className="text-center">
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  Please select your role to continue with signup
+                </p>
+                <div className="text-center text-sm text-muted-foreground">
+                  Already have an account?{' '}
+                  <button
+                    onClick={() => {
+                      console.log('Switching to login mode');
+                      setAuthMode('login');
+                      setShowRoleSelection(false);
+                    }}
+                    className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </CardContent>
       </Card>
