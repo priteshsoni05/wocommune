@@ -12,6 +12,7 @@ import { SignupForm } from '@/components/auth/SignupForm';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
 import GlobalHeader from '@/components/common/GlobalHeader';
+import WOCommuneSlate from '@/components/common/WOCommuneSlate';
 import { Footer } from '@/components/common/Footer';
 import { toast } from 'sonner';
 
@@ -172,6 +173,7 @@ export default function Auth() {
     return (
       <div className="min-h-screen flex flex-col">
         <GlobalHeader />
+        <WOCommuneSlate />
         <div className="flex-1 flex items-center justify-center p-4 pt-16">
           <Card className="w-full max-w-2xl shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
             <CardContent className="p-8">
@@ -191,6 +193,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex flex-col">
       <GlobalHeader />
+      <WOCommuneSlate />
 
       <div className="flex-1 flex items-center justify-center p-4 pt-16">
         {authMode === 'login' ? (
