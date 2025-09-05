@@ -74,11 +74,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/api/placeholder/800/600")' }}>
       {/* Header */}
       <div className="text-center space-y-3">
-        <h1 className="font-brand text-3xl font-bold text-foreground">Welcome back</h1>
-        <p className="text-muted-foreground font-sans">Sign in to your account to continue</p>
+        <h1 className="font-sans text-lg text-foreground">WELCOME BACK TO WO COMMUNE</h1>
+        <p className="text-muted-foreground font-sans">
+          Sign in to continue your journey
+        </p>
       </div>
 
       {/* Form */}
@@ -146,7 +148,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 font-sans"
+          className="w-full h-12 bg-role-button hover:bg-role-button/90 text-white font-semibold text-base rounded-lg transition-all duration-200 font-sans"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign in
