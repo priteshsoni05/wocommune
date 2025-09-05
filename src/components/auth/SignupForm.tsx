@@ -243,11 +243,11 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   };
 
   return (
-    <div className="space-y-8">
+    <div className={`space-y-8 ${selectedRole === 'helpanion' ? 'bg-cover bg-center bg-no-repeat' : ''}`} style={selectedRole === 'helpanion' ? { backgroundImage: 'url("/api/placeholder/800/600")' } : {}}>
       {/* Header */}
       <div className="text-center space-y-3">
-        <h1 className="font-brand text-3xl font-bold text-foreground">
-          Create your {selectedRole} account
+        <h1 className={`${selectedRole === 'helpanion' ? 'font-sans text-lg' : 'font-brand text-3xl font-bold'} text-foreground`}>
+          {selectedRole === 'helpanion' ? 'START YOUR HELPANION JOURNEY' : `Create your ${selectedRole} account`}
         </h1>
         <p className="text-muted-foreground font-sans">
           Join our community and start {selectedRole === 'helpanion' ? 'helping others' : 'getting help'}
@@ -386,7 +386,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <Button
             type="submit"
             disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError)}
-            className="flex-1 h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 font-sans"
+            className={`flex-1 h-12 ${selectedRole === 'helpanion' ? 'bg-helpanion-button hover:bg-helpanion-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 font-sans`}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create account
