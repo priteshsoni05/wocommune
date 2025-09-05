@@ -11,11 +11,13 @@ export type UserRole = 'walker' | 'helpanion';
 interface LoginFormProps {
   onSuccess: (userRoles: UserRole[]) => void;
   onNoRoleFound: (email: string) => void;
+  setShowForgotPassword?: (show: boolean) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({
   onSuccess,
-  onNoRoleFound
+  onNoRoleFound,
+  setShowForgotPassword
 }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -72,50 +74,84 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground font-semibold">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="Enter your email"
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-3">
+        <h1 className="font-brand text-3xl font-bold text-foreground">Welcome back</h1>
+        <p className="text-muted-foreground font-sans">Sign in to your account to continue</p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground font-semibold">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder="Enter your password"
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
-      </div>
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-5">
+          {/* Email Field */}
+          <div className="space-y-2">
+            <Label 
+              htmlFor="email" 
+              className="text-sm font-medium text-foreground font-sans"
+            >
+              Email address
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Enter your email"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+            />
+          </div>
 
-      {error && (
-        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="text-destructive font-medium">
-            {error}
-          </AlertDescription>
-        </Alert>
-      )}
+          {/* Password Field */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label 
+                htmlFor="password" 
+                className="text-sm font-medium text-foreground font-sans"
+              >
+                Password
+              </Label>
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword && setShowForgotPassword(true)}
+                className="text-sm text-primary hover:text-primary/80 transition-colors font-sans"
+              >
+                Forgot password?
+              </button>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter your password"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+            />
+          </div>
+        </div>
 
-      <Button
-        type="submit"
-        disabled={loading}
-        className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
-      >
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Sign In
-      </Button>
-    </form>
+        {/* Error Alert */}
+        {error && (
+          <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-lg">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-destructive font-medium font-sans">
+              {error}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 font-sans"
+        >
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Sign in
+        </Button>
+      </form>
+    </div>
   );
 };

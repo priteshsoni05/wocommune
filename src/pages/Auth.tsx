@@ -173,30 +173,8 @@ export default function Auth() {
       <div className="min-h-screen flex flex-col">
         <GlobalHeader />
         <div className="flex-1 flex items-center justify-center p-4 pt-16">
-          <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-            <CardHeader className="text-center space-y-4 px-6 py-6">
-              <div className="flex items-center justify-center mb-4">
-                <button
-                  onClick={handleBackToMain}
-                  className="text-brand hover:text-brand/80 mr-4 touch-manipulation p-1"
-                  aria-label="Go back"
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </button>
-                <div className="flex-1">
-                  <CardTitle className="text-2xl font-bold text-foreground">
-                    Join as {selectedRole === 'helpanion' ? 'Helpanion' : 'Walker'}
-                  </CardTitle>
-                </div>
-              </div>
-              <CardDescription className="text-muted-foreground leading-relaxed">
-                {selectedRole === 'helpanion' 
-                  ? 'Share your experiences and guide others' 
-                  : 'Seek guidance and connect with helpanions'
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="px-6 pb-6">
+          <Card className="w-full max-w-2xl shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
+            <CardContent className="p-8">
               <SignupForm
                 selectedRole={selectedRole}
                 onSuccess={handleSignupSuccess}
@@ -216,21 +194,12 @@ export default function Auth() {
 
       <div className="flex-1 flex items-center justify-center p-4 pt-16">
         {authMode === 'login' ? (
-          <Card className="w-full max-w-md shadow-lg border-border/50 bg-card/95 backdrop-blur-sm">
-            <CardHeader className="text-center space-y-4 px-6 py-6">
-              <CardTitle className="text-2xl font-bold text-foreground">
-                Welcome Back
-              </CardTitle>
-              <CardDescription className="text-muted-foreground leading-relaxed">
-                Sign in to access your dashboard
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-6 px-6 pb-6">
+          <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
+            <CardContent className="p-8">
               {noRoleMessage && (
-                <Alert className="border-brand/20 bg-brand/5">
-                  <AlertCircle className="h-4 w-4 text-brand" />
-                  <AlertDescription className="text-brand font-medium">
+                <Alert className="border-primary/20 bg-primary/5 mb-6">
+                  <AlertCircle className="h-4 w-4 text-primary" />
+                  <AlertDescription className="text-primary font-medium font-sans">
                     {noRoleMessage}
                   </AlertDescription>
                 </Alert>
@@ -239,33 +208,26 @@ export default function Auth() {
               <LoginForm
                 onSuccess={handleLoginSuccess}
                 onNoRoleFound={handleLoginNoRole}
+                setShowForgotPassword={setShowForgotPassword}
               />
               
-              <div className="space-y-3">
-                <Button
-                  variant="outline"
-                  className="w-full h-11 font-semibold touch-manipulation"
-                  onClick={() => setShowForgotPassword(true)}
-                >
-                  Forgot Password?
-                </Button>
-                
-                {noRoleMessage && (
+              {noRoleMessage && (
+                <div className="mt-6">
                   <Button
                     variant="default"
-                    className="w-full h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
+                    className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 font-sans"
                     onClick={handleCreateAccount}
                   >
                     Create New Profile
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
               
-              <div className="text-center text-sm text-muted-foreground">
+              <div className="mt-8 text-center text-sm text-muted-foreground font-sans">
                 Don't have an account?{' '}
                 <button
                   onClick={handleCreateAccount}
-                  className="text-brand hover:text-brand/80 hover:underline font-semibold touch-manipulation"
+                  className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
                 >
                   Sign up
                 </button>
@@ -273,39 +235,54 @@ export default function Auth() {
             </CardContent>
           </Card>
         ) : (
-          <div className="w-full max-w-lg text-center">
-            <h3 className="text-lg font-bold text-foreground mb-8">
-              JOIN WO COMMUNE AS
-            </h3>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold border-2 hover:bg-muted/10"
-                onClick={() => handleSignupForRole('walker')}
-              >
-                Walker
-              </Button>
-              
-              <Button
-                size="lg"
-                className="w-full sm:w-auto px-8 py-6 text-lg font-semibold text-white"
-                style={{ backgroundColor: '#193232' }}
-                onClick={() => handleSignupForRole('helpanion')}
-              >
-                Helpanion
-              </Button>
+          <div className="w-full max-w-2xl text-center">
+            <div className="space-y-6 mb-12">
+              <h1 className="font-brand text-4xl font-bold text-foreground">Join WO Commune</h1>
+              <p className="text-lg text-muted-foreground font-sans max-w-md mx-auto">
+                Choose your role and become part of our supportive community
+              </p>
             </div>
             
-            <div className="mt-8 text-center text-sm text-muted-foreground">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+              <Card 
+                className="group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 hover:border-primary/30"
+                onClick={() => handleSignupForRole('walker')}
+              >
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/10 transition-colors">
+                    <span className="text-2xl font-brand font-bold text-foreground group-hover:text-primary transition-colors">W</span>
+                  </div>
+                  <h3 className="font-brand text-xl font-bold text-foreground mb-2">Walker</h3>
+                  <p className="text-sm text-muted-foreground font-sans">
+                    Seek guidance and connect with helpanions
+                  </p>
+                </CardContent>
+              </Card>
+              
+              <Card 
+                className="group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 hover:border-primary/30 bg-primary/5"
+                onClick={() => handleSignupForRole('helpanion')}
+              >
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/90 transition-colors">
+                    <span className="text-2xl font-brand font-bold text-primary-foreground">H</span>
+                  </div>
+                  <h3 className="font-brand text-xl font-bold text-foreground mb-2">Helpanion</h3>
+                  <p className="text-sm text-muted-foreground font-sans">
+                    Share your experiences and guide others
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="mt-12 text-center text-sm text-muted-foreground font-sans">
               Already have an account?{' '}
               <button
                 onClick={() => {
                   setAuthMode('login');
                   setShowRoleSelection(false);
                 }}
-                className="text-brand hover:text-brand/80 hover:underline font-semibold"
+                className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
               >
                 Sign in
               </button>

@@ -243,116 +243,165 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-2">
-        <Label htmlFor="name" className="text-foreground font-semibold">Full Name</Label>
-        <Input
-          id="name"
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-          required
-          placeholder="Enter your full name"
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-3">
+        <h1 className="font-brand text-3xl font-bold text-foreground">
+          Create your {selectedRole} account
+        </h1>
+        <p className="text-muted-foreground font-sans">
+          Join our community and start {selectedRole === 'helpanion' ? 'helping others' : 'getting help'}
+        </p>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-foreground font-semibold">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-          required
-          placeholder="Enter your email"
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-foreground font-semibold">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          value={formData.password}
-          onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-          required
-          placeholder="Create a password"
-          minLength={6}
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="text-foreground font-semibold">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-          required
-          placeholder="Confirm your password"
-          minLength={6}
-          className="h-11 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation"
-        />
-      </div>
-
-      {selectedRole === 'helpanion' && (
-        <div className="space-y-2">
-          <Label htmlFor="username" className="text-foreground font-semibold">Username</Label>
-          <div className="relative">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-5">
+          {/* Full Name Field */}
+          <div className="space-y-2">
+            <Label 
+              htmlFor="name" 
+              className="text-sm font-medium text-foreground font-sans"
+            >
+              Full name
+            </Label>
             <Input
-              id="username"
+              id="name"
               type="text"
-              value={formData.username}
-              onChange={(e) => handleUsernameChange(e.target.value)}
-              onBlur={handleUsernameBlur}
+              value={formData.name}
+              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
-              placeholder="Choose a unique username"
-              className={`h-11 pr-10 border-border bg-background text-foreground placeholder:text-muted-foreground focus:border-brand focus:ring-brand/20 touch-manipulation ${usernameError ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : ''}`}
+              placeholder="Enter your full name"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
             />
-            {usernameLoading && (
-              <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
-            )}
           </div>
-          {usernameError && (
-            <p className="text-sm text-destructive flex items-center gap-1.5">
-              <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
-              <span>{usernameError}</span>
-            </p>
+
+          {/* Email Field */}
+          <div className="space-y-2">
+            <Label 
+              htmlFor="email" 
+              className="text-sm font-medium text-foreground font-sans"
+            >
+              Email address
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              required
+              placeholder="Enter your email"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+            />
+          </div>
+
+          {/* Username Field (for Helpanions only) */}
+          {selectedRole === 'helpanion' && (
+            <div className="space-y-2">
+              <Label 
+                htmlFor="username" 
+                className="text-sm font-medium text-foreground font-sans"
+              >
+                Username
+              </Label>
+              <div className="relative">
+                <Input
+                  id="username"
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  onBlur={handleUsernameBlur}
+                  required
+                  placeholder="Choose a unique username"
+                  className={`h-12 px-4 pr-10 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans ${
+                    usernameError ? 'border-destructive focus:border-destructive focus:ring-destructive/10' : ''
+                  }`}
+                />
+                {usernameLoading && (
+                  <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+                )}
+              </div>
+              {usernameError && (
+                <p className="text-sm text-destructive flex items-center gap-1.5 font-sans">
+                  <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span>{usernameError}</span>
+                </p>
+              )}
+            </div>
           )}
+
+          {/* Password Fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label 
+                htmlFor="password" 
+                className="text-sm font-medium text-foreground font-sans"
+              >
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                required
+                placeholder="Create password"
+                minLength={6}
+                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label 
+                htmlFor="confirmPassword" 
+                className="text-sm font-medium text-foreground font-sans"
+              >
+                Confirm password
+              </Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                required
+                placeholder="Confirm password"
+                minLength={6}
+                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              />
+            </div>
+          </div>
         </div>
-      )}
 
-      {error && (
-        <Alert variant="destructive" className="border-destructive/20 bg-destructive/5">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription className="text-destructive font-medium">
-            {error}
-          </AlertDescription>
-        </Alert>
-      )}
+        {/* Error Alert */}
+        {error && (
+          <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-lg">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-destructive font-medium font-sans">
+              {error}
+            </AlertDescription>
+          </Alert>
+        )}
 
-      <div className="flex space-x-3 pt-2">
-        <Button
-          type="submit"
-          disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError)}
-          className="flex-1 h-11 bg-brand hover:bg-brand/90 text-brand-foreground font-semibold touch-manipulation"
-        >
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Create Account
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={loading}
-          className="px-6 h-11 font-semibold touch-manipulation"
-        >
-          Cancel
-        </Button>
-      </div>
-    </form>
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
+          <Button
+            type="submit"
+            disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError)}
+            className="flex-1 h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base rounded-lg transition-all duration-200 font-sans"
+          >
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Create account
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+            className="sm:w-auto px-8 h-12 font-semibold text-base rounded-lg transition-all duration-200 font-sans border-input hover:bg-accent"
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 };
