@@ -254,12 +254,9 @@ export default function Auth() {
         ) : (
           <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="font-brand text-2xl font-bold text-foreground">
-                {getMainTitle()}
-              </CardTitle>
-              <CardDescription className="text-lg text-muted-foreground font-sans">
-                {getMainDescription()}
-              </CardDescription>
+              <h2 className="font-sans text-lg font-normal text-foreground">
+                JOIN WO COMMUNE AS
+              </h2>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button
