@@ -11,7 +11,7 @@ import { useRolePersistence } from "@/hooks/useRolePersistence";
 import { supabase } from "@/integrations/supabase/client";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
-import { RoleDebugInfo } from "@/components/debug/RoleDebugInfo";
+
 import GlobalHeader from "@/components/common/GlobalHeader";
 import WOCommuneSlate from "@/components/common/WOCommuneSlate";
 
@@ -364,7 +364,6 @@ export default function WOCommune(): JSX.Element {
 
       {/* Footer */}
       <Footer />
-      <RoleDebugInfo />
     </div>
   );
 }
