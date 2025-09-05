@@ -78,6 +78,8 @@ export const useHelpanions = () => {
 
       // Check which profiles have the helpanion role
       const profileUserIds = profiles.map(p => p.user_id);
+      console.log('useHelpanions: Profile user IDs:', profileUserIds);
+      
       const { data: helpanionRoles, error: rolesError } = await supabase
         .from('user_roles')
         .select('user_id')
@@ -85,6 +87,11 @@ export const useHelpanions = () => {
         .in('user_id', profileUserIds);
 
       console.log('useHelpanions: Roles query result:', { helpanionRoles, rolesError });
+
+      if (rolesError) {
+        console.error('Error fetching helpanion roles:', rolesError);
+        // Continue anyway and return empty array
+      }
 
       const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
       

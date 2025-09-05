@@ -91,7 +91,7 @@ export default function WOCommune(): JSX.Element {
       console.log('WOCommune: Starting to fetch helpanions...');
       
       try {
-        // First get profiles with basic info
+        // Get active profiles
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
           .select(`
@@ -102,16 +102,7 @@ export default function WOCommune(): JSX.Element {
             avatar_url, 
             created_at, 
             username,
-            skills,
-            services!left(
-              id,
-              title,
-              description,
-              price_per_hour,
-              duration_minutes,
-              category,
-              is_active
-            )
+            skills
           `)
           .eq("status", "active")
           .not("username", "is", null)
@@ -143,11 +134,17 @@ export default function WOCommune(): JSX.Element {
 
         const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
         
+        // Get services for helpanion users
+        const { data: services, error: servicesError } = await supabase
+          .from('services')
+          .select('*')
+          .in('helper_id', helpanionUserIds)
+          .eq('is_active', true);
+
         // Filter profiles to only include those with helpanion role and active services
         const helpanionProfiles = profiles.filter(profile => {
           const hasRole = helpanionUserIds.includes(profile.user_id);
-          const hasActiveServices = Array.isArray(profile.services) && 
-                                  profile.services.some(s => s.is_active);
+          const hasActiveServices = services?.some(s => s.helper_id === profile.user_id);
           return hasRole && hasActiveServices;
         });
 
