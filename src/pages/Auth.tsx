@@ -173,8 +173,10 @@ export default function Auth() {
     return (
       <div className="min-h-screen flex flex-col">
         <GlobalHeader />
-        <WOCommuneSlate />
-        <div className="flex-1 flex items-center justify-center p-4 pt-16">
+        <div className="pt-8 md:pt-10">
+          <WOCommuneSlate />
+        </div>
+        <div className="flex-1 flex items-center justify-center p-4 pt-8">
           <Card className="w-full max-w-2xl shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
             <CardContent className="p-8">
               <SignupForm
@@ -193,9 +195,11 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex flex-col">
       <GlobalHeader />
-      <WOCommuneSlate />
+      <div className="pt-8 md:pt-10">
+        <WOCommuneSlate />
+      </div>
 
-      <div className="flex-1 flex items-center justify-center p-4 pt-16">
+      <div className="flex-1 flex items-center justify-center p-4 pt-8">
         {authMode === 'login' ? (
           <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
             <CardContent className="p-8">
