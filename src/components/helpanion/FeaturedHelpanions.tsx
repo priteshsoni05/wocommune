@@ -10,7 +10,7 @@ interface HelpanionProfile {
   display_name?: string | null;
   bio?: string | null;
   avatar_url?: string | null;
-  skills?: string | null;
+  skills?: string[] | string | null;
   services?: Array<{
     id: string;
     title: string;
@@ -43,7 +43,11 @@ const truncateText = (text?: string | null, maxLength = 100) => {
 
 const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion }) => {
   const displayName = helpanion.display_name || "Helpanion";
-  const skillsArray = helpanion.skills ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 5) : [];
+  const skillsArray = Array.isArray(helpanion.skills) 
+    ? helpanion.skills.slice(0, 5) 
+    : typeof helpanion.skills === 'string' 
+      ? helpanion.skills.split(',').map(s => s.trim()).slice(0, 5)
+      : [];
 
   const handleViewProfile = () => {
     if (helpanion.username) {
