@@ -7,7 +7,7 @@ import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRolePersistence } from '@/hooks/useRolePersistence';
 import { RoleSelectionModal, UserRole } from '@/components/auth/RoleSelectionModal';
-import { RoleSwitchModal } from '@/components/auth/RoleSwitchModal';
+import { RoleSwitchStep } from '@/components/auth/RoleSwitchStep';
 import { SignupForm } from '@/components/auth/SignupForm';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { ForgotPasswordModal } from '@/components/auth/ForgotPasswordModal';
@@ -200,7 +200,17 @@ export default function Auth() {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-4 pt-8">
-        {authMode === 'login' ? (
+        {showRoleSwitch ? (
+          <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
+            <CardContent className="p-8">
+              <RoleSwitchStep
+                availableRoles={availableRoles}
+                onSelectRole={handleRoleSwitch}
+                onCancel={() => setShowRoleSwitch(false)}
+              />
+            </CardContent>
+          </Card>
+        ) : authMode === 'login' ? (
           <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
             <CardContent className="p-8">
               {noRoleMessage && (
@@ -300,14 +310,6 @@ export default function Auth() {
       
       <Footer />
       
-      {/* Role Switch Modal for Multi-Role Users */}
-      <RoleSwitchModal
-        isOpen={showRoleSwitch}
-        onClose={() => setShowRoleSwitch(false)}
-        availableRoles={availableRoles}
-        onSelectRole={handleRoleSwitch}
-      />
-
       {/* Forgot Password Modal */}
       <ForgotPasswordModal
         isOpen={showForgotPassword}
