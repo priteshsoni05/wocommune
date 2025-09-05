@@ -3,11 +3,14 @@
 // - Uses real assets from src/assets
 // - Newsletter CTA links to Substack as requested
 
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Newsletter } from '@/components/common/Newsletter';
 import { Footer } from '@/components/common/Footer';
 import GlobalHeader from '@/components/common/GlobalHeader';
+import { useAuth } from "@/contexts/AuthContext";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
+import { supabase } from "@/integrations/supabase/client";
 
 /* ---------- Real images (from src/assets) ---------- */
 import HERO_IMG from "../assets/hero-placeholder.jpg";
@@ -19,17 +22,120 @@ import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
 const PINE = "#193232"; // pine forest green
 const GOLD = "#f2f2f2"; // accent gold
 
+// Helper function for clean first name
+const titleCase = (s: string) =>
+  s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : "";
+
+const deriveFirstName = (profile: any, user: any) => {
+  const meta = user?.user_metadata || {};
+  const candidates = [
+    profile?.display_name,
+    meta.given_name,
+    meta.full_name || meta.name,
+  ].filter(Boolean) as string[];
+
+  if (candidates.length) {
+    const first = String(candidates[0]).trim().split(/\s+/)[0];
+    return titleCase(first);
+  }
+
+  if (user?.email) {
+    const local = user.email.split("@")[0];
+    const first = local.split(/[._-]+/)[0];
+    return titleCase(first);
+  }
+
+  return "Friend";
+};
+
+type Profile = {
+  id?: string;
+  user_id?: string;
+  display_name?: string | null;
+  bio?: string | null;
+  avatar_url?: string | null;
+  status?: string | null;
+  created_at?: string | null;
+  role?: string | null;
+  account_type?: string | null;
+  user_type?: string | null;
+  is_helpanion?: boolean | null;
+  last_active_role?: string | null;
+};
+
 const HomePage: React.FC = () => {
+  const { user, signOut } = useAuth();
+  const { role: activeRole, getDashboardPath, clearRoleData, hasValidRole } = useRolePersistence();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<Profile | null>(null);
+
   useEffect(() => {
     document.title = "Walker's Odyssey – Your trusted companion";
-    // Make sure fonts are loaded globally in your index.html:
-    // <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
   }, []);
+
+  // Fetch current user's profile
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("profiles")
+        .select(
+          "id, user_id, display_name, avatar_url, role, account_type, user_type, is_helpanion, created_at, last_active_role"
+        )
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching current user profile:", error);
+        setProfile(null);
+      } else {
+        setProfile(data as Profile);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
+
+  // Clean first name for header
+  const displayName = useMemo(() => deriveFirstName(profile, user), [profile, user]);
+
+  // Avatar content (image or initial)
+  const avatarContent = useMemo((): { type: "image" | "initial"; value: string } => {
+    if (profile?.avatar_url) return { type: "image" as const, value: profile.avatar_url };
+    const initial =
+      (profile?.display_name?.[0] || user?.email?.[0] || "U").toUpperCase();
+    return { type: "initial" as const, value: initial };
+  }, [profile, user]);
+
+  // Dynamic dashboard route based on stored role for persistence
+  const dashboardPath = useMemo(() => {
+    if (!user) return '/wo-commune';
+    
+    // Always try to get dashboard path for logged-in user
+    // If no valid role found, default to helpanion dashboard
+    if (!hasValidRole) {
+      console.warn('No valid role found, defaulting to helpanion dashboard');
+      return '/helpanion-dashboard';
+    }
+    
+    return getDashboardPath();
+  }, [user, hasValidRole, getDashboardPath]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
       {/* ------------------------ Global Header ------------------------ */}
-      <GlobalHeader />
+      <GlobalHeader 
+        user={user} 
+        displayName={displayName} 
+        avatarContent={avatarContent} 
+        dashboardPath={dashboardPath} 
+        clearRoleData={clearRoleData} 
+        signOut={signOut} 
+        navigate={navigate} 
+      />
 
       {/* ------------------------ Hero Section ------------------------ */}
       <section
