@@ -252,59 +252,47 @@ export default function Auth() {
             </CardContent>
           </Card>
         ) : (
-          <div className="w-full max-w-2xl text-center">
-            <div className="space-y-6 mb-12">
-              <h1 className="font-brand text-4xl font-bold text-foreground">Join WO Commune</h1>
-              <p className="text-lg text-muted-foreground font-sans max-w-md mx-auto">
-                Choose your role and become part of our supportive community
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
-              <Card 
-                className="group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 hover:border-primary/30"
+          <Card className="w-full max-w-lg shadow-xl border-border/30 bg-card/98 backdrop-blur-sm">
+            <CardHeader className="text-center pb-6">
+              <CardTitle className="font-brand text-2xl font-bold text-foreground">
+                {getMainTitle()}
+              </CardTitle>
+              <CardDescription className="text-lg text-muted-foreground font-sans">
+                {getMainDescription()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full h-14 text-lg font-semibold font-sans border-2 hover:border-primary/50 transition-all duration-200"
                 onClick={() => handleSignupForRole('walker')}
               >
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/10 transition-colors">
-                    <span className="text-2xl font-brand font-bold text-foreground group-hover:text-primary transition-colors">W</span>
-                  </div>
-                  <h3 className="font-brand text-xl font-bold text-foreground mb-2">Walker</h3>
-                  <p className="text-sm text-muted-foreground font-sans">
-                    Seek guidance and connect with helpanions
-                  </p>
-                </CardContent>
-              </Card>
+                Walker
+              </Button>
               
-              <Card 
-                className="group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 hover:border-primary/30 bg-primary/5"
+              <Button
+                size="lg"
+                className="w-full h-14 text-lg font-semibold font-sans bg-[#193232] hover:bg-[#193232]/90 text-white transition-all duration-200"
                 onClick={() => handleSignupForRole('helpanion')}
               >
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/90 transition-colors">
-                    <span className="text-2xl font-brand font-bold text-primary-foreground">H</span>
-                  </div>
-                  <h3 className="font-brand text-xl font-bold text-foreground mb-2">Helpanion</h3>
-                  <p className="text-sm text-muted-foreground font-sans">
-                    Share your experiences and guide others
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <div className="mt-12 text-center text-sm text-muted-foreground font-sans">
-              Already have an account?{' '}
-              <button
-                onClick={() => {
-                  setAuthMode('login');
-                  setShowRoleSelection(false);
-                }}
-                className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
-              >
-                Sign in
-              </button>
-            </div>
-          </div>
+                Helpanion
+              </Button>
+              
+              <div className="pt-4 text-center text-sm text-muted-foreground font-sans">
+                Already have an account?{' '}
+                <button
+                  onClick={() => {
+                    setAuthMode('login');
+                    setShowRoleSelection(false);
+                  }}
+                  className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
+                >
+                  Sign in
+                </button>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
       
