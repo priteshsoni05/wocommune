@@ -84,7 +84,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				'helpanion-button': 'hsl(180, 35%, 15%)'
+				'helpanion-button': 'hsl(180, 35%, 15%)',
+				'role-button': 'hsl(180, 35%, 15%)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
