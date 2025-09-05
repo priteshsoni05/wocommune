@@ -51,7 +51,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
 
   const handleViewProfile = () => {
     if (helpanion.username) {
-      window.location.href = `/p/${helpanion.username}`;
+      window.location.href = `/${helpanion.username}`;
     }
   };
 
