@@ -1,28 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Linkedin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function WOCommuneSlate() {
   return (
     <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
       <div className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-12 flex items-center justify-between h-8 md:h-10">
-        {/* Left section - matches logo layout */}
+        {/* Left section - Get Help Button */}
         <div className="flex-1">
-          <Link
-            to="/wo-commune"
-            className="font-medium text-xs sm:text-sm transition-colors whitespace-nowrap" style={{ color: "hsl(40, 20%, 98%)" }} onMouseEnter={(e) => e.currentTarget.style.color = "rgba(255, 255, 255, 0.8)"} onMouseLeave={(e) => e.currentTarget.style.color = "hsl(40, 20%, 98%)"}
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 px-3 text-xs font-medium border border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white transition-all duration-200"
+            asChild
           >
-            Get Help
-          </Link>
+            <Link to="/wo-commune">
+              Get Help
+            </Link>
+          </Button>
         </div>
         
-        {/* Center Text - Exactly aligned with logo */}
+        {/* Center Text - WO COMMUNE only */}
         <div className="text-center">
-          <span className="font-semibold text-xs sm:text-sm tracking-wider block sm:inline" style={{ color: "hsl(40, 20%, 98%)" }}>
+          <span className="font-semibold text-xs sm:text-sm tracking-wider" style={{ color: "hsl(40, 20%, 98%)" }}>
             WO COMMUNE
-          </span>
-          <span className="text-xs sm:text-sm ml-0 sm:ml-1 block sm:inline" style={{ color: "rgba(255, 255, 255, 0.8)" }}>
-            <span className="hidden sm:inline">– </span>Connecting walkers with helpanions
           </span>
         </div>
         
