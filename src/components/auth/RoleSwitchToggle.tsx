@@ -195,7 +195,7 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
     return (
       <>
         <Button 
-          className="w-full text-xs py-2 px-3 rounded-md text-white font-medium transition-colors hover:opacity-90"
+          className="w-full h-12 text-base font-semibold text-white transition-colors hover:opacity-90"
           style={{ backgroundColor: "#193232" }}
           onClick={() => setShowCreateRoleModal(true)}
         >
@@ -208,7 +208,7 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
             <div className="flex gap-2 pt-4">
               <Button
                 onClick={handleCreateRole}
-                className="flex-1 text-white"
+                className="flex-1 h-12 text-white font-semibold"
                 style={{ backgroundColor: "#193232" }}
                 disabled={targetRole === 'helpanion' && !formData.username}
               >
@@ -217,7 +217,7 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
               <Button
                 variant="outline"
                 onClick={() => setShowCreateRoleModal(false)}
-                className="flex-1"
+                className="flex-1 h-12 font-semibold"
               >
                 Not now
               </Button>
@@ -250,7 +250,7 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
           <div className="flex gap-2 pt-4">
             <Button
               onClick={handleCreateRole}
-              className="flex-1 text-white"
+              className="flex-1 h-12 text-white font-semibold"
               style={{ backgroundColor: "#193232" }}
               disabled={targetRole === 'helpanion' && !formData.username}
             >
@@ -259,7 +259,7 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
             <Button
               variant="outline"
               onClick={() => setShowCreateRoleModal(false)}
-              className="flex-1"
+              className="flex-1 h-12 font-semibold"
             >
               Not now
             </Button>

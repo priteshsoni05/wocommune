@@ -261,16 +261,14 @@ export default function Auth() {
             <CardContent className="space-y-4">
               <Button
                 variant="outline"
-                size="lg"
-                className="w-full h-14 text-lg font-semibold font-sans border-2 hover:border-primary/50 transition-all duration-200"
+                className="w-full h-12 text-base font-semibold font-sans border-2 hover:border-primary/50 transition-all duration-200"
                 onClick={() => handleSignupForRole('walker')}
               >
                 Walker
               </Button>
               
               <Button
-                size="lg"
-                className="w-full h-14 text-lg font-semibold font-sans bg-[#193232] hover:bg-[#193232]/90 text-white transition-all duration-200"
+                className="w-full h-12 text-base font-semibold font-sans bg-[#193232] hover:bg-[#193232]/90 text-white transition-all duration-200"
                 onClick={() => handleSignupForRole('helpanion')}
               >
                 Helpanion
