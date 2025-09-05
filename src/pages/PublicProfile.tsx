@@ -208,117 +208,139 @@ const OptimizedPublicProfile = () => {
       {/* Global Header */}
       <GlobalHeader />
 
-      {/* Main grid - full height container */}
-      <div className="w-full mx-auto grid lg:grid-cols-12 gap-0 h-[calc(100vh-72px)]">
-        {/* Sidebar */}
-        <aside className="lg:col-span-4 bg-white border-r border-gray-200 p-4 h-full lg:overflow-y-auto">
-          <div className="text-center space-y-2" style={{ color: TEXT }}>
-            <img
-              src={data.profile.avatar_url || "/placeholder.svg"}
-              alt={data.profile.display_name || "Profile"}
-              className="w-28 h-28 mx-auto rounded-full object-cover"
-              style={{ border: "4px solid #193232" }}
-              loading="lazy"
-            />
-            <h1 className="text-xl font-bold flex items-center justify-center gap-1">
-              {data.profile.display_name}
-              <CheckCircle size={18} style={{ color: "#193232" }} aria-label="Verified" />
-            </h1>
-            <p className="text-sm">
-              I help with {data.profile.role || "Professional Services"}
-            </p>
-          </div>
-
-          {/* Expertise */}
-          {skillsArray.length > 0 && (
-            <div className="mt-4" style={{ color: TEXT }}>
-              <h3 className="text-sm font-medium mb-2">Expertise</h3>
-              <div className="flex flex-wrap gap-2">
-                {skillsArray.map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 text-xs rounded-full border text-white"
-                    style={{ borderColor: "#193232", backgroundColor: "#193232" }}
-                  >
-                    {skill}
-                  </span>
-                ))}
+      {/* Main container with proper spacing */}
+      <div className="pt-8 md:pt-10 w-full">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-8 min-h-[calc(100vh-5rem)]">
+            {/* Sidebar */}
+            <aside className="lg:col-span-4 bg-white border border-gray-200 rounded-lg mx-4 lg:mx-0 p-6 h-fit lg:sticky lg:top-24">
+              <div className="text-center space-y-4" style={{ color: TEXT }}>
+                <img
+                  src={data.profile.avatar_url || "/placeholder.svg"}
+                  alt={data.profile.display_name || "Profile"}
+                  className="w-32 h-32 mx-auto rounded-full object-cover shadow-lg"
+                  style={{ border: "4px solid #193232" }}
+                  loading="lazy"
+                />
+                <div>
+                  <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
+                    {data.profile.display_name}
+                    <CheckCircle size={20} style={{ color: "#193232" }} aria-label="Verified" />
+                  </h1>
+                  <p className="text-base text-gray-600 mt-2">
+                    I help with {data.profile.role || "Professional Services"}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Reviews */}
-          <div className="mt-4" style={{ color: TEXT }}>
-            <h3 className="text-sm font-medium mb-1">Reviews</h3>
-            <p className="text-sm">★ 4.9 (24 reviews) • 87 sessions completed</p>
-          </div>
-
-          {/* Social icons */}
-          {socialLinks.length > 0 && (
-            <div className="mt-2 flex items-center justify-start gap-3" style={{ color: TEXT }}>
-              {socialLinks.map(({ url, icon: Icon, label }, idx) => (
-                <a key={idx} href={url} target="_blank" rel="noreferrer" aria-label={label}>
-                  <Icon size={18} />
-                </a>
-              ))}
-            </div>
-          )}
-
-          {/* About */}
-          {data.profile.bio && (
-            <div className="mt-4" style={{ color: TEXT }}>
-              <h3 className="text-sm font-medium mb-2">About</h3>
-              <p className="text-sm leading-relaxed">{data.profile.bio}</p>
-            </div>
-          )}
-        </aside>
-
-        {/* Main Content */}
-        <main className="lg:col-span-8 p-4 h-full lg:overflow-y-auto" style={{ color: TEXT }}>
-          <div ref={servicesRef}>
-            <h2 className="text-2xl font-bold mb-4">Services</h2>
-
-            <div className="space-y-4">
-              {data.services.map((service) => (
-                <div
-                  key={service.id}
-                  className="bg-white border border-gray-200 rounded-xl p-4"
-                >
-                  <div className="flex items-start justify-between gap-6">
-                    <div className="min-w-0">
-                      <h3 className="text-lg font-semibold">{service.title}</h3>
-                      <p className="text-sm mt-2 leading-relaxed">
-                        {service.description}
-                      </p>
-                    </div>
-
-                    <div className="shrink-0 text-right">
-                      <div className="text-base font-semibold">₹{service.price_per_hour}</div>
-                      <button
-                        onClick={() => handleServiceBook(service)}
-                        className="mt-2 inline-flex items-center justify-center rounded-md text-white text-sm px-3 py-1.5"
-                        style={{ backgroundColor: "#193232" }}
+              {/* Expertise */}
+              {skillsArray.length > 0 && (
+                <div className="mt-6" style={{ color: TEXT }}>
+                  <h3 className="text-base font-semibold mb-3">Expertise</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skillsArray.map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1.5 text-sm rounded-full border text-white font-medium"
+                        style={{ borderColor: "#193232", backgroundColor: "#193232" }}
                       >
-                        Book Now
-                      </button>
-                    </div>
+                        {skill}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              ))}
-
-              {data.services.length === 0 && (
-                <div className="text-sm">No services published yet.</div>
               )}
-            </div>
+
+              {/* Reviews */}
+              <div className="mt-6" style={{ color: TEXT }}>
+                <h3 className="text-base font-semibold mb-2">Reviews</h3>
+                <p className="text-base">★ 4.9 (24 reviews) • 87 sessions completed</p>
+              </div>
+
+              {/* Social icons */}
+              {socialLinks.length > 0 && (
+                <div className="mt-4 flex items-center justify-start gap-4" style={{ color: TEXT }}>
+                  {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                    <a 
+                      key={idx} 
+                      href={url} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      aria-label={label}
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                      <Icon size={20} />
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* About */}
+              {data.profile.bio && (
+                <div className="mt-6" style={{ color: TEXT }}>
+                  <h3 className="text-base font-semibold mb-3">About</h3>
+                  <p className="text-base leading-relaxed text-gray-700">{data.profile.bio}</p>
+                </div>
+              )}
+            </aside>
+
+            {/* Main Content */}
+            <main className="lg:col-span-8 mx-4 lg:mx-0 pb-20 lg:pb-8" style={{ color: TEXT }}>
+              <div ref={servicesRef} className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-3xl font-bold">Services</h2>
+                  <div className="text-sm text-gray-500">
+                    {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {data.services.map((service) => (
+                    <div
+                      key={service.id}
+                      className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
+                          <p className="text-base leading-relaxed text-gray-700">
+                            {service.description}
+                          </p>
+                        </div>
+
+                        <div className="sm:shrink-0 text-center sm:text-right">
+                          <div className="text-2xl font-bold mb-4" style={{ color: "#193232" }}>
+                            ₹{service.price_per_hour}
+                          </div>
+                          <button
+                            onClick={() => handleServiceBook(service)}
+                            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-white text-base font-medium px-6 py-3 hover:opacity-90 transition-opacity"
+                            style={{ backgroundColor: "#193232" }}
+                          >
+                            Book Now
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {data.services.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-gray-500">No services published yet.</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </main>
           </div>
-        </main>
+        </div>
       </div>
 
       {/* Mobile sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 safe-area-bottom">
         <button
           onClick={scrollToServices}
-          className="w-full py-3 rounded-lg font-medium text-white"
+          className="w-full py-4 rounded-lg font-semibold text-white text-lg"
           style={{ backgroundColor: "#193232" }}
         >
           Book a Session
