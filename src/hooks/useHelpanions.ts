@@ -45,7 +45,7 @@ export const useHelpanions = () => {
       
       console.log('useHelpanions: Test query result:', { testProfiles, testError });
       
-      // Use the exact same working query as WOCommune - no extra fields that might cause permission issues
+      // First get active profiles with helpanion role
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
         .select(`
@@ -56,16 +56,7 @@ export const useHelpanions = () => {
           avatar_url, 
           created_at, 
           username,
-          skills,
-          services!left(
-            id,
-            title,
-            description,
-            price_per_hour,
-            duration_minutes,
-            category,
-            is_active
-          )
+          skills
         `)
         .eq("status", "active")
         .not("username", "is", null)
@@ -103,23 +94,46 @@ export const useHelpanions = () => {
         return;
       }
 
-      // Filter profiles to only include those with helpanion role and active services
-      const helpanionProfiles = profiles.filter(profile => {
-        const hasRole = helpanionUserIds.includes(profile.user_id);
-        const hasActiveServices = Array.isArray(profile.services) && 
-                                profile.services.some(s => s.is_active);
-        return hasRole && hasActiveServices;
+      // Filter profiles to only include those with helpanion role
+      const helpanionProfiles = profiles.filter(profile => 
+        helpanionUserIds.includes(profile.user_id)
+      );
+
+      if (helpanionProfiles.length === 0) {
+        console.log('useHelpanions: No helpanion profiles found');
+        setHelpanions([]);
+        return;
+      }
+
+      // Now get services for these helpanion profiles
+      const helpanionProfileUserIds = helpanionProfiles.map(p => p.user_id);
+      const { data: services, error: servicesError } = await supabase
+        .from('services')
+        .select('*')
+        .in('helper_id', helpanionProfileUserIds)
+        .eq('is_active', true);
+
+      console.log('useHelpanions: Services query result:', { services, servicesError });
+
+      // Filter profiles to only include those with active services
+      const profilesWithServices = helpanionProfiles.filter(profile => {
+        const hasActiveServices = services?.some(s => s.helper_id === profile.user_id);
+        return hasActiveServices;
       });
 
       // Transform the data to match our interface
-      const transformedHelpanions: HelpanionProfile[] = helpanionProfiles.map(profile => ({
-        ...profile,
-        status: 'active' as const, // Set from the filter
-        updated_at: profile.created_at, // Use created_at for updated_at if not available
-        email: null, // Don't expose email in the hook
-        phone: null, // Don't expose phone in the hook
-        services: Array.isArray(profile.services) ? profile.services.filter(s => s.is_active) : []
-      }));
+      const transformedHelpanions: HelpanionProfile[] = profilesWithServices.map(profile => {
+        const profileServices = services?.filter(s => s.helper_id === profile.user_id) || [];
+        
+        return {
+          ...profile,
+          status: 'active' as const,
+          updated_at: profile.created_at,
+          email: null,
+          phone: null,
+          services: profileServices
+        };
+      });
 
       console.log('useHelpanions: Final helpanions with services:', transformedHelpanions);
       setHelpanions(transformedHelpanions);
