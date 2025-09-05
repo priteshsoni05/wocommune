@@ -45,8 +45,11 @@ export const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
           <div className="w-full max-w-md text-center space-y-8">
             <div className="space-y-4">
               <h1 className="text-3xl font-bold text-foreground">
-                JOIN WO COMMUNE AS
+                Join WO Commune
               </h1>
+              <p className="text-muted-foreground">
+                Choose your role and become part of our supportive community
+              </p>
             </div>
             
             <div className="flex justify-center gap-4">
