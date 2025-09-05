@@ -69,6 +69,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     display_name: profile.display_name || "",
     username: profile.username || "",
     bio: profile.bio || "",
+    short_bio: profile.short_bio || "",
     email: profile.email || "",
     phone: profile.phone || "",
     avatar_url: profile.avatar_url || "",
@@ -99,6 +100,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         display_name: profile.display_name || "",
         username: profile.username || "",
         bio: profile.bio || "",
+        short_bio: profile.short_bio || "",
         email: profile.email || "",
         phone: profile.phone || "",
         avatar_url: profile.avatar_url || "",
@@ -288,6 +290,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         display_name: formData.display_name,
         username: formData.username,
         bio: formData.bio,
+        short_bio: formData.short_bio,
         email: formData.email,
         phone: formData.phone,
         avatar_url: formData.avatar_url,
@@ -443,6 +446,19 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                   <div className="text-red-500 text-xs mt-1">{usernameError}</div>
                 )}
               </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="short_bio">Short Bio / Tagline</Label>
+              <Input
+                id="short_bio"
+                value={formData.short_bio}
+                onChange={(e) => handleInputChange('short_bio', e.target.value)}
+                placeholder="I help with..."
+                maxLength={100}
+              />
+              <p className="text-xs text-muted-foreground">
+                A short one-line description that appears below your name on your public profile
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="bio">About / Bio <span className="text-red-500">*</span></Label>

@@ -180,6 +180,7 @@ export type Database = {
           portfolio_url: string | null
           role: Database["public"]["Enums"]["app_role"] | null
           school: string | null
+          short_bio: string | null
           skills: string[] | null
           status: string | null
           updated_at: string
@@ -202,6 +203,7 @@ export type Database = {
           portfolio_url?: string | null
           role?: Database["public"]["Enums"]["app_role"] | null
           school?: string | null
+          short_bio?: string | null
           skills?: string[] | null
           status?: string | null
           updated_at?: string
@@ -224,6 +226,7 @@ export type Database = {
           portfolio_url?: string | null
           role?: Database["public"]["Enums"]["app_role"] | null
           school?: string | null
+          short_bio?: string | null
           skills?: string[] | null
           status?: string | null
           updated_at?: string

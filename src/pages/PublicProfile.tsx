@@ -110,6 +110,7 @@ const OptimizedPublicProfile = () => {
         phone: profile.phone,
         status: profile.status as 'active' | 'pending' | 'in_review',
         last_active_role: profile.last_active_role,
+        short_bio: profile.short_bio,
         school: profile.school,
         use_case: profile.use_case
       };
@@ -228,7 +229,7 @@ const OptimizedPublicProfile = () => {
                     <CheckCircle size={20} style={{ color: "#193232" }} aria-label="Verified" />
                   </h1>
                   <p className="text-base text-gray-600 mt-2">
-                    I help with {data.profile.role || "Professional Services"}
+                    {data.profile.short_bio || "I help with Professional Services"}
                   </p>
                 </div>
               </div>
