@@ -6,6 +6,7 @@ import { useUserRoles } from "@/hooks/useUserRoles";
 import { useServices } from "@/hooks/useServices";
 import { useBookings } from "@/hooks/useBookings";
 import { useRolePersistence } from "@/hooks/useRolePersistence";
+import { RoleSwitchToggle } from "@/components/auth/RoleSwitchToggle";
 import { useProfileProgress } from "@/hooks/useProfileProgress";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -81,11 +82,6 @@ const HelpanionDashboard = () => {
   const profileProgress = useProfileProgress(profile);
 
   const [activeTab, setActiveTab] = useState<TabKey>("home");
-  const [showWalkerModal, setShowWalkerModal] = useState(false);
-  const [walkerFormData, setWalkerFormData] = useState({
-    fullName: "",
-    email: ""
-  });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -113,10 +109,6 @@ const HelpanionDashboard = () => {
       if (profile.last_active_role !== "helpanion") {
         updateProfile({ last_active_role: "helpanion" });
       }
-      setWalkerFormData({
-        fullName: profile.display_name || "",
-        email: profile.email || ""
-      });
     }
   }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
@@ -149,33 +141,6 @@ const HelpanionDashboard = () => {
     navigate("/wo-commune");
   };
 
-  const handleRoleToggle = (checked: boolean) => {
-    if (checked) {
-      if (hasRole("walker")) {
-        navigate(`/walker/${user?.id}`);
-      } else {
-        setShowWalkerModal(true);
-      }
-    }
-  };
-
-  const handleBecomeWalker = async () => {
-    const result = await addRole("walker");
-    if (result?.error) {
-      toast({
-        title: "Error",
-        description: "Failed to add Walker role. Please try again.",
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Welcome to Walkers!",
-        description: "You can now seek help from Helpanions."
-      });
-      setShowWalkerModal(false);
-      navigate(`/walker/${user?.id}`);
-    }
-  };
 
   // Define render functions after handlers
   const renderSidebar = () => (
@@ -189,18 +154,7 @@ const HelpanionDashboard = () => {
             </p>
             <p className="text-xs text-gray-500">(Helpanion)</p>
           </div>
-          {hasRole("walker") && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-600">Walker</span>
-              <Switch
-                checked={false}
-                onCheckedChange={handleRoleToggle}
-                style={{
-                  "--switch-color": PRIMARY_GREEN
-                } as React.CSSProperties}
-              />
-            </div>
-          )}
+          <RoleSwitchToggle currentRole="helpanion" />
         </div>
         {profile && (
           <div className="mt-3">
@@ -413,63 +367,6 @@ const HelpanionDashboard = () => {
       <DashboardLayout sidebar={renderSidebar()} header={renderHeader()}>
         {renderContent()}
       </DashboardLayout>
-
-      <Dialog open={showWalkerModal} onOpenChange={setShowWalkerModal}>
-        <DialogContent className="mx-4 max-w-md">
-          <DialogHeader>
-            <DialogTitle>Join as a Walker</DialogTitle>
-            <DialogDescription>
-              You haven't joined as a Walker yet. Want to join now and start
-              seeking help from other Helpanions?
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="walker-name">Full Name</Label>
-              <Input
-                id="walker-name"
-                value={walkerFormData.fullName}
-                onChange={(e) =>
-                  setWalkerFormData((prev) => ({
-                    ...prev,
-                    fullName: e.target.value
-                  }))
-                }
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="walker-email">Email</Label>
-              <Input
-                id="walker-email"
-                type="email"
-                value={walkerFormData.email}
-                onChange={(e) =>
-                  setWalkerFormData((prev) => ({
-                    ...prev,
-                    email: e.target.value
-                  }))
-                }
-              />
-            </div>
-            <div className="flex gap-2 pt-4">
-              <Button
-                onClick={handleBecomeWalker}
-                className="flex-1 text-white"
-                style={{ backgroundColor: PRIMARY_GREEN }}
-              >
-                Yes, Join as Walker
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowWalkerModal(false)}
-                className="flex-1"
-              >
-                Not now
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };

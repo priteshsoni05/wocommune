@@ -5,6 +5,7 @@ import { useOptimizedProfile as useProfile } from '@/hooks/useOptimizedProfile';
 import { useUserRoles } from '@/hooks/useUserRoles';
 import { useServices } from '@/hooks/useServices';
 import { useRolePersistence } from '@/hooks/useRolePersistence';
+import { RoleSwitchToggle } from '@/components/auth/RoleSwitchToggle';
 import { useBookings } from '@/hooks/useBookings';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,12 +48,6 @@ export default function WalkerDashboard() {
 
   const [activeTab, setActiveTab] = useState<TabKey>('sessions');
   const [isEditing, setIsEditing] = useState(false);
-  const [showHelpanionModal, setShowHelpanionModal] = useState(false);
-  const [helpanionFormData, setHelpanionFormData] = useState({
-    fullName: "",
-    email: "",
-    username: "",
-  });
   const [formData, setFormData] = useState({
     display_name: profile?.display_name || '',
     email: profile?.email || '',
@@ -88,11 +83,6 @@ export default function WalkerDashboard() {
         email: profile.email || '',
         phone: profile.phone || '',
       });
-      setHelpanionFormData({
-        fullName: profile.display_name || "",
-        email: profile.email || "",
-        username: "",
-      });
     }
   }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
@@ -116,51 +106,6 @@ export default function WalkerDashboard() {
     navigate('/wo-commune');
   };
 
-  const handleRoleToggle = (checked: boolean) => {
-    if (checked && !rolesLoading) {
-      // User wants to switch to Helpanion
-      if (hasRole('helpanion')) {
-        navigate(`/helpanion/${user?.id}`);
-      } else {
-        setShowHelpanionModal(true);
-      }
-    }
-  };
-
-  const handleBecomeHelpanion = async () => {
-    // Update profile with username if provided
-    if (helpanionFormData.username) {
-      const profileResult = await updateProfile({
-        username: helpanionFormData.username,
-        display_name: helpanionFormData.fullName,
-        email: helpanionFormData.email
-      });
-      if (profileResult?.error) {
-        toast({
-          title: "Error",
-          description: "Failed to update profile. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-
-    const result = await addRole('helpanion');
-    if (result?.error) {
-      toast({
-        title: "Error",
-        description: "Failed to add Helpanion role. Please try again.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Welcome to Helpanions!",
-        description: "You can now provide guidance to Walkers.",
-      });
-      setShowHelpanionModal(false);
-      navigate(`/helpanion/${user?.id}`);
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -190,18 +135,7 @@ export default function WalkerDashboard() {
             </p>
             <p className="text-xs text-gray-500">(Walker)</p>
           </div>
-          {hasRole('helpanion') && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-600">Helpanion</span>
-              <Switch
-                checked={false}
-                onCheckedChange={handleRoleToggle}
-                style={{
-                  "--switch-color": PRIMARY_GREEN
-                } as React.CSSProperties}
-              />
-            </div>
-          )}
+          <RoleSwitchToggle currentRole="walker" />
         </div>
       </div>
 
@@ -259,13 +193,7 @@ export default function WalkerDashboard() {
             <p className="text-xs text-gray-600 mb-3">
               Become a Helpanion and share your expertise.
             </p>
-            <button 
-              className="w-full text-xs py-2 px-3 rounded-md text-white font-medium transition-colors hover:opacity-90"
-              style={{ backgroundColor: PRIMARY_GREEN }}
-              onClick={() => setShowHelpanionModal(true)}
-            >
-              Become a Helpanion →
-            </button>
+            <RoleSwitchToggle currentRole="walker" variant="button" />
           </div>
         </div>
       )}
@@ -491,74 +419,6 @@ export default function WalkerDashboard() {
         {renderContent()}
       </DashboardLayout>
 
-      {/* Become Helpanion Modal */}
-      <Dialog open={showHelpanionModal} onOpenChange={setShowHelpanionModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Become a Helpanion</DialogTitle>
-            <DialogDescription>
-              To become a Helpanion, please provide a unique username.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                value={helpanionFormData.fullName}
-                onChange={(e) =>
-                  setHelpanionFormData((prev) => ({
-                    ...prev,
-                    fullName: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                value={helpanionFormData.email}
-                onChange={(e) =>
-                  setHelpanionFormData((prev) => ({
-                    ...prev,
-                    email: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                value={helpanionFormData.username}
-                onChange={(e) =>
-                  setHelpanionFormData((prev) => ({
-                    ...prev,
-                    username: e.target.value,
-                  }))
-                }
-              />
-            </div>
-            <div className="flex gap-2 pt-4">
-              <Button 
-                className="flex-1 text-white"
-                style={{ backgroundColor: PRIMARY_GREEN }}
-                onClick={handleBecomeHelpanion}
-              >
-                Yes, Join as Helpanion
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => setShowHelpanionModal(false)}
-                className="flex-1"
-              >
-                Not now
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
