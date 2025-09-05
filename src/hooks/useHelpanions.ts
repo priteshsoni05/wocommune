@@ -114,6 +114,8 @@ export const useHelpanions = () => {
 
       // Now get services for these helpanion profiles
       const helpanionProfileUserIds = helpanionProfiles.map(p => p.user_id);
+      console.log('useHelpanions: Fetching services for user IDs:', helpanionProfileUserIds);
+      
       const { data: services, error: servicesError } = await supabase
         .from('services')
         .select('*')
@@ -121,6 +123,11 @@ export const useHelpanions = () => {
         .eq('is_active', true);
 
       console.log('useHelpanions: Services query result:', { services, servicesError });
+
+      if (servicesError) {
+        console.error('Error fetching services:', servicesError);
+        // Continue anyway but log the error
+      }
 
       // Filter profiles to only include those with active services
       const profilesWithServices = helpanionProfiles.filter(profile => {

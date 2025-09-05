@@ -135,16 +135,26 @@ export default function WOCommune(): JSX.Element {
         const helpanionUserIds = helpanionRoles?.map(role => role.user_id) || [];
         
         // Get services for helpanion users
+        console.log('WOCommune: Fetching services for user IDs:', helpanionUserIds);
+        
         const { data: services, error: servicesError } = await supabase
           .from('services')
           .select('*')
           .in('helper_id', helpanionUserIds)
           .eq('is_active', true);
 
+        console.log('WOCommune: Services query result:', { services, servicesError });
+
+        if (servicesError) {
+          console.error('WOCommune: Error fetching services:', servicesError);
+          // Continue anyway but log the error  
+        }
+
         // Filter profiles to only include those with helpanion role and active services
         const helpanionProfiles = profiles.filter(profile => {
           const hasRole = helpanionUserIds.includes(profile.user_id);
           const hasActiveServices = services?.some(s => s.helper_id === profile.user_id);
+          console.log(`WOCommune: Profile ${profile.display_name} - hasRole: ${hasRole}, hasActiveServices: ${hasActiveServices}`);
           return hasRole && hasActiveServices;
         });
 
