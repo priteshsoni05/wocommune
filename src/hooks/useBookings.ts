@@ -23,7 +23,7 @@ export interface Booking {
   };
 }
 
-export const useBookings = () => {
+export const useBookings = (userRole?: 'walker' | 'helpanion') => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -35,13 +35,13 @@ export const useBookings = () => {
       setBookings([]);
       setLoading(false);
     }
-  }, [user]);
+  }, [user, userRole]);
 
   const fetchBookings = async () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('bookings')
         .select(`
           *,
@@ -49,8 +49,19 @@ export const useBookings = () => {
             title,
             description
           )
-        `)
-        .eq('helper_id', user.id)
+        `);
+
+      // Filter based on user role
+      if (userRole === 'walker') {
+        query = query.eq('seeker_id', user.id);
+      } else if (userRole === 'helpanion') {
+        query = query.eq('helper_id', user.id);
+      } else {
+        // Default behavior - show both helper and seeker bookings
+        query = query.or(`helper_id.eq.${user.id},seeker_id.eq.${user.id}`);
+      }
+
+      const { data, error } = await query
         .order('booking_date', { ascending: true })
         .order('start_time', { ascending: true });
 
@@ -70,11 +81,12 @@ export const useBookings = () => {
     if (!user) return;
 
     try {
+      // Allow updates for either helper or seeker
       const { data, error } = await supabase
         .from('bookings')
         .update({ status })
         .eq('id', id)
-        .eq('helper_id', user.id)
+        .or(`helper_id.eq.${user.id},seeker_id.eq.${user.id}`)
         .select()
         .single();
 

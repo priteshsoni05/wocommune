@@ -70,7 +70,7 @@ const HelpanionDashboard = () => {
   const { profile, loading: profileLoading, updateProfile, refetch } = useOptimizedProfile();
   const { hasRole, addRole } = useUserRoles();
   const { services } = useServices();
-  const { bookings } = useBookings();
+  const { bookings } = useBookings('helpanion');
   const navigate = useNavigate();
   const { toast } = useToast();
   const { userId } = useParams();

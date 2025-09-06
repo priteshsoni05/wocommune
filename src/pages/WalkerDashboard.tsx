@@ -37,7 +37,7 @@ export default function WalkerDashboard() {
   const { profile, updateProfile } = useProfile();
   const { hasRole, addRole, loading: rolesLoading } = useUserRoles();
   const { services } = useServices();
-  const { bookings, loading: bookingsLoading } = useBookings();
+  const { bookings, loading: bookingsLoading } = useBookings('walker');
   const { userId } = useParams();
   
   // Role persistence
@@ -251,9 +251,12 @@ export default function WalkerDashboard() {
                       className="flex items-center justify-between border-b border-border pb-2"
                     >
                       <div>
-                        <div className="font-medium">{booking.seeker_name}</div>
+                        <div className="font-medium">{booking.services?.title || 'Service'}</div>
+                        <div className="text-sm text-muted-foreground">
+                          with {booking.services?.title ? 'Helpanion' : 'Helper'}
+                        </div>
                         <div className="text-xs text-muted-foreground">
-                          {format(new Date(booking.booking_date), 'PPpp')}
+                          {format(new Date(booking.booking_date), 'PPp')} - {booking.start_time} to {booking.end_time}
                         </div>
                       </div>
                       <Badge 
@@ -305,9 +308,12 @@ export default function WalkerDashboard() {
                       className="flex items-center justify-between border-b border-border pb-2"
                     >
                       <div>
-                        <div className="font-medium">{booking.seeker_name}</div>
+                        <div className="font-medium">{booking.services?.title || 'Service'}</div>
+                        <div className="text-sm text-muted-foreground">
+                          with {booking.services?.title ? 'Helpanion' : 'Helper'}
+                        </div>
                         <div className="text-xs text-muted-foreground">
-                          {format(new Date(booking.booking_date), 'PPpp')}
+                          {format(new Date(booking.booking_date), 'PPp')} - {booking.start_time} to {booking.end_time}
                         </div>
                       </div>
                       <Badge 
