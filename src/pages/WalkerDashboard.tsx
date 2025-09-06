@@ -86,13 +86,20 @@ export default function WalkerDashboard() {
     }
   }, [profile, user, setActiveRole, updateProfile, handleCorruptedData, navigate]);
 
-  const upcomingBookings = bookings.filter(booking =>
-    booking.status === 'confirmed' && new Date(booking.booking_date) >= new Date()
-  );
+  console.log('WalkerDashboard: All bookings:', bookings);
+  console.log('WalkerDashboard: Current user ID:', user?.id);
 
-  const completedBookings = bookings.filter(booking =>
-    booking.status === 'completed'
-  );
+  const upcomingBookings = bookings.filter(booking => {
+    const isUpcoming = (booking.status === 'confirmed' || booking.status === 'pending') && new Date(booking.booking_date) >= new Date();
+    console.log('WalkerDashboard: Checking booking for upcoming:', booking, 'isUpcoming:', isUpcoming);
+    return isUpcoming;
+  });
+
+  const completedBookings = bookings.filter(booking => {
+    const isCompleted = booking.status === 'completed' || booking.status === 'cancelled';
+    console.log('WalkerDashboard: Checking booking for completed/cancelled:', booking, 'isCompleted:', isCompleted);
+    return isCompleted;
+  });
 
   const handleSaveProfile = async () => {
     await updateProfile(formData);
@@ -233,18 +240,34 @@ export default function WalkerDashboard() {
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Sessions</CardTitle>
-              <CardDescription>
-                These are the sessions you've booked as a Walker.
-              </CardDescription>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle>Your Sessions</CardTitle>
+                  <CardDescription>
+                    Sessions you've booked as a Walker (including pending approval).
+                  </CardDescription>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => window.location.reload()}
+                >
+                  Refresh
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {bookingsLoading ? (
-                <div>Loading...</div>
+                <div>Loading sessions...</div>
+              ) : bookings.length === 0 ? (
+                <div className="text-muted-foreground">No sessions found. Try booking a session with a Helpanion!</div>
               ) : upcomingBookings.length === 0 ? (
                 <div className="text-muted-foreground">No upcoming sessions.</div>
               ) : (
                 <div className="space-y-4">
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Debug: Found {bookings.length} total bookings, {upcomingBookings.length} upcoming
+                  </div>
                   {upcomingBookings.map((booking) => (
                     <div
                       key={booking.id}
@@ -253,11 +276,16 @@ export default function WalkerDashboard() {
                       <div>
                         <div className="font-medium">{booking.services?.title || 'Service'}</div>
                         <div className="text-sm text-muted-foreground">
-                          with {booking.services?.title ? 'Helpanion' : 'Helper'}
+                          Session with Helpanion
                         </div>
                         <div className="text-xs text-muted-foreground">
                           {format(new Date(booking.booking_date), 'PPp')} - {booking.start_time} to {booking.end_time}
                         </div>
+                        {booking.notes && (
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Note: {booking.notes}
+                          </div>
+                        )}
                       </div>
                       <Badge 
                         className={getStatusColor(booking.status)}
@@ -290,9 +318,9 @@ export default function WalkerDashboard() {
         return (
           <Card>
             <CardHeader>
-              <CardTitle>Completed Sessions</CardTitle>
+              <CardTitle>Past Sessions</CardTitle>
               <CardDescription>
-                Your session history as a Walker.
+                Your session history as a Walker (completed and cancelled sessions).
               </CardDescription>
             </CardHeader>
             <CardContent>

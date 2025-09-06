@@ -40,6 +40,8 @@ export const useBookings = (userRole?: 'walker' | 'helpanion') => {
   const fetchBookings = async () => {
     if (!user) return;
 
+    console.log('useBookings: Fetching bookings for user:', user.id, 'role:', userRole);
+
     try {
       let query = supabase
         .from('bookings')
@@ -53,11 +55,14 @@ export const useBookings = (userRole?: 'walker' | 'helpanion') => {
 
       // Filter based on user role
       if (userRole === 'walker') {
+        console.log('useBookings: Filtering for walker - seeker_id:', user.id);
         query = query.eq('seeker_id', user.id);
       } else if (userRole === 'helpanion') {
+        console.log('useBookings: Filtering for helpanion - helper_id:', user.id);
         query = query.eq('helper_id', user.id);
       } else {
         // Default behavior - show both helper and seeker bookings
+        console.log('useBookings: Filtering for both roles');
         query = query.or(`helper_id.eq.${user.id},seeker_id.eq.${user.id}`);
       }
 
@@ -65,9 +70,12 @@ export const useBookings = (userRole?: 'walker' | 'helpanion') => {
         .order('booking_date', { ascending: true })
         .order('start_time', { ascending: true });
 
+      console.log('useBookings: Query result:', { data, error, userRole });
+
       if (error) {
         console.error('Error fetching bookings:', error);
       } else {
+        console.log('useBookings: Setting bookings:', data);
         setBookings(data as Booking[]);
       }
     } catch (error) {
