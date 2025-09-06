@@ -153,9 +153,11 @@ export default function Auth() {
   const handleCreateAccount = () => {
     console.log('handleCreateAccount called');
     setAuthMode('signup');
+    setNoRoleMessage('');
     setShowRoleSelection(true);
     setShowSignupForm(false);
     setSelectedRole(null);
+    navigate('/auth?mode=signup', { replace: true });
   };
 
   const getMainTitle = () => {
@@ -280,6 +282,10 @@ export default function Auth() {
                   onClick={() => {
                     setAuthMode('login');
                     setShowRoleSelection(false);
+                    setShowSignupForm(false);
+                    setSelectedRole(null);
+                    setNoRoleMessage('');
+                    navigate('/auth?mode=login', { replace: true });
                   }}
                   className="text-primary hover:text-primary/80 hover:underline font-semibold transition-colors"
                 >
