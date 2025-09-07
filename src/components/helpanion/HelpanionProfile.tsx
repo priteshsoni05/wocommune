@@ -74,7 +74,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     phone: profile.phone || "",
     avatar_url: profile.avatar_url || "",
     school: profile.school || "",
-    role: profile.role || "",
+        role: profile.profession || "",
     use_case: profile.use_case || "",
     skills: profile.skills || "",
     linkedin_url: profile.linkedin_url || "",
@@ -105,7 +105,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         phone: profile.phone || "",
         avatar_url: profile.avatar_url || "",
         school: profile.school || "",
-        role: profile.role || "",
+        role: profile.profession || "",
         use_case: profile.use_case || "",
         skills: Array.isArray(profile.skills) ? profile.skills.join(', ') : profile.skills || "",
         linkedin_url: profile.linkedin_url || "",
@@ -303,9 +303,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         website_url: formData.website_url,
       };
 
-      // Include role field (job role, not app_role enum)
+      // Include profession field
       if (roleValue) {
-        updateData.role = roleValue;
+        updateData.profession = roleValue;
       }
       
       console.log('Attempting to update profile with data:', updateData);

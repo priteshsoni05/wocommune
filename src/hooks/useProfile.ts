@@ -14,7 +14,7 @@ export interface Profile {
   last_active_role: 'walker' | 'helpanion' | null;
   status: 'pending' | 'active' | 'in_review';
   school: string | null;
-  role: 'walker' | 'helpanion' | null;
+  profession: string | null;
   use_case: string | null;
   skills: string[] | null;
   linkedin_url: string | null;

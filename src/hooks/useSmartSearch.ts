@@ -58,7 +58,7 @@ export const useSmartSearch = () => {
             )
           `)
           .eq('status', 'active')
-          .or(`display_name.ilike.%${query}%,role.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,bio.ilike.%${query}%`)
+          .or(`display_name.ilike.%${query}%,profession.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,bio.ilike.%${query}%`)
           .limit(10);
 
         if (profilesError) {
@@ -101,20 +101,20 @@ export const useSmartSearch = () => {
               id: key,
               type: 'person',
               text: profile.display_name,
-              subtext: profile.role || undefined,
+              subtext: profile.profession || undefined,
               userId: profile.user_id
             });
           }
 
-          // Add role suggestions
-          if (profile.role) {
-            const roleKey = `role-${profile.role.toLowerCase()}`;
-            if (!seen.has(roleKey)) {
-              seen.add(roleKey);
+          // Add profession suggestions
+          if (profile.profession) {
+            const professionKey = `profession-${profile.profession.toLowerCase()}`;
+            if (!seen.has(professionKey)) {
+              seen.add(professionKey);
               suggestionsList.push({
-                id: roleKey,
+                id: professionKey,
                 type: 'role',
-                text: profile.role,
+                text: profile.profession,
                 subtext: 'Professional Role'
               });
             }

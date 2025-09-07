@@ -105,7 +105,7 @@ const OptimizedPublicProfile = () => {
         instagram_url: profile.instagram_url,
         website_url: profile.website_url,
         portfolio_url: profile.portfolio_url,
-        role: profile.role,
+        profession: profile.profession,
         email: profile.email,
         phone: profile.phone,
         status: profile.status as 'active' | 'pending' | 'in_review',

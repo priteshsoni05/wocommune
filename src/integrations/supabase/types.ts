@@ -178,7 +178,7 @@ export type Database = {
           linkedin_url: string | null
           phone: string | null
           portfolio_url: string | null
-          role: Database["public"]["Enums"]["app_role"] | null
+          profession: string | null
           school: string | null
           short_bio: string | null
           skills: string[] | null
@@ -201,7 +201,7 @@ export type Database = {
           linkedin_url?: string | null
           phone?: string | null
           portfolio_url?: string | null
-          role?: Database["public"]["Enums"]["app_role"] | null
+          profession?: string | null
           school?: string | null
           short_bio?: string | null
           skills?: string[] | null
@@ -224,7 +224,7 @@ export type Database = {
           linkedin_url?: string | null
           phone?: string | null
           portfolio_url?: string | null
-          role?: Database["public"]["Enums"]["app_role"] | null
+          profession?: string | null
           school?: string | null
           short_bio?: string | null
           skills?: string[] | null

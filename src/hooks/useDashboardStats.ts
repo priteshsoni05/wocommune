@@ -56,7 +56,7 @@ export const useDashboardStats = () => {
         profile.bio,
         profile.email,
         profile.school,
-        profile.role,
+        profile.profession,
         profile.use_case,
         profile.skills,
         profile.avatar_url
