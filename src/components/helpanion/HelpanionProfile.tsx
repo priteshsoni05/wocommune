@@ -548,13 +548,13 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
               </div>
               {/* Role */}
               <div className="space-y-2">
-                <Label htmlFor="role">Current Role / Field</Label>
+                <Label htmlFor="role">Profession</Label>
                 {showCustomRole ? (
                   <div className="flex gap-2">
                     <Input
                       value={customRole}
                       onChange={(e) => setCustomRole(e.target.value)}
-                      placeholder="Enter your role/field"
+                      placeholder="Enter your profession"
                       className="flex-1"
                     />
                     <Button
@@ -590,7 +590,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     }}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select your role" />
+                      <SelectValue placeholder="Select your profession" />
                     </SelectTrigger>
                     <SelectContent>
                       {roleOptions.map((role) => (
