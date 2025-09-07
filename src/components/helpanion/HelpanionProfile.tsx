@@ -303,8 +303,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         website_url: formData.website_url,
       };
 
-      // Only include role if it's a valid enum value  
-      if (roleValue && (roleValue === 'walker' || roleValue === 'helpanion')) {
+      // Include role field (job role, not app_role enum)
+      if (roleValue) {
         updateData.role = roleValue;
       }
       
