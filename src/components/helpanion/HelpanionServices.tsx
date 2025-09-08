@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, DollarSign, Clock, AlertCircle, Lightbulb } from "lucide-react";
+import { Plus, Edit, Trash2, IndianRupee, Clock, AlertCircle, Lightbulb } from "lucide-react";
 
 interface HelpanionServicesProps {
   profileProgress: number;
@@ -242,7 +242,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                 <div className="space-y-2">
                   <Label htmlFor="price_per_hour">Pricing</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <IndianRupee className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="price_per_hour"
                       type="number"
@@ -376,9 +376,9 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      <IndianRupee className="h-4 w-4 text-muted-foreground" />
                       <span className="font-medium">
-                        {service.price_per_hour === 0 ? 'Free' : `$${service.price_per_hour}/hr`}
+                        {service.price_per_hour === 0 ? 'Free' : `₹${service.price_per_hour}/hr`}
                       </span>
                     </div>
                     <Badge variant={service.is_active ? "default" : "secondary"}>

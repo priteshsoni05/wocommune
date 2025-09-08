@@ -98,7 +98,7 @@ export function SearchResultsModal({ isOpen, onClose, searchTerm, helpanions }: 
                           <div className="flex flex-wrap gap-1">
                             {helpanion.services.slice(0, 2).map((service) => (
                               <Badge key={service.id} variant="secondary" className="text-xs">
-                                {service.title} - ${service.price_per_hour}/hr
+                                {service.title} - ₹{service.price_per_hour}/hr
                               </Badge>
                             ))}
                             {helpanion.services.length > 2 && (

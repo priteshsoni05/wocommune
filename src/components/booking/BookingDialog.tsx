@@ -204,7 +204,7 @@ export const BookingDialog = ({
             </div>
             <div className="flex justify-between border-t pt-1">
               <span>Total:</span>
-              <span className="font-bold text-foreground">${calculateSessionPrice().toFixed(0)}</span>
+              <span className="font-bold text-foreground">₹{calculateSessionPrice().toFixed(0)}</span>
             </div>
           </div>
         </div>

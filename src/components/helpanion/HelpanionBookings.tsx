@@ -115,7 +115,7 @@ export const HelpanionBookings = () => {
           {booking.total_amount && (
             <div className="flex items-center justify-between p-3 bg-success/10 rounded-lg">
               <span className="text-sm font-medium">Session Amount</span>
-              <span className="font-bold text-success">${booking.total_amount}</span>
+              <span className="font-bold text-success">₹{booking.total_amount}</span>
             </div>
           )}
 
