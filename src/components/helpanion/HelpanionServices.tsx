@@ -242,7 +242,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                 <div className="space-y-2">
                   <Label htmlFor="price_per_hour">Pricing</Label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <span className="absolute left-3 top-3 text-sm text-muted-foreground">₹</span>
                     <Input
                       id="price_per_hour"
                       type="number"
@@ -376,7 +376,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">₹</span>
                       <span className="font-medium">
                         {service.price_per_hour === 0 ? 'Free' : `₹${service.price_per_hour}/hr`}
                       </span>
