@@ -212,16 +212,20 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="edit-price">Price per hour</Label>
-              <Input
-                id="edit-price"
-                type="number"
-                min="0"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="25.00"
-              />
+              <Label htmlFor="edit-price">Price per hour (₹)</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">₹</span>
+                <Input
+                  id="edit-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="500.00"
+                  className="pl-8"
+                />
+              </div>
             </div>
           </div>
 

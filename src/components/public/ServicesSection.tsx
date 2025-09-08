@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, DollarSign } from "lucide-react";
+import { Clock, IndianRupee } from "lucide-react";
 import { Service } from "@/hooks/useServices";
 
 interface ServicesSectionProps {
@@ -24,7 +24,7 @@ export const ServicesSection = ({ services, helperId, onServiceBook }: ServicesS
     if (!pricePerHour) return 'Contact for pricing';
     const hourlyRate = pricePerHour;
     const sessionPrice = (hourlyRate * durationMinutes) / 60;
-    return `$${sessionPrice.toFixed(0)}`;
+    return `₹${sessionPrice.toFixed(0)}`;
   };
 
   const getCategoryColor = (category: string) => {
@@ -78,7 +78,7 @@ export const ServicesSection = ({ services, helperId, onServiceBook }: ServicesS
                     <span>{formatDuration(service.duration_minutes || 60)}</span>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <DollarSign className="w-4 h-4" />
+                    <IndianRupee className="w-4 h-4" />
                     <span className="font-medium">
                       {formatPrice(service.price_per_hour, service.duration_minutes || 60)}
                     </span>
