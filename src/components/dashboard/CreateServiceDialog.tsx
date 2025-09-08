@@ -194,16 +194,20 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">Price per Hour ($)</Label>
-              <Input
-                id="price"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="25.00"
-                value={pricePerHour}
-                onChange={(e) => setPricePerHour(e.target.value)}
-              />
+              <Label htmlFor="price">Price per Hour (₹)</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">₹</span>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="500.00"
+                  value={pricePerHour}
+                  onChange={(e) => setPricePerHour(e.target.value)}
+                  className="pl-8"
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
