@@ -44,7 +44,7 @@ export const useSmartSearch = () => {
             id,
             user_id,
             display_name,
-            role,
+            profession,
             school,
             skills,
             bio,
