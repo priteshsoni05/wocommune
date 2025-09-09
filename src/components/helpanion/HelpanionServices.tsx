@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useServices } from "@/hooks/useServices";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,18 +27,27 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
   
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingService, setEditingService] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    price_per_hour: 0,
-    duration_minutes: 60,
-    is_active: true,
-    image_url: "",
-    // Additional fields to store in description
-    helpType: "",
-    mode: "",
-    outcomes: ""
+  
+  // Use form persistence hook for service form data
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData, 
+    clearAllUserFormData 
+  } = useFormPersistence({
+    key: "helpanion_service",
+    initialValues: {
+      title: "",
+      description: "",
+      category: "",
+      price_per_hour: 0,
+      duration_minutes: 60,
+      is_active: true,
+      image_url: "",
+      helpType: "",
+      mode: "",
+      outcomes: ""
+    }
   });
 
   const isProfileIncomplete = !isProfileComplete;
@@ -84,7 +94,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
           title: "Success",
           description: editingService ? "Service updated successfully!" : "Service created successfully!",
         });
-        resetForm();
+        resetFormData(); // This will clear both state and localStorage
       }
     } catch (error) {
       toast({
@@ -96,24 +106,13 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
   };
 
   const resetForm = () => {
-    setFormData({
-      title: "",
-      description: "",
-      category: "",
-      price_per_hour: 0,
-      duration_minutes: 60,
-      is_active: true,
-      image_url: "",
-      helpType: "",
-      mode: "",
-      outcomes: ""
-    });
+    resetFormData(); // This will reset both state and localStorage
     setShowCreateForm(false);
     setEditingService(null);
   };
 
   const handleEdit = (service: any) => {
-    setFormData({
+    updateFormData({
       title: service.title,
       description: service.description || "",
       category: service.category || "",
@@ -203,7 +202,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) => updateFormData({ title: e.target.value })}
                   placeholder="e.g., Break into UI/UX Design"
                   required
                 />
@@ -212,7 +211,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="helpType">Help Type</Label>
-                  <Select value={formData.helpType} onValueChange={(value) => setFormData(prev => ({ ...prev, helpType: value }))}>
+                  <Select value={formData.helpType} onValueChange={(value) => updateFormData({ helpType: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select help type" />
                     </SelectTrigger>
@@ -226,7 +225,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
 
                 <div className="space-y-2">
                   <Label htmlFor="category">Category</Label>
-                  <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
+                  <Select value={formData.category} onValueChange={(value) => updateFormData({ category: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
@@ -248,7 +247,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                       id="price_per_hour"
                       type="number"
                       value={formData.price_per_hour}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price_per_hour: Number(e.target.value) }))}
+                      onChange={(e) => updateFormData({ price_per_hour: Number(e.target.value) })}
                       placeholder="0 for free"
                       className="pl-10"
                       min="0"
@@ -259,7 +258,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
 
                 <div className="space-y-2">
                   <Label htmlFor="duration_minutes">Duration (minutes)</Label>
-                  <Select value={formData.duration_minutes.toString()} onValueChange={(value) => setFormData(prev => ({ ...prev, duration_minutes: Number(value) }))}>
+                  <Select value={formData.duration_minutes.toString()} onValueChange={(value) => updateFormData({ duration_minutes: Number(value) })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select duration" />
                     </SelectTrigger>
@@ -278,7 +277,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
 
                 <div className="space-y-2">
                   <Label htmlFor="mode">Mode</Label>
-                  <Select value={formData.mode} onValueChange={(value) => setFormData(prev => ({ ...prev, mode: value }))}>
+                  <Select value={formData.mode} onValueChange={(value) => updateFormData({ mode: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select mode" />
                     </SelectTrigger>
@@ -296,7 +295,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) => updateFormData({ description: e.target.value })}
                   placeholder="Describe what's included in your service..."
                   rows={4}
                 />
@@ -307,7 +306,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                 <Input
                   id="outcomes"
                   value={formData.outcomes}
-                  onChange={(e) => setFormData(prev => ({ ...prev, outcomes: e.target.value }))}
+                  onChange={(e) => updateFormData({ outcomes: e.target.value })}
                   placeholder="Portfolio Review, Career Planning, Interview Prep (comma-separated)"
                 />
               </div>

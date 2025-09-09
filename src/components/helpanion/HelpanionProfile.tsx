@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Profile } from "@/hooks/useOptimizedProfile";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,7 +48,6 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
-  const [formInitialized, setFormInitialized] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [customSchool, setCustomSchool] = useState("");
   const [customRole, setCustomRole] = useState("");
@@ -65,38 +65,37 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [customUseCases, setCustomUseCases] = useState<string[]>([]);
   const [useCaseLoading, setUseCaseLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    display_name: profile.display_name || "",
-    username: profile.username || "",
-    bio: profile.bio || "",
-    short_bio: profile.short_bio || "",
-    email: profile.email || "",
-    phone: profile.phone || "",
-    avatar_url: profile.avatar_url || "",
-    school: profile.school || "",
-        role: profile.profession || "",
-    use_case: profile.use_case || "",
-    skills: profile.skills || "",
-    linkedin_url: profile.linkedin_url || "",
-    instagram_url: profile.instagram_url || "",
-    portfolio_url: profile.portfolio_url || "",
-    website_url: profile.website_url || ""
+  // Use form persistence hook for profile form data
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData,
+    isLoaded 
+  } = useFormPersistence({
+    key: "helpanion_profile",
+    initialValues: {
+      display_name: "",
+      username: "",
+      bio: "",
+      short_bio: "",
+      email: "",
+      phone: "",
+      avatar_url: "",
+      school: "",
+      role: "",
+      use_case: "",
+      skills: "",
+      linkedin_url: "",
+      instagram_url: "",
+      portfolio_url: "",
+      website_url: ""
+    }
   });
 
-  // --- Enhancement: Profile completion calculation ---
-  const completion = Math.round(
-    REQUIRED_FIELDS.filter((key) => {
-      const value = formData[key as keyof typeof formData];
-      if (Array.isArray(value)) return value.length > 0;
-      return value && typeof value === 'string' && value.trim();
-    }).length /
-    REQUIRED_FIELDS.length * 100
-  );
-
+  // Initialize form data with profile data when loaded and not yet persisted
   useEffect(() => {
-    if (profile && !formInitialized) {
-      console.log('Initializing form with profile data:', profile);
-      setFormData({
+    if (profile && isLoaded) {
+      const profileData = {
         display_name: profile.display_name || "",
         username: profile.username || "",
         bio: profile.bio || "",
@@ -112,10 +111,30 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         instagram_url: profile.instagram_url || "",
         portfolio_url: profile.portfolio_url || "",
         website_url: profile.website_url || ""
-      });
-      setFormInitialized(true);
+      };
+      
+      // Only update if form is empty (no persisted data)
+      const hasPersistedData = Object.values(formData).some(value => 
+        typeof value === 'string' && value.trim() !== ''
+      );
+      
+      if (!hasPersistedData) {
+        updateFormData(profileData);
+      }
     }
-  }, [profile, formInitialized]);
+  }, [profile, isLoaded]);
+
+  // --- Enhancement: Profile completion calculation ---
+  const completion = Math.round(
+    REQUIRED_FIELDS.filter((key) => {
+      const value = formData[key as keyof typeof formData];
+      if (Array.isArray(value)) return value.length > 0;
+      return value && typeof value === 'string' && value.trim();
+    }).length /
+    REQUIRED_FIELDS.length * 100
+  );
+
+  // This useEffect is no longer needed as we handle initialization in the previous useEffect
 
   // Fetch custom use cases from Supabase
   useEffect(() => {
@@ -205,7 +224,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   // --- Enhancement: Username normalizer and uniqueness check ---
   const handleUsernameChange = (value: string) => {
     const normalized = value.replace(/\s/g, "").toLowerCase();
-    setFormData((prev) => ({ ...prev, username: normalized }));
+    updateFormData({ username: normalized });
     setUsernameError("");
   };
 
@@ -325,14 +344,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           title: "Success",
           description: "Profile updated successfully!",
         });
-        // Profile data will be updated automatically by the parent component
-        // Update form data with the latest values
-        setFormData(prev => ({
-          ...prev,
-          school: schoolValue,
-          role: roleValue,
-          use_case: useCaseValue
-        }));
+        // Clear persisted form data since profile was successfully saved
+        resetFormData();
       }
     } catch (error) {
       console.error('Unexpected error during profile update:', error);
@@ -347,7 +360,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    updateFormData({ [field]: value });
     if (field === "username") setUsernameError("");
   };
 

@@ -79,11 +79,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem('wo_commune_role_timestamp');
       localStorage.removeItem('wo_commune_preferred_role');
       
-      // Clear any form data that might be cached
-      const formKeys = Object.keys(localStorage).filter(key => 
-        key.includes('form_') || key.includes('auth_') || key.includes('login_') || key.includes('signup_')
+      // Clear any form data that might be cached - more comprehensive approach
+      const allKeys = Object.keys(localStorage);
+      const keysToRemove = allKeys.filter(key => 
+        key.includes('form_') || 
+        key.includes('auth_') || 
+        key.includes('login_') || 
+        key.includes('signup_') ||
+        key.startsWith('helpanion_') ||
+        key.startsWith('walker_')
       );
-      formKeys.forEach(key => localStorage.removeItem(key));
+      keysToRemove.forEach(key => localStorage.removeItem(key));
       
       console.log('Auth cache cleared successfully');
     } catch (error) {

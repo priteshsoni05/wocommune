@@ -135,8 +135,9 @@ const HelpanionDashboard = () => {
 
   // Define all handler functions first
   const handleSignOut = async () => {
-    // Clear role data and sign out
+    // Clear role data and any persisted form data, then sign out
     clearRoleData();
+    // The signOut function in AuthContext will also clear form data
     await signOut();
     navigate("/wo-commune");
   };
