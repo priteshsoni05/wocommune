@@ -62,6 +62,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
       duration_minutes: formData.duration_minutes,
       is_active: formData.is_active,
       image_url: formData.image_url || null,
+      help_type: formData.helpType || null,
     };
 
     try {
@@ -120,7 +121,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
       duration_minutes: service.duration_minutes,
       is_active: service.is_active,
       image_url: service.image_url || "",
-      helpType: "",
+      helpType: service.help_type || "",
       mode: "",
       outcomes: ""
     });
@@ -354,6 +355,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                       <CardTitle className="text-lg">{service.title}</CardTitle>
                       <CardDescription className="flex items-center gap-2 mt-1">
                         {service.category && <Badge variant="secondary">{service.category}</Badge>}
+                        {service.help_type && <Badge variant="outline">{service.help_type}</Badge>}
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {service.duration_minutes}min

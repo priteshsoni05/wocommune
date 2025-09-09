@@ -71,7 +71,7 @@ const OptimizedPublicProfile = () => {
       // Then get services separately
       const { data: services, error: servicesError } = await supabase
         .from("services")
-        .select("*")
+        .select("*, help_type")
         .eq("helper_id", profile.user_id)
         .eq("is_active", true);
 
@@ -87,7 +87,10 @@ const OptimizedPublicProfile = () => {
       console.log('Availability query result:', { availability, availabilityError });
 
       // Process the data - use the fetched data directly
-      const processedServices = services || [];
+      const processedServices = (services || []).map((service: any) => ({
+        ...service,
+        help_type: service.help_type || null
+      }));
       const processedAvailability = availability || [];
 
       // Create profile object

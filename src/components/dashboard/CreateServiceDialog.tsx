@@ -118,6 +118,7 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
         category: category || null,
         duration_minutes: parseInt(durationMinutes),
         image_url: imageUrl,
+        help_type: null,
         is_active: true
       });
 
