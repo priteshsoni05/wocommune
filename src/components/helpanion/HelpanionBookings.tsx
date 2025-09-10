@@ -15,7 +15,7 @@ import {
   Video,
   MoreHorizontal
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, isAfter, parseISO, parse } from "date-fns";
 
 export const HelpanionBookings = () => {
   const { bookings, updateBookingStatus, getTodaysBookings, getUpcomingBookings, loading } = useBookings();
@@ -55,6 +55,13 @@ export const HelpanionBookings = () => {
       default:
         return 'outline';
     }
+  };
+
+  const isSessionEnded = (booking: any) => {
+    const now = new Date();
+    const bookingDate = parseISO(booking.booking_date);
+    const endTime = parse(booking.end_time, 'HH:mm:ss', bookingDate);
+    return isAfter(now, endTime);
   };
 
   const BookingCard = ({ booking }: { booking: any }) => (
@@ -147,14 +154,16 @@ export const HelpanionBookings = () => {
                   <Video className="h-5 w-5 mr-2" />
                   Join Session
                 </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => handleStatusUpdate(booking.id, 'completed')}
-                  className="flex-1 sm:flex-none"
-                >
-                  <CheckCircle className="h-5 w-5 mr-2" />
-                  Complete
-                </Button>
+                {isSessionEnded(booking) && (
+                  <Button 
+                    variant="outline"
+                    onClick={() => handleStatusUpdate(booking.id, 'completed')}
+                    className="flex-1 sm:flex-none"
+                  >
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    Complete
+                  </Button>
+                )}
               </>
             )}
             

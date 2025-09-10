@@ -1,4 +1,5 @@
 import { Clock, User, Video, CheckCircle } from "lucide-react";
+import { isAfter, parse } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useBookings } from "@/hooks/useBookings";
@@ -23,6 +24,13 @@ export const TodaysSessions = () => {
         description: "Great job helping someone today"
       });
     }
+  };
+
+  const isSessionEnded = (booking: any) => {
+    const now = new Date();
+    const today = new Date();
+    const endTime = parse(booking.end_time, 'HH:mm:ss', today);
+    return isAfter(now, endTime);
   };
 
   if (loading) {
@@ -95,11 +103,13 @@ export const TodaysSessions = () => {
                     <span className="hidden sm:inline">Join Call</span>
                     <span className="sm:hidden">Join</span>
                   </Button>
-                  <Button variant="outline" className="gap-2 w-full sm:w-auto" onClick={() => handleMarkDone(booking.id)}>
-                    <CheckCircle className="h-5 w-5" />
-                    <span className="hidden sm:inline">Mark Done</span>
-                    <span className="sm:hidden">Done</span>
-                  </Button>
+                  {isSessionEnded(booking) && (
+                    <Button variant="outline" className="gap-2 w-full sm:w-auto" onClick={() => handleMarkDone(booking.id)}>
+                      <CheckCircle className="h-5 w-5" />
+                      <span className="hidden sm:inline">Mark Done</span>
+                      <span className="sm:hidden">Done</span>
+                    </Button>
+                  )}
                 </>
               ) : booking.status === 'completed' ? (
                 <div className="flex items-center justify-center sm:justify-start gap-2 text-success">
