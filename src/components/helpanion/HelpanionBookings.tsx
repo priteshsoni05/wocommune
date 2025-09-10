@@ -124,20 +124,18 @@ export const HelpanionBookings = () => {
             {booking.status === 'pending' && (
               <>
                 <Button 
-                  size="sm" 
                   onClick={() => handleStatusUpdate(booking.id, 'confirmed')}
                   className="flex-1"
                 >
-                  <CheckCircle className="h-4 w-4 mr-2" />
+                  <CheckCircle className="h-5 w-5 mr-2" />
                   Confirm
                 </Button>
                 <Button 
-                  size="sm" 
                   variant="outline"
                   onClick={() => handleStatusUpdate(booking.id, 'cancelled')}
                   className="flex-1 sm:flex-none"
                 >
-                  <XCircle className="h-4 w-4 mr-2" />
+                  <XCircle className="h-5 w-5 mr-2" />
                   Cancel
                 </Button>
               </>
@@ -145,24 +143,23 @@ export const HelpanionBookings = () => {
             
             {booking.status === 'confirmed' && (
               <>
-                <Button size="sm" className="flex-1">
-                  <Video className="h-4 w-4 mr-2" />
+                <Button className="flex-1">
+                  <Video className="h-5 w-5 mr-2" />
                   Join Session
                 </Button>
                 <Button 
-                  size="sm" 
                   variant="outline"
                   onClick={() => handleStatusUpdate(booking.id, 'completed')}
                   className="flex-1 sm:flex-none"
                 >
-                  <CheckCircle className="h-4 w-4 mr-2" />
+                  <CheckCircle className="h-5 w-5 mr-2" />
                   Complete
                 </Button>
               </>
             )}
             
-            <Button size="sm" variant="ghost" className="flex-1 sm:flex-none">
-              <MessageSquare className="h-4 w-4 mr-2" />
+            <Button variant="ghost" className="flex-1 sm:flex-none">
+              <MessageSquare className="h-5 w-5 mr-2" />
               Message
             </Button>
           </div>

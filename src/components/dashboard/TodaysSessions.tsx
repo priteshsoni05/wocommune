@@ -90,13 +90,13 @@ export const TodaysSessions = () => {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:ml-4">
               {booking.status === 'confirmed' ? (
                 <>
-                  <Button size="sm" className="gap-2 w-full sm:w-auto">
-                    <Video className="h-4 w-4" />
+                  <Button className="gap-2 w-full sm:w-auto">
+                    <Video className="h-5 w-5" />
                     <span className="hidden sm:inline">Join Call</span>
                     <span className="sm:hidden">Join</span>
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2 w-full sm:w-auto" onClick={() => handleMarkDone(booking.id)}>
-                    <CheckCircle className="h-4 w-4" />
+                  <Button variant="outline" className="gap-2 w-full sm:w-auto" onClick={() => handleMarkDone(booking.id)}>
+                    <CheckCircle className="h-5 w-5" />
                     <span className="hidden sm:inline">Mark Done</span>
                     <span className="sm:hidden">Done</span>
                   </Button>
