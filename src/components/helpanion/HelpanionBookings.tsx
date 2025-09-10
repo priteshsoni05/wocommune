@@ -120,7 +120,7 @@ export const HelpanionBookings = () => {
           )}
 
           {/* Actions */}
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             {booking.status === 'pending' && (
               <>
                 <Button 
@@ -135,6 +135,7 @@ export const HelpanionBookings = () => {
                   size="sm" 
                   variant="outline"
                   onClick={() => handleStatusUpdate(booking.id, 'cancelled')}
+                  className="flex-1 sm:flex-none"
                 >
                   <XCircle className="h-4 w-4 mr-2" />
                   Cancel
@@ -152,6 +153,7 @@ export const HelpanionBookings = () => {
                   size="sm" 
                   variant="outline"
                   onClick={() => handleStatusUpdate(booking.id, 'completed')}
+                  className="flex-1 sm:flex-none"
                 >
                   <CheckCircle className="h-4 w-4 mr-2" />
                   Complete
@@ -159,7 +161,7 @@ export const HelpanionBookings = () => {
               </>
             )}
             
-            <Button size="sm" variant="ghost">
+            <Button size="sm" variant="ghost" className="flex-1 sm:flex-none">
               <MessageSquare className="h-4 w-4 mr-2" />
               Message
             </Button>

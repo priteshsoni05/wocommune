@@ -73,39 +73,41 @@ export const TodaysSessions = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         {todaysBookings.map((booking) => (
-          <div key={booking.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="text-sm font-medium bg-accent px-2 py-1 rounded">
+          <div key={booking.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-muted/30 rounded-lg space-y-3 sm:space-y-0">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                <div className="text-sm font-medium bg-accent px-2 py-1 rounded w-fit">
                   {booking.start_time}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <User className="h-4 w-4" />
-                  {booking.seeker_name}
+                  <User className="h-4 w-4 flex-shrink-0" />
+                  <span className="truncate">{booking.seeker_name}</span>
                 </div>
               </div>
-              <p className="text-sm font-medium">{booking.services?.title || 'Service'}</p>
+              <p className="text-sm font-medium truncate">{booking.services?.title || 'Service'}</p>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:ml-4">
               {booking.status === 'confirmed' ? (
                 <>
-                  <Button size="sm" className="gap-2">
+                  <Button size="sm" className="gap-2 w-full sm:w-auto">
                     <Video className="h-4 w-4" />
-                    Join Call
+                    <span className="hidden sm:inline">Join Call</span>
+                    <span className="sm:hidden">Join</span>
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2" onClick={() => handleMarkDone(booking.id)}>
+                  <Button variant="outline" size="sm" className="gap-2 w-full sm:w-auto" onClick={() => handleMarkDone(booking.id)}>
                     <CheckCircle className="h-4 w-4" />
-                    Mark Done
+                    <span className="hidden sm:inline">Mark Done</span>
+                    <span className="sm:hidden">Done</span>
                   </Button>
                 </>
               ) : booking.status === 'completed' ? (
-                <div className="flex items-center gap-2 text-success">
+                <div className="flex items-center justify-center sm:justify-start gap-2 text-success">
                   <CheckCircle className="h-4 w-4" />
                   <span className="text-sm">Completed</span>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 text-warning">
+                <div className="flex items-center justify-center sm:justify-start gap-2 text-warning">
                   <Clock className="h-4 w-4" />
                   <span className="text-sm">Pending</span>
                 </div>
