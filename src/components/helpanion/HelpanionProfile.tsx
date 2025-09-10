@@ -395,15 +395,6 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-2">
-                <Label htmlFor="avatar_url">Profile Image URL <span className="text-red-500">*</span></Label>
-                <Input
-                  id="avatar_url"
-                  type="url"
-                  value={formData.avatar_url}
-                  onChange={(e) => handleInputChange('avatar_url', e.target.value)}
-                  placeholder="https://example.com/your-photo.jpg"
-                  required
-                />
                 <input
                   ref={fileInputRef}
                   type="file"
