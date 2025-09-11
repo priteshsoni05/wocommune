@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Profile } from "@/hooks/useOptimizedProfile";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,6 +80,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     
     if (formData.newPassword !== formData.confirmPassword) {
       toast({
@@ -86,6 +88,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
         description: "New passwords don't match.",
         variant: "destructive",
       });
+      setLoading(false);
       return;
     }
 
@@ -95,21 +98,43 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
         description: "Password must be at least 6 characters long.",
         variant: "destructive",
       });
+      setLoading(false);
       return;
     }
 
-    // In a real app, you'd call supabase.auth.updateUser here
-    toast({
-      title: "Success",
-      description: "Password updated successfully!",
-    });
-    
-    setFormData(prev => ({
-      ...prev,
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: ""
-    }));
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: formData.newPassword
+      });
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to update password.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Password updated successfully!",
+        });
+        
+        setFormData(prev => ({
+          ...prev,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        }));
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while updating password.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -220,7 +245,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                 />
               </div>
             </div>
-            <Button type="submit">
+            <Button type="submit" disabled={loading}>
               <Lock className="h-4 w-4 mr-2" />
               Update Password
             </Button>
