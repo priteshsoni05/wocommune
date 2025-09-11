@@ -176,7 +176,7 @@ export default function WalkerDashboard() {
           <p className="text-xs text-gray-500 mb-2 uppercase font-medium">Quick Actions</p>
           <button
             className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-200 transition-colors"
-            onClick={() => navigate('/helpanion')}
+            onClick={() => navigate('/helpanions')}
           >
             <Calendar className="h-4 w-4" />
             <span className="text-sm font-medium">Browse Helpanions</span>
