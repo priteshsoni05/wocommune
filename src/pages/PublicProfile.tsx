@@ -5,17 +5,16 @@ import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog"
 import { Profile } from "@/hooks/useOptimizedProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
-import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle } from "lucide-react";
+import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle, Star } from "lucide-react";
 import GlobalHeader from '@/components/common/GlobalHeader';
+import { useAuth } from "@/contexts/AuthContext";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
 
 interface PublicProfileData {
   profile: Profile;
   services: Service[];
   availability: AvailabilitySlot[];
 }
-
-const PINE = "#193232";
-const TEXT = "#111111";
 
 // Cache for public profiles
 const profileCache = new Map<string, { data: PublicProfileData; timestamp: number }>();
@@ -24,6 +23,8 @@ const CACHE_DURATION = 300000; // 5 minutes
 const OptimizedPublicProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { getDashboardPath, clearRoleData } = useRolePersistence();
   const [data, setData] = useState<PublicProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -150,6 +151,22 @@ const OptimizedPublicProfile = () => {
     servicesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  // Helper function for sign out
+  const handleSignOut = async () => {
+    clearRoleData();
+    await supabase.auth.signOut();
+    navigate('/wo-commune');
+  };
+
+  // Get avatar content for header
+  const avatarContent = useMemo(() => {
+    if (user?.user_metadata?.avatar_url) {
+      return { type: 'image' as const, value: user.user_metadata.avatar_url };
+    }
+    const displayName = user?.user_metadata?.display_name || user?.email || 'User';
+    return { type: 'initial' as const, value: displayName.charAt(0).toUpperCase() };
+  }, [user]);
+
   // Memoize skills processing
   const skillsArray = useMemo(() => {
     const skills = data?.profile.skills;
@@ -181,7 +198,7 @@ const OptimizedPublicProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ color: TEXT }}>
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-4">
           <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto border-primary"></div>
           <p className="text-sm text-muted-foreground">Loading profile...</p>
@@ -192,14 +209,13 @@ const OptimizedPublicProfile = () => {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center" style={{ color: TEXT }}>
-        <h1 className="text-xl font-semibold">Profile Not Found</h1>
-        <p className="text-sm text-gray-500 mt-2">Username: {username}</p>
-        <p className="text-sm text-gray-500">Error: {error}</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        <h1 className="text-xl font-semibold text-foreground">Profile Not Found</h1>
+        <p className="text-sm text-muted-foreground mt-2">Username: {username}</p>
+        <p className="text-sm text-muted-foreground">Error: {error}</p>
         <Link
           to="/wo-commune"
-          className="mt-3 px-4 py-2 rounded-md text-white"
-          style={{ backgroundColor: "#193232" }}
+          className="mt-3 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           Back to WO Commune
         </Link>
@@ -208,146 +224,174 @@ const OptimizedPublicProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6]">
-      {/* Global Header */}
-      <GlobalHeader />
+    <div className="min-h-screen bg-background">
+      {/* Global Header with burger menu functionality */}
+      <GlobalHeader 
+        user={user}
+        displayName={user?.user_metadata?.display_name || user?.email?.split('@')[0] || "Friend"}
+        avatarContent={avatarContent}
+        dashboardPath={getDashboardPath()}
+        clearRoleData={clearRoleData}
+        signOut={handleSignOut}
+        navigate={navigate}
+      />
 
-      {/* Main container with proper spacing */}
-      <div className="pt-8 md:pt-10 w-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-8 min-h-[calc(100vh-5rem)]">
-            {/* Sidebar */}
-            <aside className="lg:col-span-4 bg-white border border-gray-200 rounded-lg mx-4 lg:mx-0 p-6 h-fit lg:sticky lg:top-24">
-              <div className="text-center space-y-4" style={{ color: TEXT }}>
-                <img
-                  src={data.profile.avatar_url || "/placeholder.svg"}
-                  alt={data.profile.display_name || "Profile"}
-                  className="w-32 h-32 mx-auto rounded-full object-cover shadow-lg"
-                  style={{ border: "4px solid #193232" }}
-                  loading="lazy"
-                />
+      {/* Hero Section - Clean and Premium */}
+      <section className="pt-16 pb-8 bg-gradient-to-b from-background to-muted/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
+            {/* Profile Image */}
+            <div className="flex-shrink-0">
+              <img
+                src={data.profile.avatar_url || "/placeholder.svg"}
+                alt={data.profile.display_name || "Profile"}
+                className="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover shadow-xl border-4 border-white"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Profile Info */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                 <div>
-                  <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
+                  <h1 className="text-3xl lg:text-4xl font-bold text-foreground flex items-center justify-center lg:justify-start gap-3 mb-3">
                     {data.profile.display_name}
-                    <CheckCircle size={20} style={{ color: "#193232" }} aria-label="Verified" />
+                    <CheckCircle size={24} className="text-primary" aria-label="Verified" />
                   </h1>
-                  <p className="text-base text-gray-600 mt-2">
-                    {data.profile.short_bio || "I help with Professional Services"}
+                  
+                  <p className="text-lg text-muted-foreground mb-4">
+                    {data.profile.short_bio || "Professional Services Expert"}
                   </p>
-                </div>
-              </div>
 
-              {/* Expertise */}
-              {skillsArray.length > 0 && (
-                <div className="mt-6" style={{ color: TEXT }}>
-                  <h3 className="text-base font-semibold mb-3">Expertise</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {skillsArray.map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1.5 text-sm rounded-full border text-white font-medium"
-                        style={{ borderColor: "#193232", backgroundColor: "#193232" }}
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Reviews */}
-              <div className="mt-6" style={{ color: TEXT }}>
-                <h3 className="text-base font-semibold mb-2">Reviews</h3>
-                <p className="text-base">★ 4.9 (24 reviews) • 87 sessions completed</p>
-              </div>
-
-              {/* Social icons */}
-              {socialLinks.length > 0 && (
-                <div className="mt-4 flex items-center justify-start gap-4" style={{ color: TEXT }}>
-                  {socialLinks.map(({ url, icon: Icon, label }, idx) => (
-                    <a 
-                      key={idx} 
-                      href={url} 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      aria-label={label}
-                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                      <Icon size={20} />
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {/* About */}
-              {data.profile.bio && (
-                <div className="mt-6" style={{ color: TEXT }}>
-                  <h3 className="text-base font-semibold mb-3">About</h3>
-                  <p className="text-base leading-relaxed text-gray-700">{data.profile.bio}</p>
-                </div>
-              )}
-            </aside>
-
-            {/* Main Content */}
-            <main className="lg:col-span-8 mx-4 lg:mx-0 pb-20 lg:pb-8" style={{ color: TEXT }}>
-              <div ref={servicesRef} className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-3xl font-bold">Services</h2>
-                  <div className="text-sm text-gray-500">
-                    {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  {data.services.map((service) => (
-                    <div
-                      key={service.id}
-                      className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-                          <p className="text-base leading-relaxed text-gray-700">
-                            {service.description}
-                          </p>
-                        </div>
-
-                        <div className="sm:shrink-0 text-center sm:text-right">
-                          <div className="text-2xl font-bold mb-4" style={{ color: "#193232" }}>
-                            ₹{service.price_per_hour}
-                          </div>
-                          <button
-                            onClick={() => handleServiceBook(service)}
-                            className="w-full sm:w-auto inline-flex items-center justify-center rounded-lg text-white text-base font-medium px-6 py-3 hover:opacity-90 transition-opacity"
-                            style={{ backgroundColor: "#193232" }}
-                          >
-                            Book Now
-                          </button>
-                        </div>
-                      </div>
+                  {/* Expertise Tags */}
+                  {skillsArray.length > 0 && (
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
+                      {skillsArray.slice(0, 3).map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 text-sm rounded-full bg-primary text-primary-foreground font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
                     </div>
-                  ))}
+                  )}
 
-                  {data.services.length === 0 && (
-                    <div className="text-center py-12">
-                      <div className="text-gray-500">No services published yet.</div>
+                  {/* Reviews */}
+                  <div className="flex items-center justify-center lg:justify-start gap-4 text-sm text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">4.9</span>
+                      <span>(24 reviews)</span>
+                    </div>
+                    <span>•</span>
+                    <span>87 sessions completed</span>
+                  </div>
+
+                  {/* Social Links */}
+                  {socialLinks.length > 0 && (
+                    <div className="flex items-center justify-center lg:justify-start gap-3">
+                      {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                        <a 
+                          key={idx} 
+                          href={url} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          aria-label={label}
+                          className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                        >
+                          <Icon size={20} />
+                        </a>
+                      ))}
                     </div>
                   )}
                 </div>
+
+                {/* CTA Button */}
+                <div className="lg:flex-shrink-0">
+                  <button
+                    onClick={scrollToServices}
+                    className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg"
+                  >
+                    View Services
+                  </button>
+                </div>
               </div>
-            </main>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* About Section */}
+      {data.profile.bio && (
+        <section className="py-12 bg-background">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-foreground mb-6">About</h2>
+            <div className="prose prose-lg max-w-none text-muted-foreground">
+              <p className="leading-relaxed">{data.profile.bio}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Services Section - Premium Shopfront Layout */}
+      <section ref={servicesRef} className="py-16 bg-muted/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">Services</h2>
+            <p className="text-lg text-muted-foreground">
+              {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
+            </p>
+          </div>
+
+          {data.services.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="text-muted-foreground text-lg">No services available at the moment.</div>
+            </div>
+          ) : (
+            <div className="grid gap-8 lg:gap-12">
+              {data.services.map((service) => (
+                <div
+                  key={service.id}
+                  className="bg-card border border-border rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/20"
+                >
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-foreground mb-4">{service.title}</h3>
+                      <p className="text-base leading-relaxed text-muted-foreground mb-6 lg:mb-0">
+                        {service.description}
+                      </p>
+                    </div>
+
+                    <div className="lg:flex-shrink-0 lg:text-right">
+                      <div className="text-3xl font-bold text-primary mb-4">
+                        ₹{service.price_per_hour}
+                        <span className="text-base font-normal text-muted-foreground ml-1">
+                          /hour
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleServiceBook(service)}
+                        className="w-full lg:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold text-lg hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl"
+                      >
+                        Book Session
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Mobile sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 safe-area-bottom">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4 safe-area-bottom">
         <button
           onClick={scrollToServices}
-          className="w-full py-4 rounded-lg font-semibold text-white text-lg"
-          style={{ backgroundColor: "#193232" }}
+          className="w-full py-4 rounded-xl font-semibold text-primary-foreground text-lg bg-primary hover:bg-primary/90 transition-colors shadow-lg"
         >
-          Book a Session
+          View Services
         </button>
       </div>
 
