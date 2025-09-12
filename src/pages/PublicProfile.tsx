@@ -237,16 +237,16 @@ const OptimizedPublicProfile = () => {
       />
 
       {/* Main Content - Two Column Layout */}
-      <section className="pt-20 pb-20 bg-background">
+      <section className="pt-15 pb-15 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-18">
             
             {/* Left Column - User Information */}
             <div className="lg:col-span-5">
-              <div className="space-y-12">
+              <div className="space-y-9">
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-8">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
                     <img
                       src={data.profile.avatar_url || "/placeholder.svg"}
                       alt={data.profile.display_name || "Profile"}
@@ -254,7 +254,7 @@ const OptimizedPublicProfile = () => {
                       loading="lazy"
                     />
                     
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-3">
                       <h1 className="text-2xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
                         {data.profile.display_name}
                         <CheckCircle size={16} className="text-primary" aria-label="Verified" />
@@ -283,7 +283,7 @@ const OptimizedPublicProfile = () => {
 
                 {/* About Section */}
                 {data.profile.bio && (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <h2 className="text-lg font-medium text-foreground">About</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
                       {data.profile.bio}
@@ -292,10 +292,10 @@ const OptimizedPublicProfile = () => {
                 )}
 
                 {/* Key Details */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <h3 className="text-base font-medium text-foreground">Key Details</h3>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div className="flex items-center gap-3 text-sm">
                       <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                       <span className="font-medium">4.9</span>
@@ -324,9 +324,9 @@ const OptimizedPublicProfile = () => {
                 </div>
 
                 {/* Social Links & Contact */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {socialLinks.length > 0 && (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       <h3 className="text-base font-medium text-foreground">Connect</h3>
                       <div className="flex items-center justify-center lg:justify-start gap-2">
                         {socialLinks.map(({ url, icon: Icon, label }, idx) => (
@@ -355,7 +355,7 @@ const OptimizedPublicProfile = () => {
 
             {/* Right Column - Services */}
             <div className="lg:col-span-7" ref={servicesRef}>
-              <div className="space-y-12">
+              <div className="space-y-9">
                 <div className="space-y-2">
                   <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
                   <p className="text-sm text-muted-foreground">
@@ -364,11 +364,11 @@ const OptimizedPublicProfile = () => {
                 </div>
 
                 {data.services.length === 0 ? (
-                  <div className="text-center py-20">
+                  <div className="text-center py-15">
                     <div className="text-muted-foreground">No services available at the moment.</div>
                   </div>
                 ) : (
-                  <div className="space-y-8">
+                  <div className="space-y-6">
                     {data.services.map((service) => (
                       <div
                         key={service.id}
