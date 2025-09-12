@@ -236,152 +236,184 @@ const OptimizedPublicProfile = () => {
         navigate={navigate}
       />
 
-      {/* Hero Section - Clean and Premium */}
-      <section className="pt-16 pb-8 bg-gradient-to-b from-background to-muted/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12">
-            {/* Profile Image */}
-            <div className="flex-shrink-0">
-              <img
-                src={data.profile.avatar_url || "/placeholder.svg"}
-                alt={data.profile.display_name || "Profile"}
-                className="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover shadow-xl border-4 border-white"
-                loading="lazy"
-              />
-            </div>
+      {/* Main Content - Two Column Layout */}
+      <section className="pt-16 pb-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+            
+            {/* Left Column - User Information */}
+            <div className="lg:col-span-5">
+              <div className="space-y-8">
+                {/* Profile Image & Basic Info */}
+                <div className="text-center lg:text-left">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                    <img
+                      src={data.profile.avatar_url || "/placeholder.svg"}
+                      alt={data.profile.display_name || "Profile"}
+                      className="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white mx-auto lg:mx-0 lg:flex-shrink-0"
+                      loading="lazy"
+                    />
+                    
+                    <div className="flex-1">
+                      <h1 className="text-3xl font-bold text-foreground flex items-center justify-center lg:justify-start gap-3 mb-3">
+                        {data.profile.display_name}
+                        <CheckCircle size={24} className="text-primary" aria-label="Verified" />
+                      </h1>
+                      
+                      <p className="text-lg text-muted-foreground mb-4">
+                        {data.profile.short_bio || "Professional Services Expert"}
+                      </p>
 
-            {/* Profile Info */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-foreground flex items-center justify-center lg:justify-start gap-3 mb-3">
-                    {data.profile.display_name}
-                    <CheckCircle size={24} className="text-primary" aria-label="Verified" />
-                  </h1>
-                  
-                  <p className="text-lg text-muted-foreground mb-4">
-                    {data.profile.short_bio || "Professional Services Expert"}
-                  </p>
-
-                  {/* Expertise Tags */}
-                  {skillsArray.length > 0 && (
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
-                      {skillsArray.slice(0, 3).map((skill, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 text-sm rounded-full bg-primary text-primary-foreground font-medium"
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                      {/* Expertise Tags */}
+                      {skillsArray.length > 0 && (
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                          {skillsArray.slice(0, 3).map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-3 py-1 text-sm rounded-full bg-primary text-primary-foreground font-medium"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-
-                  {/* Reviews */}
-                  <div className="flex items-center justify-center lg:justify-start gap-4 text-sm text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">4.9</span>
-                      <span>(24 reviews)</span>
-                    </div>
-                    <span>•</span>
-                    <span>87 sessions completed</span>
                   </div>
-
-                  {/* Social Links */}
-                  {socialLinks.length > 0 && (
-                    <div className="flex items-center justify-center lg:justify-start gap-3">
-                      {socialLinks.map(({ url, icon: Icon, label }, idx) => (
-                        <a 
-                          key={idx} 
-                          href={url} 
-                          target="_blank" 
-                          rel="noreferrer" 
-                          aria-label={label}
-                          className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
-                        >
-                          <Icon size={20} />
-                        </a>
-                      ))}
-                    </div>
-                  )}
                 </div>
 
-                {/* CTA Button */}
-                <div className="lg:flex-shrink-0">
-                  <button
-                    onClick={scrollToServices}
-                    className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-lg"
-                  >
-                    View Services
+                {/* About Section */}
+                {data.profile.bio && (
+                  <div>
+                    <h2 className="text-xl font-semibold text-foreground mb-4">About</h2>
+                    <p className="text-muted-foreground leading-relaxed line-clamp-4">
+                      {data.profile.bio}
+                    </p>
+                  </div>
+                )}
+
+                {/* Key Details */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-foreground">Key Details</h3>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4 text-sm">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">4.9 rating</span>
+                      <span className="text-muted-foreground">(24 reviews)</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 text-sm">
+                      <CheckCircle className="h-4 w-4 text-primary" />
+                      <span>87 sessions completed</span>
+                    </div>
+                    
+                    {data.profile.profession && (
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="font-medium">Profession:</span>
+                        <span className="text-muted-foreground">{data.profile.profession}</span>
+                      </div>
+                    )}
+                    
+                    {data.profile.school && (
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="font-medium">Education:</span>
+                        <span className="text-muted-foreground">{data.profile.school}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Social Links & Contact */}
+                <div className="space-y-4">
+                  {socialLinks.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground mb-3">Connect</h3>
+                      <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                        {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                          <a 
+                            key={idx} 
+                            href={url} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            aria-label={label}
+                            className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                          >
+                            <Icon size={20} />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Contact Button */}
+                  <button className="w-full px-6 py-3 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors">
+                    Contact & Connect
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* About Section */}
-      {data.profile.bio && (
-        <section className="py-12 bg-background">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-foreground mb-6">About</h2>
-            <div className="prose prose-lg max-w-none text-muted-foreground">
-              <p className="leading-relaxed">{data.profile.bio}</p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Services Section - Premium Shopfront Layout */}
-      <section ref={servicesRef} className="py-16 bg-muted/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Services</h2>
-            <p className="text-lg text-muted-foreground">
-              {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
-            </p>
-          </div>
-
-          {data.services.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-muted-foreground text-lg">No services available at the moment.</div>
-            </div>
-          ) : (
-            <div className="grid gap-8 lg:gap-12">
-              {data.services.map((service) => (
-                <div
-                  key={service.id}
-                  className="bg-card border border-border rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-primary/20"
-                >
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-foreground mb-4">{service.title}</h3>
-                      <p className="text-base leading-relaxed text-muted-foreground mb-6 lg:mb-0">
-                        {service.description}
-                      </p>
-                    </div>
-
-                    <div className="lg:flex-shrink-0 lg:text-right">
-                      <div className="text-3xl font-bold text-primary mb-4">
-                        ₹{service.price_per_hour}
-                        <span className="text-base font-normal text-muted-foreground ml-1">
-                          /hour
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => handleServiceBook(service)}
-                        className="w-full lg:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-xl font-semibold text-lg hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl"
-                      >
-                        Book Session
-                      </button>
-                    </div>
-                  </div>
+            {/* Right Column - Services */}
+            <div className="lg:col-span-7" ref={servicesRef}>
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-semibold text-foreground mb-2">Here's what I can help you with</h2>
+                  <p className="text-muted-foreground">
+                    {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
+                  </p>
                 </div>
-              ))}
+
+                {data.services.length === 0 ? (
+                  <div className="text-center py-16">
+                    <div className="text-muted-foreground text-lg">No services available at the moment.</div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {data.services.map((service) => (
+                      <div
+                        key={service.id}
+                        className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-primary/20"
+                      >
+                        <div className="space-y-4">
+                          <div>
+                            <h3 className="text-xl font-bold text-foreground mb-2">{service.title}</h3>
+                            <p className="text-muted-foreground leading-relaxed">
+                              {service.description}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-border">
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="text-2xl font-bold text-primary">
+                                ₹{service.price_per_hour}
+                                <span className="text-base font-normal text-muted-foreground ml-1">
+                                  /hour
+                                </span>
+                              </div>
+                              {service.duration_minutes && (
+                                <>
+                                  <span>•</span>
+                                  <span>{service.duration_minutes} min sessions</span>
+                                </>
+                              )}
+                            </div>
+
+                            <button
+                              onClick={() => handleServiceBook(service)}
+                              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                              style={{ backgroundColor: '#193232' }}
+                            >
+                              Get Help
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
