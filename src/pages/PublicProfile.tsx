@@ -237,30 +237,30 @@ const OptimizedPublicProfile = () => {
       />
 
       {/* Main Content - Two Column Layout */}
-      <section className="pt-16 pb-16 bg-background">
+      <section className="pt-20 pb-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
             
             {/* Left Column - User Information */}
             <div className="lg:col-span-5">
-              <div className="space-y-8">
+              <div className="space-y-12">
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-8">
                     <img
                       src={data.profile.avatar_url || "/placeholder.svg"}
                       alt={data.profile.display_name || "Profile"}
-                      className="w-32 h-32 rounded-full object-cover shadow-lg border-4 border-white mx-auto lg:mx-0 lg:flex-shrink-0"
+                      className="w-24 h-24 rounded-full object-cover shadow-sm border-2 border-border mx-auto lg:mx-0 lg:flex-shrink-0"
                       loading="lazy"
                     />
                     
-                    <div className="flex-1">
-                      <h1 className="text-3xl font-bold text-foreground flex items-center justify-center lg:justify-start gap-3 mb-3">
+                    <div className="flex-1 space-y-4">
+                      <h1 className="text-2xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
                         {data.profile.display_name}
-                        <CheckCircle size={24} className="text-primary" aria-label="Verified" />
+                        <CheckCircle size={16} className="text-primary" aria-label="Verified" />
                       </h1>
                       
-                      <p className="text-lg text-muted-foreground mb-4">
+                      <p className="text-base text-muted-foreground leading-relaxed">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
 
@@ -270,7 +270,7 @@ const OptimizedPublicProfile = () => {
                           {skillsArray.slice(0, 3).map((skill, idx) => (
                             <span
                               key={idx}
-                              className="px-3 py-1 text-sm rounded-full bg-primary text-primary-foreground font-medium"
+                              className="px-2 py-1 text-xs rounded-md bg-muted text-foreground font-medium"
                             >
                               {skill}
                             </span>
@@ -283,52 +283,52 @@ const OptimizedPublicProfile = () => {
 
                 {/* About Section */}
                 {data.profile.bio && (
-                  <div>
-                    <h2 className="text-xl font-semibold text-foreground mb-4">About</h2>
-                    <p className="text-muted-foreground leading-relaxed line-clamp-4">
+                  <div className="space-y-4">
+                    <h2 className="text-lg font-medium text-foreground">About</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
                       {data.profile.bio}
                     </p>
                   </div>
                 )}
 
                 {/* Key Details */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-foreground">Key Details</h3>
+                <div className="space-y-6">
+                  <h3 className="text-base font-medium text-foreground">Key Details</h3>
                   
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-4 text-sm">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">4.9 rating</span>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-sm">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">4.9</span>
                       <span className="text-muted-foreground">(24 reviews)</span>
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                      <span>87 sessions completed</span>
+                    <div className="flex items-center gap-3 text-sm">
+                      <CheckCircle className="h-3 w-3 text-primary" />
+                      <span className="text-muted-foreground">87 sessions completed</span>
                     </div>
                     
                     {data.profile.profession && (
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="font-medium">Profession:</span>
-                        <span className="text-muted-foreground">{data.profile.profession}</span>
+                      <div className="space-y-1">
+                        <span className="text-xs font-medium text-foreground">Profession</span>
+                        <p className="text-sm text-muted-foreground">{data.profile.profession}</p>
                       </div>
                     )}
                     
                     {data.profile.school && (
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="font-medium">Education:</span>
-                        <span className="text-muted-foreground">{data.profile.school}</span>
+                      <div className="space-y-1">
+                        <span className="text-xs font-medium text-foreground">Education</span>
+                        <p className="text-sm text-muted-foreground">{data.profile.school}</p>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {/* Social Links & Contact */}
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {socialLinks.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground mb-3">Connect</h3>
-                      <div className="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                    <div className="space-y-4">
+                      <h3 className="text-base font-medium text-foreground">Connect</h3>
+                      <div className="flex items-center justify-center lg:justify-start gap-2">
                         {socialLinks.map(({ url, icon: Icon, label }, idx) => (
                           <a 
                             key={idx} 
@@ -336,9 +336,9 @@ const OptimizedPublicProfile = () => {
                             target="_blank" 
                             rel="noreferrer" 
                             aria-label={label}
-                            className="p-2 hover:bg-muted rounded-full transition-colors text-muted-foreground hover:text-foreground"
+                            className="p-2 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
                           >
-                            <Icon size={20} />
+                            <Icon size={16} />
                           </a>
                         ))}
                       </div>
@@ -346,7 +346,7 @@ const OptimizedPublicProfile = () => {
                   )}
                   
                   {/* Contact Button */}
-                  <button className="w-full px-6 py-3 bg-foreground text-background rounded-lg font-medium hover:bg-foreground/90 transition-colors">
+                  <button className="w-full px-4 py-2 bg-foreground text-background rounded-md text-sm font-medium hover:bg-foreground/90 transition-colors">
                     Contact & Connect
                   </button>
                 </div>
@@ -355,38 +355,38 @@ const OptimizedPublicProfile = () => {
 
             {/* Right Column - Services */}
             <div className="lg:col-span-7" ref={servicesRef}>
-              <div className="space-y-8">
-                <div>
-                  <h2 className="text-2xl font-semibold text-foreground mb-2">Here's what I can help you with</h2>
-                  <p className="text-muted-foreground">
+              <div className="space-y-12">
+                <div className="space-y-2">
+                  <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
+                  <p className="text-sm text-muted-foreground">
                     {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
                   </p>
                 </div>
 
                 {data.services.length === 0 ? (
-                  <div className="text-center py-16">
-                    <div className="text-muted-foreground text-lg">No services available at the moment.</div>
+                  <div className="text-center py-20">
+                    <div className="text-muted-foreground">No services available at the moment.</div>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     {data.services.map((service) => (
                       <div
                         key={service.id}
-                        className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-primary/20"
+                        className="bg-card border border-border rounded-lg p-6 hover:shadow-sm transition-all duration-300 hover:border-primary/20"
                       >
                         <div className="space-y-4">
-                          <div>
-                            <h3 className="text-xl font-bold text-foreground mb-2">{service.title}</h3>
-                            <p className="text-muted-foreground leading-relaxed">
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-medium text-foreground">{service.title}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
                               {service.description}
                             </p>
                           </div>
 
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-border">
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <div className="text-2xl font-bold text-primary">
+                              <div className="text-xl font-semibold text-primary">
                                 ₹{service.price_per_hour}
-                                <span className="text-base font-normal text-muted-foreground ml-1">
+                                <span className="text-sm font-normal text-muted-foreground ml-1">
                                   /hour
                                 </span>
                               </div>
@@ -400,7 +400,7 @@ const OptimizedPublicProfile = () => {
 
                             <button
                               onClick={() => handleServiceBook(service)}
-                              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                              className="px-4 py-2 text-sm font-medium text-white rounded-md hover:opacity-90 transition-colors"
                               style={{ backgroundColor: '#193232' }}
                             >
                               Get Help
