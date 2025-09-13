@@ -237,13 +237,13 @@ const OptimizedPublicProfile = () => {
       />
 
       {/* Main Content - Two Column Layout */}
-      <section className="pt-15 pb-15 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-18">
+      <section className="pt-6 pb-12 bg-background">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
             
             {/* Left Column - User Information */}
-            <div className="lg:col-span-5">
-              <div className="space-y-9">
+            <div className="lg:col-span-2">
+              <div className="space-y-6">
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
                   <div className="flex flex-col lg:flex-row lg:items-start gap-6">
@@ -346,7 +346,7 @@ const OptimizedPublicProfile = () => {
                   )}
                   
                   {/* Contact Button */}
-                  <button className="w-full px-4 py-2 bg-foreground text-background rounded-md text-sm font-medium hover:bg-foreground/90 transition-colors">
+                  <button className="w-full px-3 py-2 bg-foreground text-background rounded-md text-sm font-medium hover:bg-foreground/90 transition-colors">
                     Contact & Connect
                   </button>
                 </div>
@@ -354,8 +354,8 @@ const OptimizedPublicProfile = () => {
             </div>
 
             {/* Right Column - Services */}
-            <div className="lg:col-span-7" ref={servicesRef}>
-              <div className="space-y-9">
+            <div className="lg:col-span-3" ref={servicesRef}>
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
                   <p className="text-sm text-muted-foreground">
