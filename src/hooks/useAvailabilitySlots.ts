@@ -12,19 +12,21 @@ export interface AvailabilitySlot {
   created_at: string;
 }
 
-export const useAvailabilitySlots = () => {
+export const useAvailabilitySlots = (helperId?: string) => {
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   const fetchSlots = async () => {
-    if (!user) return;
+    // Use helperId if provided, otherwise use current user
+    const targetId = helperId || user?.id;
+    if (!targetId) return;
 
     try {
       const { data, error } = await supabase
         .from('availability_slots')
         .select('*')
-        .eq('helper_id', user.id)
+        .eq('helper_id', targetId)
         .order('day_of_week', { ascending: true })
         .order('start_time', { ascending: true });
 
@@ -109,7 +111,7 @@ export const useAvailabilitySlots = () => {
 
   useEffect(() => {
     fetchSlots();
-  }, [user]);
+  }, [user, helperId]);
 
   return {
     slots,

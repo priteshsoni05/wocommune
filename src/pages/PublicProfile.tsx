@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProfile } from "@/hooks/useProfile";
 import { useServices } from "@/hooks/useServices";
+import { useAvailabilitySlots } from "@/hooks/useAvailabilitySlots";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import GlobalHeader from "@/components/common/GlobalHeader";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog";
 import { MapPin, Star, Clock, ExternalLink } from "lucide-react";
 
 export default function PublicProfile() {
   const { id } = useParams();
   const { profile, loading: profileLoading } = useProfile();
   const { services, loading: servicesLoading } = useServices();
+  const { slots: availability, loading: availabilityLoading } = useAvailabilitySlots(id);
+  
+  const [selectedService, setSelectedService] = useState<any>(null);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
 
-  if (profileLoading || servicesLoading) {
+  if (profileLoading || servicesLoading || availabilityLoading) {
     return (
       <div className="min-h-screen bg-background">
         <GlobalHeader />
@@ -48,8 +54,8 @@ export default function PublicProfile() {
   }
 
   const handleBookNow = (service: any) => {
-    console.log("Show availability for service:", service);
-    // TODO: Open availability modal/calendar
+    setSelectedService(service);
+    setShowBookingDialog(true);
   };
 
   const getInitials = (name: string) => {
@@ -232,6 +238,18 @@ export default function PublicProfile() {
           </div>
         </div>
       </div>
+
+      {/* Booking Dialog */}
+      {selectedService && (
+        <ServiceBookingDialog
+          open={showBookingDialog}
+          onOpenChange={setShowBookingDialog}
+          service={selectedService}
+          availability={availability}
+          helperId={id || ''}
+          helperName={profile?.display_name || 'Helper'}
+        />
+      )}
     </div>
   );
 }
