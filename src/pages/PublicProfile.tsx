@@ -47,9 +47,9 @@ export default function PublicProfile() {
     );
   }
 
-  const handleServiceBook = (service: any) => {
-    console.log("Book service:", service);
-    // connect booking flow here
+  const handleBookNow = (service: any) => {
+    console.log("Show availability for service:", service);
+    // TODO: Open availability modal/calendar
   };
 
   const getInitials = (name: string) => {
@@ -208,10 +208,10 @@ export default function PublicProfile() {
                               <span className="text-xs text-muted-foreground font-normal">/session</span>
                             </div>
                             <Button 
-                              onClick={() => handleServiceBook(service)}
+                              onClick={() => handleBookNow(service)}
                               className="bg-[hsl(180,33%,15%)] hover:bg-[hsl(180,33%,12%)] text-white text-xs px-4 py-1.5 h-auto font-medium"
                             >
-                              Get Help
+                              Book now
                             </Button>
                           </div>
                         </div>
