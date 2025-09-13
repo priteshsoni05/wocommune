@@ -1,242 +1,430 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useProfile } from "@/hooks/useProfile";
-import { useServices } from "@/hooks/useServices";
-import { useAvailabilitySlots } from "@/hooks/useAvailabilitySlots";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import GlobalHeader from "@/components/common/GlobalHeader";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { ServiceBookingDialog } from "@/components/booking/ServiceBookingDialog";
-import { MapPin, Star, Clock, ExternalLink } from "lucide-react";
+import { Profile } from "@/hooks/useOptimizedProfile";
+import { Service } from "@/hooks/useServices";
+import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
+import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle, Star } from "lucide-react";
+import GlobalHeader from '@/components/common/GlobalHeader';
+import { useAuth } from "@/contexts/AuthContext";
+import { useRolePersistence } from "@/hooks/useRolePersistence";
 
-export default function PublicProfile() {
-  const { id } = useParams();
-  const { profile, loading: profileLoading } = useProfile();
-  const { services, loading: servicesLoading } = useServices();
-  const { slots: availability, loading: availabilityLoading } = useAvailabilitySlots(id);
-  
-  const [selectedService, setSelectedService] = useState<any>(null);
+interface PublicProfileData {
+  profile: Profile;
+  services: Service[];
+  availability: AvailabilitySlot[];
+}
+
+// Cache for public profiles
+const profileCache = new Map<string, { data: PublicProfileData; timestamp: number }>();
+const CACHE_DURATION = 300000; // 5 minutes
+
+const OptimizedPublicProfile = () => {
+  const { username } = useParams<{ username: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { getDashboardPath, clearRoleData } = useRolePersistence();
+  const [data, setData] = useState<PublicProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
+  const servicesRef = useRef<HTMLDivElement | null>(null);
 
-  if (profileLoading || servicesLoading || availabilityLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <GlobalHeader />
-        <div className="pt-16 max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1 space-y-4">
-              <Skeleton className="w-24 h-24 rounded-full mx-auto lg:mx-0" />
-              <Skeleton className="h-6 w-32 mx-auto lg:mx-0" />
-              <Skeleton className="h-4 w-48 mx-auto lg:mx-0" />
-            </div>
-            <div className="lg:col-span-2 space-y-6">
-              <Skeleton className="h-8 w-64" />
-              <Skeleton className="h-32 w-full" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const fetchPublicProfile = useCallback(async () => {
+    if (!username) {
+      setError("Profile not found");
+      setLoading(false);
+      return;
+    }
 
-  if (!profile) {
-    return (
-      <div className="min-h-screen bg-background">
-        <GlobalHeader />
-        <div className="pt-16 flex justify-center items-center min-h-[80vh] text-muted-foreground">
-          Profile not found.
-        </div>
-      </div>
-    );
-  }
+    // Check cache first
+    const cached = profileCache.get(username);
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      setData(cached.data);
+      setLoading(false);
+      return;
+    }
 
-  const handleBookNow = (service: any) => {
+    console.log('Fetching public profile for username:', username);
+    try {
+      // First get the profile
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("username", username)
+        .eq("status", "active")
+        .maybeSingle();
+
+      console.log('Profile query result:', { profile, profileError });
+
+      if (profileError) {
+        console.error('Profile query error:', profileError);
+        throw profileError;
+      }
+
+      if (!profile) {
+        console.log('No profile found for username:', username);
+        throw new Error("No profile found");
+      }
+
+      // Then get services separately
+      const { data: services, error: servicesError } = await supabase
+        .from("services")
+        .select("*, help_type")
+        .eq("helper_id", profile.user_id)
+        .eq("is_active", true);
+
+      console.log('Services query result:', { services, servicesError });
+
+      // Then get availability separately
+      const { data: availability, error: availabilityError } = await supabase
+        .from("availability_slots")
+        .select("*")
+        .eq("helper_id", profile.user_id)
+        .eq("is_available", true);
+
+      console.log('Availability query result:', { availability, availabilityError });
+
+      // Process the data - use the fetched data directly
+      const processedServices = (services || []).map((service: any) => ({
+        ...service,
+        help_type: service.help_type || null
+      }));
+      const processedAvailability = availability || [];
+
+      // Create profile object
+      const profileData: Profile = {
+        id: profile.id,
+        user_id: profile.user_id,
+        display_name: profile.display_name,
+        bio: profile.bio,
+        avatar_url: profile.avatar_url,
+        created_at: profile.created_at,
+        updated_at: profile.updated_at || profile.created_at,
+        username: profile.username,
+        skills: profile.skills,
+        linkedin_url: profile.linkedin_url,
+        instagram_url: profile.instagram_url,
+        website_url: profile.website_url,
+        portfolio_url: profile.portfolio_url,
+        profession: profile.profession,
+        email: profile.email,
+        phone: profile.phone,
+        status: profile.status as 'active' | 'pending' | 'in_review',
+        last_active_role: profile.last_active_role,
+        short_bio: profile.short_bio,
+        school: profile.school,
+        use_case: profile.use_case
+      };
+
+      const result: PublicProfileData = {
+        profile: profileData,
+        services: processedServices,
+        availability: processedAvailability
+      };
+
+      console.log('Public profile data loaded successfully:', result);
+
+      // Cache the result
+      profileCache.set(username, { data: result, timestamp: Date.now() });
+      setData(result);
+    } catch (err) {
+      console.error("Failed to load profile:", err);
+      setError(`Failed to load profile: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    } finally {
+      setLoading(false);
+    }
+  }, [username]);
+
+  useEffect(() => {
+    fetchPublicProfile();
+  }, [fetchPublicProfile]);
+
+  const handleServiceBook = useCallback((service: Service) => {
     setSelectedService(service);
     setShowBookingDialog(true);
+  }, []);
+
+  const scrollToServices = useCallback(() => {
+    servicesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  // Helper function for sign out
+  const handleSignOut = async () => {
+    clearRoleData();
+    await supabase.auth.signOut();
+    navigate('/wo-commune');
   };
 
-  const getInitials = (name: string) => {
-    return name
-      ?.split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase() || 'H';
-  };
+  // Get avatar content for header
+  const avatarContent = useMemo(() => {
+    if (user?.user_metadata?.avatar_url) {
+      return { type: 'image' as const, value: user.user_metadata.avatar_url };
+    }
+    const displayName = user?.user_metadata?.display_name || user?.email || 'User';
+    return { type: 'initial' as const, value: displayName.charAt(0).toUpperCase() };
+  }, [user]);
+
+  // Memoize skills processing
+  const skillsArray = useMemo(() => {
+    const skills = data?.profile.skills;
+    if (!skills) return [];
+    if (Array.isArray(skills)) return skills.slice(0, 5);
+    if (typeof skills === 'string') return String(skills).split(",").slice(0, 5).map(skill => skill.trim());
+    return [];
+  }, [data?.profile.skills]);
+
+  // Memoize social links
+  const socialLinks = useMemo(() => {
+    if (!data?.profile) return [];
+    
+    const links = [];
+    if (data.profile.instagram_url) {
+      links.push({ url: data.profile.instagram_url, icon: Instagram, label: "Instagram" });
+    }
+    if (data.profile.linkedin_url) {
+      links.push({ url: data.profile.linkedin_url, icon: Linkedin, label: "LinkedIn" });
+    }
+    if (data.profile.website_url) {
+      links.push({ url: data.profile.website_url, icon: Globe, label: "Website" });
+    }
+    if (data.profile.portfolio_url) {
+      links.push({ url: data.profile.portfolio_url, icon: FolderOpen, label: "Portfolio" });
+    }
+    return links;
+  }, [data?.profile]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto border-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+        <h1 className="text-xl font-semibold text-foreground">Profile Not Found</h1>
+        <p className="text-sm text-muted-foreground mt-2">Username: {username}</p>
+        <p className="text-sm text-muted-foreground">Error: {error}</p>
+        <Link
+          to="/wo-commune"
+          className="mt-3 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          Back to WO Commune
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
-      <GlobalHeader />
-      
-      <div className="pt-16 max-w-7xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* LEFT SIDEBAR - User Information */}
-          <div className="lg:col-span-1">
-            <Card className="p-6 border-0 shadow-sm">
-              <div className="flex flex-col items-center lg:items-start space-y-4">
-                {/* Profile Avatar */}
-                <Avatar className="w-20 h-20">
-                  <AvatarImage src={profile.avatar_url || ""} alt={profile.display_name || ""} />
-                  <AvatarFallback className="text-lg font-medium bg-muted text-muted-foreground">
-                    {getInitials(profile.display_name || "")}
-                  </AvatarFallback>
-                </Avatar>
+      {/* Global Header with burger menu functionality */}
+      <GlobalHeader 
+        user={user}
+        displayName={user?.user_metadata?.display_name || user?.email?.split('@')[0] || "Friend"}
+        avatarContent={avatarContent}
+        dashboardPath={getDashboardPath()}
+        clearRoleData={clearRoleData}
+        signOut={handleSignOut}
+        navigate={navigate}
+      />
 
-                {/* Name & Bio */}
-                <div className="text-center lg:text-left space-y-1">
-                  <h1 className="text-lg font-semibold text-foreground">
-                    {profile.display_name}
-                  </h1>
-                  {profile.bio && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {profile.bio.substring(0, 100)}
-                      {profile.bio.length > 100 && "..."}
-                    </p>
-                  )}
-                  {profile.profession && (
-                    <p className="text-xs text-muted-foreground font-medium">
-                      {profile.profession}
-                    </p>
-                  )}
+      {/* Main Content - Two Column Layout */}
+      <section className="pt-15 pb-15 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-18">
+            
+            {/* Left Column - User Information */}
+            <div className="lg:col-span-5">
+              <div className="space-y-9">
+                {/* Profile Image & Basic Info */}
+                <div className="text-center lg:text-left">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                    <img
+                      src={data.profile.avatar_url || "/placeholder.svg"}
+                      alt={data.profile.display_name || "Profile"}
+                      className="w-24 h-24 rounded-full object-cover shadow-sm border-2 border-border mx-auto lg:mx-0 lg:flex-shrink-0"
+                      loading="lazy"
+                    />
+                    
+                    <div className="flex-1 space-y-3">
+                      <h1 className="text-2xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
+                        {data.profile.display_name}
+                        <CheckCircle size={16} className="text-primary" aria-label="Verified" />
+                      </h1>
+                      
+                      <p className="text-base text-muted-foreground leading-relaxed">
+                        {data.profile.short_bio || "Professional Services Expert"}
+                      </p>
+
+                      {/* Expertise Tags */}
+                      {skillsArray.length > 0 && (
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                          {skillsArray.slice(0, 3).map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-1 text-xs rounded-md bg-muted text-foreground font-medium"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
+                {/* About Section */}
+                {data.profile.bio && (
+                  <div className="space-y-3">
+                    <h2 className="text-lg font-medium text-foreground">About</h2>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                      {data.profile.bio}
+                    </p>
+                  </div>
+                )}
+
                 {/* Key Details */}
-                <div className="w-full space-y-3 text-center lg:text-left">
-                  {profile.skills && profile.skills.length > 0 && (
-                    <div>
-                      <h6 className="text-xs font-medium text-foreground mb-2">Expertise</h6>
-                      <div className="flex flex-wrap gap-1 justify-center lg:justify-start">
-                        {profile.skills.slice(0, 3).map((skill, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs py-0.5 px-2">
-                            {skill}
-                          </Badge>
+                <div className="space-y-4">
+                  <h3 className="text-base font-medium text-foreground">Key Details</h3>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-sm">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium">4.9</span>
+                      <span className="text-muted-foreground">(24 reviews)</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 text-sm">
+                      <CheckCircle className="h-3 w-3 text-primary" />
+                      <span className="text-muted-foreground">87 sessions completed</span>
+                    </div>
+                    
+                    {data.profile.profession && (
+                      <div className="space-y-1">
+                        <span className="text-xs font-medium text-foreground">Profession</span>
+                        <p className="text-sm text-muted-foreground">{data.profile.profession}</p>
+                      </div>
+                    )}
+                    
+                    {data.profile.school && (
+                      <div className="space-y-1">
+                        <span className="text-xs font-medium text-foreground">Education</span>
+                        <p className="text-sm text-muted-foreground">{data.profile.school}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Social Links & Contact */}
+                <div className="space-y-4">
+                  {socialLinks.length > 0 && (
+                    <div className="space-y-3">
+                      <h3 className="text-base font-medium text-foreground">Connect</h3>
+                      <div className="flex items-center justify-center lg:justify-start gap-2">
+                        {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                          <a 
+                            key={idx} 
+                            href={url} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            aria-label={label}
+                            className="p-2 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
+                          >
+                            <Icon size={16} />
+                          </a>
                         ))}
                       </div>
                     </div>
                   )}
+                  
+                  {/* Contact Button */}
+                  <button className="w-full px-4 py-2 bg-foreground text-background rounded-md text-sm font-medium hover:bg-foreground/90 transition-colors">
+                    Contact & Connect
+                  </button>
+                </div>
+              </div>
+            </div>
 
-                  {(profile.school || profile.linkedin_url || profile.website_url) && (
-                    <div className="space-y-2 pt-2 border-t border-border">
-                      {profile.school && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center lg:justify-start">
-                          <MapPin className="w-3 h-3" />
-                          <span>{profile.school}</span>
-                        </div>
-                      )}
-                      
-                      {/* Social Links */}
-                      <div className="flex gap-2 justify-center lg:justify-start">
-                        {profile.linkedin_url && (
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
-                            <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </Button>
-                        )}
-                        {profile.website_url && (
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0" asChild>
-                            <a href={profile.website_url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  )}
+            {/* Right Column - Services */}
+            <div className="lg:col-span-7" ref={servicesRef}>
+              <div className="space-y-9">
+                <div className="space-y-2">
+                  <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
+                  </p>
                 </div>
 
-                {/* Contact Button */}
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full mt-4 text-xs font-medium border-foreground/20 hover:bg-foreground hover:text-background"
-                >
-                  Connect
-                </Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* RIGHT SECTION - Services */}
-          <div className="lg:col-span-2">
-            <div className="space-y-4">
-              <div className="text-center lg:text-left">
-                <h2 className="text-lg font-medium text-foreground mb-1">
-                  Here's what I can help you with
-                </h2>
-                {profile.bio && (
-                  <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
-                    {profile.bio.substring(0, 150)}
-                    {profile.bio.length > 150 && "..."}
-                  </p>
-                )}
-              </div>
-
-              {/* Services Grid */}
-              <div className="space-y-3">
-                {services && services.length > 0 ? (
-                  services.map((service: any) => (
-                    <Card key={service.id} className="border border-border/50 hover:border-border transition-colors">
-                      <CardContent className="p-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                          {/* Service Info */}
-                          <div className="flex-1 space-y-1">
-                            <div className="flex items-center gap-2">
-                              <h3 className="text-sm font-medium text-foreground">
-                                {service.title}
-                              </h3>
-                              {service.category && (
-                                <Badge variant="outline" className="text-xs px-1.5 py-0">
-                                  {service.category}
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-xs text-muted-foreground leading-relaxed">
-                              {service.description?.substring(0, 120)}
-                              {service.description?.length > 120 && "..."}
+                {data.services.length === 0 ? (
+                  <div className="text-center py-15">
+                    <div className="text-muted-foreground">No services available at the moment.</div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {data.services.map((service) => (
+                      <div
+                        key={service.id}
+                        className="bg-card border border-border rounded-lg p-6 hover:shadow-sm transition-all duration-300 hover:border-primary/20"
+                      >
+                        <div className="space-y-4">
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-medium text-foreground">{service.title}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {service.description}
                             </p>
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                              {service.duration_minutes && (
-                                <div className="flex items-center gap-1">
-                                  <Clock className="w-3 h-3" />
-                                  <span>{service.duration_minutes} min</span>
-                                </div>
-                              )}
-                            </div>
                           </div>
 
-                          {/* Price & CTA */}
-                          <div className="flex flex-col items-start sm:items-end gap-2 sm:text-right">
-                            <div className="text-sm font-semibold text-foreground">
-                              ₹{service.price_per_hour}
-                              <span className="text-xs text-muted-foreground font-normal">/session</span>
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-border">
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="text-xl font-semibold text-primary">
+                                ₹{service.price_per_hour}
+                                <span className="text-sm font-normal text-muted-foreground ml-1">
+                                  /hour
+                                </span>
+                              </div>
+                              {service.duration_minutes && (
+                                <>
+                                  <span>•</span>
+                                  <span>{service.duration_minutes} min sessions</span>
+                                </>
+                              )}
                             </div>
-                            <Button 
-                              onClick={() => handleBookNow(service)}
-                              className="bg-[hsl(180,33%,15%)] hover:bg-[hsl(180,33%,12%)] text-white text-xs px-4 py-1.5 h-auto font-medium"
+
+                            <button
+                              onClick={() => handleServiceBook(service)}
+                              className="px-4 py-2 text-sm font-medium text-white rounded-md hover:opacity-90 transition-colors"
+                              style={{ backgroundColor: '#193232' }}
                             >
-                              Book now
-                            </Button>
+                              Get Help
+                            </button>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <Card className="border border-dashed border-border/50">
-                    <CardContent className="p-6 text-center">
-                      <p className="text-sm text-muted-foreground">
-                        No services available at the moment.
-                      </p>
-                    </CardContent>
-                  </Card>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Mobile sticky CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4 safe-area-bottom">
+        <button
+          onClick={scrollToServices}
+          className="w-full py-4 rounded-xl font-semibold text-primary-foreground text-lg bg-primary hover:bg-primary/90 transition-colors shadow-lg"
+        >
+          View Services
+        </button>
       </div>
 
       {/* Booking Dialog */}
@@ -245,11 +433,13 @@ export default function PublicProfile() {
           open={showBookingDialog}
           onOpenChange={setShowBookingDialog}
           service={selectedService}
-          availability={availability}
-          helperId={id || ''}
-          helperName={profile?.display_name || 'Helper'}
+          availability={data.availability}
+          helperId={data.profile.user_id}
+          helperName={data.profile.display_name || "Helper"}
         />
       )}
     </div>
   );
-}
+};
+
+export default OptimizedPublicProfile;
