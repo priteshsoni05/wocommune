@@ -238,8 +238,8 @@ const OptimizedPublicProfile = () => {
 
       {/* Main Content - Two Column Layout */}
       <section className="pt-4 pb-8 bg-background">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
             
             {/* Left Column - User Information */}
             <div className="lg:col-span-2">
@@ -336,7 +336,7 @@ const OptimizedPublicProfile = () => {
             </div>
 
             {/* Right Column - Services */}
-            <div className="lg:col-span-3" ref={servicesRef}>
+            <div className="lg:col-span-5" ref={servicesRef}>
               <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
@@ -385,7 +385,7 @@ const OptimizedPublicProfile = () => {
                               className="px-4 py-2 text-sm font-medium text-white rounded-md hover:opacity-90 transition-colors"
                               style={{ backgroundColor: '#193232' }}
                             >
-                              Get Help
+                              Book now
                             </button>
                           </div>
                         </div>
