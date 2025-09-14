@@ -291,7 +291,7 @@ const OptimizedPublicProfile = () => {
                   </div>
                 )}
 
-                {/* Key Details */}
+                {/* At a glance */}
                 <div className="space-y-3">
                   <h3 className="text-base font-medium text-white">Key Details</h3>
                   
