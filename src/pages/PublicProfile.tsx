@@ -237,36 +237,36 @@ const OptimizedPublicProfile = () => {
       />
 
       {/* Main Content - Two Column Layout */}
-      <section className="pt-6 pb-12 bg-background">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+      <section className="pt-4 pb-8 bg-background">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-6">
             
             {/* Left Column - User Information */}
             <div className="lg:col-span-2">
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
-                  <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-4">
                     <img
                       src={data.profile.avatar_url || "/placeholder.svg"}
                       alt={data.profile.display_name || "Profile"}
-                      className="w-24 h-24 rounded-full object-cover shadow-sm border-2 border-border mx-auto lg:mx-0 lg:flex-shrink-0"
+                      className="w-20 h-20 rounded-full object-cover shadow-sm border-2 border-border mx-auto lg:mx-0 lg:flex-shrink-0"
                       loading="lazy"
                     />
                     
-                    <div className="flex-1 space-y-3">
-                      <h1 className="text-2xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
+                    <div className="flex-1 space-y-2">
+                      <h1 className="text-xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
                         {data.profile.display_name}
-                        <CheckCircle size={16} className="text-primary" aria-label="Verified" />
+                        <CheckCircle size={14} className="text-primary" aria-label="Verified" />
                       </h1>
                       
-                      <p className="text-base text-muted-foreground leading-relaxed">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
 
                       {/* Expertise Tags */}
                       {skillsArray.length > 0 && (
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-1">
                           {skillsArray.slice(0, 3).map((skill, idx) => (
                             <span
                               key={idx}
@@ -283,8 +283,8 @@ const OptimizedPublicProfile = () => {
 
                 {/* About Section */}
                 {data.profile.bio && (
-                  <div className="space-y-3">
-                    <h2 className="text-lg font-medium text-foreground">About</h2>
+                  <div className="space-y-2">
+                    <h2 className="text-base font-medium text-foreground">About</h2>
                     <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
                       {data.profile.bio}
                     </p>
@@ -292,21 +292,10 @@ const OptimizedPublicProfile = () => {
                 )}
 
                 {/* Key Details */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <h3 className="text-base font-medium text-foreground">Key Details</h3>
                   
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-sm">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">4.9</span>
-                      <span className="text-muted-foreground">(24 reviews)</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary" />
-                      <span className="text-muted-foreground">87 sessions completed</span>
-                    </div>
-                    
+                  <div className="space-y-2">
                     {data.profile.profession && (
                       <div className="space-y-1">
                         <span className="text-xs font-medium text-foreground">Profession</span>
@@ -323,33 +312,26 @@ const OptimizedPublicProfile = () => {
                   </div>
                 </div>
 
-                {/* Social Links & Contact */}
-                <div className="space-y-4">
-                  {socialLinks.length > 0 && (
-                    <div className="space-y-3">
-                      <h3 className="text-base font-medium text-foreground">Connect</h3>
-                      <div className="flex items-center justify-center lg:justify-start gap-2">
-                        {socialLinks.map(({ url, icon: Icon, label }, idx) => (
-                          <a 
-                            key={idx} 
-                            href={url} 
-                            target="_blank" 
-                            rel="noreferrer" 
-                            aria-label={label}
-                            className="p-2 hover:bg-muted rounded-md transition-colors text-muted-foreground hover:text-foreground"
-                          >
-                            <Icon size={16} />
-                          </a>
-                        ))}
-                      </div>
+                {/* Social Links */}
+                {socialLinks.length > 0 && (
+                  <div className="space-y-3 p-4 rounded-lg" style={{ backgroundColor: '#193232' }}>
+                    <h3 className="text-base font-medium text-white">Connect</h3>
+                    <div className="flex items-center justify-center lg:justify-start gap-3">
+                      {socialLinks.map(({ url, icon: Icon, label }, idx) => (
+                        <a 
+                          key={idx} 
+                          href={url} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          aria-label={label}
+                          className="p-2 hover:bg-white/10 rounded-md transition-colors text-white/80 hover:text-white"
+                        >
+                          <Icon size={18} />
+                        </a>
+                      ))}
                     </div>
-                  )}
-                  
-                  {/* Contact Button */}
-                  <button className="w-full px-3 py-2 bg-foreground text-background rounded-md text-sm font-medium hover:bg-foreground/90 transition-colors">
-                    Contact & Connect
-                  </button>
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
