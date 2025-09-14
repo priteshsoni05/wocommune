@@ -237,7 +237,7 @@ const OptimizedPublicProfile = () => {
       />
 
       {/* Main Content - Two Column Layout */}
-      <section className="pt-4 pb-8 bg-background">
+      <section className="pt-20 pb-8 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
             
