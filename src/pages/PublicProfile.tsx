@@ -243,24 +243,24 @@ const OptimizedPublicProfile = () => {
             
             {/* Left Column - User Information */}
             <div className="lg:col-span-2">
-              <div className="space-y-4">
+              <div className="space-y-4 p-6 rounded-lg" style={{ backgroundColor: '#193232' }}>
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
                   <div className="flex flex-col lg:flex-row lg:items-start gap-4">
                     <img
                       src={data.profile.avatar_url || "/placeholder.svg"}
                       alt={data.profile.display_name || "Profile"}
-                      className="w-20 h-20 rounded-full object-cover shadow-sm border-2 border-border mx-auto lg:mx-0 lg:flex-shrink-0"
+                      className="w-20 h-20 rounded-full object-cover shadow-sm border-2 border-white/20 mx-auto lg:mx-0 lg:flex-shrink-0"
                       loading="lazy"
                     />
                     
                     <div className="flex-1 space-y-2">
-                      <h1 className="text-xl font-semibold text-foreground flex items-center justify-center lg:justify-start gap-2">
+                      <h1 className="text-xl font-semibold text-white flex items-center justify-center lg:justify-start gap-2">
                         {data.profile.display_name}
-                        <CheckCircle size={14} className="text-primary" aria-label="Verified" />
+                        <CheckCircle size={14} className="text-white" aria-label="Verified" />
                       </h1>
                       
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <p className="text-sm text-white/80 leading-relaxed">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
 
@@ -270,7 +270,7 @@ const OptimizedPublicProfile = () => {
                           {skillsArray.slice(0, 3).map((skill, idx) => (
                             <span
                               key={idx}
-                              className="px-2 py-1 text-xs rounded-md bg-muted text-foreground font-medium"
+                              className="px-2 py-1 text-xs rounded-md bg-white/20 text-white font-medium"
                             >
                               {skill}
                             </span>
@@ -284,8 +284,8 @@ const OptimizedPublicProfile = () => {
                 {/* About Section */}
                 {data.profile.bio && (
                   <div className="space-y-2">
-                    <h2 className="text-base font-medium text-foreground">About</h2>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                    <h2 className="text-base font-medium text-white">About</h2>
+                    <p className="text-sm text-white/80 leading-relaxed line-clamp-4">
                       {data.profile.bio}
                     </p>
                   </div>
@@ -293,20 +293,20 @@ const OptimizedPublicProfile = () => {
 
                 {/* Key Details */}
                 <div className="space-y-3">
-                  <h3 className="text-base font-medium text-foreground">Key Details</h3>
+                  <h3 className="text-base font-medium text-white">Key Details</h3>
                   
                   <div className="space-y-2">
                     {data.profile.profession && (
                       <div className="space-y-1">
-                        <span className="text-xs font-medium text-foreground">Profession</span>
-                        <p className="text-sm text-muted-foreground">{data.profile.profession}</p>
+                        <span className="text-xs font-medium text-white">Profession</span>
+                        <p className="text-sm text-white/80">{data.profile.profession}</p>
                       </div>
                     )}
                     
                     {data.profile.school && (
                       <div className="space-y-1">
-                        <span className="text-xs font-medium text-foreground">Education</span>
-                        <p className="text-sm text-muted-foreground">{data.profile.school}</p>
+                        <span className="text-xs font-medium text-white">Education</span>
+                        <p className="text-sm text-white/80">{data.profile.school}</p>
                       </div>
                     )}
                   </div>
@@ -314,7 +314,7 @@ const OptimizedPublicProfile = () => {
 
                 {/* Social Links */}
                 {socialLinks.length > 0 && (
-                  <div className="space-y-3 p-4 rounded-lg" style={{ backgroundColor: '#193232' }}>
+                  <div className="space-y-3">
                     <h3 className="text-base font-medium text-white">Connect</h3>
                     <div className="flex items-center justify-center lg:justify-start gap-3">
                       {socialLinks.map(({ url, icon: Icon, label }, idx) => (
