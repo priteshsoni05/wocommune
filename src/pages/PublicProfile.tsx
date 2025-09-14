@@ -340,9 +340,6 @@ const OptimizedPublicProfile = () => {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
-                  <p className="text-sm text-muted-foreground">
-                    {data.services.length} service{data.services.length !== 1 ? 's' : ''} available
-                  </p>
                 </div>
 
                 {data.services.length === 0 ? (
