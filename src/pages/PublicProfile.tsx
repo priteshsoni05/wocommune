@@ -6,6 +6,7 @@ import { Profile } from "@/hooks/useOptimizedProfile";
 import { Service } from "@/hooks/useServices";
 import { AvailabilitySlot } from "@/hooks/useAvailabilitySlots";
 import { Instagram, Linkedin, Globe, FolderOpen, CheckCircle, Star } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import GlobalHeader from '@/components/common/GlobalHeader';
 import { useAuth } from "@/contexts/AuthContext";
 import { useRolePersistence } from "@/hooks/useRolePersistence";
@@ -30,6 +31,7 @@ const OptimizedPublicProfile = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
+  const [showBioModal, setShowBioModal] = useState(false);
   const servicesRef = useRef<HTMLDivElement | null>(null);
 
   const fetchPublicProfile = useCallback(async () => {
@@ -167,6 +169,18 @@ const OptimizedPublicProfile = () => {
     return { type: 'initial' as const, value: displayName.charAt(0).toUpperCase() };
   }, [user]);
 
+  // Memoize bio processing
+  const truncatedBio = useMemo(() => {
+    const bio = data?.profile.bio;
+    if (!bio) return { text: "", needsTruncation: false };
+    
+    if (bio.length <= 500) {
+      return { text: bio, needsTruncation: false };
+    }
+    
+    return { text: bio.substring(0, 500), needsTruncation: true };
+  }, [data?.profile.bio]);
+
   // Memoize skills processing
   const skillsArray = useMemo(() => {
     const skills = data?.profile.skills;
@@ -286,7 +300,15 @@ const OptimizedPublicProfile = () => {
                   <div className="space-y-2">
                     <h2 className="text-base font-medium text-white">About</h2>
                     <p className="text-sm text-white/80 leading-relaxed">
-                      {data.profile.bio}
+                      {truncatedBio.text}
+                      {truncatedBio.needsTruncation && (
+                        <button
+                          onClick={() => setShowBioModal(true)}
+                          className="text-white/60 hover:text-white ml-1 underline"
+                        >
+                          ...
+                        </button>
+                      )}
                     </p>
                   </div>
                 )}
@@ -405,6 +427,20 @@ const OptimizedPublicProfile = () => {
           View Services
         </button>
       </div>
+
+      {/* Bio Modal */}
+      <Dialog open={showBioModal} onOpenChange={setShowBioModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>About {data?.profile.display_name}</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {data?.profile.bio}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Booking Dialog */}
       {selectedService && (
