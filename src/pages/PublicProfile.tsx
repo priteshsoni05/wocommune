@@ -174,11 +174,11 @@ const OptimizedPublicProfile = () => {
     const bio = data?.profile.bio;
     if (!bio) return { text: "", needsTruncation: false };
     
-    if (bio.length <= 500) {
+    if (bio.length <= 375) {
       return { text: bio, needsTruncation: false };
     }
     
-    return { text: bio.substring(0, 500), needsTruncation: true };
+    return { text: bio.substring(0, 375), needsTruncation: true };
   }, [data?.profile.bio]);
 
   // Memoize skills processing
