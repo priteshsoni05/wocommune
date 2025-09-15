@@ -238,11 +238,11 @@ const OptimizedPublicProfile = () => {
 
       {/* Main Content - Two Column Layout */}
       <section className="pt-20 pb-8 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
             
             {/* Left Column - User Information */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-1">
               <div className="space-y-4 p-6 rounded-lg" style={{ backgroundColor: '#193232' }}>
                 {/* Profile Image & Basic Info */}
                 <div className="text-center lg:text-left">
@@ -263,29 +263,29 @@ const OptimizedPublicProfile = () => {
                       <p className="text-sm text-white/80 leading-relaxed">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
-
-                      {/* Expertise Tags */}
-                      {skillsArray.length > 0 && (
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-1">
-                          {skillsArray.slice(0, 3).map((skill, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-1 text-xs rounded-md bg-white/20 text-white font-medium"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   </div>
+                  
+                  {/* Expertise Tags - positioned below image */}
+                  {skillsArray.length > 0 && (
+                    <div className="flex flex-wrap justify-center lg:justify-start gap-1 mt-3">
+                      {skillsArray.slice(0, 5).map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-1 text-xs rounded-md bg-white/20 text-white font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* About Section */}
                 {data.profile.bio && (
                   <div className="space-y-2">
                     <h2 className="text-base font-medium text-white">About</h2>
-                    <p className="text-sm text-white/80 leading-relaxed line-clamp-4">
+                    <p className="text-sm text-white/80 leading-relaxed">
                       {data.profile.bio}
                     </p>
                   </div>
@@ -336,7 +336,7 @@ const OptimizedPublicProfile = () => {
             </div>
 
             {/* Right Column - Services */}
-            <div className="lg:col-span-5" ref={servicesRef}>
+            <div className="lg:col-span-2" ref={servicesRef}>
               <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-xl font-medium text-foreground">Here's what I can help you with</h2>
