@@ -13,6 +13,8 @@ export interface Service {
   is_active: boolean;
   image_url: string | null;
   help_type: string | null;
+  mode: string | null;
+  outcomes: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -285,10 +285,13 @@ export type Database = {
           created_at: string
           description: string | null
           duration_minutes: number | null
+          help_type: string | null
           helper_id: string
           id: string
           image_url: string | null
           is_active: boolean | null
+          mode: string | null
+          outcomes: string | null
           price_per_hour: number | null
           title: string
           updated_at: string
@@ -298,10 +301,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_minutes?: number | null
+          help_type?: string | null
           helper_id: string
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          mode?: string | null
+          outcomes?: string | null
           price_per_hour?: number | null
           title: string
           updated_at?: string
@@ -311,10 +317,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           duration_minutes?: number | null
+          help_type?: string | null
           helper_id?: string
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          mode?: string | null
+          outcomes?: string | null
           price_per_hour?: number | null
           title?: string
           updated_at?: string

@@ -35,6 +35,8 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
   const [price, setPrice] = useState(service.price_per_hour?.toString() || "");
   const [category, setCategory] = useState(service.category || "");
   const [duration, setDuration] = useState(service.duration_minutes.toString());
+  const [mode, setMode] = useState(service.mode || "");
+  const [outcomes, setOutcomes] = useState(service.outcomes || "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(service.image_url);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +53,8 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
       setPrice(service.price_per_hour?.toString() || "");
       setCategory(service.category || "");
       setDuration(service.duration_minutes.toString());
+      setMode(service.mode || "");
+      setOutcomes(service.outcomes || "");
       setCurrentImageUrl(service.image_url);
       setImageFile(null);
     }
@@ -133,6 +137,8 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
         category: category || null,
         duration_minutes: parseInt(duration),
         image_url: imageUrl,
+        mode: mode || null,
+        outcomes: outcomes?.trim() ? outcomes.trim() : null,
       });
 
       if (result?.error) {
@@ -247,6 +253,31 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-mode">Mode</Label>
+            <Select value={mode} onValueChange={setMode}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Zoom">Zoom</SelectItem>
+                <SelectItem value="Google Meet">Google Meet</SelectItem>
+                <SelectItem value="Phone Call">Phone Call</SelectItem>
+                <SelectItem value="In-person">In-person</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-outcomes">Tags or Outcomes Covered</Label>
+            <Input
+              id="edit-outcomes"
+              value={outcomes}
+              onChange={(e) => setOutcomes(e.target.value)}
+              placeholder="Portfolio Review, Career Planning, Interview Prep"
+            />
           </div>
 
           <div className="space-y-2">

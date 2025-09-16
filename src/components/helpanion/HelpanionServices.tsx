@@ -73,6 +73,8 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
       is_active: formData.is_active,
       image_url: formData.image_url || null,
       help_type: formData.helpType || null,
+      mode: formData.mode || null,
+      outcomes: formData.outcomes?.trim() ? formData.outcomes.trim() : null,
     };
 
     try {
@@ -121,8 +123,8 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
       is_active: service.is_active,
       image_url: service.image_url || "",
       helpType: service.help_type || "",
-      mode: "",
-      outcomes: ""
+      mode: service.mode || "",
+      outcomes: service.outcomes || ""
     });
     setEditingService(service.id);
     setShowCreateForm(true);

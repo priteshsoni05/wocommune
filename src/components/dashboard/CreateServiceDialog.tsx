@@ -35,6 +35,8 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
   const [pricePerHour, setPricePerHour] = useState('');
   const [category, setCategory] = useState('');
   const [durationMinutes, setDurationMinutes] = useState('60');
+  const [mode, setMode] = useState('');
+  const [outcomes, setOutcomes] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -119,6 +121,8 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
         duration_minutes: parseInt(durationMinutes),
         image_url: imageUrl,
         help_type: null,
+        mode: mode || null,
+        outcomes: outcomes?.trim() ? outcomes.trim() : null,
         is_active: true
       });
 
@@ -140,6 +144,8 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
         setPricePerHour('');
         setCategory('');
         setDurationMinutes('60');
+        setMode('');
+        setOutcomes('');
         setImageFile(null);
         setImagePreview(null);
       }
@@ -195,7 +201,7 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">Price per Hour (₹)</Label>
+              <Label htmlFor="price">Pricing (₹)</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">₹</span>
                 <Input
@@ -243,6 +249,31 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="mode">Mode</Label>
+            <Select value={mode} onValueChange={setMode}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Zoom">Zoom</SelectItem>
+                <SelectItem value="Google Meet">Google Meet</SelectItem>
+                <SelectItem value="Phone Call">Phone Call</SelectItem>
+                <SelectItem value="In-person">In-person</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="outcomes">Tags or Outcomes Covered</Label>
+            <Input
+              id="outcomes"
+              value={outcomes}
+              onChange={(e) => setOutcomes(e.target.value)}
+              placeholder="Portfolio Review, Career Planning, Interview Prep"
+            />
           </div>
 
           <div className="space-y-2">
