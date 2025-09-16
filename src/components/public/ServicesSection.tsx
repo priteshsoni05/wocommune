@@ -21,7 +21,7 @@ export const ServicesSection = ({ services, helperId, onServiceBook }: ServicesS
   };
 
   const formatPrice = (pricePerHour: number | null, durationMinutes: number) => {
-    if (!pricePerHour) return 'Contact for pricing';
+    if (!pricePerHour || pricePerHour === 0) return 'Free';
     const hourlyRate = pricePerHour;
     const sessionPrice = (hourlyRate * durationMinutes) / 60;
     return `₹${sessionPrice.toFixed(0)}`;
