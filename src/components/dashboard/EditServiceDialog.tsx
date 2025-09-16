@@ -212,7 +212,7 @@ export const EditServiceDialog = ({ service, open, onOpenChange }: EditServiceDi
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="edit-price">Price per hour (₹)</Label>
+              <Label htmlFor="edit-price">Pricing (₹)</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">₹</span>
                 <Input

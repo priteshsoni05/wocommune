@@ -131,7 +131,7 @@ export const ServiceCard = ({ service }: ServiceCardProps) => {
         <div className="flex items-center justify-between text-sm">
           <div className="space-y-1">
             <div className="font-medium">
-              ₹{service.price_per_hour}/hr
+              ₹{service.price_per_hour}
             </div>
             <div className="text-muted-foreground">
               {formatDuration(service.duration_minutes)}

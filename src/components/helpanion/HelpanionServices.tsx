@@ -376,10 +376,9 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
                     {service.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">₹</span>
+                  <div className="flex items-center gap-2">
                       <span className="font-medium">
-                        {service.price_per_hour === 0 ? 'Free' : `₹${service.price_per_hour}/hr`}
+                        {service.price_per_hour === 0 ? 'Free' : `₹${service.price_per_hour}`}
                       </span>
                     </div>
                     <Badge variant={service.is_active ? "default" : "secondary"}>
