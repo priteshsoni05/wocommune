@@ -391,7 +391,7 @@ const OptimizedPublicProfile = () => {
                               {service.duration_minutes && (
                                 <>
                                   <span>•</span>
-                                  <span>{service.duration_minutes} min sessions</span>
+                                  <span>{service.duration_minutes} Min</span>
                                 </>
                               )}
                             </div>
