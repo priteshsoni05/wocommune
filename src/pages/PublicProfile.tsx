@@ -387,9 +387,6 @@ const OptimizedPublicProfile = () => {
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <div className="text-xl font-semibold text-primary">
                                 ₹{service.price_per_hour}
-                                <span className="text-sm font-normal text-muted-foreground ml-1">
-                                  /hour
-                                </span>
                               </div>
                               {service.duration_minutes && (
                                 <>
