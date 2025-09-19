@@ -19,7 +19,6 @@ const REQUIRED_PROFILE_FIELDS = [
 const OPTIONAL_PROFILE_FIELDS = [
   { key: 'email', label: 'Email' },
   { key: 'school', label: 'School' },
-  { key: 'role', label: 'Role' },
   { key: 'use_case', label: 'Use Case' },
 ] as const;
 
