@@ -415,15 +415,6 @@ const OptimizedPublicProfile = () => {
         </div>
       </section>
 
-      {/* Mobile sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border p-4 safe-area-bottom">
-        <button
-          onClick={scrollToServices}
-          className="w-full py-4 rounded-xl font-semibold text-primary-foreground text-lg bg-primary hover:bg-primary/90 transition-colors shadow-lg"
-        >
-          View Services
-        </button>
-      </div>
 
       {/* Bio Modal */}
       <Dialog open={showBioModal} onOpenChange={setShowBioModal}>
