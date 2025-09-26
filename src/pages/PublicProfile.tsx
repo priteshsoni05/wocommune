@@ -274,7 +274,7 @@ const OptimizedPublicProfile = () => {
                         <CheckCircle size={14} className="text-white" aria-label="Verified" />
                       </h1>
                       
-                      <p className="text-sm text-white/80 leading-relaxed text-justify sm:text-left">
+                      <p className="text-sm text-white/80 leading-relaxed text-center">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
                     </div>
