@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export default function WOCommuneSlate() {
   return (
-    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
+    <div className="safe-area-x mt-10 md:mt-12" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-10 md:h-12">
         {/* Left section - Get Help Button */}
         <div className="flex-1">
