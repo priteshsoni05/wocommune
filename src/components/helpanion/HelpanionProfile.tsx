@@ -92,7 +92,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     }
   });
 
-  // Initialize form data with profile data when loaded and not yet persisted
+  // Initialize form data with profile data when loaded
   useEffect(() => {
     if (profile && isLoaded) {
       const profileData = {
@@ -113,14 +113,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         website_url: profile.website_url || ""
       };
       
-      // Only update if form is empty (no persisted data)
-      const hasPersistedData = Object.values(formData).some(value => 
-        typeof value === 'string' && value.trim() !== ''
-      );
-      
-      if (!hasPersistedData) {
-        updateFormData(profileData);
-      }
+      // Always sync with the latest profile data from database
+      updateFormData(profileData);
     }
   }, [profile, isLoaded]);
 
