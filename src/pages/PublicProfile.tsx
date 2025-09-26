@@ -274,7 +274,7 @@ const OptimizedPublicProfile = () => {
                         <CheckCircle size={14} className="text-white" aria-label="Verified" />
                       </h1>
                       
-                      <p className="text-sm text-white/80 leading-relaxed">
+                      <p className="text-sm text-white/80 leading-relaxed text-justify sm:text-left">
                         {data.profile.short_bio || "Professional Services Expert"}
                       </p>
                     </div>
@@ -299,7 +299,7 @@ const OptimizedPublicProfile = () => {
                 {data.profile.bio && (
                   <div className="space-y-2">
                     <h2 className="text-base font-medium text-white">About</h2>
-                    <p className="text-sm text-white/80 leading-relaxed">
+                    <p className="text-sm text-white/80 leading-relaxed text-justify sm:text-left">
                       {truncatedBio.text}
                       {truncatedBio.needsTruncation && (
                         <button
@@ -321,14 +321,14 @@ const OptimizedPublicProfile = () => {
                     {data.profile.profession && (
                       <div className="space-y-1">
                         <span className="text-xs font-medium text-white">Profession</span>
-                        <p className="text-sm text-white/80">{data.profile.profession}</p>
+                        <p className="text-sm text-white/80 text-justify sm:text-left">{data.profile.profession}</p>
                       </div>
                     )}
                     
                     {data.profile.school && (
                       <div className="space-y-1">
                         <span className="text-xs font-medium text-white">Education</span>
-                        <p className="text-sm text-white/80">{data.profile.school}</p>
+                        <p className="text-sm text-white/80 text-justify sm:text-left">{data.profile.school}</p>
                       </div>
                     )}
                   </div>
@@ -378,7 +378,7 @@ const OptimizedPublicProfile = () => {
                         <div className="space-y-4">
                           <div className="space-y-3">
                             <h3 className="text-lg font-medium text-foreground">{service.title}</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">
+                            <p className="text-sm text-muted-foreground leading-relaxed text-justify sm:text-left">
                               {service.description}
                             </p>
                           </div>
@@ -423,7 +423,7 @@ const OptimizedPublicProfile = () => {
             <DialogTitle>About {data?.profile.display_name}</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
-            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap text-justify sm:text-left">
               {data?.profile.bio}
             </p>
           </div>
