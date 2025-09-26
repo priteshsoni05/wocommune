@@ -338,7 +338,7 @@ const OptimizedPublicProfile = () => {
                 {socialLinks.length > 0 && (
                   <div className="space-y-3">
                     <h3 className="text-base font-medium text-white">Connect</h3>
-                    <div className="flex items-center justify-center lg:justify-start gap-2">
+                    <div className="flex items-center justify-start gap-2">
                       {socialLinks.map(({ url, icon: Icon, label }, idx) => (
                         <a 
                           key={idx} 
