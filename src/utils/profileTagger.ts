@@ -95,10 +95,19 @@ function containsKeyword(text: string | null, keywords: string[]): boolean {
   const lowerText = text.toLowerCase();
   return keywords.some(keyword => {
     const keywordLower = keyword.toLowerCase();
-    // For specific institutions like ICAI, use exact matching to avoid false positives
+    
+    // For specific institutions and short keywords like ICAI, CA, use word boundary matching
     if (keywordLower === 'icai' || keywordLower === 'ca') {
+      // Use word boundaries to ensure exact matches only
+      const regex = new RegExp(`\\b${keywordLower}\\b`, 'i');
+      return regex.test(text);
+    }
+    
+    // For "chartered accountant" - check for the full phrase
+    if (keywordLower === 'chartered accountant') {
       return lowerText.includes(keywordLower);
     }
+    
     // For other keywords, use enhanced fuzzy matching
     return lowerText.includes(keywordLower) || 
            lowerText.split(' ').some(word => word.startsWith(keywordLower.substring(0, 3))) ||
