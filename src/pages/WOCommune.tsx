@@ -258,7 +258,7 @@ export default function WOCommune(): JSX.Element {
       <WOCommuneSlate />
 
       {/* ===== HERO — With background image like home page ===== */}
-      <section className="relative w-full py-20 md:py-28">
+      <section className="relative w-full h-[85vh] sm:h-[90vh] md:h-screen">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-center bg-no-repeat bg-cover"
@@ -270,7 +270,7 @@ export default function WOCommune(): JSX.Element {
         {/* Dark overlay for text contrast */}
         <div className="absolute inset-0 bg-black/45" />
         
-        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 text-center">
+        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
           <p className="text-2xl md:text-4xl leading-tight mb-8 text-white font-sans">
             Help will always be given at WO COMMUNE
             <br />
