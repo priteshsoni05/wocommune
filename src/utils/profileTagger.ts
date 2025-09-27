@@ -133,37 +133,55 @@ export function generateProfileTags(profile: {
     helpAreas: []
   };
 
-  // Only use Professional Background fields for tagging
+  // Use Professional Background + Display Name + Services for tagging
   const professionalText = [
     profile.school,
     profile.profession,
     profile.use_case,
-    ...(profile.skills || [])
+    ...(profile.skills || []),
+    ...(profile.services?.map(s => s.category) || []),
+    ...(profile.services?.map(s => s.title) || []),
+    ...(profile.services?.map(s => s.description) || [])
   ].filter(Boolean).join(' ');
 
-  // Alumni tagging - Only from school field
+  // Alumni tagging - From school field and services
   Object.entries(ALUMNI_KEYWORDS).forEach(([tag, keywords]) => {
-    if (containsKeyword(profile.school, keywords)) {
+    if (containsKeyword(profile.school, keywords) || 
+        profile.services?.some(service => 
+          containsKeyword(service.category, keywords) ||
+          containsKeyword(service.title, keywords) ||
+          containsKeyword(service.description, keywords)
+        )) {
       if (!tags.alumni.includes(tag)) {
         tags.alumni.push(tag);
       }
     }
   });
 
-  // People tagging - Only from profession and use_case
+  // People tagging - From profession, use_case, and services
   Object.entries(PEOPLE_KEYWORDS).forEach(([tag, keywords]) => {
     if (containsKeyword(profile.profession, keywords) || 
-        containsKeyword(profile.use_case, keywords)) {
+        containsKeyword(profile.use_case, keywords) ||
+        profile.services?.some(service => 
+          containsKeyword(service.category, keywords) ||
+          containsKeyword(service.title, keywords) ||
+          containsKeyword(service.description, keywords)
+        )) {
       if (!tags.people.includes(tag)) {
         tags.people.push(tag);
       }
     }
   });
 
-  // Help Areas tagging - Only from skills and use_case
+  // Help Areas tagging - From skills, use_case, and services
   Object.entries(HELP_AREAS_KEYWORDS).forEach(([tag, keywords]) => {
     if (profile.skills?.some(skill => containsKeyword(skill, keywords)) ||
-        containsKeyword(profile.use_case, keywords)) {
+        containsKeyword(profile.use_case, keywords) ||
+        profile.services?.some(service => 
+          containsKeyword(service.category, keywords) ||
+          containsKeyword(service.title, keywords) ||
+          containsKeyword(service.description, keywords)
+        )) {
       if (!tags.helpAreas.includes(tag)) {
         tags.helpAreas.push(tag);
       }

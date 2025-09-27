@@ -59,7 +59,7 @@ export const useSmartSearch = () => {
             )
           `)
           .eq('status', 'active')
-          .or(`profession.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,use_case.ilike.%${query}%`)
+          .or(`display_name.ilike.%${query}%,profession.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,use_case.ilike.%${query}%`)
           .limit(15);
 
         if (profilesError) {

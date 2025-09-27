@@ -108,17 +108,23 @@ export function useFilteredHelpanions() {
   // Filter and sort helpanions with priority based on dropdown selections
   const filteredHelpanions = useMemo(() => {
     const filtered = taggedHelpanions.filter(helpanion => {
-      // Enhanced search filter - ONLY Professional Background fields
+      // Enhanced search filter - Professional Background + Display Name + Services
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
         const searchWords = searchTerm.split(' ').filter(word => word.length > 0);
         
         const matchesSearch = searchWords.every(word => {
-          return helpanion.profession?.toLowerCase().includes(word) ||
+          return helpanion.display_name?.toLowerCase().includes(word) ||
+                 helpanion.profession?.toLowerCase().includes(word) ||
                  helpanion.school?.toLowerCase().includes(word) ||
                  helpanion.use_case?.toLowerCase().includes(word) ||
                  helpanion.skills?.some(skill => 
                    skill.toLowerCase().includes(word)
+                 ) ||
+                 helpanion.services?.some(service => 
+                   service.title.toLowerCase().includes(word) ||
+                   service.description?.toLowerCase().includes(word) ||
+                   service.category?.toLowerCase().includes(word)
                  );
         });
         
@@ -159,15 +165,31 @@ export function useFilteredHelpanions() {
         if (b.tags.helpAreas.includes(filter)) scoreB += 100;
       });
 
-      // Secondary priority for search term exact matches in Professional Background only
+      // Secondary priority for search term exact matches in Professional + Display Name + Services
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
+        if (a.display_name?.toLowerCase().includes(searchTerm)) scoreA += 50;
+        if (b.display_name?.toLowerCase().includes(searchTerm)) scoreB += 50;
         if (a.profession?.toLowerCase().includes(searchTerm)) scoreA += 30;
         if (b.profession?.toLowerCase().includes(searchTerm)) scoreB += 30;
         if (a.school?.toLowerCase().includes(searchTerm)) scoreA += 20;
         if (b.school?.toLowerCase().includes(searchTerm)) scoreB += 20;
         if (a.use_case?.toLowerCase().includes(searchTerm)) scoreA += 10;
         if (b.use_case?.toLowerCase().includes(searchTerm)) scoreB += 10;
+        
+        // Services matching
+        const aServiceMatch = a.services?.some(service => 
+          service.title.toLowerCase().includes(searchTerm) ||
+          service.description?.toLowerCase().includes(searchTerm) ||
+          service.category?.toLowerCase().includes(searchTerm)
+        );
+        const bServiceMatch = b.services?.some(service => 
+          service.title.toLowerCase().includes(searchTerm) ||
+          service.description?.toLowerCase().includes(searchTerm) ||
+          service.category?.toLowerCase().includes(searchTerm)
+        );
+        if (aServiceMatch) scoreA += 15;
+        if (bServiceMatch) scoreB += 15;
       }
 
       // If scores are equal, sort by creation date (newest first)
