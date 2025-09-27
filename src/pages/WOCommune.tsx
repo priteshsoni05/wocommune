@@ -15,7 +15,8 @@ import { Footer } from "@/components/common/Footer";
 import GlobalHeader from "@/components/common/GlobalHeader";
 import WOCommuneSlate from "@/components/common/WOCommuneSlate";
 
-const HERO_IMG = "/assets/hero-placeholder.jpg";
+import heroImage from "@/assets/wo-commune-hero-1920x1080.jpg";
+const HERO_IMG = heroImage;
 const EVENT_IMG = "/assets/event-placeholder.jpg";
 const CONVO_IMG = "/assets/convo-placeholder.jpg";
 const PODCAST_IMG = "/assets/podcast-placeholder.jpg";
