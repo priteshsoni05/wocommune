@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 type TabKey = 'sessions' | 'notifications' | 'history' | 'settings';
 
 const PRIMARY_GREEN = "#193232";
-const BG_NEUTRAL = "#FAF9F6";
+const BG_NEUTRAL = "#f2f2f2";
 
 const navigationTabs = [
   { key: 'sessions' as TabKey, label: 'Sessions', icon: Calendar },

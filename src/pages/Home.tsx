@@ -125,7 +125,7 @@ const HomePage: React.FC = () => {
   }, [user, hasValidRole, getDashboardPath]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#2B2B2B]">
+    <div className="min-h-screen bg-[#f2f2f2] text-[#2B2B2B]">
       {/* ------------------------ Global Header ------------------------ */}
       <GlobalHeader 
         user={user} 

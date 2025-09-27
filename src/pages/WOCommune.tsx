@@ -241,7 +241,7 @@ export default function WOCommune(): JSX.Element {
 
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#222] font-body">
+    <div className="min-h-screen bg-[#f2f2f2] text-[#222] font-body">
       {/* ===== Global Header ===== */}
       <GlobalHeader 
         user={user} 

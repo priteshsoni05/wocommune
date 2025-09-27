@@ -9,17 +9,17 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Warm, human-first color palette */
-    --background: 40 20% 98%;
+    --background: 0 0% 95%;
     --foreground: 20 14% 10%;
 
     --card: 38 25% 96%;
     --card-foreground: 20 14% 10%;
 
-    --popover: 40 20% 98%;
+    --popover: 0 0% 95%;
     --popover-foreground: 20 14% 10%;
 
     --primary: 20 14% 10%;
-    --primary-foreground: 40 20% 98%;
+    --primary-foreground: 0 0% 95%;
 
     --secondary: 35 15% 88%;
     --secondary-foreground: 20 14% 10%;
@@ -31,14 +31,14 @@ All colors MUST be HSL.
     --accent-foreground: 20 14% 10%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 40 20% 98%;
+    --destructive-foreground: 0 0% 95%;
 
     --success: 142 71% 45%;
-    --success-foreground: 40 20% 98%;
+    --success-foreground: 0 0% 95%;
 
     /* Brand green - consistent across all elements */
     --brand: 180 33% 15%;
-    --brand-foreground: 40 20% 98%;
+    --brand-foreground: 0 0% 95%;
 
     --warning: 43 96% 56%;
     --warning-foreground: 20 14% 10%;

@@ -57,7 +57,7 @@ export default function WOCommunePage(): JSX.Element {
   }, [helpanions, fetchedHelpanions]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#222]">
+    <div className="min-h-screen bg-[#f2f2f2] text-[#222]">
       {/* ===== Header ===== */}
       <Header onLoginClick={() => navigate('/auth?mode=login&role=walker')} />
 

@@ -115,7 +115,7 @@ export default function HelpanionsDirectory() {
   }, [helpanions, sortBy]);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+    <div className="min-h-screen bg-[#f2f2f2] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
       {/* ===== Global Header (same as home page) ===== */}
       <GlobalHeader 
         user={user}
