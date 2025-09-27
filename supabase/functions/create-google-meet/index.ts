@@ -60,8 +60,9 @@ Deno.serve(async (req) => {
         .maybeSingle();
       
       if (profile?.google_calendar_id) {
-        calendarId = profile.google_calendar_id;
-        console.log(`Using helpanion's calendar: ${calendarId}`);
+        // If the calendar ID is an email address, use 'primary' instead
+        calendarId = profile.google_calendar_id.includes('@') ? 'primary' : profile.google_calendar_id;
+        console.log(`Using helpanion's calendar: ${calendarId} (original: ${profile.google_calendar_id})`);
       } else {
         console.error(`No calendar configured for helpanion ${helper_id}`);
         throw new Error('Helpanion has not configured their Google Calendar integration');
