@@ -95,7 +95,11 @@ function containsKeyword(text: string | null, keywords: string[]): boolean {
   const lowerText = text.toLowerCase();
   return keywords.some(keyword => {
     const keywordLower = keyword.toLowerCase();
-    // Exact match or partial match for better fuzzy matching
+    // For specific institutions like ICAI, use exact matching to avoid false positives
+    if (keywordLower === 'icai' || keywordLower === 'ca') {
+      return lowerText.includes(keywordLower);
+    }
+    // For other keywords, use enhanced fuzzy matching
     return lowerText.includes(keywordLower) || 
            lowerText.split(' ').some(word => word.startsWith(keywordLower.substring(0, 3))) ||
            keywordLower.split(' ').some(keywordWord => lowerText.includes(keywordWord));
