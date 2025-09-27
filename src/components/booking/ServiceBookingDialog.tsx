@@ -94,7 +94,7 @@ export const ServiceBookingDialog = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="inset-0 w-screen h-[100dvh] max-w-none max-h-none sm:inset-0 sm:w-screen sm:h-[100dvh] sm:max-w-none sm:max-h-none sm:rounded-none sm:translate-x-0 sm:translate-y-0 sm:left-0 sm:top-0 overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle className="text-2xl">Book: {service.title}</DialogTitle>
             <DialogDescription className="text-base">
