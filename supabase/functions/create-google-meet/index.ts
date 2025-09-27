@@ -180,6 +180,54 @@ Deno.serve(async (req) => {
     }
 
     if (!meetLink) {
+      console.warn('No Meet link after create/patch. Retrying on global calendar.');
+      if (calendarId !== globalCalendarId) {
+        let resp2 = await fetch(
+          makeUrl(globalCalendarId),
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(event),
+          }
+        );
+
+        if (!resp2.ok) {
+          const t2 = await resp2.text();
+          console.error('Global calendar create failed:', t2);
+        } else {
+          const ev2 = await resp2.json();
+          console.log('Created event on global calendar:', ev2);
+          meetLink = extractMeet(ev2);
+
+          if (!meetLink) {
+            // Try patching on global calendar as well
+            const gPatchUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(globalCalendarId)}/events/${encodeURIComponent(ev2.id)}?conferenceDataVersion=1`;
+            const r = await fetch(gPatchUrl, {
+              method: 'PATCH',
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                conferenceData: { createRequest: { requestId: crypto.randomUUID() } }
+              }),
+            });
+            if (r.ok) {
+              const patched = await r.json();
+              meetLink = extractMeet(patched);
+              console.log('Global calendar PATCH result:', patched);
+            } else {
+              console.error('Global calendar PATCH failed:', await r.text());
+            }
+          }
+        }
+      }
+    }
+
+    if (!meetLink) {
       throw new Error('Failed to create Google Meet link');
     }
 
