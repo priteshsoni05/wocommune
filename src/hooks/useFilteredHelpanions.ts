@@ -59,6 +59,29 @@ export function useFilteredHelpanions() {
     setSearchParams(newParams, { replace: true });
   }, [setSearchParams]);
 
+  // Sync filters from URL when query params change (avoids loops by comparing state)
+  useEffect(() => {
+    const alumni = searchParams.getAll('alumni');
+    const people = searchParams.getAll('people');
+    const helpAreas = searchParams.getAll('helpAreas');
+    const search = searchParams.get('search') || '';
+
+    const incoming: FilterState = { alumni, people, helpAreas, search };
+
+    const eq = (a: string[], b: string[]) =>
+      a.length === b.length && a.every((v) => b.includes(v));
+
+    const isSame =
+      eq(incoming.alumni, filters.alumni) &&
+      eq(incoming.people, filters.people) &&
+      eq(incoming.helpAreas, filters.helpAreas) &&
+      incoming.search === filters.search;
+
+    if (!isSame) {
+      setFilters(incoming);
+    }
+  }, [searchParams, filters]);
+
   // Calculate filter counts
   const filterCounts = useMemo<FilterCounts>(() => {
     const counts: FilterCounts = {
