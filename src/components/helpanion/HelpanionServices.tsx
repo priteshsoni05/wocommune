@@ -19,7 +19,7 @@ interface HelpanionServicesProps {
 const helpTypes = ["One-time", "Ongoing", "Review", "Freelance"];
 const categories = ["College", "Career", "Wellness", "Productivity", "Business", "Creative", "Technical"];
 const durations = [30, 45, 60, 90];
-const modes = ["Zoom", "Google Meet", "Phone Call", "In-person"];
+const modes = ["Google Meet"];
 
 export const HelpanionServices = ({ profileProgress, isProfileComplete }: HelpanionServicesProps) => {
   const { services, createService, updateService, deleteService, loading } = useServices();
@@ -45,7 +45,7 @@ export const HelpanionServices = ({ profileProgress, isProfileComplete }: Helpan
       is_active: true,
       image_url: "",
       helpType: "",
-      mode: "",
+      mode: "Google Meet",
       outcomes: ""
     }
   });
