@@ -37,9 +37,12 @@ serve(async (req) => {
     const accessToken = await getAccessToken(jwtToken);
 
     // Create calendar event with Google Meet
+    // Note: Service accounts cannot invite attendees without Domain-Wide Delegation
+    // So we create the event without attendees and include attendee info in description
+    const attendeeList = attendeeEmails.length > 0 ? `\n\nAttendees: ${attendeeEmails.join(', ')}` : '';
     const event = {
       summary: title,
-      description: description,
+      description: description + attendeeList,
       start: {
         dateTime: startTime,
         timeZone: 'UTC',
@@ -48,7 +51,6 @@ serve(async (req) => {
         dateTime: endTime,
         timeZone: 'UTC',
       },
-      attendees: attendeeEmails.map(email => ({ email })),
       conferenceData: {
         createRequest: {
           requestId: crypto.randomUUID(),
