@@ -33,7 +33,7 @@ const AboutPage: React.FC = () => {
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mission */}
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>Our Mission</CardTitle>
             </CardHeader>
@@ -44,7 +44,7 @@ const AboutPage: React.FC = () => {
             </CardContent>
           </Card>
           {/* Vision */}
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>Our Vision</CardTitle>
             </CardHeader>
@@ -60,7 +60,7 @@ const AboutPage: React.FC = () => {
       {/* ------------------------ Our Story ------------------------ */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>Our Story</CardTitle>
             </CardHeader>
@@ -83,7 +83,7 @@ const AboutPage: React.FC = () => {
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* WO Commune */}
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>WO Commune</CardTitle>
             </CardHeader>
@@ -95,7 +95,7 @@ const AboutPage: React.FC = () => {
           </Card>
           
           {/* WO Experiences */}
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>WO Experiences</CardTitle>
             </CardHeader>
@@ -107,7 +107,7 @@ const AboutPage: React.FC = () => {
           </Card>
           
           {/* WO Essentials */}
-          <Card>
+          <Card className="bg-gray-50">
             <CardHeader>
               <CardTitle style={{ color: PINE }}>WO Essentials</CardTitle>
             </CardHeader>
