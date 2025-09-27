@@ -105,10 +105,10 @@ export function useFilteredHelpanions() {
     return counts;
   }, [taggedHelpanions]);
 
-  // Filter and sort helpanions with priority based on dropdown selections
+  // Filter and sort helpanions - Dropdown and Search work independently
   const filteredHelpanions = useMemo(() => {
     const filtered = taggedHelpanions.filter(helpanion => {
-      // Enhanced search filter - Professional Background + Display Name + Services
+      // Search bar filter - works independently with professional background + services
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
         const searchWords = searchTerm.split(' ').filter(word => word.length > 0);
@@ -131,7 +131,9 @@ export function useFilteredHelpanions() {
         if (!matchesSearch) return false;
       }
 
-      // Category filters (AND logic within category, OR logic between categories)
+      // Dropdown category filters - focused on professional background and services
+      // These filters use tags generated from: School, Profession, Skills, Use Case, Services
+      // EXCLUDES: Bio and other personal information
       const hasAlumniMatch = filters.alumni.length === 0 || 
         filters.alumni.some(filter => helpanion.tags.alumni.includes(filter));
       
@@ -144,52 +146,80 @@ export function useFilteredHelpanions() {
       return hasAlumniMatch && hasPeopleMatch && hasHelpAreasMatch;
     });
 
-    // Sort with priority for exact dropdown matches
+    // Sort with high priority for exact dropdown selections from GET HELP button
     return filtered.sort((a, b) => {
       let scoreA = 0;
       let scoreB = 0;
 
-      // Priority scoring based on exact dropdown filter matches
+      // HIGHEST PRIORITY: Exact dropdown filter matches (GET HELP button selections)
+      // These get maximum priority as they represent specific professional requirements
       filters.alumni.forEach(filter => {
-        if (a.tags.alumni.includes(filter)) scoreA += 100;
-        if (b.tags.alumni.includes(filter)) scoreB += 100;
+        if (a.tags.alumni.includes(filter)) scoreA += 300; // High priority for dropdown selections
+        if (b.tags.alumni.includes(filter)) scoreB += 300;
       });
 
       filters.people.forEach(filter => {
-        if (a.tags.people.includes(filter)) scoreA += 100;
-        if (b.tags.people.includes(filter)) scoreB += 100;
+        if (a.tags.people.includes(filter)) scoreA += 300; // High priority for dropdown selections
+        if (b.tags.people.includes(filter)) scoreB += 300;
       });
 
       filters.helpAreas.forEach(filter => {
-        if (a.tags.helpAreas.includes(filter)) scoreA += 100;
-        if (b.tags.helpAreas.includes(filter)) scoreB += 100;
+        if (a.tags.helpAreas.includes(filter)) scoreA += 300; // High priority for dropdown selections
+        if (b.tags.helpAreas.includes(filter)) scoreB += 300;
       });
 
-      // Secondary priority for search term exact matches in Professional + Display Name + Services
+      // SECONDARY PRIORITY: Search term matches (independent search bar)
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
+        
+        // Professional background exact matches get higher scores
+        if (a.display_name?.toLowerCase() === searchTerm) scoreA += 100;
+        if (b.display_name?.toLowerCase() === searchTerm) scoreB += 100;
+        if (a.profession?.toLowerCase() === searchTerm) scoreA += 90;
+        if (b.profession?.toLowerCase() === searchTerm) scoreB += 90;
+        if (a.school?.toLowerCase() === searchTerm) scoreA += 80;
+        if (b.school?.toLowerCase() === searchTerm) scoreB += 80;
+        
+        // Professional background partial matches
         if (a.display_name?.toLowerCase().includes(searchTerm)) scoreA += 50;
         if (b.display_name?.toLowerCase().includes(searchTerm)) scoreB += 50;
-        if (a.profession?.toLowerCase().includes(searchTerm)) scoreA += 30;
-        if (b.profession?.toLowerCase().includes(searchTerm)) scoreB += 30;
-        if (a.school?.toLowerCase().includes(searchTerm)) scoreA += 20;
-        if (b.school?.toLowerCase().includes(searchTerm)) scoreB += 20;
-        if (a.use_case?.toLowerCase().includes(searchTerm)) scoreA += 10;
-        if (b.use_case?.toLowerCase().includes(searchTerm)) scoreB += 10;
+        if (a.profession?.toLowerCase().includes(searchTerm)) scoreA += 40;
+        if (b.profession?.toLowerCase().includes(searchTerm)) scoreB += 40;
+        if (a.school?.toLowerCase().includes(searchTerm)) scoreA += 30;
+        if (b.school?.toLowerCase().includes(searchTerm)) scoreB += 30;
+        if (a.use_case?.toLowerCase().includes(searchTerm)) scoreA += 20;
+        if (b.use_case?.toLowerCase().includes(searchTerm)) scoreB += 20;
         
-        // Services matching
-        const aServiceMatch = a.services?.some(service => 
+        // Skills matching
+        const aSkillMatch = a.skills?.some(skill => skill.toLowerCase().includes(searchTerm));
+        const bSkillMatch = b.skills?.some(skill => skill.toLowerCase().includes(searchTerm));
+        if (aSkillMatch) scoreA += 25;
+        if (bSkillMatch) scoreB += 25;
+        
+        // Services matching (title, description, category)
+        const aServiceExactMatch = a.services?.some(service => 
+          service.title.toLowerCase() === searchTerm ||
+          service.category?.toLowerCase() === searchTerm
+        );
+        const bServiceExactMatch = b.services?.some(service => 
+          service.title.toLowerCase() === searchTerm ||
+          service.category?.toLowerCase() === searchTerm
+        );
+        if (aServiceExactMatch) scoreA += 35;
+        if (bServiceExactMatch) scoreB += 35;
+        
+        const aServicePartialMatch = a.services?.some(service => 
           service.title.toLowerCase().includes(searchTerm) ||
           service.description?.toLowerCase().includes(searchTerm) ||
           service.category?.toLowerCase().includes(searchTerm)
         );
-        const bServiceMatch = b.services?.some(service => 
+        const bServicePartialMatch = b.services?.some(service => 
           service.title.toLowerCase().includes(searchTerm) ||
           service.description?.toLowerCase().includes(searchTerm) ||
           service.category?.toLowerCase().includes(searchTerm)
         );
-        if (aServiceMatch) scoreA += 15;
-        if (bServiceMatch) scoreB += 15;
+        if (aServicePartialMatch) scoreA += 15;
+        if (bServicePartialMatch) scoreB += 15;
       }
 
       // If scores are equal, sort by creation date (newest first)
