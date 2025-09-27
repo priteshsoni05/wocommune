@@ -1,25 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { GetHelpHierarchy } from '@/components/helpanion/GetHelpHierarchy';
 
 export default function WOCommuneSlate() {
+  const [isGetHelpOpen, setIsGetHelpOpen] = useState(false);
+
   return (
     <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", marginTop: "0px" }}>
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-12 md:h-12">
 
         {/* Left section - Get Help Button */}
         <div className="flex-1">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-7 px-4 text-sm font-medium leading-none border border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white transition-all duration-200"
-            asChild
-          >
-            <Link to="/wo-commune">
-              Get Help
-            </Link>
-          </Button>
+          <Dialog open={isGetHelpOpen} onOpenChange={setIsGetHelpOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-4 text-sm font-medium leading-none border border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white transition-all duration-200"
+              >
+                Get Help
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Find the Right Help</DialogTitle>
+              </DialogHeader>
+              <GetHelpHierarchy onClose={() => setIsGetHelpOpen(false)} />
+            </DialogContent>
+          </Dialog>
         </div>
         
         {/* Center Text - WO COMMUNE only */}
