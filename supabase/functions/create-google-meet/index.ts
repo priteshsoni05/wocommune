@@ -87,10 +87,7 @@ Deno.serve(async (req) => {
       },
       conferenceData: {
         createRequest: {
-          requestId: crypto.randomUUID(),
-          conferenceSolutionKey: {
-            type: 'hangoutsMeet'
-          }
+          requestId: crypto.randomUUID()
         }
       }
     };
