@@ -131,9 +131,53 @@ Deno.serve(async (req) => {
     const createdEvent = await response.json();
     console.log('Created event:', createdEvent);
 
-    const meetLink = createdEvent.conferenceData?.entryPoints?.find(
-      (entry: any) => entry.entryPointType === 'video'
-    )?.uri;
+    const extractMeet = (ev: any) =>
+      ev?.conferenceData?.entryPoints?.find((entry: any) => entry.entryPointType === 'video')?.uri ||
+      ev?.hangoutLink || null;
+
+    let meetLink = extractMeet(createdEvent);
+
+    // Fallback: Patch the event to request a conference if none was created
+    if (!meetLink) {
+      console.warn('No conference on create. Attempting PATCH to add Google Meet.');
+      const patchUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(createdEvent.id)}?conferenceDataVersion=1`;
+
+      const attemptPatch = async (body: any, label: string) => {
+        const r = await fetch(patchUrl, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        });
+        if (!r.ok) {
+          const t = await r.text();
+          console.error(`PATCH ${label} failed:`, t);
+          return null;
+        }
+        const ev = await r.json();
+        console.log(`PATCH ${label} success:`, ev);
+        return extractMeet(ev);
+      };
+
+      // 1) Try without explicit conference type
+      meetLink = await attemptPatch({
+        conferenceData: { createRequest: { requestId: crypto.randomUUID() } }
+      }, 'no-type');
+
+      // 2) If still missing, try with explicit hangoutsMeet type
+      if (!meetLink) {
+        meetLink = await attemptPatch({
+          conferenceData: {
+            createRequest: {
+              requestId: crypto.randomUUID(),
+              conferenceSolutionKey: { type: 'hangoutsMeet' }
+            }
+          }
+        }, 'hangoutsMeet');
+      }
+    }
 
     if (!meetLink) {
       throw new Error('Failed to create Google Meet link');
