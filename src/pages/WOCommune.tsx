@@ -270,7 +270,7 @@ export default function WOCommune(): JSX.Element {
         <div className="absolute inset-0 bg-black/45" />
         
         <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 text-center">
-          <h1 className="text-3xl md:text-5xl leading-tight mb-8 text-white">
+          <h1 className="text-3xl md:text-5xl leading-tight mb-8 text-white font-sans">
             Help will always be given at <span className="font-logo">WO COMMUNE</span>
             <br />
             <span className="text-lg md:text-2xl">to those who ask for it</span>
