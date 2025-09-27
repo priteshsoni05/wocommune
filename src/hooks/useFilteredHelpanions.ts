@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useHelpanions } from './useHelpanions';
 import { tagHelpanionProfile, TaggedHelpanionProfile } from '@/utils/profileTagger';
@@ -39,44 +39,25 @@ export function useFilteredHelpanions() {
     };
   });
 
-  // Update filters when URL parameters change
-  useEffect(() => {
-    const alumniParams = searchParams.getAll('alumni');
-    const peopleParams = searchParams.getAll('people'); 
-    const helpAreasParams = searchParams.getAll('helpAreas');
-    
-    // Also check for single parameter values (from dropdown clicks)
-    const singleAlumni = searchParams.get('alumni');
-    const singlePeople = searchParams.get('people');
-    const singleHelpAreas = searchParams.get('helpAreas');
-    
-    setFilters({
-      alumni: singleAlumni ? [singleAlumni] : alumniParams,
-      people: singlePeople ? [singlePeople] : peopleParams,
-      helpAreas: singleHelpAreas ? [singleHelpAreas] : helpAreasParams,
-      search: searchParams.get('search') || ''
-    });
-  }, [searchParams]);
-
   // Tag all helpanions with auto-generated tags
   const taggedHelpanions = useMemo<TaggedHelpanionProfile[]>(() => {
     return rawHelpanions.map(tagHelpanionProfile);
   }, [rawHelpanions]);
 
-  // Update URL when filters change
-  useEffect(() => {
+  // Update URL when filters change (only when manually changed, not from URL)
+  const updateURL = useCallback((newFilters: FilterState) => {
     const newParams = new URLSearchParams();
     
-    filters.alumni.forEach(item => newParams.append('alumni', item));
-    filters.people.forEach(item => newParams.append('people', item));
-    filters.helpAreas.forEach(item => newParams.append('helpAreas', item));
+    newFilters.alumni.forEach(item => newParams.append('alumni', item));
+    newFilters.people.forEach(item => newParams.append('people', item));
+    newFilters.helpAreas.forEach(item => newParams.append('helpAreas', item));
     
-    if (filters.search) {
-      newParams.set('search', filters.search);
+    if (newFilters.search) {
+      newParams.set('search', newFilters.search);
     }
 
     setSearchParams(newParams, { replace: true });
-  }, [filters, setSearchParams]);
+  }, [setSearchParams]);
 
   // Calculate filter counts
   const filterCounts = useMemo<FilterCounts>(() => {
@@ -135,30 +116,38 @@ export function useFilteredHelpanions() {
 
   // Filter management functions
   const addFilter = (category: keyof Omit<FilterState, 'search'>, item: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [category]: [...prev[category], item]
-    }));
+    const newFilters = {
+      ...filters,
+      [category]: [...filters[category], item]
+    };
+    setFilters(newFilters);
+    updateURL(newFilters);
   };
 
   const removeFilter = (category: keyof Omit<FilterState, 'search'>, item: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [category]: prev[category].filter(f => f !== item)
-    }));
+    const newFilters = {
+      ...filters,
+      [category]: filters[category].filter(f => f !== item)
+    };
+    setFilters(newFilters);
+    updateURL(newFilters);
   };
 
   const clearFilters = () => {
-    setFilters({
+    const newFilters = {
       alumni: [],
       people: [],
       helpAreas: [],
       search: ''
-    });
+    };
+    setFilters(newFilters);
+    updateURL(newFilters);
   };
 
   const setSearch = (search: string) => {
-    setFilters(prev => ({ ...prev, search }));
+    const newFilters = { ...filters, search };
+    setFilters(newFilters);
+    updateURL(newFilters);
   };
 
   const hasActiveFilters = filters.alumni.length > 0 || 
