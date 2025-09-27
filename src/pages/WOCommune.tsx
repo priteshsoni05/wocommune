@@ -64,15 +64,6 @@ type Profile = {
   last_active_role?: string | null;
 };
 
-// Category card component
-function CategoryCard({ icon, title }: { icon: string; title: string }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-6 text-center hover:bg-gray-100 transition-colors cursor-pointer">
-      <div className="text-3xl mb-3">{icon}</div>
-      <h3 className="font-medium text-gray-900">{title}</h3>
-    </div>
-  );
-}
 
 export default function WOCommune(): JSX.Element {
   const { user, signOut } = useAuth();
@@ -308,26 +299,8 @@ export default function WOCommune(): JSX.Element {
         </div>
       </section>
 
-      {/* ===== Categories We Offer Help In ===== */}
-      <section className="max-w-7xl mx-auto px-4 py-16 bg-white">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-semibold mb-4">Categories We Offer Help In</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover the diverse areas where our helpanions can guide and support you on your journey
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <CategoryCard icon="💼" title="Career Guidance" />
-          <CategoryCard icon="🎓" title="Education & Learning" />
-          <CategoryCard icon="💡" title="Personal Development" />
-          <CategoryCard icon="🏃‍♂️" title="Health & Wellness" />
-          <CategoryCard icon="💰" title="Financial Planning" />
-          <CategoryCard icon="🎨" title="Creative Arts" />
-          <CategoryCard icon="🚀" title="Entrepreneurship" />
-          <CategoryCard icon="🧘‍♀️" title="Mental Health" />
-        </div>
-      </section>
+      {/* ===== Testimonials ===== */}
+      <TestimonialsSlider compact />
 
       {/* ===== Featured Helpanions ===== */}
 
@@ -355,8 +328,6 @@ export default function WOCommune(): JSX.Element {
         </div>
       </div>
 
-      {/* ===== Testimonials ===== */}
-      <TestimonialsSlider compact />
 
       {/* ===== Tabs Section (events & conversations) ===== */}
       <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
