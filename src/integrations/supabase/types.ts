@@ -47,10 +47,12 @@ export type Database = {
       bookings: {
         Row: {
           booking_date: string
+          calendar_event_id: string | null
           created_at: string
           end_time: string
           helper_id: string
           id: string
+          meeting_link: string | null
           notes: string | null
           seeker_email: string
           seeker_id: string | null
@@ -63,10 +65,12 @@ export type Database = {
         }
         Insert: {
           booking_date: string
+          calendar_event_id?: string | null
           created_at?: string
           end_time: string
           helper_id: string
           id?: string
+          meeting_link?: string | null
           notes?: string | null
           seeker_email: string
           seeker_id?: string | null
@@ -79,10 +83,12 @@ export type Database = {
         }
         Update: {
           booking_date?: string
+          calendar_event_id?: string | null
           created_at?: string
           end_time?: string
           helper_id?: string
           id?: string
+          meeting_link?: string | null
           notes?: string | null
           seeker_email?: string
           seeker_id?: string | null

@@ -20,6 +20,7 @@ interface BookingConfirmationRequest {
     end_time: string;
     total_amount: number;
     notes: string | null;
+    meeting_link?: string;
   };
   service: {
     title: string;
@@ -72,10 +73,19 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Generate meeting details using Jitsi Meet
-    const meetingId = `WOCommune-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
-    const meetingLink = `https://meet.jit.si/${meetingId}`;
-    const meetingPassword = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // Use Google Meet link if provided, otherwise fallback to Jitsi Meet
+    let meetingLink, meetingId, meetingPassword;
+    
+    if (booking.meeting_link) {
+      meetingLink = booking.meeting_link;
+      meetingId = "Google Meet";
+      meetingPassword = "No password required";
+    } else {
+      // Fallback to Jitsi Meet if Google Meet link not available
+      meetingId = `WOCommune-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
+      meetingLink = `https://meet.jit.si/${meetingId}`;
+      meetingPassword = Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
 
     // Send confirmation email to seeker
     const seekerEmailResponse = await resend.emails.send({
@@ -128,8 +138,12 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
               <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
               <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-              <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
-              <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+              ${booking.meeting_link ? `
+                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+              ` : `
+                <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
+                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+              `}
             </div>
             <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
           </div>
@@ -222,8 +236,12 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
                 <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Video Meeting Link:</p>
                 <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-                <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
-                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+                ${booking.meeting_link ? `
+                  <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+                ` : `
+                  <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
+                  <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
+                `}
               </div>
               <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 The seeker will receive the same meeting details in their confirmation email</p>
             </div>

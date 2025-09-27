@@ -126,11 +126,50 @@ export const BookingDialog = ({
         throw error;
       }
 
+      // Create Google Meet link for the session
+      let meetingLink = null;
+      try {
+        const startDateTime = new Date(selectedDate);
+        startDateTime.setHours(parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]), 0, 0);
+        
+        const endDateTime = new Date(startDateTime.getTime() + (service.duration_minutes || 60) * 60000);
+
+        const meetResponse = await supabase.functions.invoke('create-google-meet', {
+          body: {
+            title: `${service.title} - Session with ${formData.fullName}`,
+            description: `Service: ${service.title}\nDuration: ${service.duration_minutes || 60} minutes\nNotes: ${formData.message || 'No special notes'}`,
+            startTime: startDateTime.toISOString(),
+            endTime: endDateTime.toISOString(),
+            attendeeEmails: [formData.email]
+          }
+        });
+
+        if (meetResponse.data?.meetLink) {
+          meetingLink = meetResponse.data.meetLink;
+          console.log('Google Meet link created:', meetingLink);
+        }
+      } catch (meetError) {
+        console.error('Failed to create Google Meet link:', meetError);
+        // Continue with booking even if Meet link creation fails
+      }
+
+      // Update booking with meeting link if created
+      if (meetingLink && data?.id) {
+        try {
+          await supabase
+            .from('bookings')
+            .update({ meeting_link: meetingLink })
+            .eq('id', data.id);
+        } catch (updateError) {
+          console.error('Failed to update booking with meeting link:', updateError);
+        }
+      }
+
       // Send booking confirmation emails
       try {
         await supabase.functions.invoke('send-booking-confirmation', {
           body: {
-            booking: data,
+            booking: { ...data, meeting_link: meetingLink },
             service: service,
             helperEmail: helperId
           }
