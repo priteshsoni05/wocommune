@@ -188,7 +188,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ About Section (2-column) ------------------------ */}
-      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-20">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16">
         <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left column: text */}
           <div className="px-2">
@@ -220,7 +220,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="py-12">
+      <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
             <div className="text-center mb-8">
@@ -270,7 +270,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Upcoming Event Strip ------------------------ */}
-      <section className="py-12">
+      <section className="py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
@@ -295,7 +295,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Podcasts & Stories ------------------------ */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-20">
+      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-16">
         <h3 className="text-lg font-semibold mb-6">Podcasts & Stories</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
