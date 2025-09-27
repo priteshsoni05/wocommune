@@ -109,20 +109,11 @@ Deno.serve(async (req) => {
       }
     );
 
-    // Fallback: if specified calendar isn't found, try primary
-    if (response.status === 404 && calendarId !== 'primary') {
-      console.warn('Specified calendar not found. Retrying with primary calendar.');
-      response = await fetch(
-        makeUrl('primary'),
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(event),
-        }
-      );
+    // If specified calendar isn't found or not accessible, return a clear error
+    if (response.status === 404) {
+      const t = await response.text();
+      console.error('Calendar not accessible:', t);
+      throw new Error('Helpanion calendar not found or not shared with the service account. Share it with wo-commune-booking@walkers-odyssey.iam.gserviceaccount.com (Make changes to events).');
     }
 
     if (!response.ok) {
