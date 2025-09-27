@@ -21,7 +21,7 @@ const categoryData = [
       },
       {
         title: 'International & Design',
-        items: ['London School of Fashion', 'Fashion Design', 'International', 'Design Schools']
+        items: ['London School of Fashion']
       },
       {
         title: 'Broader Categories',
@@ -64,10 +64,6 @@ const categoryData = [
       {
         title: 'Core Business',
         items: ['Finance', 'Marketing', 'Business', 'Sales', 'Operations']
-      },
-      {
-        title: 'Technology & Design',
-        items: ['Technology', 'Design', 'Product', 'Data']
       },
       {
         title: 'Growth & Development',
