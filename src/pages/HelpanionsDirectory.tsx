@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
 import GlobalHeader from "@/components/common/GlobalHeader";
-import DiscoverHelpanionSlate from "@/components/common/DiscoverHelpanionSlate";
+import WOCommuneSlate from "@/components/common/WOCommuneSlate";
 import { DirectoryHelpanionCard } from "@/components/helpanion/DirectoryHelpanionCard";
 
 // ------------ Helpers ------------
@@ -130,8 +130,8 @@ export default function HelpanionsDirectory() {
         navigate={navigate}
       />
 
-      {/* ===== Discover Helpanions Slate ===== */}
-      <DiscoverHelpanionSlate />
+      {/* ===== WO Commune Slate ===== */}
+      <WOCommuneSlate />
 
       <div className="h-8 md:h-10" />
 
