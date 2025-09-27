@@ -91,15 +91,49 @@ export const BookingDialog = ({
 
       console.log('Booking data to insert:', bookingData);
 
-      // For anonymous users, we can't select the booking back due to RLS
-      // So we'll insert without selecting for anonymous users
+      // Create Google Meet link FIRST (required for booking)
+      let meetingLink = null;
+      console.log('Creating Google Meet link...');
+      
+      const startDateTime = new Date(selectedDate);
+      startDateTime.setHours(parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]), 0, 0);
+      
+      const endDateTime = new Date(startDateTime.getTime() + (service.duration_minutes || 60) * 60000);
+
+      const meetResponse = await supabase.functions.invoke('create-google-meet', {
+        body: {
+          service_name: service.title,
+          start_time: startDateTime.toISOString(),
+          end_time: endDateTime.toISOString(),
+          seeker_name: formData.fullName,
+          seeker_email: formData.email,
+          helper_name: "Helper", // This would come from helper profile
+          helper_email: "helper@example.com", // This would come from helper profile
+          helper_id: helperId,
+        }
+      });
+
+      if (!meetResponse.data?.meetLink) {
+        console.error('Google Meet creation failed:', meetResponse.error);
+        throw new Error('Unable to create Google Meet session. Please try again.');
+      }
+
+      meetingLink = meetResponse.data.meetLink;
+      console.log('Google Meet link created successfully:', meetingLink);
+
+      // Now create booking with meeting link
+      const bookingDataWithMeeting = {
+        ...bookingData,
+        meeting_link: meetingLink
+      };
+
       let data, error;
       
       if (user?.id) {
         // Authenticated user - can select the booking back
         const result = await supabase
           .from('bookings')
-          .insert(bookingData)
+          .insert(bookingDataWithMeeting)
           .select()
           .single();
         data = result.data;
@@ -108,10 +142,10 @@ export const BookingDialog = ({
         // Anonymous user - just insert without selecting
         const result = await supabase
           .from('bookings')
-          .insert(bookingData);
+          .insert(bookingDataWithMeeting);
         error = result.error;
         // Create a mock data object for the email function
-        data = { ...bookingData, id: 'anonymous-booking' };
+        data = { ...bookingDataWithMeeting, id: 'anonymous-booking' };
       }
 
       console.log('Supabase response:', { data, error });
@@ -124,50 +158,6 @@ export const BookingDialog = ({
           code: error.code
         });
         throw error;
-      }
-
-      // Create Google Meet link for the session (required)
-      let meetingLink = null;
-      try {
-        const startDateTime = new Date(selectedDate);
-        startDateTime.setHours(parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]), 0, 0);
-        
-        const endDateTime = new Date(startDateTime.getTime() + (service.duration_minutes || 60) * 60000);
-
-        const meetResponse = await supabase.functions.invoke('create-google-meet', {
-          body: {
-            service_name: service.title,
-            start_time: startDateTime.toISOString(),
-            end_time: endDateTime.toISOString(),
-            seeker_name: formData.fullName,
-            seeker_email: formData.email,
-            helper_name: "Helper", // This would come from helper profile
-            helper_email: "helper@example.com", // This would come from helper profile
-            helper_id: helperId,
-          }
-        });
-
-        if (meetResponse.data?.meetLink) {
-          meetingLink = meetResponse.data.meetLink;
-          console.log('Google Meet link created:', meetingLink);
-        } else {
-          throw new Error('Failed to create Google Meet link');
-        }
-      } catch (meetError) {
-        console.error('Failed to create Google Meet link:', meetError);
-        throw new Error('Unable to create Google Meet session. Please try again.');
-      }
-
-      // Update booking with meeting link
-      if (data?.id) {
-        try {
-          await supabase
-            .from('bookings')
-            .update({ meeting_link: meetingLink })
-            .eq('id', data.id);
-        } catch (updateError) {
-          console.error('Failed to update booking with meeting link:', updateError);
-        }
       }
 
       // Send booking confirmation emails
