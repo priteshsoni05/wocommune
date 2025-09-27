@@ -16,12 +16,16 @@ const categoryData = [
     icon: <GraduationCap className="h-4 w-4" />,
     subcategories: [
       {
-        title: 'Indian Institutions',
+        title: 'Premier Institutions',
         items: ['IIM', 'ISB', 'XLRI', 'IIT', 'NIT', 'NIFT', 'NID', 'ICAI']
       },
       {
-        title: 'Foreign Institutions', 
-        items: ['London School of Fashion']
+        title: 'International & Design',
+        items: ['London School of Fashion', 'Fashion Design', 'International', 'Design Schools']
+      },
+      {
+        title: 'Broader Categories',
+        items: ['Business Schools', 'Engineering', 'Liberal Arts']
       }
     ]
   },
@@ -32,19 +36,23 @@ const categoryData = [
     subcategories: [
       {
         title: 'Business & Leadership',
-        items: ['Founders', 'Consultants', 'Chartered Accountants']
+        items: ['Founders', 'Consultants', 'Product Managers', 'Operations']
       },
       {
-        title: 'Technology & Design',
-        items: ['Engineers', 'Designers']
+        title: 'Technology & Data',
+        items: ['Engineers', 'Data Professionals', 'Designers']
       },
       {
-        title: 'Marketing & Content',
-        items: ['Marketers', 'Writers', 'Storytellers']
+        title: 'Marketing & Sales',
+        items: ['Marketers', 'Writers', 'Sales Professionals', 'Customer Success']
       },
       {
-        title: 'Fashion & Retail',
-        items: ['Merchandisers', 'Buyers']
+        title: 'Finance & Fashion',
+        items: ['Chartered Accountants', 'Finance Professionals', 'Fashion Professionals', 'Merchandisers']
+      },
+      {
+        title: 'Support & Growth',
+        items: ['HR Professionals', 'Students']
       }
     ]
   },
@@ -54,8 +62,16 @@ const categoryData = [
     icon: <HelpCircle className="h-4 w-4" />,
     subcategories: [
       {
-        title: 'Professional Fields',
-        items: ['Finance', 'Fashion', 'Marketing', 'Writing']
+        title: 'Core Business',
+        items: ['Finance', 'Marketing', 'Business', 'Sales', 'Operations']
+      },
+      {
+        title: 'Technology & Design',
+        items: ['Technology', 'Design', 'Product', 'Data']
+      },
+      {
+        title: 'Growth & Development',
+        items: ['Career', 'Education', 'Consulting', 'Fashion', 'Writing']
       }
     ]
   }

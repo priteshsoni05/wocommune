@@ -37,7 +37,7 @@ export const useSmartSearch = () => {
       try {
         const query = searchTerm.toLowerCase().trim();
         
-        // Search profiles and their services
+        // Search profiles and their services with better matching
         const { data: profiles, error: profilesError } = await supabase
           .from('profiles')
           .select(`
@@ -48,6 +48,7 @@ export const useSmartSearch = () => {
             school,
             skills,
             bio,
+            use_case,
             status,
             services!inner(
               id,
@@ -58,8 +59,8 @@ export const useSmartSearch = () => {
             )
           `)
           .eq('status', 'active')
-          .or(`display_name.ilike.%${query}%,profession.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,bio.ilike.%${query}%`)
-          .limit(10);
+          .or(`display_name.ilike.%${query}%,profession.ilike.%${query}%,school.ilike.%${query}%,skills.ilike.%${query}%,bio.ilike.%${query}%,use_case.ilike.%${query}%`)
+          .limit(15);
 
         if (profilesError) {
           console.error('Error fetching profiles:', profilesError);
@@ -147,11 +148,25 @@ export const useSmartSearch = () => {
                     id: skillKey,
                     type: 'tag',
                     text: skillTrimmed,
-                    subtext: 'Skill Tag'
+                    subtext: 'Skill'
                   });
                 }
               }
             });
+          }
+
+          // Add use case suggestions
+          if (profile.use_case) {
+            const useCaseKey = `usecase-${profile.use_case.toLowerCase()}`;
+            if (!seen.has(useCaseKey)) {
+              seen.add(useCaseKey);
+              suggestionsList.push({
+                id: useCaseKey,
+                type: 'tag',
+                text: profile.use_case,
+                subtext: 'Help Area'
+              });
+            }
           }
         });
 
@@ -231,9 +246,10 @@ export const useSmartSearch = () => {
           }
         });
     } else {
-      // For tags, roles, schools, redirect to filtered search
-      const filterParam = encodeURIComponent(suggestion.text);
-      navigate(`/helpanions?filter=${filterParam}&type=${suggestion.type}`);
+      // For tags, roles, schools, redirect to filtered search with appropriate parameters
+      const searchParams = new URLSearchParams();
+      searchParams.set('search', suggestion.text);
+      navigate(`/helpanions?${searchParams.toString()}`);
     }
     setShowSuggestions(false);
     setSearchTerm('');

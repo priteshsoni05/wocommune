@@ -105,20 +105,29 @@ export function useFilteredHelpanions() {
     return counts;
   }, [taggedHelpanions]);
 
-  // Filter helpanions based on current filters
+  // Filter helpanions based on current filters with enhanced search
   const filteredHelpanions = useMemo(() => {
     return taggedHelpanions.filter(helpanion => {
-      // Search filter
+      // Enhanced search filter with multi-field matching
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
-        const matchesSearch = 
-          helpanion.display_name?.toLowerCase().includes(searchTerm) ||
-          helpanion.bio?.toLowerCase().includes(searchTerm) ||
-          helpanion.skills?.some(skill => skill.toLowerCase().includes(searchTerm)) ||
-          helpanion.services?.some(service => 
-            service.title.toLowerCase().includes(searchTerm) ||
-            service.description?.toLowerCase().includes(searchTerm)
-          );
+        const searchWords = searchTerm.split(' ').filter(word => word.length > 0);
+        
+        const matchesSearch = searchWords.every(word => {
+          return helpanion.display_name?.toLowerCase().includes(word) ||
+                 helpanion.bio?.toLowerCase().includes(word) ||
+                 helpanion.profession?.toLowerCase().includes(word) ||
+                 helpanion.school?.toLowerCase().includes(word) ||
+                 helpanion.use_case?.toLowerCase().includes(word) ||
+                 helpanion.skills?.some(skill => 
+                   skill.toLowerCase().includes(word)
+                 ) ||
+                 helpanion.services?.some(service => 
+                   service.title.toLowerCase().includes(word) ||
+                   service.description?.toLowerCase().includes(word) ||
+                   service.category?.toLowerCase().includes(word)
+                 );
+        });
         
         if (!matchesSearch) return false;
       }
