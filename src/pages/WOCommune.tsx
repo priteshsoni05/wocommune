@@ -270,10 +270,10 @@ export default function WOCommune(): JSX.Element {
         <div className="absolute inset-0 bg-black/45" />
         
         <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 text-center">
-          <p className="text-3xl md:text-5xl leading-tight mb-8 text-white font-sans">
+          <p className="text-2xl md:text-4xl leading-tight mb-8 text-white font-sans">
             Help will always be given at WO COMMUNE
             <br />
-            <span className="text-lg md:text-2xl">to those who ask for it</span>
+            <span className="text-sm md:text-lg">to those who ask for it</span>
           </p>
           
           <div className="w-full max-w-[600px] mx-auto">
