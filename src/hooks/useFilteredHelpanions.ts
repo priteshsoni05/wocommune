@@ -105,9 +105,9 @@ export function useFilteredHelpanions() {
     return counts;
   }, [taggedHelpanions]);
 
-  // Filter helpanions based on current filters with enhanced search
+  // Filter and sort helpanions with priority based on dropdown selections
   const filteredHelpanions = useMemo(() => {
-    return taggedHelpanions.filter(helpanion => {
+    const filtered = taggedHelpanions.filter(helpanion => {
       // Enhanced search filter with multi-field matching
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
@@ -143,6 +143,46 @@ export function useFilteredHelpanions() {
         filters.helpAreas.some(filter => helpanion.tags.helpAreas.includes(filter));
 
       return hasAlumniMatch && hasPeopleMatch && hasHelpAreasMatch;
+    });
+
+    // Sort with priority for exact dropdown matches
+    return filtered.sort((a, b) => {
+      let scoreA = 0;
+      let scoreB = 0;
+
+      // Priority scoring based on exact dropdown filter matches
+      filters.alumni.forEach(filter => {
+        if (a.tags.alumni.includes(filter)) scoreA += 100;
+        if (b.tags.alumni.includes(filter)) scoreB += 100;
+      });
+
+      filters.people.forEach(filter => {
+        if (a.tags.people.includes(filter)) scoreA += 100;
+        if (b.tags.people.includes(filter)) scoreB += 100;
+      });
+
+      filters.helpAreas.forEach(filter => {
+        if (a.tags.helpAreas.includes(filter)) scoreA += 100;
+        if (b.tags.helpAreas.includes(filter)) scoreB += 100;
+      });
+
+      // Secondary priority for search term exact matches
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        if (a.display_name?.toLowerCase().includes(searchTerm)) scoreA += 50;
+        if (b.display_name?.toLowerCase().includes(searchTerm)) scoreB += 50;
+        if (a.profession?.toLowerCase().includes(searchTerm)) scoreA += 30;
+        if (b.profession?.toLowerCase().includes(searchTerm)) scoreB += 30;
+        if (a.school?.toLowerCase().includes(searchTerm)) scoreA += 20;
+        if (b.school?.toLowerCase().includes(searchTerm)) scoreB += 20;
+      }
+
+      // If scores are equal, sort by creation date (newest first)
+      if (scoreA === scoreB) {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+
+      return scoreB - scoreA; // Higher score first
     });
   }, [taggedHelpanions, filters]);
 
