@@ -36,7 +36,7 @@ export default function GlobalHeader({
         >
           WALKER'S ODYSSEY
         </Link>
-        <div className="flex-1 flex justify-end items-center -mr-2 sm:-mr-3">
+        <div className="flex-1 flex justify-end items-center">
           <BurgerMenu 
             user={user} 
             displayName={displayName || "Friend"} 
