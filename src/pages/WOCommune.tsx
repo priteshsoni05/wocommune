@@ -325,17 +325,9 @@ export default function WOCommune(): JSX.Element {
           </div>
           
           {fetching ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-gray-100 rounded-2xl h-80 animate-pulse" />
-              ))}
-            </div>
+            <p className="text-center text-gray-500">Loading...</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {topHelpanions.map((helpanion: any, index: number) => (
-                <HelpanionCard key={helpanion.id || index} helpanion={helpanion} />
-              ))}
-            </div>
+            <FeaturedHelpanions helpanions={topHelpanions} />
           )}
         </div>
 
@@ -399,50 +391,6 @@ function CategoryTag({ children, active = false }: { children: React.ReactNode; 
     }`}>
       {children}
     </button>
-  );
-}
-
-// Helpanion Card Component
-function HelpanionCard({ helpanion }: { helpanion: any }) {
-  return (
-    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="aspect-video bg-gray-100 overflow-hidden">
-        {helpanion.avatar_url ? (
-          <img 
-            src={helpanion.avatar_url} 
-            alt={helpanion.display_name || 'Helpanion'} 
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#193232] to-[#2a4d4d] text-white text-2xl font-bold">
-            {(helpanion.display_name || 'H')[0].toUpperCase()}
-          </div>
-        )}
-      </div>
-      <div className="p-6">
-        <h3 className="font-bold text-lg text-gray-900 mb-2">
-          {helpanion.display_name || 'Anonymous Helper'}
-        </h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {helpanion.short_bio || helpanion.bio || 'Ready to help you on your journey.'}
-        </p>
-        <div className="flex items-center justify-between">
-          <div className="flex gap-2">
-            {helpanion.skills?.slice(0, 2).map((skill: string, index: number) => (
-              <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
-                {skill}
-              </span>
-            ))}
-          </div>
-          <Link
-            to={`/profile/${helpanion.username || helpanion.id}`}
-            className="text-[#193232] font-medium text-sm hover:underline"
-          >
-            View Profile
-          </Link>
-        </div>
-      </div>
-    </div>
   );
 }
 
