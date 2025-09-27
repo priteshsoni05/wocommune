@@ -90,7 +90,7 @@ export function GetHelpDropdown() {
     <NavigationMenu className="z-50">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-7 px-2 text-sm font-bold leading-none border border-white/20 bg-white hover:bg-white/90 focus:bg-white/90 transition-all duration-200 uppercase tracking-wider" style={{ color: '#193232' }}>
+          <NavigationMenuTrigger className="h-7 px-2 text-sm font-bold leading-none bg-transparent hover:bg-transparent focus:bg-transparent transition-all duration-200 uppercase tracking-wider text-white hover:text-white/80" style={{ border: 'none' }}>
             GET HELP
           </NavigationMenuTrigger>
           <NavigationMenuContent className="bg-popover/100 border border-border">
