@@ -31,6 +31,7 @@ serve(async (req) => {
     }
 
     const credentials = JSON.parse(credentialsString);
+    const calendarId = Deno.env.get('GOOGLE_CALENDAR_ID') || 'primary';
     
     // Get OAuth2 access token
     const jwtToken = await createJWT(credentials);
@@ -62,7 +63,7 @@ serve(async (req) => {
     };
 
     const response = await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1`,
+      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?conferenceDataVersion=1`,
       {
         method: 'POST',
         headers: {
