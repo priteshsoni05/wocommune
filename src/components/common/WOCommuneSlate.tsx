@@ -15,7 +15,7 @@ export default function WOCommuneSlate() {
         
         {/* Center Text - WO COMMUNE only */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <span className="font-semibold text-sm sm:text-base tracking-wider" style={{ color: "hsl(40, 20%, 98%)" }}>
+          <span className="font-logo font-semibold text-sm sm:text-base tracking-wider" style={{ color: "hsl(40, 20%, 98%)" }}>
             WO COMMUNE
           </span>
         </div>
