@@ -187,34 +187,19 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* ------------------------ About Section (2-column) ------------------------ */}
-      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16">
-        <div className="max-w-[1140px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          {/* Left column: text */}
-          <div className="px-2">
-            <h2 className="mb-6">
+      {/* ------------------------ About Section ------------------------ */}
+      <section className="py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
               Walking Beside You, Every Step of the Way
             </h2>
-            <p className="mb-6">
-              At Walker's Odyssey, we believe every journey is unique. Whether you're taking your first step
-              or navigating an unfamiliar path, we're here to walk alongside you — offering guidance,
-              inspiration, and a community that celebrates your pace, your way.
+            <p className="text-gray-700 leading-relaxed mb-6 max-w-4xl mx-auto">
+              In a world that never stops comparing, we forget the truth: every journey has its own rhythm. We scroll past destinations without seeing the grind, the setbacks, the small steps that made them real. Walker's Odyssey was born from a simple belief: we don't just need goals to chase — we need people, places, and moments that remind us to enjoy the path along the way.
             </p>
-            <Link to="/about" className="inline-flex items-center gap-2 hover:underline" style={{ color: "#193232" }}>
+            <Link to="/about" className="inline-flex items-center gap-2 font-medium hover:underline" style={{ color: "#193232" }}>
               Our Story →
             </Link>
-          </div>
-
-          {/* Right column: portrait image (3:4) */}
-          <div className="px-2 flex justify-center md:justify-end">
-            {/* Reversed ratio - now landscape instead of portrait */}
-            <div className="w-[350px] sm:w-[420px] md:w-[520px] lg:w-[550px] h-[262px] sm:h-[315px] md:h-[390px] lg:h-[412px] rounded-md overflow-hidden shadow-sm">
-              <img
-                src={ABOUT_IMG}
-                alt="Two people walking on a forest path (symbolic, non-romantic)"
-                className="w-full h-full object-cover"
-              />
-            </div>
           </div>
         </div>
       </section>
