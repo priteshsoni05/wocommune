@@ -13,7 +13,7 @@ import { useRolePersistence } from "@/hooks/useRolePersistence";
 import { supabase } from "@/integrations/supabase/client";
 
 /* ---------- Real images (from src/assets) ---------- */
-import HERO_IMG from "../assets/hero-placeholder.jpg";
+import HERO_IMG from "../assets/hero-section-image.webp";
 import ABOUT_IMG from "../assets/about-placeholder-portrait.jpg";
 import EVENT_PLACEHOLDER from "../assets/event-placeholder.jpg";
 import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
