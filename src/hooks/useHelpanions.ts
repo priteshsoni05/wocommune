@@ -6,6 +6,7 @@ export interface HelpanionProfile {
   user_id: string;
   username: string | null;
   display_name: string | null;
+  short_bio: string | null;
   email: string | null;
   phone: string | null;
   bio: string | null;
@@ -52,6 +53,7 @@ export const useHelpanions = () => {
           id, 
           user_id,
           display_name, 
+          short_bio,
           bio, 
           avatar_url, 
           created_at, 

@@ -98,6 +98,7 @@ export default function WOCommune(): JSX.Element {
             id, 
             user_id,
             display_name, 
+            short_bio,
             bio, 
             avatar_url, 
             created_at, 

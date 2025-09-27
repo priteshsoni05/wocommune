@@ -8,6 +8,7 @@ interface HelpanionProfile {
   user_id?: string;
   username?: string;
   display_name?: string | null;
+  short_bio?: string | null;
   bio?: string | null;
   avatar_url?: string | null;
   skills?: string[] | string | null;
@@ -92,7 +93,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
 
         {/* Bio */}
         <p className="text-muted-foreground text-sm text-center mb-4 leading-relaxed flex-1">
-          {truncateText(helpanion.bio)}
+          {truncateText(helpanion.short_bio || helpanion.bio)}
         </p>
 
         {/* Expertise Tags */}
