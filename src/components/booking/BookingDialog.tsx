@@ -126,7 +126,7 @@ export const BookingDialog = ({
         throw error;
       }
 
-      // Create Google Meet link for the session
+      // Create Google Meet link for the session (required)
       let meetingLink = null;
       try {
         const startDateTime = new Date(selectedDate);
@@ -147,14 +147,16 @@ export const BookingDialog = ({
         if (meetResponse.data?.meetLink) {
           meetingLink = meetResponse.data.meetLink;
           console.log('Google Meet link created:', meetingLink);
+        } else {
+          throw new Error('Failed to create Google Meet link');
         }
       } catch (meetError) {
         console.error('Failed to create Google Meet link:', meetError);
-        // Continue with booking even if Meet link creation fails
+        throw new Error('Unable to create Google Meet session. Please try again.');
       }
 
-      // Update booking with meeting link if created
-      if (meetingLink && data?.id) {
+      // Update booking with meeting link
+      if (data?.id) {
         try {
           await supabase
             .from('bookings')

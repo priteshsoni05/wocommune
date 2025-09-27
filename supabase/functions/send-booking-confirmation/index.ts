@@ -73,19 +73,12 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Use Google Meet link if provided, otherwise fallback to Jitsi Meet
-    let meetingLink, meetingId, meetingPassword;
-    
-    if (booking.meeting_link) {
-      meetingLink = booking.meeting_link;
-      meetingId = "Google Meet";
-      meetingPassword = "No password required";
-    } else {
-      // Fallback to Jitsi Meet if Google Meet link not available
-      meetingId = `WOCommune-${booking.id.slice(0, 8)}-${Date.now().toString().slice(-6)}`;
-      meetingLink = `https://meet.jit.si/${meetingId}`;
-      meetingPassword = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // Use Google Meet link (required)
+    if (!booking.meeting_link) {
+      throw new Error('Google Meet link is required but was not provided');
     }
+    
+    const meetingLink = booking.meeting_link;
 
     // Send confirmation email to seeker
     const seekerEmailResponse = await resend.emails.send({
@@ -138,12 +131,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
               <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
               <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-              ${booking.meeting_link ? `
-                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
-              ` : `
-                <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
-                <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
-              `}
+              <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
             </div>
             <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
           </div>
@@ -166,7 +154,7 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
 
           <div style="text-align: center; margin-top: 30px;">
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Video Meeting: ' + meetingLink + '\n\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Video Meeting: ' + meetingLink + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
                style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
               📅 Add to Calendar
             </a>
@@ -236,12 +224,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
                 <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Video Meeting Link:</p>
                 <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-                ${booking.meeting_link ? `
-                  <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
-                ` : `
-                  <p style="margin: 0; color: #666; font-size: 14px;">Meeting ID: ${meetingId}</p>
-                  <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Password: ${meetingPassword}</p>
-                `}
+                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
               </div>
               <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 The seeker will receive the same meeting details in their confirmation email</p>
             </div>
@@ -264,7 +247,7 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
-              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + booking.seeker_name)}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Client: ' + booking.seeker_name + '\nEmail: ' + booking.seeker_email + '\n\nVideo Meeting: ' + meetingLink + '\nMeeting ID: ' + meetingId + '\nPassword: ' + meetingPassword + '\n\nService: ' + service.title + '\nDescription: ' + service.description + (booking.notes ? '\n\nClient Notes: ' + booking.notes : ''))}" 
+              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + booking.seeker_name)}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Client: ' + booking.seeker_name + '\nEmail: ' + booking.seeker_email + '\n\nVideo Meeting: ' + meetingLink + '\n\nService: ' + service.title + '\nDescription: ' + service.description + (booking.notes ? '\n\nClient Notes: ' + booking.notes : ''))}" 
                  style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
                 📅 Add to Calendar
               </a>
