@@ -256,10 +256,21 @@ export default function WOCommune(): JSX.Element {
       {/* ===== WO COMMUNE Active Slate ===== */}
       <WOCommuneSlate />
 
-      {/* ===== HERO — Clean centered version ===== */}
-      <section className="w-full bg-[#FAF9F6] py-20 md:py-28">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
-          <h1 className="text-3xl md:text-5xl leading-tight mb-8" style={{ color: "#193232" }}>
+      {/* ===== HERO — With background image like home page ===== */}
+      <section className="relative w-full py-20 md:py-28">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-center bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url(${HERO_IMG})`,
+          }}
+          aria-hidden="true"
+        />
+        {/* Dark overlay for text contrast */}
+        <div className="absolute inset-0 bg-black/45" />
+        
+        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 text-center">
+          <h1 className="text-3xl md:text-5xl leading-tight mb-8 text-white">
             Help will always be given at <span className="font-logo">WO COMMUNE</span>
             <br />
             <span className="text-lg md:text-2xl">to those who ask for it</span>
