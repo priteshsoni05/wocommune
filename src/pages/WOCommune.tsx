@@ -274,7 +274,7 @@ export default function WOCommune(): JSX.Element {
           <p className="text-2xl md:text-4xl leading-tight mb-8 text-white font-sans">
             Help will always be given at WO COMMUNE
             <br />
-            <span className="text-sm md:text-lg">to those who ask for it</span>
+            <span className="text-base md:text-xl">to those who ask for it</span>
           </p>
           
           <div className="w-full max-w-[600px] mx-auto">
