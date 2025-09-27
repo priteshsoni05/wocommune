@@ -4,7 +4,7 @@ export function Newsletter() {
   return (
     <section className="py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#F3F2EE] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-gray-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
             <h4 className="text-xl font-bold text-gray-900 mb-1">Walk with us</h4>
             <p className="text-base" style={{ color: "#193232" }}>Stories, guidance, and events — straight to your inbox.</p>
