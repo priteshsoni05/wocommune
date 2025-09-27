@@ -21,12 +21,42 @@ export function useFilteredHelpanions() {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Initialize filters from URL parameters
-  const [filters, setFilters] = useState<FilterState>(() => ({
-    alumni: searchParams.getAll('alumni'),
-    people: searchParams.getAll('people'),
-    helpAreas: searchParams.getAll('helpAreas'),
-    search: searchParams.get('search') || ''
-  }));
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const alumniParams = searchParams.getAll('alumni');
+    const peopleParams = searchParams.getAll('people'); 
+    const helpAreasParams = searchParams.getAll('helpAreas');
+    
+    // Also check for single parameter values (from dropdown clicks)
+    const singleAlumni = searchParams.get('alumni');
+    const singlePeople = searchParams.get('people');
+    const singleHelpAreas = searchParams.get('helpAreas');
+    
+    return {
+      alumni: singleAlumni ? [singleAlumni] : alumniParams,
+      people: singlePeople ? [singlePeople] : peopleParams,
+      helpAreas: singleHelpAreas ? [singleHelpAreas] : helpAreasParams,
+      search: searchParams.get('search') || ''
+    };
+  });
+
+  // Update filters when URL parameters change
+  useEffect(() => {
+    const alumniParams = searchParams.getAll('alumni');
+    const peopleParams = searchParams.getAll('people'); 
+    const helpAreasParams = searchParams.getAll('helpAreas');
+    
+    // Also check for single parameter values (from dropdown clicks)
+    const singleAlumni = searchParams.get('alumni');
+    const singlePeople = searchParams.get('people');
+    const singleHelpAreas = searchParams.get('helpAreas');
+    
+    setFilters({
+      alumni: singleAlumni ? [singleAlumni] : alumniParams,
+      people: singlePeople ? [singlePeople] : peopleParams,
+      helpAreas: singleHelpAreas ? [singleHelpAreas] : helpAreasParams,
+      search: searchParams.get('search') || ''
+    });
+  }, [searchParams]);
 
   // Tag all helpanions with auto-generated tags
   const taggedHelpanions = useMemo<TaggedHelpanionProfile[]>(() => {

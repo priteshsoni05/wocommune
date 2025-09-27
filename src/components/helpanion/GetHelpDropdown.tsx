@@ -65,7 +65,14 @@ export function GetHelpDropdown() {
   const navigate = useNavigate();
 
   const handleCategoryClick = (category: string, item: string) => {
-    const categoryParam = category.toLowerCase();
+    // Map category IDs to correct parameter names
+    const categoryMap: { [key: string]: string } = {
+      'alumni': 'alumni',
+      'people': 'people', 
+      'help-areas': 'helpAreas'
+    };
+    
+    const categoryParam = categoryMap[category] || category;
     const searchParams = new URLSearchParams();
     searchParams.set(categoryParam, item);
     navigate(`/helpanions?${searchParams.toString()}`);
