@@ -6,7 +6,7 @@ import { GetHelpDropdown } from '@/components/helpanion/GetHelpDropdown';
 export default function WOCommuneSlate() {
   return (
     <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", marginTop: "0px" }}>
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-12 md:h-12">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-12 md:h-12 relative">
 
         {/* Left section - Get Help Dropdown */}
         <div className="flex-1">
@@ -14,7 +14,7 @@ export default function WOCommuneSlate() {
         </div>
         
         {/* Center Text - WO COMMUNE only */}
-        <div className="text-center">
+        <div className="absolute left-1/2 transform -translate-x-1/2">
           <span className="font-semibold text-sm sm:text-base tracking-wider" style={{ color: "hsl(40, 20%, 98%)" }}>
             WO COMMUNE
           </span>
