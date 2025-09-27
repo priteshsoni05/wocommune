@@ -268,21 +268,21 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Upcoming Event Strip ------------------------ */}
-      <section className="bg-[#F3F2EE] py-8">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex-1 text-left sm:text-left">
-              <h3 className="font-semibold text-lg mb-1 text-[#333]">Upcoming Event</h3>
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Upcoming Event</h3>
               <div className="text-gray-700">
                 <div className="font-medium">Networking Dinner</div>
                 <div className="text-sm text-gray-600">24 Aug 2025 — 7:00 PM • Cafe Veritas, Downtown</div>
                 <div className="text-sm text-gray-600 mt-1">An evening of conversation and community.</div>
               </div>
             </div>
-            <div className="flex-shrink-0">
+            <div className="flex gap-3 w-full md:w-auto">
               <Link
                 to="#"
-                className="inline-block px-5 py-2 rounded-md font-semibold"
+                className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors hover:opacity-90"
                 style={{ backgroundColor: PINE, color: "white" }}
               >
                 Learn More
