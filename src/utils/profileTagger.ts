@@ -144,14 +144,9 @@ export function generateProfileTags(profile: {
     ...(profile.services?.map(s => s.description) || [])
   ].filter(Boolean).join(' ');
 
-  // Alumni tagging - From school field and services
+  // Alumni tagging - ONLY from school field (strict)
   Object.entries(ALUMNI_KEYWORDS).forEach(([tag, keywords]) => {
-    if (containsKeyword(profile.school, keywords) || 
-        profile.services?.some(service => 
-          containsKeyword(service.category, keywords) ||
-          containsKeyword(service.title, keywords) ||
-          containsKeyword(service.description, keywords)
-        )) {
+    if (containsKeyword(profile.school, keywords)) {
       if (!tags.alumni.includes(tag)) {
         tags.alumni.push(tag);
       }
