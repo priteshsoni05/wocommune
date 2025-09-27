@@ -133,47 +133,37 @@ export function generateProfileTags(profile: {
     helpAreas: []
   };
 
-  // Combine all text for analysis
-  const allText = [
+  // Only use Professional Background fields for tagging
+  const professionalText = [
     profile.school,
     profile.profession,
     profile.use_case,
-    profile.bio,
-    ...(profile.skills || []),
-    ...(profile.services?.map(s => s.category) || []),
-    ...(profile.services?.map(s => s.title) || []),
-    ...(profile.services?.map(s => s.description) || [])
+    ...(profile.skills || [])
   ].filter(Boolean).join(' ');
 
-  // Alumni tagging
+  // Alumni tagging - Only from school field
   Object.entries(ALUMNI_KEYWORDS).forEach(([tag, keywords]) => {
-    if (containsKeyword(profile.school, keywords) || containsKeyword(allText, keywords)) {
+    if (containsKeyword(profile.school, keywords)) {
       if (!tags.alumni.includes(tag)) {
         tags.alumni.push(tag);
       }
     }
   });
 
-  // People tagging
+  // People tagging - Only from profession and use_case
   Object.entries(PEOPLE_KEYWORDS).forEach(([tag, keywords]) => {
     if (containsKeyword(profile.profession, keywords) || 
-        containsKeyword(profile.use_case, keywords) ||
-        containsKeyword(allText, keywords)) {
+        containsKeyword(profile.use_case, keywords)) {
       if (!tags.people.includes(tag)) {
         tags.people.push(tag);
       }
     }
   });
 
-  // Help Areas tagging
+  // Help Areas tagging - Only from skills and use_case
   Object.entries(HELP_AREAS_KEYWORDS).forEach(([tag, keywords]) => {
     if (profile.skills?.some(skill => containsKeyword(skill, keywords)) ||
-        profile.services?.some(service => 
-          containsKeyword(service.category, keywords) ||
-          containsKeyword(service.title, keywords) ||
-          containsKeyword(service.description, keywords)
-        ) ||
-        containsKeyword(allText, keywords)) {
+        containsKeyword(profile.use_case, keywords)) {
       if (!tags.helpAreas.includes(tag)) {
         tags.helpAreas.push(tag);
       }
