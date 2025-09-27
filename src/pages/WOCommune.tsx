@@ -278,11 +278,11 @@ export default function WOCommune(): JSX.Element {
           </p>
           
           <div className="w-full max-w-[600px] mx-auto">
-            <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-4 py-3 shadow-sm border">
+            <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-4 py-2 shadow-sm border">
               <input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ask for help"
+                placeholder="Ask for help here"
                 className="flex-1 text-sm outline-none"
                 aria-label="Search query"
               />
