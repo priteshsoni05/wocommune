@@ -220,49 +220,51 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="text-white py-20" style={{ backgroundColor: "#193232" }}>
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <div className="text-center mb-12">
-            <h3 className="mb-3">Find your helpanion in 3 steps</h3>
-            <p className="text-white/80">Connect with guidance that understands your journey</p>
-          </div>
+      <section className="py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
+            <div className="text-center mb-8">
+              <h3 className="text-xl font-bold mb-2">Find your helpanion in 3 steps</h3>
+              <p className="text-white/80">Connect with guidance that understands your journey</p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
-                1
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {/* Step 1 */}
+              <div className="text-center">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 mx-auto">
+                  1
+                </div>
+                <h4 className="font-semibold text-base mb-2">Discover Your Helpanion</h4>
+                <p className="text-white/80 text-sm leading-relaxed">Search our network and find someone who understands your journey and goals.</p>
               </div>
-              <h4 className="font-semibold text-lg mb-3">Discover Your Helpanion</h4>
-              <p className="text-white/80 leading-relaxed">Search our network and find someone who understands your journey and goals.</p>
-            </div>
-            
-            {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
-                2
+              
+              {/* Step 2 */}
+              <div className="text-center">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 mx-auto">
+                  2
+                </div>
+                <h4 className="font-semibold text-base mb-2">Schedule the Meeting</h4>
+                <p className="text-white/80 text-sm leading-relaxed">Check for availability, book an appointment and share your goals.</p>
               </div>
-              <h4 className="font-semibold text-lg mb-3">Schedule the Meeting</h4>
-              <p className="text-white/80 leading-relaxed">Check for availability, book an appointment and share your goals.</p>
-            </div>
-            
-            {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-xl font-bold mb-4 mx-auto">
-                3
+              
+              {/* Step 3 */}
+              <div className="text-center">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 mx-auto">
+                  3
+                </div>
+                <h4 className="font-semibold text-base mb-2">Connect & Converse</h4>
+                <p className="text-white/80 text-sm leading-relaxed">Get real advice and guidance that helps you take the next step.</p>
               </div>
-              <h4 className="font-semibold text-lg mb-3">Connect & Converse</h4>
-              <p className="text-white/80 leading-relaxed">Get real advice and guidance that helps you take the next step.</p>
             </div>
-          </div>
 
-          <div className="text-center">
-            <Link
-              to="/wo-commune"
-              className="inline-flex items-center px-6 py-3 rounded-md font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
-            >
-              Find your helpanion →
-            </Link>
+            <div className="text-center">
+              <Link
+                to="/wo-commune"
+                className="inline-flex items-center px-6 py-3 rounded-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
+              >
+                Find your helpanion →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
