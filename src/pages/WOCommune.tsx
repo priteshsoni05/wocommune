@@ -274,7 +274,7 @@ export default function WOCommune(): JSX.Element {
                 <input
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search 'career advice', 'run club', 'networking'..."
+                  placeholder="ask for help"
                   className="flex-1 text-sm outline-none"
                   aria-label="Search query"
                 />
