@@ -88,6 +88,10 @@ Deno.serve(async (req) => {
         dateTime: end_time,
         timeZone: 'UTC',
       },
+      attendees: [
+        { email: seeker_email },
+        { email: helper_email }
+      ],
       conferenceData: {
         createRequest: {
           requestId: crypto.randomUUID()
@@ -179,6 +183,18 @@ Deno.serve(async (req) => {
             }
           }
         }, 'hangoutsMeet');
+      }
+
+      // 3) Fallback for consumer accounts: legacy eventHangout
+      if (!meetLink) {
+        meetLink = await attemptPatch({
+          conferenceData: {
+            createRequest: {
+              requestId: crypto.randomUUID(),
+              conferenceSolutionKey: { type: 'eventHangout' }
+            }
+          }
+        }, 'eventHangout');
       }
     }
 
