@@ -241,7 +241,7 @@ export default function WOCommune(): JSX.Element {
 
 
   return (
-    <div className="min-h-screen bg-[#f2f2f2] text-[#222] font-body">
+    <div className="min-h-screen bg-white text-[#222]">
       {/* ===== Global Header ===== */}
       <GlobalHeader 
         user={user} 
@@ -258,109 +258,127 @@ export default function WOCommune(): JSX.Element {
       {/* ===== WO COMMUNE Active Slate ===== */}
       <WOCommuneSlate />
 
-      {/* ===== HERO — With background image like home page ===== */}
-      <section className="relative w-full h-[85vh] sm:h-[90vh] md:h-screen">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 bg-center bg-no-repeat bg-cover"
-          style={{
-            backgroundImage: `url(${HERO_IMG})`,
-          }}
-          aria-hidden="true"
-        />
-        {/* Dark overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/45" />
+      {/* ===== Main Content Container ===== */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         
-        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-center justify-center text-center">
-          <p className="text-2xl md:text-4xl leading-tight mb-8 text-white font-sans">
-            Help will always be given at WO COMMUNE
+        {/* ===== Hero Section ===== */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600 mb-6">
+            <span>💡</span>
+            <span>Our Community</span>
+          </div>
+          
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Help will always be given at 
             <br />
-            <span className="text-base md:text-xl">to those who ask for it</span>
+            <span className="text-[#193232]">WO COMMUNE</span>
+          </h1>
+          
+          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            Connect with our community of helpers for expert insights, support, and guidance to elevate your journey.
           </p>
           
-          <div className="w-full max-w-[600px] mx-auto">
-            <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-4 py-2 shadow-sm border">
-              <input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ask for help here"
-                className="flex-1 text-sm outline-none"
-                aria-label="Search query"
-              />
-              <button
-                type="submit"
-                className="px-6 py-2 rounded-md text-white font-medium"
-                style={{ backgroundColor: "#193232" }}
-              >
-                Search
-              </button>
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-16">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for help..."
+                  className="w-full pl-12 pr-32 py-4 text-lg border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#193232] focus:border-transparent bg-gray-50"
+                  aria-label="Search query"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-6 py-2 bg-[#193232] text-white font-medium rounded-xl hover:bg-[#193232]/90 transition-colors"
+                >
+                  Search
+                </button>
+              </div>
             </form>
           </div>
+
+          {/* Category Tags */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+            <span className="text-sm font-medium text-gray-500 mr-2">Top Picks</span>
+            <CategoryTag active>All</CategoryTag>
+            <CategoryTag>Personal Development</CategoryTag>
+            <CategoryTag>Career</CategoryTag>
+            <CategoryTag>Health & Wellness</CategoryTag>
+            <CategoryTag>Relationships</CategoryTag>
+          </div>
         </div>
-      </section>
 
-      {/* ===== Testimonials ===== */}
-      <TestimonialsSlider compact />
+        {/* ===== Featured Helpanions Grid ===== */}
+        <div className="mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Featured Helpanions</h2>
+            <Link
+              to="/helpanions"
+              className="inline-flex items-center text-[#193232] font-medium hover:underline"
+            >
+              View all
+              <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+          
+          {fetching ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-gray-100 rounded-2xl h-80 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {topHelpanions.map((helpanion: any, index: number) => (
+                <HelpanionCard key={helpanion.id || index} helpanion={helpanion} />
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* ===== Featured Helpanions ===== */}
+        {/* ===== Testimonials ===== */}
+        <div className="mb-20">
+          <TestimonialsSlider compact />
+        </div>
 
-      {/* ===== Featured Helpanions ===== */}
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        <h2 className="mb-8 text-center">
-          Featured Helpanions
-        </h2>
-        {fetching ? (
-          <p className="text-center text-secondary">Loading...</p>
-        ) : (
-          <FeaturedHelpanions helpanions={topHelpanions} />
-        )}
-
-        {/* Right-aligned CTA below grid */}
-        <div className="mt-6 flex justify-end">
-          <Link
-            to="/helpanions"
-            className="inline-flex items-center px-4 py-2 rounded-md font-semibold text-white hover:opacity-90"
-            style={{ backgroundColor: PINE }}
-          >
-            Explore all helpanions
-            <ArrowRight className="ml-1 h-4 w-4" />
-          </Link>
+        {/* ===== Community Activities ===== */}
+        <div className="mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-900">Community Activities</h2>
+            <div className="flex gap-2">
+              <CategoryTag active>Events</CategoryTag>
+              <CategoryTag>Conversations</CategoryTag>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ActivityCard
+              image={EVENT_IMG}
+              title="Dinner & Conversations — City Hub"
+              description="Join like-minded walkers for an evening of meaningful conversation and food."
+              buttonText="RSVP"
+              type="event"
+            />
+            <ActivityCard
+              image={CONVO_IMG}
+              title="From Comparison to Contentment"
+              description="A group conversation about stopping comparison and finding your own pace."
+              buttonText="Join"
+              type="conversation"
+            />
+            <ActivityCard
+              image={PODCAST_IMG}
+              title="You Give Up, Until You Decide Not To"
+              description="Listen to inspiring journeys in short conversational episodes."
+              buttonText="Listen"
+              type="podcast"
+            />
+          </div>
         </div>
       </div>
-
-
-      {/* ===== Tabs Section (events & conversations) ===== */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-        <div className="flex gap-4 items-center mb-6">
-          <TabButton>Events</TabButton>
-          <TabButton>Conversations</TabButton>
-          <div className="ml-auto text-sm text-gray-500">Showing featured picks</div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          <Card
-            image={EVENT_IMG}
-            title="Dinner & Conversations — City Hub"
-            desc="Join like-minded walkers for an evening of meaningful conversation and food."
-            btn="RSVP"
-          />
-          <Card
-            image={CONVO_IMG}
-            title="From Comparison to Contentment"
-            desc="A group conversation about stopping comparison and finding your own pace."
-            btn="Join"
-            secondary
-          />
-          <Card
-            image={PODCAST_IMG}
-            title="You Give Up, Until You Decide Not To"
-            desc="Listen to inspiring journeys in short conversational episodes."
-            btn="Listen"
-            secondary
-          />
-        </div>
-      </section>
-
 
       {/* Newsletter */}
       <Newsletter />
@@ -371,45 +389,93 @@ export default function WOCommune(): JSX.Element {
   );
 }
 
-// Small Tab button
-function TabButton({ children }: { children: React.ReactNode }) {
+// Category Tag Component
+function CategoryTag({ children, active = false }: { children: React.ReactNode; active?: boolean }) {
   return (
-    <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm font-body">
+    <button className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+      active 
+        ? 'bg-[#193232] text-white' 
+        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+    }`}>
       {children}
     </button>
   );
 }
 
-// Stat block
-function StatBlock({ number, label }: { number: string; label: string }) {
+// Helpanion Card Component
+function HelpanionCard({ helpanion }: { helpanion: any }) {
   return (
-    <div className="text-center">
-      <div className="text-xl font-semibold font-heading">{number}</div>
-      <div className="text-sm text-gray-600">{label}</div>
+    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="aspect-video bg-gray-100 overflow-hidden">
+        {helpanion.avatar_url ? (
+          <img 
+            src={helpanion.avatar_url} 
+            alt={helpanion.display_name || 'Helpanion'} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#193232] to-[#2a4d4d] text-white text-2xl font-bold">
+            {(helpanion.display_name || 'H')[0].toUpperCase()}
+          </div>
+        )}
+      </div>
+      <div className="p-6">
+        <h3 className="font-bold text-lg text-gray-900 mb-2">
+          {helpanion.display_name || 'Anonymous Helper'}
+        </h3>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+          {helpanion.short_bio || helpanion.bio || 'Ready to help you on your journey.'}
+        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex gap-2">
+            {helpanion.skills?.slice(0, 2).map((skill: string, index: number) => (
+              <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+                {skill}
+              </span>
+            ))}
+          </div>
+          <Link
+            to={`/profile/${helpanion.username || helpanion.id}`}
+            className="text-[#193232] font-medium text-sm hover:underline"
+          >
+            View Profile
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
 
+// Activity Card Component
+function ActivityCard({ image, title, description, buttonText, type }: { 
+  image: string; 
+  title: string; 
+  description: string; 
+  buttonText: string;
+  type: 'event' | 'conversation' | 'podcast';
+}) {
+  const typeColors = {
+    event: 'bg-blue-100 text-blue-800',
+    conversation: 'bg-green-100 text-green-800',
+    podcast: 'bg-purple-100 text-purple-800'
+  };
 
-// Card component used in tabs (equal-height)
-function Card({ image, title, desc, btn, secondary }: { image: string; title: string; desc: string; btn: string; secondary?: boolean; }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col h-full min-h-[420px]">
-      <img src={image} alt={title} className="w-full h-44 object-cover" loading="lazy" />
-      <div className="p-6 flex flex-col flex-1">
-        <h3 className="font-semibold mt-1 text-2xl font-heading">{title}</h3>
-        <p className="text-sm text-gray-600 mt-3 font-body">{desc}</p>
-
-        {secondary ? (
-          <div className="mt-auto flex items-center justify-between pt-4">
-            <div className="text-xs text-gray-500">Online • Free</div>
-            <button className="px-4 py-2 rounded-md border border-gray-300">{btn}</button>
-          </div>
-        ) : (
-          <div className="mt-auto pt-4">
-            <button className="px-5 py-2.5 rounded-md text-white font-medium" style={{ backgroundColor: PINE }}>{btn}</button>
-          </div>
-        )}
+    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="aspect-video overflow-hidden">
+        <img src={image} alt={title} className="w-full h-full object-cover" loading="lazy" />
+      </div>
+      <div className="p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className={`px-2 py-1 text-xs font-medium rounded-full ${typeColors[type]}`}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </span>
+        </div>
+        <h3 className="font-bold text-lg text-gray-900 mb-2">{title}</h3>
+        <p className="text-gray-600 text-sm mb-4">{description}</p>
+        <button className="w-full bg-[#193232] text-white py-2 px-4 rounded-xl font-medium hover:bg-[#193232]/90 transition-colors">
+          {buttonText}
+        </button>
       </div>
     </div>
   );
