@@ -62,8 +62,10 @@ serve(async (req) => {
       }
     };
 
-    const response = await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?conferenceDataVersion=1`,
+    const makeUrl = (id: string) => `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(id)}/events?conferenceDataVersion=1`;
+
+    let response = await fetch(
+      makeUrl(calendarId),
       {
         method: 'POST',
         headers: {
@@ -73,6 +75,22 @@ serve(async (req) => {
         body: JSON.stringify(event),
       }
     );
+
+    // Fallback: if specified calendar isn't found, try primary
+    if (response.status === 404 && calendarId !== 'primary') {
+      console.warn('Specified calendar not found. Retrying with primary calendar.');
+      response = await fetch(
+        makeUrl('primary'),
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(event),
+        }
+      );
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
