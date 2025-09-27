@@ -256,44 +256,32 @@ export default function WOCommune(): JSX.Element {
       {/* ===== WO COMMUNE Active Slate ===== */}
       <WOCommuneSlate />
 
-      {/* ===== HERO — RESTORED AS REQUESTED (long hero with search & image) ===== */}
-      <section
-        className="relative w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${HERO_IMG})` }}
-      >
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="relative max-w-[1140px] mx-auto px-4 md:px-8 py-20 md:py-28 flex flex-col md:flex-row items-center gap-8">
-          <div className="flex-1 text-white text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl leading-tight">
-              Help will always be given at <span className="font-logo">WO COMMUNE</span>
-              <br />
-              <span className="text-lg md:text-2xl">to those who ask for it</span>
-            </h1>
-            <div className="mt-6 w-full max-w-[700px] mx-auto md:mx-0">
-              <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-3 py-2 shadow">
-                <input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="ask for help"
-                  className="flex-1 text-sm outline-none"
-                  aria-label="Search query"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-md"
-                  style={{ backgroundColor: PINE, color: "#fff" }}
-                >
-                  Search
-                </button>
-              </form>
-            </div>
-          </div>
-          <div className="w-full md:w-[420px] lg:w-[520px] rounded-md overflow-hidden shadow-lg border border-white/20">
-            <img
-              src={HERO_IMG}
-              alt="Walking path visual"
-              className="w-full h-64 md:h-80 object-cover"
-            />
+      {/* ===== HERO — Clean centered version ===== */}
+      <section className="w-full bg-[#FAF9F6] py-20 md:py-28">
+        <div className="max-w-[1140px] mx-auto px-4 md:px-8 text-center">
+          <h1 className="text-3xl md:text-5xl leading-tight mb-8" style={{ color: "#193232" }}>
+            Help will always be given at <span className="font-logo">WO COMMUNE</span>
+            <br />
+            <span className="text-lg md:text-2xl">to those who ask for it</span>
+          </h1>
+          
+          <div className="w-full max-w-[600px] mx-auto">
+            <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-4 py-3 shadow-sm border">
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="ask for help"
+                className="flex-1 text-sm outline-none"
+                aria-label="Search query"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2 rounded-md text-white font-medium"
+                style={{ backgroundColor: "#193232" }}
+              >
+                Search
+              </button>
+            </form>
           </div>
         </div>
       </section>
