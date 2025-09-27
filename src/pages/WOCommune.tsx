@@ -64,6 +64,16 @@ type Profile = {
   last_active_role?: string | null;
 };
 
+// Category card component
+function CategoryCard({ icon, title }: { icon: string; title: string }) {
+  return (
+    <div className="bg-gray-50 rounded-lg p-6 text-center hover:bg-gray-100 transition-colors cursor-pointer">
+      <div className="text-3xl mb-3">{icon}</div>
+      <h3 className="font-medium text-gray-900">{title}</h3>
+    </div>
+  );
+}
+
 export default function WOCommune(): JSX.Element {
   const { user, signOut } = useAuth();
   const { role: activeRole, getDashboardPath, clearRoleData, handleCorruptedData, hasValidRole } = useRolePersistence();
@@ -409,15 +419,6 @@ function StatBlock({ number, label }: { number: string; label: string }) {
   );
 }
 
-// Category card component
-function CategoryCard({ icon, title }: { icon: string; title: string }) {
-  return (
-    <div className="bg-gray-50 rounded-lg p-6 text-center hover:bg-gray-100 transition-colors cursor-pointer">
-      <div className="text-3xl mb-3">{icon}</div>
-      <h3 className="font-medium text-gray-900">{title}</h3>
-    </div>
-  );
-}
 
 // Card component used in tabs (equal-height)
 function Card({ image, title, desc, btn, secondary }: { image: string; title: string; desc: string; btn: string; secondary?: boolean; }) {
