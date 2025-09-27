@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Newsletter } from '@/components/common/Newsletter';
 import { Footer } from '@/components/common/Footer';
 import GlobalHeader from '@/components/common/GlobalHeader';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const PINE = "#193232"; // Pine forest green
 const GOLD = "#C7A76C"; // Accent gold
@@ -30,84 +31,102 @@ const AboutPage: React.FC = () => {
 
       {/* ------------------------ Mission & Vision ------------------------ */}
       <section className="bg-[#F3F2EE] py-12">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Mission */}
-          <div>
-            <h3 style={{ color: PINE }}>
-              Our Mission
-            </h3>
-            <p className="text-secondary leading-relaxed">
-              To equip individuals with our products and services offerings, take their first step
-              or continue walking on their unique path.
-            </p>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>Our Mission</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed">
+                To create spaces — digital and physical — where people feel seen, supported, and inspired to keep moving forward, one step at a time.
+              </p>
+            </CardContent>
+          </Card>
           {/* Vision */}
-          <div>
-            <h3 style={{ color: PINE }}>
-              Our Vision
-            </h3>
-            <p className="text-secondary leading-relaxed">
-              To be the trusted companion empowering and supporting walkers as they navigate their
-              unique paths to fulfilment.
-            </p>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>Our Vision</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed">
+                A global ecosystem of belonging. A world where human connection, shared experiences, and mindful action fuel growth — not just for ourselves, but for the communities we build together.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
       {/* ------------------------ Our Story ------------------------ */}
       <section className="py-12">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <h3 className="font-normal" style={{ color: "#193232" }}>
-            Our Story
-          </h3>
-          <p className="leading-relaxed mb-4 font-normal" style={{ color: "#193232" }}>
-            In a world where social media often pressures us to rush and compare our lives with
-            others, we wanted to create a space where individuals can embrace their own pace, cherish
-            their unique paths, and uncover joy in every step of their journey.
-          </p>
-          <p className="leading-relaxed mb-4 font-normal" style={{ color: "#193232" }}>
-            At Walker's Odyssey, we rise above being just a brand. We aim to build a community of
-            like-minded individuals who recognize that every step—whether success or setbacks—is a
-            vital part of growth. Failure isn’t a setback; it emerges only when we measure our
-            progress against others. What may appear as failure is, in truth, a curve of learning and
-            growth.
-          </p>
-          <p className="text-sm text-gray-700 leading-relaxed mb-4">
-            To support you along your journey, we offer meticulously crafted fashion and lifestyle
-            products and services that are not only practical and functional but also serve as a
-            source of inspiration—a testament to your individuality and resilience.
-          </p>
-          <p className="text-sm text-gray-700 leading-relaxed">
-            Join us at Walker's Odyssey and discover how our products can be your trusted companions
-            on your journey. Let's keep walking together and celebrate every step along the way.
-          </p>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>Our Story</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="leading-relaxed">
+                In a world where social media often pressures us to rush and compare our lives with others, we wanted to create a space where individuals can embrace their own pace, cherish their unique paths, and uncover joy in every step of their journey.
+              </p>
+              <p className="leading-relaxed">
+                At Walker's Odyssey, we rise above being just a brand. We aim to build a community of like-minded individuals who recognize that every step—whether success or setbacks—is a vital part of growth. Failure isn't a setback; it emerges only when we measure our progress against others. What may appear as failure is, in truth, a curve of learning and growth.
+              </p>
+              <p className="leading-relaxed">
+                To support you along your journey, we are building
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
-      {/* ------------------------ Philosophy ------------------------ */}
+      {/* ------------------------ WO Offerings ------------------------ */}
       <section className="bg-[#F3F2EE] py-12">
-        <div className="max-w-[1140px] mx-auto px-4 md:px-8">
-          <h2 className="text-xl font-serif mb-4" style={{ color: PINE }}>
-            Our Philosophy
-          </h2>
-          <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700 leading-relaxed">
-            <li>We’re ready when you are. Without delay.</li>
-            <li>Practical designs always comes first. Even if it’s challenging.</li>
-            <li>Companionship and camaraderie matters.</li>
-            <li>No fake promises. No empty gestures.</li>
-            <li>Because we are a lifestyle brand. But what we really offer is support.</li>
-          </ul>
-          <p className="mt-4 text-sm font-semibold" style={{ color: PINE }}>
-            Keep striving. Keep Walking!
-          </p>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* WO Commune */}
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>WO Commune</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed">
+                One-to-one connections that go beyond small talk. A living platform where people share experiences, stories, and wisdom through real conversations. Today, it's video calls. Tomorrow, it becomes a new kind of social network — one built on depth, not noise.
+              </p>
+            </CardContent>
+          </Card>
+          
+          {/* WO Experiences */}
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>WO Experiences</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed">
+                From networking dinners to run clubs. From storytelling nights to music, art, and sport. From yoga studios to community cafés. Experiences designed to help people connect offline, move their bodies, and nurture their minds.
+              </p>
+            </CardContent>
+          </Card>
+          
+          {/* WO Essentials */}
+          <Card>
+            <CardHeader>
+              <CardTitle style={{ color: PINE }}>WO Essentials</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="leading-relaxed">
+                Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging. Carry a piece of the Odyssey with you, wherever you go.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
-      {/* ------------------------ Tagline ------------------------ */}
+      {/* ------------------------ Call to Action ------------------------ */}
       <section className="py-12 text-center">
-        <h2 className="font-logo" style={{ color: GOLD }}>
-          Keep Walking
-        </h2>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-lg leading-relaxed" style={{ color: PINE }}>
+            Join us at Walker's Odyssey and Let's keep walking together and celebrate every step along the way.
+          </p>
+        </div>
       </section>
 
       {/* Newsletter */}
