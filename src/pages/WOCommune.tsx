@@ -268,10 +268,12 @@ export default function WOCommune(): JSX.Element {
             <span>Our Community</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             Help will always be given at 
             <br />
             <span className="text-[#193232]">WO COMMUNE</span>
+            <br />
+            <span className="text-2xl sm:text-3xl lg:text-4xl">to those who ask for it</span>
           </h1>
           
           <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
