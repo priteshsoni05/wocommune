@@ -20,13 +20,9 @@ const categoryData = [
         items: ['IIM', 'ISB', 'XLRI', 'IIT', 'NIT', 'NIFT', 'NID', 'ICAI']
       },
       {
-        title: 'International & Design',
+        title: 'International',
         items: ['London School of Fashion']
       },
-      {
-        title: 'Broader Categories',
-        items: ['Business Schools', 'Engineering', 'Liberal Arts']
-      }
     ]
   },
   {
