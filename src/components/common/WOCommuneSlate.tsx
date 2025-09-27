@@ -27,10 +27,10 @@ export default function WOCommuneSlate() {
               href="https://www.linkedin.com/showcase/wo-commune"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 rounded-full items-center justify-center leading-none transition-colors" 
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} 
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} 
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
+              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 items-center justify-center leading-none transition-colors" 
+              style={{ color: "hsl(40, 20%, 98%)" }} 
+              onMouseEnter={(e) => { e.currentTarget.style.color = "white"; }} 
+              onMouseLeave={(e) => { e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune LinkedIn"
             >
               <Linkedin className="block w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -39,10 +39,10 @@ export default function WOCommuneSlate() {
               href="https://www.instagram.com/wo_commune"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 rounded-full items-center justify-center leading-none transition-colors" 
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} 
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} 
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
+              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 items-center justify-center leading-none transition-colors" 
+              style={{ color: "hsl(40, 20%, 98%)" }} 
+              onMouseEnter={(e) => { e.currentTarget.style.color = "white"; }} 
+              onMouseLeave={(e) => { e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune Instagram"
             >
               <Instagram className="block w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -51,10 +51,10 @@ export default function WOCommuneSlate() {
               href="https://wocommune.substack.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 rounded-full items-center justify-center leading-none transition-colors" 
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", color: "hsl(40, 20%, 98%)" }} 
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; e.currentTarget.style.color = "white"; }} 
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)"; e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
+              className="inline-flex w-7 h-7 sm:w-8 sm:h-8 items-center justify-center leading-none transition-colors" 
+              style={{ color: "hsl(40, 20%, 98%)" }} 
+              onMouseEnter={(e) => { e.currentTarget.style.color = "white"; }} 
+              onMouseLeave={(e) => { e.currentTarget.style.color = "hsl(40, 20%, 98%)"; }}
               aria-label="WO Commune Substack"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="block w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true">
