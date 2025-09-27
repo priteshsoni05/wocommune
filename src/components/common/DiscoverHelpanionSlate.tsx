@@ -3,7 +3,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 
 export default function DiscoverHelpanionSlate() {
   return (
-    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", marginTop: "0px" }}>
+    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", marginTop: "40px" }}>
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-center h-12 md:h-12">
         {/* Center Text - Discover Helpanions */}
         <div className="text-center">
