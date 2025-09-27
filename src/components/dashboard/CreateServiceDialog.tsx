@@ -35,7 +35,7 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
   const [pricePerHour, setPricePerHour] = useState('');
   const [category, setCategory] = useState('');
   const [durationMinutes, setDurationMinutes] = useState('60');
-  const [mode, setMode] = useState('');
+  const [mode, setMode] = useState('Google Meet');
   const [outcomes, setOutcomes] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -144,7 +144,7 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
         setPricePerHour('');
         setCategory('');
         setDurationMinutes('60');
-        setMode('');
+        setMode('Google Meet');
         setOutcomes('');
         setImageFile(null);
         setImagePreview(null);
@@ -255,13 +255,10 @@ export const CreateServiceDialog: React.FC<CreateServiceDialogProps> = ({ childr
             <Label htmlFor="mode">Mode</Label>
             <Select value={mode} onValueChange={setMode}>
               <SelectTrigger>
-                <SelectValue placeholder="Select mode" />
+                <SelectValue placeholder="Google Meet" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Zoom">Zoom</SelectItem>
                 <SelectItem value="Google Meet">Google Meet</SelectItem>
-                <SelectItem value="Phone Call">Phone Call</SelectItem>
-                <SelectItem value="In-person">In-person</SelectItem>
               </SelectContent>
             </Select>
           </div>
