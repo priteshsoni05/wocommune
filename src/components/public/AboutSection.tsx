@@ -16,7 +16,7 @@ I'm passionate about sharing knowledge and helping others succeed. Let's work to
     <section className="py-12 border-b border-border">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-heading text-foreground mb-6 text-center">
-          About {profile.display_name?.split(' ')[0] || 'Me'}
+          Short Bio
         </h2>
         <div className="prose prose-lg max-w-none text-muted-foreground">
           {detailedBio.split('\n\n').map((paragraph, index) => (

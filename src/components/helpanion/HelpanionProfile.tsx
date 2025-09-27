@@ -459,7 +459,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="bio">About / Bio <span className="text-red-500">*</span></Label>
+              <Label htmlFor="bio">Short Bio <span className="text-red-500">*</span></Label>
               <Textarea
                 id="bio"
                 value={formData.bio}
