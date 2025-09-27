@@ -136,11 +136,14 @@ export const BookingDialog = ({
 
         const meetResponse = await supabase.functions.invoke('create-google-meet', {
           body: {
-            title: `${service.title} - Session with ${formData.fullName}`,
-            description: `Service: ${service.title}\nDuration: ${service.duration_minutes || 60} minutes\nNotes: ${formData.message || 'No special notes'}`,
-            startTime: startDateTime.toISOString(),
-            endTime: endDateTime.toISOString(),
-            attendeeEmails: [formData.email]
+            service_name: service.title,
+            start_time: startDateTime.toISOString(),
+            end_time: endDateTime.toISOString(),
+            seeker_name: formData.fullName,
+            seeker_email: formData.email,
+            helper_name: "Helper", // This would come from helper profile
+            helper_email: "helper@example.com", // This would come from helper profile
+            helper_id: helperId,
           }
         });
 

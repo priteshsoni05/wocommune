@@ -175,9 +175,11 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          calendar_integration_status: string | null
           created_at: string
           display_name: string | null
           email: string | null
+          google_calendar_id: string | null
           id: string
           instagram_url: string | null
           last_active_role: Database["public"]["Enums"]["app_role"] | null
@@ -198,9 +200,11 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          calendar_integration_status?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
+          google_calendar_id?: string | null
           id?: string
           instagram_url?: string | null
           last_active_role?: Database["public"]["Enums"]["app_role"] | null
@@ -221,9 +225,11 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          calendar_integration_status?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
+          google_calendar_id?: string | null
           id?: string
           instagram_url?: string | null
           last_active_role?: Database["public"]["Enums"]["app_role"] | null

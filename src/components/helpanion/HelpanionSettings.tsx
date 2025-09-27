@@ -21,6 +21,7 @@ import {
   Save,
   Settings as SettingsIcon
 } from "lucide-react";
+import { CalendarIntegrationSettings } from "./CalendarIntegrationSettings";
 
 interface HelpanionSettingsProps {
   profile: Profile;
@@ -280,6 +281,9 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
           </div>
         </CardContent>
       </Card>
+
+      {/* Calendar Integration */}
+      <CalendarIntegrationSettings />
 
       {/* Notification Settings */}
       <Card>

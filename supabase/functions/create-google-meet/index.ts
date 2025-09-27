@@ -1,55 +1,88 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+interface BookingRequest {
+  service_name: string;
+  start_time: string;
+  end_time: string;
+  seeker_name: string;
+  seeker_email: string;
+  helper_name: string;
+  helper_email: string;
+  helper_id?: string;
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface BookingRequest {
-  title: string;
-  description: string;
-  startTime: string; // ISO string
-  endTime: string; // ISO string
-  attendeeEmails: string[];
-}
-
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { title, description, startTime, endTime, attendeeEmails }: BookingRequest = await req.json();
-    
-    console.log('Creating Google Meet for:', { title, startTime, endTime, attendeeEmails });
+    const {
+      service_name,
+      start_time,
+      end_time,
+      seeker_name,
+      seeker_email,
+      helper_name,
+      helper_email,
+      helper_id,
+    } = await req.json() as BookingRequest;
 
-    // Get Google Calendar credentials from environment
-    const credentialsString = Deno.env.get('GOOGLE_CALENDAR_CREDENTIALS');
-    if (!credentialsString) {
-      throw new Error('Google Calendar credentials not found');
+    const credentials = Deno.env.get('GOOGLE_CALENDAR_CREDENTIALS');
+    const globalCalendarId = Deno.env.get('GOOGLE_CALENDAR_ID');
+
+    if (!credentials || !globalCalendarId) {
+      return new Response(
+        JSON.stringify({ error: 'Google Calendar credentials not configured' }),
+        { status: 500, headers: corsHeaders }
+      );
     }
 
-    const credentials = JSON.parse(credentialsString);
-    const calendarId = Deno.env.get('GOOGLE_CALENDAR_ID') || 'primary';
+    // Initialize Supabase client for fetching helpanion's calendar
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
-    // Get OAuth2 access token
-    const jwtToken = await createJWT(credentials);
-    const accessToken = await getAccessToken(jwtToken);
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
-    // Create calendar event with Google Meet
-    // Note: Service accounts cannot invite attendees without Domain-Wide Delegation
-    // So we create the event without attendees and include attendee info in description
-    const attendeeList = attendeeEmails.length > 0 ? `\n\nAttendees: ${attendeeEmails.join(', ')}` : '';
+    // Get helpanion's calendar ID if helper_id is provided
+    let calendarId = globalCalendarId;
+    if (helper_id) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('google_calendar_id')
+        .eq('user_id', helper_id)
+        .maybeSingle();
+      
+      if (profile?.google_calendar_id) {
+        calendarId = profile.google_calendar_id;
+        console.log(`Using helpanion's calendar: ${calendarId}`);
+      } else {
+        console.log(`No custom calendar for helpanion ${helper_id}, using global calendar`);
+      }
+    }
+
+    const credentialsObj = JSON.parse(credentials);
+    
+    // Get access token
+    const jwt = await createJWT(credentialsObj);
+    const accessToken = await getAccessToken(jwt);
+
+    // Create the calendar event
     const event = {
-      summary: title,
-      description: description + attendeeList,
+      summary: `${service_name} - ${seeker_name}`,
+      description: `Service: ${service_name}\nSeeker: ${seeker_name} (${seeker_email})\nHelper: ${helper_name} (${helper_email})`,
       start: {
-        dateTime: startTime,
+        dateTime: start_time,
         timeZone: 'UTC',
       },
       end: {
-        dateTime: endTime,
+        dateTime: end_time,
         timeZone: 'UTC',
       },
       conferenceData: {
