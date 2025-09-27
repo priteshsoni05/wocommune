@@ -53,7 +53,7 @@ type TabKey =
   | "settings";
 
 const PRIMARY_GREEN = "#193232";
-const BG_NEUTRAL = "#f2f2f2";
+const BG_NEUTRAL = "#ffffff";
 
 const navigationTabs = [
   { key: "home" as TabKey, label: "Home", icon: Home },

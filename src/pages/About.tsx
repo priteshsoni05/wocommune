@@ -13,7 +13,7 @@ const GOLD = "#C7A76C"; // Accent gold
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="bg-[#f2f2f2] text-[#2B2B2B] min-h-screen">
+    <div className="bg-white text-[#2B2B2B] min-h-screen">
       {/* ------------------------ Global Header ------------------------ */}
       <GlobalHeader />
 

@@ -7,7 +7,7 @@ export function Footer() {
     (import.meta.env.VITE_PIPELINE_MARKER as string | undefined) ?? 'main';
 
   return (
-    <footer className="bg-[#f2f2f2] text-[#2B2B2B] border-t border-gray-200">
+    <footer className="bg-white text-[#2B2B2B] border-t border-gray-200">
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
           {/* Brand block */}
