@@ -60,10 +60,10 @@ export default function BurgerMenu({
       {/* Burger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex w-7 h-7 sm:w-8 sm:h-8 items-center justify-center text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
+        className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
         aria-label="Menu"
       >
-        {isOpen ? <X size={16} className="sm:w-4 sm:h-4" /> : <Menu size={16} className="sm:w-4 sm:h-4" />}
+        {isOpen ? <X size={16} /> : "Navigate"}
       </button>
 
       {/* Mobile/Desktop Slide-in Menu */}
