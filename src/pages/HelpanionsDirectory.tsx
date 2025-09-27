@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
-import { useHelpanions } from "@/hooks/useHelpanions";
+import { useFilteredHelpanions } from "@/hooks/useFilteredHelpanions";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { FilterChips } from "@/components/helpanion/FilterChips";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Newsletter } from "@/components/common/Newsletter";
@@ -44,9 +45,19 @@ type Profile = {
 };
 
 export default function HelpanionsDirectory() {
-  const { helpanions, loading } = useHelpanions();
-  const [searchParams] = useSearchParams();
-  const [directorySearchTerm, setDirectorySearchTerm] = useState(searchParams.get("search") || "");
+  const { 
+    helpanions, 
+    loading, 
+    filters, 
+    addFilter, 
+    removeFilter, 
+    clearFilters, 
+    setSearch,
+    hasActiveFilters,
+    totalCount,
+    allCount
+  } = useFilteredHelpanions();
+  
   const [sortBy, setSortBy] = useState<"newest" | "price-low" | "price-high">("newest");
 
   const { user, signOut } = useAuth();
@@ -74,41 +85,34 @@ export default function HelpanionsDirectory() {
     return prices.length ? Math.min(...prices.map(Number)) : null;
   };
 
-  // Filters
-  const filteredHelpanions = useMemo(() => {
-    let filtered = helpanions.filter((h) => {
-      const q = directorySearchTerm.trim().toLowerCase();
-      const matchesSearch =
-        q === "" ||
-        h.display_name?.toLowerCase().includes(q) ||
-        h.bio?.toLowerCase().includes(q);
-      return matchesSearch;
-    });
+  // Sort helpanions based on current sort option
+  const sortedHelpanions = useMemo(() => {
+    let sorted = [...helpanions];
 
     switch (sortBy) {
       case "newest":
-        filtered.sort(
+        sorted.sort(
           (a: any, b: any) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
         break;
       case "price-low":
-        filtered.sort(
+        sorted.sort(
           (a: any, b: any) =>
             (getMinPrice(a.services) ?? Infinity) -
             (getMinPrice(b.services) ?? Infinity)
         );
         break;
       case "price-high":
-        filtered.sort(
+        sorted.sort(
           (a: any, b: any) =>
             (getMinPrice(b.services) ?? 0) -
             (getMinPrice(a.services) ?? 0)
         );
         break;
     }
-    return filtered;
-  }, [helpanions, directorySearchTerm, sortBy]);
+    return sorted;
+  }, [helpanions, sortBy]);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#111]" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
@@ -150,6 +154,12 @@ export default function HelpanionsDirectory() {
           >
             Find the right helpanion to guide you with real-world advice and practical experience.
           </p>
+          
+          {hasActiveFilters && (
+            <div className="mt-4 text-sm text-gray-500">
+              Showing {totalCount} of {allCount} helpanions
+            </div>
+          )}
         </div>
       </section>
 
@@ -160,8 +170,8 @@ export default function HelpanionsDirectory() {
             <div className="relative md:flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
               <Input
-                value={directorySearchTerm}
-                onChange={(e) => setDirectorySearchTerm(e.target.value)}
+                value={filters.search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search helpanions…"
                 className="pl-9 h-10 rounded-lg border-neutral-300"
               />
@@ -178,17 +188,41 @@ export default function HelpanionsDirectory() {
             </Select>
           </div>
         </div>
+        
+        {/* Filter Chips */}
+        <div className="mb-8">
+          <FilterChips 
+            filters={filters}
+            onRemoveFilter={removeFilter}
+            onClearAll={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+          />
+        </div>
       </div>
 
       {/* ===== Grid ===== */}
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 pb-12">
         {loading ? (
           <div className="text-center py-16 text-gray-600">Loading helpanions…</div>
-        ) : filteredHelpanions.length === 0 ? (
-          <div className="text-center py-16 text-gray-600">No helpanions found.</div>
+        ) : sortedHelpanions.length === 0 ? (
+          <div className="text-center py-16 text-gray-600">
+            {hasActiveFilters ? (
+              <div>
+                <p className="mb-4">No helpanions match your current filters.</p>
+                <button
+                  onClick={clearFilters}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Clear filters to see all helpanions
+                </button>
+              </div>
+            ) : (
+              "No helpanions found."
+            )}
+          </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {filteredHelpanions.map((helpanion: any) => (
+            {sortedHelpanions.map((helpanion: any) => (
               <DirectoryHelpanionCard key={helpanion.id} helpanion={helpanion} />
             ))}
           </div>

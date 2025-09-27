@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -61,11 +61,16 @@ const categoryData = [
   }
 ];
 
-function slugify(text: string): string {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-}
-
 export function GetHelpDropdown() {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: string, item: string) => {
+    const categoryParam = category.toLowerCase();
+    const searchParams = new URLSearchParams();
+    searchParams.set(categoryParam, item);
+    navigate(`/helpanions?${searchParams.toString()}`);
+  };
+
   return (
     <NavigationMenu className="z-50">
       <NavigationMenuList>
@@ -90,13 +95,13 @@ export function GetHelpDropdown() {
                       <ul className="space-y-1">
                         {subcategory.items.map((item) => (
                           <li key={item}>
-                            <Link
-                              to={`/helpanions?category=${slugify(category.title)}&filter=${slugify(item)}`}
-                              className="text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
+                            <button
+                              onClick={() => handleCategoryClick(category.id, item)}
+                              className="w-full text-left text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
                             >
                               <span>{item}</span>
                               <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </Link>
+                            </button>
                           </li>
                         ))}
                       </ul>
@@ -113,14 +118,14 @@ export function GetHelpDropdown() {
                   <p className="text-sm font-medium text-foreground">Browse All Categories</p>
                   <p className="text-xs text-muted-foreground">Explore our complete directory of Helpanions</p>
                 </div>
-                <Link
-                  to="/helpanions"
+                <button
+                  onClick={() => navigate('/helpanions')}
                   className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200"
                   style={{ backgroundColor: '#193232' }}
                 >
                   View All
                   <ChevronRight className="ml-1 h-3 w-3" />
-                </Link>
+                </button>
               </div>
             </div>
           </NavigationMenuContent>
