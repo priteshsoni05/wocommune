@@ -144,12 +144,27 @@ export function generateProfileTags(profile: {
     ...(profile.services?.map(s => s.description) || [])
   ].filter(Boolean).join(' ');
 
-  // Alumni tagging - ONLY from school field (strict)
+  // Alumni tagging - ONLY from school field (strict) + special ICAI rule
   Object.entries(ALUMNI_KEYWORDS).forEach(([tag, keywords]) => {
+    let shouldTag = false;
+    
+    // Standard rule: Check school field
     if (containsKeyword(profile.school, keywords)) {
-      if (!tags.alumni.includes(tag)) {
-        tags.alumni.push(tag);
+      shouldTag = true;
+    }
+    
+    // Special rule for ICAI: Also check if profession is "Chartered Accountant"
+    if (tag === 'ICAI' && profile.profession) {
+      const professionLower = profile.profession.toLowerCase();
+      const isCharteredAccountant = professionLower.includes('chartered accountant') || 
+                                   /\bca\b/.test(professionLower);
+      if (isCharteredAccountant) {
+        shouldTag = true;
       }
+    }
+    
+    if (shouldTag && !tags.alumni.includes(tag)) {
+      tags.alumni.push(tag);
     }
   });
 
