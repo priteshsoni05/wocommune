@@ -265,12 +265,8 @@ export default function WOCommune(): JSX.Element {
         <div className="relative max-w-[1140px] mx-auto px-4 md:px-8 py-20 md:py-28 flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 text-white text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-semibold leading-tight">
-              Your trusted companion for every step
+              Help will always be given at wo commune to those who ask for it
             </h1>
-            <p className="mt-4 text-lg md:text-xl max-w-2xl">
-              A community of events, conversations, and 1:1 guidance that helps
-              you take meaningful steps — at your pace.
-            </p>
             <div className="mt-6 w-full max-w-[700px] mx-auto md:mx-0">
               <form onSubmit={handleSearchSubmit} className="flex items-center gap-3 bg-white rounded-md px-3 py-2 shadow">
                 <input
