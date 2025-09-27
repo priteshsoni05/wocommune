@@ -115,7 +115,8 @@ export function GetHelpDropdown() {
                 </div>
                 <Link
                   to="/helpanions"
-                  className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors duration-200"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200"
+                  style={{ backgroundColor: '#193232' }}
                 >
                   View All
                   <ChevronRight className="ml-1 h-3 w-3" />
