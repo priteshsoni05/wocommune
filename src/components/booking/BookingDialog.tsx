@@ -60,14 +60,31 @@ export const BookingDialog = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Check if user is authenticated - redirect to auth if not
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign up as a Walker to book sessions with our Helpanions.",
+        action: (
+          <Button
+            onClick={() => window.location.href = '/auth?mode=signup&role=walker'}
+            className="bg-primary text-primary-foreground"
+          >
+            Join as Walker
+          </Button>
+        ),
+      });
+      return;
+    }
+    
     console.log('Starting booking process...');
     console.log('User:', user);
     console.log('Service:', service);
     
     setLoading(true);
     try {
-      // Create a guest user ID if not authenticated - use null for anonymous users
-      const bookingUserId = user?.id || null;
+      // Now authenticated user is required - use user.id directly
+      const bookingUserId = user.id;
       
       // Convert time strings to proper format for database
       const formatTimeForDB = (timeStr: string) => {
@@ -141,24 +158,14 @@ export const BookingDialog = ({
 
       let data, error;
       
-      if (user?.id) {
-        // Authenticated user - can select the booking back
-        const result = await supabase
-          .from('bookings')
-          .insert(bookingDataWithMeeting)
-          .select()
-          .single();
-        data = result.data;
-        error = result.error;
-      } else {
-        // Anonymous user - just insert without selecting
-        const result = await supabase
-          .from('bookings')
-          .insert(bookingDataWithMeeting);
-        error = result.error;
-        // Create a mock data object for the email function
-        data = { ...bookingDataWithMeeting, id: 'anonymous-booking' };
-      }
+      // Authenticated user - can select the booking back
+      const result = await supabase
+        .from('bookings')
+        .insert(bookingDataWithMeeting)
+        .select()
+        .single();
+      data = result.data;
+      error = result.error;
 
       console.log('Supabase response:', { data, error });
       
@@ -178,7 +185,7 @@ export const BookingDialog = ({
           body: {
             booking: { ...data, meeting_link: meetingLink },
             service: service,
-            helperEmail: helperEmail
+            helperEmail: helperId
           }
         });
       } catch (emailError) {
