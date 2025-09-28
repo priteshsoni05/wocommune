@@ -91,37 +91,49 @@ export const BookingDialog = ({
 
       console.log('Booking data to insert:', bookingData);
 
-      // Create Google Meet link FIRST (required for booking)
-      let meetingLink = null;
+      // Create Google Meet link, but do NOT block booking if it fails
+      let meetingLink: string | null = null;
       console.log('Creating Google Meet link...');
+
+      // Resolve helper profile for accurate calendar + email context
+      const { data: helperProfile } = await supabase
+        .from('profiles')
+        .select('display_name, email')
+        .eq('user_id', helperId)
+        .maybeSingle();
+
+      const helperDisplayName = helperProfile?.display_name || 'Helper';
+      const helperEmail = helperProfile?.email || 'helper@example.com';
       
       const startDateTime = new Date(selectedDate);
       startDateTime.setHours(parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]), 0, 0);
-      
       const endDateTime = new Date(startDateTime.getTime() + (service.duration_minutes || 60) * 60000);
 
-      const meetResponse = await supabase.functions.invoke('create-google-meet', {
-        body: {
-          service_name: service.title,
-          start_time: startDateTime.toISOString(),
-          end_time: endDateTime.toISOString(),
-          seeker_name: formData.fullName,
-          seeker_email: formData.email,
-          helper_name: "Helper", // This would come from helper profile
-          helper_email: "helper@example.com", // This would come from helper profile
-          helper_id: helperId,
-        }
-      });
+      try {
+        const meetResponse = await supabase.functions.invoke('create-google-meet', {
+          body: {
+            service_name: service.title,
+            start_time: startDateTime.toISOString(),
+            end_time: endDateTime.toISOString(),
+            seeker_name: formData.fullName,
+            seeker_email: formData.email,
+            helper_name: helperDisplayName,
+            helper_email: helperEmail,
+            helper_id: helperId,
+          }
+        });
 
-      if (!meetResponse.data?.meetLink) {
-        console.error('Google Meet creation failed:', meetResponse.error);
-        throw new Error('Unable to create Google Meet session. Please try again.');
+        if (meetResponse.data?.meetLink) {
+          meetingLink = meetResponse.data.meetLink as string;
+          console.log('Google Meet link created successfully:', meetingLink);
+        } else {
+          console.warn('No Google Meet link returned. Proceeding without one.', meetResponse.error || meetResponse.data);
+        }
+      } catch (meetErr) {
+        console.error('Google Meet creation error. Proceeding without Meet link.', meetErr);
       }
 
-      meetingLink = meetResponse.data.meetLink;
-      console.log('Google Meet link created successfully:', meetingLink);
-
-      // Now create booking with meeting link
+      // Now create booking with optional meeting link
       const bookingDataWithMeeting = {
         ...bookingData,
         meeting_link: meetingLink
@@ -166,7 +178,7 @@ export const BookingDialog = ({
           body: {
             booking: { ...data, meeting_link: meetingLink },
             service: service,
-            helperEmail: helperId
+            helperEmail: helperEmail
           }
         });
       } catch (emailError) {
