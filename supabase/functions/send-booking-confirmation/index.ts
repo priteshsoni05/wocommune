@@ -93,103 +93,119 @@ const handler = async (req: Request): Promise<Response> => {
     const hasMeetingLink = !!booking.meeting_link;
 
     // Send confirmation email to seeker
-    const seekerEmailResponse = await resend.emails.send({
-      from: "WO Commune <onboarding@resend.dev>",
-      to: [booking.seeker_email],
-      subject: "🎉 Booking Confirmed - Your session is scheduled!",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
-            <h1 style="margin: 0; font-size: 28px;">Booking Confirmed! 🎉</h1>
-            <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Your session with ${helperProfile?.display_name || 'your Helpanion'} is all set</p>
-          </div>
-          
-          <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #667eea; margin-bottom: 25px;">
-            <h2 style="margin: 0 0 15px 0; color: #333; font-size: 20px;">Session Details</h2>
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Service:</td>
-                <td style="padding: 8px 0; color: #333;">${service.title}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Date:</td>
-                <td style="padding: 8px 0; color: #333;">${formatDate(booking.booking_date)}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Time:</td>
-                <td style="padding: 8px 0; color: #333;">${formatTime(booking.start_time)} - ${formatTime(booking.end_time)}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Duration:</td>
-                <td style="padding: 8px 0; color: #333;">${service.duration_minutes} minutes</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Helpanion:</td>
-                <td style="padding: 8px 0; color: #333;">${helperProfile?.display_name || 'Your Helper'}</td>
-              </tr>
-              ${booking.total_amount ? `
-              <tr>
-                <td style="padding: 8px 0; font-weight: bold; color: #555;">Total:</td>
-                <td style="padding: 8px 0; color: #333; font-weight: bold;">$${booking.total_amount}</td>
-              </tr>
-              ` : ''}
-            </table>
-          </div>
-
-          <div style="background: #e8f5e8; border: 1px solid #4caf50; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-            <h3 style="margin: 0 0 15px 0; color: #2e7d32; display: flex; align-items: center;">
-              📹 Meeting Details
-            </h3>
-            <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-              <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
-              ${hasMeetingLink ? `
-                <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
-              ` : `
-                <p style="margin: 0; color: #e65100; font-weight: bold;">${meetingLink}</p>
-                <p style="margin: 0; color: #666; font-size: 14px;">Your helper will provide the meeting link soon</p>
-              `}
+    console.log('Sending email to seeker:', booking.seeker_email);
+    
+    try {
+      const seekerEmailResponse = await resend.emails.send({
+        from: "WO Commune <onboarding@resend.dev>",
+        to: [booking.seeker_email],
+        subject: "🎉 Booking Confirmed - Your session is scheduled!",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
+              <h1 style="margin: 0; font-size: 28px;">Booking Confirmed! 🎉</h1>
+              <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Your session with ${helperProfile?.display_name || 'your Helpanion'} is all set</p>
             </div>
-            <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
-          </div>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #667eea; margin-bottom: 25px;">
+              <h2 style="margin: 0 0 15px 0; color: #333; font-size: 20px;">Session Details</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Service:</td>
+                  <td style="padding: 8px 0; color: #333;">${service.title}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Date:</td>
+                  <td style="padding: 8px 0; color: #333;">${formatDate(booking.booking_date)}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Time:</td>
+                  <td style="padding: 8px 0; color: #333;">${formatTime(booking.start_time)} - ${formatTime(booking.end_time)}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Duration:</td>
+                  <td style="padding: 8px 0; color: #333;">${service.duration_minutes} minutes</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Helpanion:</td>
+                  <td style="padding: 8px 0; color: #333;">${helperProfile?.display_name || 'Your Helper'}</td>
+                </tr>
+                ${booking.total_amount ? `
+                <tr>
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Total:</td>
+                  <td style="padding: 8px 0; color: #333; font-weight: bold;">$${booking.total_amount}</td>
+                </tr>
+                ` : ''}
+              </table>
+            </div>
 
-          ${booking.notes ? `
-          <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-            <h3 style="margin: 0 0 10px 0; color: #856404;">Your Message:</h3>
-            <p style="margin: 0; color: #856404;">"${booking.notes}"</p>
-          </div>
-          ` : ''}
+            <div style="background: #e8f5e8; border: 1px solid #4caf50; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #2e7d32; display: flex; align-items: center;">
+                📹 Meeting Details
+              </h3>
+              <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
+                ${hasMeetingLink ? `
+                  <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
+                  <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+                ` : `
+                  <p style="margin: 0; color: #e65100; font-weight: bold;">${meetingLink}</p>
+                  <p style="margin: 0; color: #666; font-size: 14px;">Your helper will provide the meeting link soon</p>
+                `}
+              </div>
+              <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
+            </div>
 
-          <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-            <h3 style="margin: 0 0 15px 0; color: #155724;">What's Next?</h3>
-            <ul style="margin: 0; padding-left: 20px; color: #155724;">
-              <li>Save the meeting link and details above</li>
-              <li>Add this session to your calendar using the button below</li>
-              <li>Join the meeting 5 minutes before the start time</li>
-              <li>Prepare any questions or materials in advance</li>
-            </ul>
-          </div>
+            ${booking.notes ? `
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 10px 0; color: #856404;">Your Message:</h3>
+              <p style="margin: 0; color: #856404;">"${booking.notes}"</p>
+            </div>
+            ` : ''}
 
-          <div style="text-align: center; margin-top: 30px;">
-            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Video Meeting: ' + meetingLink + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
-               style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
-              📅 Add to Calendar
-            </a>
-          </div>
+            <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+              <h3 style="margin: 0 0 15px 0; color: #155724;">What's Next?</h3>
+              <ul style="margin: 0; padding-left: 20px; color: #155724;">
+                <li>Save the meeting link and details above</li>
+                <li>Add this session to your calendar using the button below</li>
+                <li>Join the meeting 5 minutes before the start time</li>
+                <li>Prepare any questions or materials in advance</li>
+              </ul>
+            </div>
 
-          <div style="text-align: center; color: #666; font-size: 14px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p>Need help? Reply to this email or contact us at support@wocommune.com</p>
-            <p style="margin: 5px 0 0 0;">WO Commune - Connecting you with amazing Helpanions</p>
+            <div style="text-align: center; margin-top: 30px;">
+              <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(service.title + ' Session with ' + (helperProfile?.display_name || 'Helpanion'))}&dates=${booking.booking_date.replace(/-/g, '')}T${booking.start_time.replace(':', '')}00/${booking.booking_date.replace(/-/g, '')}T${booking.end_time.replace(':', '')}00&details=${encodeURIComponent('Join Video Meeting: ' + meetingLink + '\n\nService: ' + service.title + '\nDescription: ' + service.description)}" 
+                 style="background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin-bottom: 15px;">
+                📅 Add to Calendar
+              </a>
+            </div>
+
+            <div style="text-align: center; color: #666; font-size: 14px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p>Need help? Reply to this email or contact us at support@wocommune.com</p>
+              <p style="margin: 5px 0 0 0;">WO Commune - Connecting you with amazing Helpanions</p>
+            </div>
           </div>
-        </div>
-      `,
-    });
+        `,
+      });
+
+      console.log('Seeker email sent successfully:', seekerEmailResponse);
+      
+      if (seekerEmailResponse.error) {
+        console.error('Seeker email error:', seekerEmailResponse.error);
+      }
+    } catch (seekerEmailError) {
+      console.error('Failed to send seeker email:', seekerEmailError);
+      // Continue with helper email even if seeker email fails
+    }
 
     // Send notification email to helper
     if (helperProfile?.email) {
-      const helperEmailResponse = await resend.emails.send({
-        from: "WO Commune <onboarding@resend.dev>",
-        to: [helperProfile.email],
+      console.log('Sending email to helper:', helperProfile.email);
+      
+      try {
+        const helperEmailResponse = await resend.emails.send({
+          from: "WO Commune <onboarding@resend.dev>",
+          to: [helperProfile.email],
         subject: "🔔 New Booking - Session scheduled with a seeker",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -281,10 +297,21 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           </div>
         `,
-      });
+        });
+        
+        console.log('Helper email sent successfully:', helperEmailResponse);
+        
+        if (helperEmailResponse.error) {
+          console.error('Helper email error:', helperEmailResponse.error);
+        }
+      } catch (helperEmailError) {
+        console.error('Failed to send helper email:', helperEmailError);
+      }
+    } else {
+      console.log('Helper email not available, skipping helper notification');
     }
 
-    console.log("Booking confirmation emails sent successfully");
+    console.log("Booking confirmation emails processing completed");
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
