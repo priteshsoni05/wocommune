@@ -46,18 +46,28 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Received booking confirmation request:', { booking, service, helperEmail });
 
-    // Get helper's email from profiles table using helper_id (which is passed as helperEmail)
-    const { data: helperProfile, error: profileError } = await supabase
-      .from('profiles')
-      .select('email, display_name')
-      .eq('user_id', helperEmail) // helperEmail is actually the helper_id
-      .maybeSingle();
+    // Resolve helper profile/email. The client might send helper_id (UUID) or helper email.
+    let helperProfile: { email?: string; display_name?: string } | null = null;
+    let profileError: any = null;
 
-    console.log('Helper profile lookup:', { helperProfile, profileError, helperId: helperEmail });
+    if (helperEmail && helperEmail.includes && helperEmail.includes('@')) {
+      // Treat as direct email
+      helperProfile = { email: helperEmail };
+    } else if (helperEmail) {
+      const result = await supabase
+        .from('profiles')
+        .select('email, display_name')
+        .eq('user_id', helperEmail)
+        .maybeSingle();
+      helperProfile = result.data as any;
+      profileError = result.error;
+    }
+
+    console.log('Helper profile lookup:', { helperProfile, profileError, helperIdentifier: helperEmail });
 
     if (profileError) {
       console.error('Error fetching helper profile:', profileError);
-      throw new Error(`Failed to fetch helper profile: ${profileError.message}`);
+      // Don't throw - we can still email the seeker even if helper email is unknown
     }
 
     const formatTime = (timeString: string) => {
@@ -84,7 +94,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to seeker
     const seekerEmailResponse = await resend.emails.send({
-      from: "WO Commune <bookings@resend.dev>",
+      from: "WO Commune <onboarding@resend.dev>",
       to: [booking.seeker_email],
       subject: "🎉 Booking Confirmed - Your session is scheduled!",
       html: `
@@ -178,7 +188,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Send notification email to helper
     if (helperProfile?.email) {
       const helperEmailResponse = await resend.emails.send({
-        from: "WO Commune <bookings@resend.dev>",
+        from: "WO Commune <onboarding@resend.dev>",
         to: [helperProfile.email],
         subject: "🔔 New Booking - Session scheduled with a seeker",
         html: `
