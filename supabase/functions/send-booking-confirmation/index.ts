@@ -27,7 +27,7 @@ interface BookingConfirmationRequest {
     description: string;
     duration_minutes: number;
   };
-  helperEmail: string;
+  helperEmail: string; // This is actually the helper_id
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -50,10 +50,15 @@ const handler = async (req: Request): Promise<Response> => {
     const { data: helperProfile, error: profileError } = await supabase
       .from('profiles')
       .select('email, display_name')
-      .eq('user_id', helperEmail)
-      .single();
+      .eq('user_id', helperEmail) // helperEmail is actually the helper_id
+      .maybeSingle();
 
     console.log('Helper profile lookup:', { helperProfile, profileError, helperId: helperEmail });
+
+    if (profileError) {
+      console.error('Error fetching helper profile:', profileError);
+      throw new Error(`Failed to fetch helper profile: ${profileError.message}`);
+    }
 
     const formatTime = (timeString: string) => {
       const [hours, minutes] = timeString.split(':');
@@ -73,12 +78,9 @@ const handler = async (req: Request): Promise<Response> => {
       });
     };
 
-    // Use Google Meet link (required)
-    if (!booking.meeting_link) {
-      throw new Error('Google Meet link is required but was not provided');
-    }
-    
-    const meetingLink = booking.meeting_link;
+    // Use Google Meet link if available, or provide fallback
+    const meetingLink = booking.meeting_link || 'Meeting link will be shared separately';
+    const hasMeetingLink = !!booking.meeting_link;
 
     // Send confirmation email to seeker
     const seekerEmailResponse = await resend.emails.send({
@@ -130,8 +132,13 @@ const handler = async (req: Request): Promise<Response> => {
             </h3>
             <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
               <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Join Video Meeting:</p>
-              <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-              <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+              ${hasMeetingLink ? `
+                <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
+                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+              ` : `
+                <p style="margin: 0; color: #e65100; font-weight: bold;">${meetingLink}</p>
+                <p style="margin: 0; color: #666; font-size: 14px;">Your helper will provide the meeting link soon</p>
+              `}
             </div>
             <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 Tip: Click the link 5 minutes before your session starts</p>
           </div>
@@ -223,8 +230,13 @@ const handler = async (req: Request): Promise<Response> => {
               </h3>
               <div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
                 <p style="margin: 0 0 10px 0; color: #2e7d32; font-weight: bold;">Video Meeting Link:</p>
-                <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
-                <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+                ${hasMeetingLink ? `
+                  <a href="${meetingLink}" style="color: #1976d2; text-decoration: none; font-weight: bold; display: block; margin-bottom: 10px;">${meetingLink}</a>
+                  <p style="margin: 0; color: #666; font-size: 14px;">Google Meet - No password required</p>
+                ` : `
+                  <p style="margin: 0; color: #e65100; font-weight: bold;">${meetingLink}</p>
+                  <p style="margin: 0; color: #666; font-size: 14px;">Please share the meeting link with the seeker</p>
+                `}
               </div>
               <p style="margin: 0; color: #2e7d32; font-size: 14px;">💡 The seeker will receive the same meeting details in their confirmation email</p>
             </div>
