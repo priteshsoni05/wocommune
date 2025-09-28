@@ -113,6 +113,29 @@ export const useBookings = (userRole?: 'walker' | 'helpanion') => {
     }
   };
 
+  const deleteBooking = async (id: string) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('id', id)
+        .eq('helper_id', user.id); // Ensure only helper can delete their bookings
+
+      if (error) {
+        console.error('Error deleting booking:', error);
+        return { error };
+      } else {
+        setBookings(prev => prev.filter(booking => booking.id !== id));
+        return { success: true };
+      }
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+      return { error };
+    }
+  };
+
   const getTodaysBookings = () => {
     const today = new Date().toISOString().split('T')[0];
     return bookings.filter(booking => booking.booking_date === today);
@@ -127,6 +150,7 @@ export const useBookings = (userRole?: 'walker' | 'helpanion') => {
     bookings,
     loading,
     updateBookingStatus,
+    deleteBooking,
     getTodaysBookings,
     getUpcomingBookings,
     refetch: fetchBookings

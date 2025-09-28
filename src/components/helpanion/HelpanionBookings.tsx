@@ -18,7 +18,7 @@ import {
 import { format, isAfter, parseISO, parse } from "date-fns";
 
 export const HelpanionBookings = () => {
-  const { bookings, updateBookingStatus, getTodaysBookings, getUpcomingBookings, loading } = useBookings();
+  const { bookings, updateBookingStatus, deleteBooking, getTodaysBookings, getUpcomingBookings, loading } = useBookings();
   const { toast } = useToast();
 
   const todaysBookings = getTodaysBookings();
@@ -40,6 +40,23 @@ export const HelpanionBookings = () => {
       toast({
         title: "Success",
         description: `Booking ${status} successfully!`,
+      });
+    }
+  };
+
+  const handleCancelBooking = async (bookingId: string) => {
+    const result = await deleteBooking(bookingId);
+    
+    if (result?.error) {
+      toast({
+        title: "Error",
+        description: "Failed to cancel booking.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: "Booking cancelled and slot is now available!",
       });
     }
   };
@@ -139,7 +156,7 @@ export const HelpanionBookings = () => {
                 </Button>
                 <Button 
                   variant="outline"
-                  onClick={() => handleStatusUpdate(booking.id, 'cancelled')}
+                  onClick={() => handleCancelBooking(booking.id)}
                   className="flex-1 sm:flex-none"
                 >
                   <XCircle className="h-5 w-5 mr-2" />
