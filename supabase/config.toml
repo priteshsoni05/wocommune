@@ -3,5 +3,8 @@ project_id = "epwckfaunzvjymggzupt"
 [functions.create-google-meet]
 verify_jwt = false
 
+[functions.create-zoho-meeting]
+verify_jwt = false
+
 [functions.send-booking-confirmation]
 verify_jwt = false

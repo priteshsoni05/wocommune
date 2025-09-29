@@ -1,0 +1,160 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+interface BookingRequest {
+  service_name: string;
+  start_time: string;
+  end_time: string;
+  seeker_name: string;
+  seeker_email: string;
+  helper_name: string;
+  helper_email: string;
+  helper_id?: string;
+}
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+Deno.serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const {
+      service_name,
+      start_time,
+      end_time,
+      seeker_name,
+      seeker_email,
+      helper_name,
+      helper_email,
+    } = await req.json() as BookingRequest;
+
+    const clientId = Deno.env.get('ZOHO_CLIENT_ID');
+    const clientSecret = Deno.env.get('ZOHO_CLIENT_SECRET');
+
+    if (!clientId || !clientSecret) {
+      return new Response(
+        JSON.stringify({ error: 'Zoho credentials not configured' }),
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    console.log('Creating Zoho meeting for:', service_name);
+
+    // Get access token from Zoho
+    const accessToken = await getZohoAccessToken(clientId, clientSecret);
+    
+    if (!accessToken) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to get Zoho access token' }),
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    // Prepare meeting data
+    const meetingData = {
+      topic: service_name,
+      start_time: start_time,
+      duration: calculateDuration(start_time, end_time),
+      timezone: 'UTC',
+      agenda: `Meeting between ${helper_name} and ${seeker_name} for ${service_name}`,
+      participants: [
+        {
+          email: helper_email,
+          name: helper_name
+        },
+        {
+          email: seeker_email,
+          name: seeker_name
+        }
+      ],
+      settings: {
+        join_before_host: true,
+        mute_upon_entry: false,
+        auto_recording: 'none'
+      }
+    };
+
+    // Create meeting in Zoho
+    const meetingResponse = await fetch('https://meeting.zoho.com/api/v2/meetings', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(meetingData),
+    });
+
+    if (!meetingResponse.ok) {
+      const errorData = await meetingResponse.text();
+      console.error('Zoho API error:', errorData);
+      return new Response(
+        JSON.stringify({ error: 'Failed to create Zoho meeting', details: errorData }),
+        { status: 500, headers: corsHeaders }
+      );
+    }
+
+    const meetingResult = await meetingResponse.json();
+    console.log('Zoho meeting created:', meetingResult);
+
+    return new Response(JSON.stringify({
+      meeting_link: meetingResult.join_url || meetingResult.start_url,
+      meeting_id: meetingResult.id || meetingResult.meeting_id,
+      meeting_details: meetingResult
+    }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  } catch (error) {
+    console.error('Error in create-zoho-meeting function:', error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});
+
+async function getZohoAccessToken(clientId: string, clientSecret: string): Promise<string | null> {
+  try {
+    // This would typically require a refresh token flow in production
+    // For now, we'll need to implement the OAuth flow to get the access token
+    
+    // Note: In a production environment, you would store refresh tokens
+    // and use them to get new access tokens. This is a simplified version.
+    
+    const response = await fetch('https://accounts.zoho.com/oauth/v2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        'grant_type': 'client_credentials',
+        'client_id': clientId,
+        'client_secret': clientSecret,
+        'scope': 'ZohoMeeting.meeting.CREATE,ZohoMeeting.meeting.READ'
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('Failed to get Zoho access token:', errorData);
+      return null;
+    }
+
+    const tokenData = await response.json();
+    return tokenData.access_token;
+  } catch (error) {
+    console.error('Error getting Zoho access token:', error);
+    return null;
+  }
+}
+
+function calculateDuration(startTime: string, endTime: string): number {
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  return Math.round((end.getTime() - start.getTime()) / (1000 * 60)); // Duration in minutes
+}
