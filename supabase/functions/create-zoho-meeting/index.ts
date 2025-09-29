@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error in create-zoho-meeting function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
@@ -120,11 +120,14 @@ Deno.serve(async (req) => {
 
 async function getZohoAccessToken(clientId: string, clientSecret: string): Promise<string | null> {
   try {
-    // This would typically require a refresh token flow in production
-    // For now, we'll need to implement the OAuth flow to get the access token
+    const refreshToken = Deno.env.get('ZOHO_REFRESH_TOKEN');
     
-    // Note: In a production environment, you would store refresh tokens
-    // and use them to get new access tokens. This is a simplified version.
+    if (!refreshToken) {
+      console.error('ZOHO_REFRESH_TOKEN not configured. Please complete OAuth flow first.');
+      return null;
+    }
+
+    console.log('Using refresh token to get access token...');
     
     const response = await fetch('https://accounts.zoho.com/oauth/v2/token', {
       method: 'POST',
@@ -132,10 +135,10 @@ async function getZohoAccessToken(clientId: string, clientSecret: string): Promi
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
-        'grant_type': 'client_credentials',
+        'grant_type': 'refresh_token',
         'client_id': clientId,
         'client_secret': clientSecret,
-        'scope': 'ZohoMeeting.meeting.CREATE,ZohoMeeting.meeting.READ'
+        'refresh_token': refreshToken
       }),
     });
 
@@ -146,6 +149,7 @@ async function getZohoAccessToken(clientId: string, clientSecret: string): Promi
     }
 
     const tokenData = await response.json();
+    console.log('Successfully obtained access token');
     return tokenData.access_token;
   } catch (error) {
     console.error('Error getting Zoho access token:', error);
