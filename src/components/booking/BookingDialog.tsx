@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Clock, User, Mail, MessageSquare, Video } from "lucide-react";
+import { Calendar, Clock, User, Mail, MessageSquare } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Service } from "@/hooks/useServices";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface BookingDialogProps {
   open: boolean;
@@ -35,8 +34,7 @@ export const BookingDialog = ({
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    message: "",
-    meetingPlatform: "google-meet"
+    message: ""
   });
   const { user } = useAuth();
   const { toast } = useToast();
@@ -110,9 +108,9 @@ export const BookingDialog = ({
 
       console.log('Booking data to insert:', bookingData);
 
-      // Create meeting link based on selected platform
+      // Create Zoho meeting link
       let meetingLink: string | null = null;
-      console.log(`Creating ${formData.meetingPlatform} link...`);
+      console.log('Creating Zoho meeting link...');
 
       // Resolve helper profile for accurate calendar + email context
       const { data: helperProfile } = await supabase
@@ -140,22 +138,18 @@ export const BookingDialog = ({
       };
 
       try {
-        const functionName = formData.meetingPlatform === 'zoho-meeting' 
-          ? 'create-zoho-meeting' 
-          : 'create-google-meet';
-
-        const meetResponse = await supabase.functions.invoke(functionName, {
+        const meetResponse = await supabase.functions.invoke('create-zoho-meeting', {
           body: meetingData
         });
 
-        if (meetResponse.data?.meeting_link || meetResponse.data?.meetLink) {
-          meetingLink = (meetResponse.data.meeting_link || meetResponse.data.meetLink) as string;
-          console.log(`${formData.meetingPlatform} link created successfully:`, meetingLink);
+        if (meetResponse.data?.meeting_link) {
+          meetingLink = meetResponse.data.meeting_link as string;
+          console.log('Zoho meeting link created successfully:', meetingLink);
         } else {
-          console.warn(`No ${formData.meetingPlatform} link returned. Proceeding without one.`, meetResponse.error || meetResponse.data);
+          console.warn('No Zoho meeting link returned. Proceeding without one.', meetResponse.error || meetResponse.data);
         }
       } catch (meetErr) {
-        console.error(`${formData.meetingPlatform} creation error. Proceeding without meeting link.`, meetErr);
+        console.error('Zoho meeting creation error. Proceeding without meeting link.', meetErr);
       }
 
       // Now create booking with optional meeting link
@@ -298,31 +292,6 @@ export const BookingDialog = ({
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               placeholder="Enter your email"
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="flex items-center space-x-2">
-              <Video className="w-4 h-4" />
-              <span>Meeting Platform *</span>
-            </Label>
-            <RadioGroup 
-              value={formData.meetingPlatform} 
-              onValueChange={(value) => setFormData(prev => ({ ...prev, meetingPlatform: value }))}
-              className="flex space-x-6"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="google-meet" id="google-meet" />
-                <Label htmlFor="google-meet" className="font-normal cursor-pointer">
-                  Google Meet
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="zoho-meeting" id="zoho-meeting" />
-                <Label htmlFor="zoho-meeting" className="font-normal cursor-pointer">
-                  Zoho Meeting
-                </Label>
-              </div>
-            </RadioGroup>
           </div>
 
           <div className="space-y-2">
