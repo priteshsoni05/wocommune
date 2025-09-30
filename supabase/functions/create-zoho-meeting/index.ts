@@ -104,6 +104,8 @@ Deno.serve(async (req) => {
       }
     };
 
+    console.log('Preparing to create Zoho meeting with data:', JSON.stringify(meetingData, null, 2));
+
     // Create meeting in Zoho
     const meetingResponse = await fetch('https://meeting.zoho.com/api/v2/meetings', {
       method: 'POST',
@@ -113,6 +115,8 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify(meetingData),
     });
+
+    console.log('Zoho API response status:', meetingResponse.status, meetingResponse.statusText);
 
     if (!meetingResponse.ok) {
       const errorData = await meetingResponse.text();
