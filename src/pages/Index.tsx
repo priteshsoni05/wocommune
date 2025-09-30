@@ -75,43 +75,6 @@ export default function WOCommunePage(): JSX.Element {
       {/* ===== Featured Helpanions ===== */}
       <FeaturedHelpanionsList helpanions={topHelpanions} loading={loading} />
 
-      {/* ===== Events / Conversations / Podcasts ===== */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-        <div className="flex gap-4 items-center mb-6">
-          <TabButton>Events</TabButton>
-          <TabButton>Conversations</TabButton>
-          <TabButton>Podcasts</TabButton>
-          <div className="ml-auto text-sm text-gray-500">Showing featured picks</div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card
-            image={EVENT_IMG}
-            title="Dinner & Conversations — City Hub"
-            subtitle="Networking Dinner"
-            desc="Join like-minded walkers for an evening of meaningful conversation and food."
-            btnText="RSVP"
-            primary
-          />
-          <Card
-            image={CONVO_IMG}
-            title="From Comparison to Contentment"
-            subtitle="Community Talk"
-            desc="A group conversation about stopping comparison and finding your own pace."
-            btnText="Join"
-            secondary
-            footerNote="Online • Free"
-          />
-          <Card
-            image={PODCAST_IMG}
-            title="You Give Up, Until You Decide Not To"
-            subtitle="Podcast"
-            desc="Listen to inspiring journeys in short conversational episodes."
-            btnText="Listen"
-            secondary
-            footerNote="20 min"
-          />
-        </div>
-      </section>
 
       {/* ===== Stats ===== */}
       <section className="bg-white py-10">
