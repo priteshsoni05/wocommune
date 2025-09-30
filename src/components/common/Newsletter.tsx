@@ -2,7 +2,7 @@ export function Newsletter() {
   const PINE = "#193232";
   
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-4 md:py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gray-50 rounded-2xl p-4 md:p-8 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <div className="text-center md:text-left">
