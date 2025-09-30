@@ -9,7 +9,7 @@ export function Newsletter() {
             <h4 className="text-base md:text-xl font-bold text-gray-900 mb-1">Walk with us</h4>
             <p className="text-sm md:text-base" style={{ color: "#193232" }}>Stories, guidance, and events — straight to your inbox.</p>
           </div>
-          <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex justify-center md:justify-start gap-3 w-full md:w-auto">
             <a
               href="https://wocommune.substack.com/"
               target="_blank"
