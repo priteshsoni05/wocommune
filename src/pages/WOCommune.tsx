@@ -259,10 +259,10 @@ export default function WOCommune(): JSX.Element {
       <WOCommuneSlate />
 
       {/* ===== Main Content Container ===== */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         
         {/* ===== Hero Section ===== */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600 mb-6">
             <span>💡</span>
             <span>Our Community</span>
@@ -281,7 +281,7 @@ export default function WOCommune(): JSX.Element {
           </p>
           
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-16">
+          <div className="max-w-2xl mx-auto mb-10">
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -303,7 +303,7 @@ export default function WOCommune(): JSX.Element {
           </div>
 
           {/* Category Tags */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
             <span className="text-sm font-medium text-gray-500 mr-2">Top Picks</span>
             <CategoryTag active>All</CategoryTag>
             <CategoryTag>Personal Development</CategoryTag>
@@ -314,8 +314,8 @@ export default function WOCommune(): JSX.Element {
         </div>
 
         {/* ===== Featured Helpanions Grid ===== */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-8">
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Featured Helpanions</h2>
             <Link
               to="/helpanions"
@@ -334,13 +334,13 @@ export default function WOCommune(): JSX.Element {
         </div>
 
         {/* ===== Testimonials ===== */}
-        <div className="mb-16">
+        <div className="mb-10">
           <TestimonialsSlider compact />
         </div>
 
         {/* ===== Community Activities ===== */}
         <div className="mb-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Community Activities</h2>
             <div className="flex gap-2">
               <CategoryTag active>Events</CategoryTag>
