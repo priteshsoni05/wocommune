@@ -127,8 +127,6 @@ export default function WOCommunePage(): JSX.Element {
         </div>
       </section>
 
-      {/* ===== Podcasts & Stories ===== */}
-      <PodcastsAndStories />
 
       {/* ===== Footer ===== */}
         <AppFooter />
