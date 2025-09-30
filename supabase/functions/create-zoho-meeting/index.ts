@@ -130,9 +130,13 @@ Deno.serve(async (req) => {
     const meetingResult = await meetingResponse.json();
     console.log('Zoho meeting created:', meetingResult);
 
+    // Try multiple known fields for meeting link/id across Zoho API variants
+    const meetingLink = meetingResult.join_url || meetingResult.start_url || meetingResult.joinUrl || meetingResult.startUrl || meetingResult.presenterUrl || meetingResult.attendeeUrl || meetingResult.meeting?.join_url || meetingResult.data?.join_url || meetingResult.links?.join || null;
+    const meetingId = meetingResult.id || meetingResult.meeting_id || meetingResult.meetingKey || meetingResult.meeting_id?.toString?.() || null;
+
     return new Response(JSON.stringify({
-      meeting_link: meetingResult.join_url || meetingResult.start_url,
-      meeting_id: meetingResult.id || meetingResult.meeting_id,
+      meeting_link: meetingLink,
+      meeting_id: meetingId,
       meeting_details: meetingResult
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
