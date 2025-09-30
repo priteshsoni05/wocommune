@@ -23,6 +23,27 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Check if request has body
+    const requestText = await req.text();
+    if (!requestText) {
+      console.error('Empty request body received');
+      return new Response(
+        JSON.stringify({ error: 'Request body is required' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    let requestData: BookingRequest;
+    try {
+      requestData = JSON.parse(requestText);
+    } catch (parseError) {
+      console.error('Invalid JSON in request body:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     const {
       service_name,
       start_time,
@@ -31,7 +52,7 @@ Deno.serve(async (req) => {
       seeker_email,
       helper_name,
       helper_email,
-    } = await req.json() as BookingRequest;
+    } = requestData;
 
     const clientId = Deno.env.get('ZOHO_CLIENT_ID');
     const clientSecret = Deno.env.get('ZOHO_CLIENT_SECRET');
