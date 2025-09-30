@@ -65,16 +65,20 @@ Deno.serve(async (req) => {
     }
 
     console.log('Creating Zoho meeting for:', service_name);
+    console.log('Meeting data:', { service_name, start_time, end_time, seeker_name, helper_name });
 
     // Get access token from Zoho
     const accessToken = await getZohoAccessToken(clientId, clientSecret);
     
     if (!accessToken) {
+      console.error('Failed to get Zoho access token - check if ZOHO_REFRESH_TOKEN is set');
       return new Response(
         JSON.stringify({ error: 'Failed to get Zoho access token' }),
         { status: 500, headers: corsHeaders }
       );
     }
+    
+    console.log('Successfully obtained Zoho access token');
 
     // Prepare meeting data
     const meetingData = {
