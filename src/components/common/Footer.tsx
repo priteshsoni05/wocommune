@@ -20,29 +20,26 @@ export function Footer() {
         </div>
 
         {/* Navigation rows */}
-        <div className="space-y-6">
+        <div className="space-y-3">
           {/* Brand links */}
-          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
-            <h6 className="font-semibold text-sm">Brand:</h6>
-            <Link to="/about" className="text-sm text-gray-700 hover:underline">About</Link>
+          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+            <h6 className="font-semibold text-sm">BRAND:</h6>
+            <Link to="/about" className="text-sm text-gray-700 hover:underline">ABOUT</Link>
           </div>
 
           {/* Commune links */}
-          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
-            <h6 className="font-semibold text-sm">Commune:</h6>
-            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Know Commune</Link>
-            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Join Commune</Link>
-            <Link to="/helpanions" className="text-sm text-gray-700 hover:underline">Become a Helpanion</Link>
-            <Link to="#" className="text-sm text-gray-700 hover:underline">Community Guidelines</Link>
+          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+            <h6 className="font-semibold text-sm">COMMUNE:</h6>
+            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">KNOW COMMUNE</Link>
+            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</Link>
+            <Link to="/helpanions" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
+            <Link to="#" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
           </div>
 
           {/* Get in touch */}
-          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
-            <h6 className="font-semibold text-sm">Get in touch:</h6>
-            <ContactModal>
-              <button className="text-sm text-gray-700 hover:underline cursor-pointer">Contact Us</button>
-            </ContactModal>
-            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline">Write Us</a>
+          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+            <h6 className="font-semibold text-sm">GET IN TOUCH:</h6>
+            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline">WRITE US</a>
           </div>
         </div>
 
