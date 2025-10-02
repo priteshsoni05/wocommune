@@ -185,11 +185,11 @@ const HomePage: React.FC = () => {
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 text-left">
                 Walking Beside You, Every Step of the Way
               </h2>
-              <p className="text-gray-700 leading-relaxed max-w-4xl mx-auto text-justify">
+              <p className="text-gray-700 leading-relaxed max-w-4xl text-justify">
                 In a world that never stops comparing, we forget the truth: every journey has its own rhythm. We scroll past destinations without seeing the grind, the setbacks, the small steps that made them real. Walker's Odyssey was born from a simple belief: we don't just need goals to chase — we need people, places, and moments that remind us to enjoy the path along the way.
               </p>
             </div>
