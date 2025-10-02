@@ -131,12 +131,10 @@ export default function HelpanionsDirectory() {
       />
 
       {/* ===== WO Commune Slate ===== */}
-      <div style={{ paddingTop: "40px" }}>
-        <WOCommuneSlate />
-      </div>
+      <WOCommuneSlate />
 
       {/* ===== Hero Section ===== */}
-      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16 mt-[84px] md:mt-[92px]">
         <div className="max-w-3xl mx-auto text-center">
           <h1 
             className="text-3xl md:text-5xl font-semibold leading-tight"

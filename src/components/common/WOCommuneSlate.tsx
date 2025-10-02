@@ -5,8 +5,8 @@ import { GetHelpDropdown } from '@/components/helpanion/GetHelpDropdown';
 
 export default function WOCommuneSlate() {
   return (
-    <div className="safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", marginTop: "0px" }}>
-      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-12 md:h-12 relative">
+    <div className="fixed top-[36px] md:top-[44px] left-0 right-0 z-40 safe-area-x" style={{ backgroundColor: "#193232", borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}>
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-14 flex items-center justify-between h-12 relative">
 
         {/* Left section - Get Help Dropdown */}
         <div className="flex-1">
