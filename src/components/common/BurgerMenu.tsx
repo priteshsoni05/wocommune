@@ -22,6 +22,7 @@ export default function BurgerMenu({
   navigate 
 }: BurgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,8 +35,12 @@ export default function BurgerMenu({
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = 'hidden';
+      setIsAnimating(true);
     } else {
       document.body.style.overflow = 'unset';
+      // Keep menu visible during slide-out animation
+      const timer = setTimeout(() => setIsAnimating(false), 500);
+      return () => clearTimeout(timer);
     }
 
     return () => {
@@ -55,6 +60,8 @@ export default function BurgerMenu({
     navigate('/wo-commune');
   };
 
+  const shouldRenderMenu = isOpen || isAnimating;
+
   return (
     <div ref={menuRef} className="relative">
       {/* Burger Button */}
@@ -67,16 +74,26 @@ export default function BurgerMenu({
       </button>
 
       {/* Mobile/Desktop Slide-in Menu */}
-      {isOpen && (
+      {shouldRenderMenu && (
         <>
           {/* Backdrop - covers entire screen and closes menu on click */}
           <div 
-            className="fixed inset-0 bg-black/30 z-40 animate-fade-in" 
+            className="fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ease-out" 
+            style={{ 
+              opacity: isOpen ? 1 : 0,
+              pointerEvents: isOpen ? 'auto' : 'none'
+            }}
             onClick={() => setIsOpen(false)}
           />
           
-          {/* Menu Panel */}
-          <div className="fixed top-[36px] md:top-[44px] right-0 w-64 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 animate-slide-in-right" style={{ backgroundColor: '#ffffff' }}>
+          {/* Menu Panel - slides from right edge with Apple-like animation */}
+          <div 
+            className="fixed top-[36px] md:top-[44px] right-0 w-64 h-[calc(100vh-36px)] md:h-[calc(100vh-44px)] shadow-2xl z-50 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-y-auto"
+            style={{ 
+              backgroundColor: '#ffffff',
+              transform: isOpen ? 'translateX(0)' : 'translateX(100%)'
+            }}
+          >
             {/* Navigation Items */}
             <nav className="p-4 pt-6" style={{ backgroundColor: '#ffffff' }}>
               <ul className="space-y-1">
