@@ -36,10 +36,10 @@ export const RoleSwitchStep: React.FC<RoleSwitchStepProps> = ({
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <h1 className="font-sans text-lg text-foreground">
+        <h1 className="text-lg text-foreground">
           CHOOSE YOUR PROFILE
         </h1>
-        <p className="text-muted-foreground font-sans">
+        <p className="text-muted-foreground">
           You have profiles as both Walker and Helpanion. Choose which one to continue with.
         </p>
       </div>
@@ -60,17 +60,17 @@ export const RoleSwitchStep: React.FC<RoleSwitchStepProps> = ({
                   style={{ backgroundColor: roleId === 'helpanion' ? '#193232' : '#f3f4f6' }}
                 >
                   <span 
-                    className="text-lg font-sans font-bold" 
+                    className="text-lg font-bold" 
                     style={{ color: roleId === 'helpanion' ? 'white' : '#193232' }}
                   >
                     {roleId === 'helpanion' ? 'H' : 'W'}
                   </span>
                 </div>
                 <div className="flex-1 text-left">
-                  <h3 className="text-lg font-sans font-semibold text-foreground">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {role.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground font-sans">
+                  <p className="text-sm text-muted-foreground">
                     {role.description}
                   </p>
                 </div>
@@ -90,7 +90,7 @@ export const RoleSwitchStep: React.FC<RoleSwitchStepProps> = ({
           />
           <label 
             htmlFor="remember-choice" 
-            className="text-sm text-muted-foreground cursor-pointer font-sans"
+            className="text-sm text-muted-foreground cursor-pointer"
           >
             Remember my choice next time
           </label>
@@ -99,7 +99,7 @@ export const RoleSwitchStep: React.FC<RoleSwitchStepProps> = ({
         <Button 
           variant="outline" 
           onClick={onCancel} 
-          className="w-full h-12 font-sans font-semibold bg-background border-input hover:bg-muted/50 transition-all duration-200 rounded-lg"
+          className="w-full h-12 font-semibold bg-background border-input hover:bg-muted/50 transition-all duration-200 rounded-lg"
         >
           Cancel
         </Button>

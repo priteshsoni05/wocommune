@@ -11,7 +11,7 @@ export function Footer() {
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
         {/* Brand block */}
         <div className="mb-8">
-          <h5 className="text-xl font-heading mb-3">
+          <h5 className="text-xl font-logo mb-3 tracking-wider">
             WALKER'S ODYSSEY
           </h5>
           <p className="text-sm text-gray-600 leading-relaxed whitespace-nowrap overflow-x-auto">

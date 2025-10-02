@@ -28,8 +28,8 @@ export default function MainHeader({
         <div className="flex-1" />
         <Link
           to="/"
-          className="text-lg font-semibold tracking-[0.2em]"
-          style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+          className="text-lg font-logo font-semibold tracking-[0.2em]"
+          style={{ color: "#333" }}
           aria-label="Walker's Odyssey home"
         >
           WALKER'S ODYSSEY

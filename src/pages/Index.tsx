@@ -105,8 +105,8 @@ function Header({ onLoginClick }: { onLoginClick: () => void }) {
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 flex items-center justify-between h-16">
         <Link
           to="/"
-          className="text-[20px] font-semibold tracking-widest"
-          style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+          className="text-[20px] font-logo font-semibold tracking-widest"
+          style={{ color: "#333" }}
         >
           WALKER'S ODYSSEY
         </Link>
@@ -130,8 +130,8 @@ function SubHeader() {
         <div className="flex items-center gap-3">
           <Link
             to="/wo-commune"
-            className="font-semibold tracking-widest text-[15px]"
-            style={{ fontFamily: "'Cormorant Garamond', serif", color: "#333" }}
+            className="font-logo font-semibold tracking-widest text-[15px]"
+            style={{ color: "#333" }}
           >
             WO COMMUNE
           </Link>

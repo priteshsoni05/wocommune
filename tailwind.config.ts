@@ -19,18 +19,11 @@ export default {
 		},
 		extend: {
 		fontFamily: {
-			// UI and body text - Source Sans Pro
+			// Default font - Source Sans Pro (applied globally)
 			'sans': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
-			'body': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
 			
-			// Headings and brand elements - Cormorant Garamond
-			'serif': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
-			'brand': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
-			'heading': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
-			
-			// Legacy support
-			'futura': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
-			'futura-bold': ['"Source Sans Pro"', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+			// Logo only - Cormorant Garamond
+			'logo': ['"Cormorant Garamond"', 'ui-serif', 'Georgia', 'serif'],
 		},
 			colors: {
 				border: 'hsl(var(--border))',

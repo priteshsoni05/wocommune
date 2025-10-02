@@ -39,7 +39,7 @@ export function ContactModal({ children }: ContactModalProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-white">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-heading">
+          <DialogTitle className="text-2xl">
             Contact Us
           </DialogTitle>
           <DialogDescription>
@@ -119,7 +119,7 @@ export function ContactModal({ children }: ContactModalProps) {
           {/* Contact Information */}
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-heading mb-4">
+              <h3 className="text-lg mb-4">
                 Get in touch
               </h3>
               <div className="space-y-3">

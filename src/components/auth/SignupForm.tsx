@@ -268,10 +268,10 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     <div className={`space-y-8 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-cover bg-center bg-no-repeat' : ''}`} style={selectedRole === 'helpanion' || selectedRole === 'walker' ? { backgroundImage: 'url("/api/placeholder/800/600")' } : {}}>
       {/* Header */}
       <div className="text-center space-y-3">
-        <h1 className={`${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'font-sans text-lg' : 'font-brand text-3xl font-bold'} text-foreground`}>
+        <h1 className={`${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'text-lg' : 'text-3xl font-bold'} text-foreground`}>
           {selectedRole === 'helpanion' ? 'START YOUR HELPANION JOURNEY' : selectedRole === 'walker' ? 'START YOUR WALKER JOURNEY' : `Create your ${selectedRole} account`}
         </h1>
-        <p className="text-muted-foreground font-sans">
+        <p className="text-muted-foreground">
           Join our community and start {selectedRole === 'helpanion' ? 'helping others' : 'getting help'}
         </p>
       </div>
@@ -283,7 +283,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div className="space-y-2">
             <Label 
               htmlFor="name" 
-              className="text-sm font-medium text-foreground font-sans"
+              className="text-sm font-medium text-foreground"
             >
               Full name
             </Label>
@@ -294,7 +294,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               required
               placeholder="Enter your full name"
-              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
             />
           </div>
 
@@ -302,7 +302,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div className="space-y-2">
             <Label 
               htmlFor="email" 
-              className="text-sm font-medium text-foreground font-sans"
+              className="text-sm font-medium text-foreground"
             >
               Email address
             </Label>
@@ -313,7 +313,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               required
               placeholder="Enter your email"
-              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
             />
           </div>
 
@@ -322,7 +322,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             <div className="space-y-2">
               <Label 
                 htmlFor="username" 
-                className="text-sm font-medium text-foreground font-sans"
+                className="text-sm font-medium text-foreground"
               >
                 Username
               </Label>
@@ -335,7 +335,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                   onBlur={handleUsernameBlur}
                   required
                   placeholder="Choose a unique username"
-                  className={`h-12 px-4 pr-10 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans ${
+                  className={`h-12 px-4 pr-10 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 ${
                     usernameError ? 'border-destructive focus:border-destructive focus:ring-destructive/10' : ''
                   }`}
                 />
@@ -344,7 +344,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 )}
               </div>
               {usernameError && (
-                <p className="text-sm text-destructive flex items-center gap-1.5 font-sans">
+                <p className="text-sm text-destructive flex items-center gap-1.5">
                   <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
                   <span>{usernameError}</span>
                 </p>
@@ -357,7 +357,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             <div className="space-y-2">
               <Label 
                 htmlFor="password" 
-                className="text-sm font-medium text-foreground font-sans"
+                className="text-sm font-medium text-foreground"
               >
                 Password
               </Label>
@@ -369,13 +369,13 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 required
                 placeholder="Create password"
                 minLength={6}
-                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
               />
             </div>
             <div className="space-y-2">
               <Label 
                 htmlFor="confirmPassword" 
-                className="text-sm font-medium text-foreground font-sans"
+                className="text-sm font-medium text-foreground"
               >
                 Confirm password
               </Label>
@@ -387,7 +387,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 required
                 placeholder="Confirm password"
                 minLength={6}
-                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+                className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
               />
             </div>
           </div>
@@ -404,7 +404,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <div className="flex-1">
             <Label
               htmlFor="guidelines"
-              className="text-sm font-medium text-foreground cursor-pointer font-sans leading-relaxed"
+              className="text-sm font-medium text-foreground cursor-pointer leading-relaxed"
             >
               I agree to the{' '}
               <Link 
@@ -422,7 +422,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
         {error && (
           <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-lg">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-destructive font-medium font-sans">
+            <AlertDescription className="text-destructive font-medium">
               {error}
             </AlertDescription>
           </Alert>
@@ -433,7 +433,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <Button
             type="submit"
             disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError) || !agreedToGuidelines}
-            className={`flex-1 h-12 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 font-sans disabled:opacity-50 disabled:cursor-not-allowed`}
+            className={`flex-1 h-12 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create account
@@ -443,7 +443,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             variant="outline"
             onClick={onCancel}
             disabled={loading}
-            className="sm:w-auto px-8 h-12 font-semibold text-base rounded-lg transition-all duration-200 font-sans border-input hover:bg-accent"
+            className="sm:w-auto px-8 h-12 font-semibold text-base rounded-lg transition-all duration-200 border-input hover:bg-accent"
           >
             Cancel
           </Button>

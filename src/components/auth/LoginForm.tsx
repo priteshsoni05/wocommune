@@ -79,8 +79,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     <div className="space-y-8 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: 'url("/api/placeholder/800/600")' }}>
       {/* Header */}
       <div className="text-center space-y-3">
-        <h1 className="font-sans text-lg text-foreground">WELCOME BACK TO WO COMMUNE</h1>
-        <p className="text-muted-foreground font-sans">
+        <h1 className="text-lg text-foreground">WELCOME BACK TO WO COMMUNE</h1>
+        <p className="text-muted-foreground">
           Sign in to continue your journey
         </p>
       </div>
@@ -92,7 +92,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <div className="space-y-2">
             <Label 
               htmlFor="email" 
-              className="text-sm font-medium text-foreground font-sans"
+              className="text-sm font-medium text-foreground"
             >
               Email address
             </Label>
@@ -103,7 +103,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="Enter your email"
-              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
             />
           </div>
 
@@ -112,14 +112,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             <div className="flex items-center justify-between">
               <Label 
                 htmlFor="password" 
-                className="text-sm font-medium text-foreground font-sans"
+                className="text-sm font-medium text-foreground"
               >
                 Password
               </Label>
               <button
                 type="button"
                 onClick={() => setShowForgotPassword && setShowForgotPassword(true)}
-                className="text-sm text-primary hover:text-primary/80 transition-colors font-sans"
+                className="text-sm text-primary hover:text-primary/80 transition-colors"
               >
                 Forgot password?
               </button>
@@ -131,7 +131,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Enter your password"
-              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200 font-sans"
+              className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
             />
           </div>
         </div>
@@ -140,7 +140,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         {error && (
           <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-lg">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription className="text-destructive font-medium font-sans">
+            <AlertDescription className="text-destructive font-medium">
               {error}
             </AlertDescription>
           </Alert>
@@ -150,7 +150,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 bg-role-button hover:bg-role-button/90 text-white font-semibold text-base rounded-lg transition-all duration-200 font-sans"
+          className="w-full h-12 bg-role-button hover:bg-role-button/90 text-white font-semibold text-base rounded-lg transition-all duration-200"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign in
