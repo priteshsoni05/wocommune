@@ -254,26 +254,49 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* ------------------------ Upcoming Event Strip ------------------------ */}
+      {/* ------------------------ Upcoming Event ------------------------ */}
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-center md:text-left">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Upcoming Event</h3>
-              <div className="text-gray-700">
-                <div className="font-medium">Networking Dinner</div>
-                <div className="text-sm text-gray-600">24 Aug 2025 — 7:00 PM • Cafe Veritas, Downtown</div>
-                <div className="text-sm text-gray-600 mt-1">An evening of conversation and community.</div>
+          <div className="bg-gray-50 rounded-2xl overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              {/* Event Image - 3:4 aspect ratio */}
+              <div className="relative aspect-[3/4]">
+                <img 
+                  src={EVENT_PLACEHOLDER} 
+                  alt="Networking Dinner Event" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
               </div>
-            </div>
-            <div className="flex gap-3 w-full md:w-auto">
-              <Link
-                to="#"
-                className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors hover:opacity-90"
-                style={{ backgroundColor: PINE, color: "white" }}
-              >
-                Learn More
-              </Link>
+              
+              {/* Event Details */}
+              <div className="p-6 md:p-8 flex flex-col justify-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Upcoming Event</h3>
+                <div className="space-y-3 mb-6">
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900">Networking Dinner</h4>
+                  </div>
+                  <div className="text-gray-700">
+                    <div className="flex items-center gap-2 text-sm mb-1">
+                      <span className="font-medium">📅 24 Aug 2025 — 7:00 PM</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm mb-2">
+                      <span className="font-medium">📍 Cafe Veritas, Downtown</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 leading-relaxed">
+                    An evening of conversation and community. Join like-minded walkers for meaningful connections over good food.
+                  </p>
+                </div>
+                <div>
+                  <Link
+                    to="#"
+                    className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors hover:opacity-90"
+                    style={{ backgroundColor: PINE, color: "white" }}
+                  >
+                    RSVP Now →
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
