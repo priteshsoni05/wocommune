@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-} from '@/components/ui/navigation-menu';
-import { GraduationCap, Users, HelpCircle, ChevronRight } from 'lucide-react';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { GraduationCap, Users, HelpCircle, ChevronRight, ChevronDown } from 'lucide-react';
 
 const categoryData = [
   {
@@ -87,65 +86,74 @@ export function GetHelpDropdown() {
   };
 
   return (
-    <NavigationMenu className="z-50">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-7 px-2 text-sm font-bold leading-none bg-transparent hover:bg-transparent focus:bg-transparent transition-all duration-200 uppercase tracking-wider text-white hover:text-white/80" style={{ border: 'none' }}>
-            GET HELP
-          </NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-popover/100 border border-border">
-            <div className="w-[800px] p-6 grid grid-cols-3 gap-6">
-              {categoryData.map((category) => (
-                <div key={category.id} className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border pb-2">
-                    {category.icon}
-                    <span>{category.title}</span>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          className="h-7 px-2 text-sm font-bold leading-none bg-transparent hover:bg-transparent focus:bg-transparent transition-all duration-200 uppercase tracking-wider text-white hover:text-white/80 border-0"
+        >
+          GET HELP
+          <ChevronDown className="ml-1 h-3 w-3" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent 
+        align="start" 
+        className="w-[800px] bg-white border border-border shadow-lg z-[100] p-0"
+        sideOffset={8}
+      >
+        {/* Scrollable content area */}
+        <div className="max-h-[70vh] overflow-y-auto">
+          <div className="p-6 grid grid-cols-3 gap-6">
+            {categoryData.map((category) => (
+              <div key={category.id} className="space-y-4">
+                <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border pb-2">
+                  {category.icon}
+                  <span>{category.title}</span>
+                </div>
+                
+                {category.subcategories.map((subcategory) => (
+                  <div key={subcategory.title} className="space-y-2">
+                    <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      {subcategory.title}
+                    </h4>
+                    <ul className="space-y-1">
+                      {subcategory.items.map((item) => (
+                        <li key={item}>
+                          <button
+                            onClick={() => handleCategoryClick(category.id, item)}
+                            className="w-full text-left text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
+                          >
+                            <span>{item}</span>
+                            <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  
-                  {category.subcategories.map((subcategory) => (
-                    <div key={subcategory.title} className="space-y-2">
-                      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                        {subcategory.title}
-                      </h4>
-                      <ul className="space-y-1">
-                        {subcategory.items.map((item) => (
-                          <li key={item}>
-                            <button
-                              onClick={() => handleCategoryClick(category.id, item)}
-                              className="w-full text-left text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
-                            >
-                              <span>{item}</span>
-                              <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-            
-            {/* Bottom CTA */}
-            <div className="border-t border-border bg-muted/20 px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-foreground">Browse All Categories</p>
-                  <p className="text-xs text-muted-foreground">Explore our complete directory of Helpanions</p>
-                </div>
-                <button
-                  onClick={() => navigate('/helpanions')}
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200"
-                  style={{ backgroundColor: '#193232' }}
-                >
-                  View All
-                  <ChevronRight className="ml-1 h-3 w-3" />
-                </button>
+                ))}
               </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Bottom CTA - Fixed at bottom */}
+        <div className="border-t border-border bg-muted/20 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">Browse All Categories</p>
+              <p className="text-xs text-muted-foreground">Explore our complete directory of Helpanions</p>
             </div>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+            <button
+              onClick={() => navigate('/helpanions')}
+              className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200"
+              style={{ backgroundColor: '#193232' }}
+            >
+              View All
+              <ChevronRight className="ml-1 h-3 w-3" />
+            </button>
+          </div>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
