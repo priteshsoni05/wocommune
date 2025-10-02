@@ -189,7 +189,7 @@ const HomePage: React.FC = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Walking Beside You, Every Step of the Way
               </h2>
-              <p className="text-gray-700 leading-relaxed max-w-4xl mx-auto">
+              <p className="text-gray-700 leading-relaxed max-w-4xl mx-auto text-justify">
                 In a world that never stops comparing, we forget the truth: every journey has its own rhythm. We scroll past destinations without seeing the grind, the setbacks, the small steps that made them real. Walker's Odyssey was born from a simple belief: we don't just need goals to chase — we need people, places, and moments that remind us to enjoy the path along the way.
               </p>
             </div>
@@ -199,7 +199,7 @@ const HomePage: React.FC = () => {
               {/* WO Commune */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Commune</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className="text-gray-700 text-sm leading-relaxed text-justify">
                   One-to-one connections that go beyond small talk. A living platform where people share experiences, stories, and wisdom through real conversations.
                 </p>
               </div>
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
               {/* WO Experiences */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Experiences</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className="text-gray-700 text-sm leading-relaxed text-justify">
                   From networking dinners to run clubs. Experiences designed to help people connect offline, move their bodies, and nurture their minds.
                 </p>
               </div>
@@ -215,7 +215,7 @@ const HomePage: React.FC = () => {
               {/* WO Essentials */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Essentials</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className="text-gray-700 text-sm leading-relaxed text-justify">
                   Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging.
                 </p>
               </div>
