@@ -14,7 +14,7 @@ export function Footer() {
           <h5 className="text-xl font-logo mb-3 tracking-wider">
             WALKER'S ODYSSEY
           </h5>
-          <p className="text-sm text-gray-600 leading-relaxed whitespace-nowrap overflow-x-auto">
+          <p className="text-sm text-gray-600 leading-relaxed">
             Your trusted companion for every step - connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
         </div>
