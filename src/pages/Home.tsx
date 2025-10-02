@@ -188,7 +188,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ About Section ------------------------ */}
-      <section className="py-16">
+      <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8 text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -205,7 +205,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Helpanion Section (3 steps) ------------------------ */}
-      <section className="py-16">
+      <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
             <div className="text-center mb-8">
@@ -255,7 +255,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* ------------------------ Upcoming Event Strip ------------------------ */}
-      <section className="py-16">
+      <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
