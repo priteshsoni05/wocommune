@@ -22,7 +22,6 @@ export default function BurgerMenu({
   navigate 
 }: BurgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,18 +33,10 @@ export default function BurgerMenu({
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
-      setIsAnimating(true);
-    } else {
-      document.body.style.overflow = 'unset';
-      // Keep menu visible during slide-out animation
-      const timer = setTimeout(() => setIsAnimating(false), 500);
-      return () => clearTimeout(timer);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
 
@@ -60,48 +51,52 @@ export default function BurgerMenu({
     navigate('/wo-commune');
   };
 
-  const shouldRenderMenu = isOpen || isAnimating;
-
   return (
     <div ref={menuRef} className="relative">
-      {/* Burger Button */}
+      {/* Burger Button - Always visible */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="inline-flex w-7 h-7 sm:w-8 sm:h-8 items-center justify-center text-gray-600 hover:text-gray-900 transition-colors touch-manipulation"
         aria-label="Menu"
       >
-        {isOpen ? <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+        <Menu className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
       </button>
 
-      {/* Mobile/Desktop Slide-in Menu */}
-      {shouldRenderMenu && (
+      {/* Dropdown Panel */}
+      {isOpen && (
         <>
-          {/* Backdrop - covers entire screen and closes menu on click */}
+          {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ease-out" 
-            style={{ 
-              opacity: isOpen ? 1 : 0,
-              pointerEvents: isOpen ? 'auto' : 'none'
-            }}
+            className="fixed inset-0 bg-black/20 z-40" 
             onClick={() => setIsOpen(false)}
           />
           
-          {/* Menu Panel - slides from right edge with Apple-like animation */}
+          {/* Dropdown Menu */}
           <div 
-            className="fixed top-[36px] md:top-[44px] right-0 w-64 h-[calc(100vh-36px)] md:h-[calc(100vh-44px)] shadow-2xl z-50 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-y-auto"
-            style={{ 
-              backgroundColor: '#ffffff',
-              transform: isOpen ? 'translateX(0)' : 'translateX(100%)'
-            }}
+            className="absolute top-full right-0 mt-2 w-64 bg-white shadow-2xl z-50 rounded-lg border border-gray-200 animate-fade-in"
+            style={{ transformOrigin: 'top right' }}
           >
+            {/* Close Button */}
+            <div className="flex justify-end p-2 border-b border-gray-100">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="inline-flex w-6 h-6 items-center justify-center text-gray-400 hover:text-gray-900 transition-colors rounded-md hover:bg-gray-100"
+                aria-label="Close menu"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
             {/* Navigation Items */}
-            <nav className="p-4 pt-6" style={{ backgroundColor: '#ffffff' }}>
+            <nav className="p-4">
               <ul className="space-y-1">
                 <li>
                   <Link
                     to="/"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     Home
                   </Link>
@@ -110,7 +105,9 @@ export default function BurgerMenu({
                   <Link
                     to="/wo-commune"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     WO COMMUNE
                   </Link>
@@ -119,7 +116,9 @@ export default function BurgerMenu({
                   <Link
                     to="/helpanions"
                     onClick={handleLinkClick}
-                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                    className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                   >
                     Meet your Helpanion
                   </Link>
@@ -133,7 +132,7 @@ export default function BurgerMenu({
               {user ? (
                 <div>
                   {/* User Info */}
-                  <div className="flex items-center gap-3 px-3 py-1 mb-2">
+                  <div className="flex items-center gap-3 px-3 py-2 mb-2">
                     {avatarContent.type === 'image' ? (
                       <img
                         src={avatarContent.value}
@@ -156,7 +155,9 @@ export default function BurgerMenu({
                       <Link
                         to={dashboardPath}
                         onClick={handleLinkClick}
-                        className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                        className="block px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                       >
                         Dashboard
                       </Link>
@@ -164,7 +165,9 @@ export default function BurgerMenu({
                     <li>
                       <button
                         onClick={handleSignOut}
-                        className="w-full text-left px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                        className="w-full text-left px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                       >
                         Sign Out
                       </button>
@@ -177,7 +180,9 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=login"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                     >
                       <LogIn size={16} />
                       Login
@@ -187,7 +192,9 @@ export default function BurgerMenu({
                     <Link
                       to="/auth?mode=signup"
                       onClick={handleLinkClick}
-                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
+                      className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:text-white rounded-md transition-all duration-200 font-medium" 
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#193232"} 
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ""}
                     >
                       <UserPlus size={16} />
                       Sign Up
