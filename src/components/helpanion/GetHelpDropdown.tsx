@@ -98,30 +98,30 @@ export function GetHelpDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="start" 
-        className="w-[800px] bg-white border border-border shadow-lg z-[100] p-0"
+        className="w-[calc(100vw-2rem)] sm:w-[500px] md:w-[650px] lg:w-[800px] bg-white border border-border shadow-lg z-[100] p-0"
         sideOffset={8}
       >
         {/* Scrollable content area */}
         <div className="max-h-[70vh] overflow-y-auto">
-          <div className="p-6 grid grid-cols-3 gap-6">
+          <div className="p-3 sm:p-4 md:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {categoryData.map((category) => (
-              <div key={category.id} className="space-y-4">
-                <div className="flex items-center gap-2 text-sm font-semibold text-foreground border-b border-border pb-2">
+              <div key={category.id} className="space-y-3 md:space-y-4">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground border-b border-border pb-2">
                   {category.icon}
                   <span>{category.title}</span>
                 </div>
                 
                 {category.subcategories.map((subcategory) => (
-                  <div key={subcategory.title} className="space-y-2">
-                    <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  <div key={subcategory.title} className="space-y-1.5 md:space-y-2">
+                    <h4 className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide">
                       {subcategory.title}
                     </h4>
-                    <ul className="space-y-1">
+                    <ul className="space-y-0.5 md:space-y-1">
                       {subcategory.items.map((item) => (
                         <li key={item}>
                           <button
                             onClick={() => handleCategoryClick(category.id, item)}
-                            className="w-full text-left text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
+                            className="w-full text-left text-xs sm:text-sm text-foreground hover:text-primary transition-colors duration-200 flex items-center justify-between group py-1"
                           >
                             <span>{item}</span>
                             <ChevronRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -137,15 +137,15 @@ export function GetHelpDropdown() {
         </div>
         
         {/* Bottom CTA - Fixed at bottom */}
-        <div className="border-t border-border bg-muted/20 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">Browse All Categories</p>
-              <p className="text-xs text-muted-foreground">Explore our complete directory of Helpanions</p>
+        <div className="border-t border-border bg-muted/20 px-3 sm:px-4 md:px-6 py-3 md:py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex-1">
+              <p className="text-xs sm:text-sm font-medium text-foreground">Browse All Categories</p>
+              <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">Explore our complete directory of Helpanions</p>
             </div>
             <button
               onClick={() => navigate('/helpanions')}
-              className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200"
+              className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md text-white hover:opacity-90 transition-all duration-200 whitespace-nowrap"
               style={{ backgroundColor: '#193232' }}
             >
               View All
