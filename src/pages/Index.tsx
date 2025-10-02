@@ -7,7 +7,6 @@ import { GetHelpMegaMenu } from "@/components/helpanion/GetHelpMegaMenu";
 import { TestimonialsSlider } from "@/components/helpanion/TestimonialsSlider";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Newsletter } from "@/components/common/Newsletter";
 import { Footer } from "@/components/common/Footer";
 
 const HERO_IMG = "/assets/hero-placeholder.jpg";
@@ -329,10 +328,6 @@ function Card({
       </div>
     </div>
   );
-}
-
-function PodcastsAndStories() {
-  return <Newsletter />;
 }
 
 function AppFooter() {
