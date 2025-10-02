@@ -184,16 +184,48 @@ const HomePage: React.FC = () => {
       {/* ------------------------ About Section ------------------------ */}
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-50 rounded-2xl p-6 md:p-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Walking Beside You, Every Step of the Way
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-6 max-w-4xl mx-auto">
-              In a world that never stops comparing, we forget the truth: every journey has its own rhythm. We scroll past destinations without seeing the grind, the setbacks, the small steps that made them real. Walker's Odyssey was born from a simple belief: we don't just need goals to chase — we need people, places, and moments that remind us to enjoy the path along the way.
-            </p>
-            <Link to="/about" className="inline-flex items-center gap-2 font-medium hover:underline" style={{ color: "#193232" }}>
-              Our Story →
-            </Link>
+          <div className="bg-gray-50 rounded-2xl p-6 md:p-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                Walking Beside You, Every Step of the Way
+              </h2>
+              <p className="text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                In a world that never stops comparing, we forget the truth: every journey has its own rhythm. We scroll past destinations without seeing the grind, the setbacks, the small steps that made them real. Walker's Odyssey was born from a simple belief: we don't just need goals to chase — we need people, places, and moments that remind us to enjoy the path along the way.
+              </p>
+            </div>
+            
+            {/* Three Pillars */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {/* WO Commune */}
+              <div className="bg-white rounded-lg p-5">
+                <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Commune</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  One-to-one connections that go beyond small talk. A living platform where people share experiences, stories, and wisdom through real conversations.
+                </p>
+              </div>
+              
+              {/* WO Experiences */}
+              <div className="bg-white rounded-lg p-5">
+                <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Experiences</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  From networking dinners to run clubs. Experiences designed to help people connect offline, move their bodies, and nurture their minds.
+                </p>
+              </div>
+              
+              {/* WO Essentials */}
+              <div className="bg-white rounded-lg p-5">
+                <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Essentials</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link to="/about" className="inline-flex items-center gap-2 font-medium hover:underline" style={{ color: "#193232" }}>
+                Our Story →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
