@@ -16,7 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import HERO_IMG from "../assets/hero-section-image.webp";
 import ABOUT_IMG from "../assets/about-placeholder-portrait.jpg";
 import EVENT_PLACEHOLDER from "../assets/event-placeholder.jpg";
-import PODCAST_PLACEHOLDER from "../assets/podcast-placeholder.jpg";
+
 
 /* ---------- Brand color tokens (used inline for clarity) ---------- */
 const PINE = "#193232"; // pine forest green
@@ -279,34 +279,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* ------------------------ Podcasts & Stories ------------------------ */}
-      <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-16">
-        <h3 className="text-lg font-semibold mb-6">Podcasts & Stories</h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Featured podcast / visual */}
-          <article className="rounded-md overflow-hidden shadow-sm">
-            <img src={PODCAST_PLACEHOLDER} alt="Podcast cover" className="w-full h-72 object-cover" />
-            <div className="p-4 bg-white">
-              <h4 className="font-semibold mb-2">You Give Up, Until You Decide Not To.</h4>
-              <p className="text-sm text-gray-600">A conversation about persistence and small daily wins. Listen to our latest episode.</p>
-            </div>
-          </article>
-
-          {/* Latest article / summary */}
-          <aside className="bg-white rounded-md p-6 shadow-sm">
-            <h4 className="font-semibold mb-2">The Latest Edit</h4>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Short takes and stories about walking, learning, and the tiny steps that shape a life.
-            </p>
-            <div className="mt-4">
-              <Link to="/about" className="font-normal" style={{ color: "#193232" }}>
-                Our Story →
-              </Link>
-            </div>
-          </aside>
-        </div>
-      </section>
 
       {/* Newsletter */}
       <Newsletter />
