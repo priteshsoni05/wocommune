@@ -69,8 +69,11 @@ export default function BurgerMenu({
       {/* Mobile/Desktop Slide-in Menu */}
       {isOpen && (
         <>
-          {/* Backdrop - only covers content below header */}
-          <div className="fixed inset-0 top-12 bg-black/20 z-40" />
+          {/* Backdrop - covers entire screen and closes menu on click */}
+          <div 
+            className="fixed inset-0 bg-black/30 z-40" 
+            onClick={() => setIsOpen(false)}
+          />
           
           {/* Menu Panel */}
           <div className="fixed top-0 right-4 w-48 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
