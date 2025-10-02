@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useRolePersistence } from '@/hooks/useRolePersistence';
+import { Link } from 'react-router-dom';
 
 export type UserRole = 'walker' | 'helpanion';
 
@@ -39,6 +41,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   const [error, setError] = useState('');
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameError, setUsernameError] = useState('');
+  const [agreedToGuidelines, setAgreedToGuidelines] = useState(false);
   const { setActiveRole } = useRolePersistence();
 
   const checkUsernameAvailability = async (username: string) => {
@@ -88,6 +91,13 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     e.stopPropagation();
     setError('');
     setLoading(true);
+
+    // Validate community guidelines agreement
+    if (!agreedToGuidelines) {
+      setError('You must agree to the Community Guidelines to continue');
+      setLoading(false);
+      return;
+    }
 
     // Validate password confirmation
     if (formData.password !== formData.confirmPassword) {
@@ -167,19 +177,24 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               }
             }
 
-            // Update profile for Helpanions
+            // Update profile for Helpanions and set guidelines acceptance
+            const profileUpdate: any = {
+              community_guidelines_accepted_at: new Date().toISOString()
+            };
             if (selectedRole === 'helpanion') {
-              const { error: profileError } = await supabase
-                .from('profiles')
-                .update({ username: formData.username })
-                .eq('user_id', user.id);
+              profileUpdate.username = formData.username;
+            }
 
-              if (profileError) {
-                console.error('Error updating profile:', profileError);
-                setError('Error updating profile');
-                setLoading(false);
-                return;
-              }
+            const { error: profileError } = await supabase
+              .from('profiles')
+              .update(profileUpdate)
+              .eq('user_id', user.id);
+
+            if (profileError) {
+              console.error('Error updating profile:', profileError);
+              setError('Error updating profile');
+              setLoading(false);
+              return;
             }
 
             // Set the active role immediately after role addition
@@ -205,19 +220,24 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           return;
         }
 
-        // Update profile for Helpanions
+        // Update profile for Helpanions and set guidelines acceptance
+        const profileUpdate: any = {
+          community_guidelines_accepted_at: new Date().toISOString()
+        };
         if (selectedRole === 'helpanion') {
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .update({ username: formData.username })
-            .eq('user_id', authData.user.id);
+          profileUpdate.username = formData.username;
+        }
 
-          if (profileError) {
-            console.error('Error updating profile:', profileError);
-            setError('Account created but error updating profile');
-            setLoading(false);
-            return;
-          }
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update(profileUpdate)
+          .eq('user_id', authData.user.id);
+
+        if (profileError) {
+          console.error('Error updating profile:', profileError);
+          setError('Account created but error updating profile');
+          setLoading(false);
+          return;
         }
 
         // Set the active role immediately after successful signup
@@ -373,6 +393,31 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           </div>
         </div>
 
+        {/* Community Guidelines Agreement */}
+        <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg border border-border">
+          <Checkbox
+            id="guidelines"
+            checked={agreedToGuidelines}
+            onCheckedChange={(checked) => setAgreedToGuidelines(checked === true)}
+            className="mt-0.5"
+          />
+          <div className="flex-1">
+            <Label
+              htmlFor="guidelines"
+              className="text-sm font-medium text-foreground cursor-pointer font-sans leading-relaxed"
+            >
+              I agree to the{' '}
+              <Link 
+                to="/guidelines" 
+                target="_blank"
+                className="text-primary hover:underline font-semibold"
+              >
+                Community Guidelines
+              </Link>
+            </Label>
+          </div>
+        </div>
+
         {/* Error Alert */}
         {error && (
           <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-lg">
@@ -387,8 +432,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <Button
             type="submit"
-            disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError)}
-            className={`flex-1 h-12 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 font-sans`}
+            disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError) || !agreedToGuidelines}
+            className={`flex-1 h-12 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 font-sans disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create account

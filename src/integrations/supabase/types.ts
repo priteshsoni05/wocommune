@@ -176,6 +176,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           calendar_integration_status: string | null
+          community_guidelines_accepted_at: string | null
           created_at: string
           display_name: string | null
           email: string | null
@@ -201,6 +202,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           calendar_integration_status?: string | null
+          community_guidelines_accepted_at?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
@@ -226,6 +228,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           calendar_integration_status?: string | null
+          community_guidelines_accepted_at?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
