@@ -31,8 +31,8 @@ export function Footer() {
           <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
             <h6 className="font-semibold text-sm">COMMUNE:</h6>
             <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">KNOW COMMUNE</Link>
-            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</Link>
-            <Link to="/helpanions" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
+            <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</a>
+            <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
             <Link to="#" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
           </div>
 

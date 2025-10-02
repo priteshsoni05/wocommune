@@ -27,7 +27,7 @@ export function HelpanionFooter() {
           <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
             <h4 className="font-semibold text-sm text-foreground">COMMUNE:</h4>
             <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">KNOW COMMUNE</Link>
-            <Link to="/auth?mode=signup&role=walker" className="text-sm text-muted-foreground hover:text-foreground transition-colors">JOIN COMMUNE</Link>
+            <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">JOIN COMMUNE</a>
             <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-muted-foreground hover:text-foreground transition-colors">BECOME A HELPANION</Link>
             <Link to="/guidelines" className="text-sm text-muted-foreground hover:text-foreground transition-colors">COMMUNITY GUIDELINES</Link>
           </div>
