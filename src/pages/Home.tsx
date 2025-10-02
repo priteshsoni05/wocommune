@@ -258,9 +258,9 @@ const HomePage: React.FC = () => {
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-50 rounded-2xl overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              {/* Event Image - 3:4 aspect ratio */}
-              <div className="relative aspect-[3/4]">
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-0">
+              {/* Event Image - smaller ratio */}
+              <div className="relative h-64 md:h-full md:min-h-[300px]">
                 <img 
                   src={EVENT_PLACEHOLDER} 
                   alt="Networking Dinner Event" 
@@ -270,27 +270,21 @@ const HomePage: React.FC = () => {
               
               {/* Event Details */}
               <div className="p-6 md:p-8 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Upcoming Event</h3>
-                <div className="space-y-3 mb-6">
-                  <div>
-                    <h4 className="text-xl font-semibold text-gray-900">Networking Dinner</h4>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Upcoming Event</h3>
+                <div className="space-y-2 mb-4">
+                  <h4 className="text-lg font-semibold text-gray-900">Networking Dinner</h4>
+                  <div className="text-gray-700 text-sm space-y-1">
+                    <div>📅 24 Aug 2025 — 7:00 PM</div>
+                    <div>📍 Cafe Veritas, Downtown</div>
                   </div>
-                  <div className="text-gray-700">
-                    <div className="flex items-center gap-2 text-sm mb-1">
-                      <span className="font-medium">📅 24 Aug 2025 — 7:00 PM</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm mb-2">
-                      <span className="font-medium">📍 Cafe Veritas, Downtown</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 leading-relaxed">
-                    An evening of conversation and community. Join like-minded walkers for meaningful connections over good food.
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    An evening of conversation and community. Join like-minded walkers for meaningful connections.
                   </p>
                 </div>
                 <div>
                   <Link
                     to="#"
-                    className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors hover:opacity-90"
+                    className="inline-flex items-center px-5 py-2.5 rounded-lg font-semibold transition-colors hover:opacity-90 text-sm"
                     style={{ backgroundColor: PINE, color: "white" }}
                   >
                     RSVP Now →
