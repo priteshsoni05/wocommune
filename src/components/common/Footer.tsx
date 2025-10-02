@@ -33,7 +33,7 @@ export function Footer() {
             <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">KNOW COMMUNE</Link>
             <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</a>
             <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
-            <Link to="#" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
+            <Link to="/guidelines" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
           </div>
 
           {/* Get in touch */}
