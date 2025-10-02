@@ -9,48 +9,41 @@ export function Footer() {
   return (
     <footer className="bg-white text-[#2B2B2B] border-t border-gray-200">
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-          {/* Brand block */}
-          <div>
-            <h5 className="text-xl font-heading mb-4">
-              WALKER'S ODYSSEY
-            </h5>
-            <p className="text-sm text-gray-600 max-w-[320px] leading-relaxed">
-              Your trusted companion for every step - connecting you with guidance, community, and
-              inspiration to walk your path with purpose.
-            </p>
-          </div>
+        {/* Brand block */}
+        <div className="mb-8">
+          <h5 className="text-xl font-heading mb-3">
+            WALKER'S ODYSSEY
+          </h5>
+          <p className="text-sm text-gray-600 max-w-[600px] leading-relaxed">
+            Your trusted companion for every step - connecting you with guidance, community, and
+            inspiration to walk your path with purpose.
+          </p>
+        </div>
 
+        {/* Navigation rows */}
+        <div className="space-y-6">
           {/* Brand links */}
-          <div>
-            <h6 className="font-semibold mb-3">Brand</h6>
-            <ul className="space-y-3 text-sm text-gray-700">
-              <li><Link to="/about" className="hover:underline">About</Link></li>
-            </ul>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h6 className="font-semibold text-sm">Brand:</h6>
+            <Link to="/about" className="text-sm text-gray-700 hover:underline">About</Link>
           </div>
 
           {/* Commune links */}
-          <div>
-            <h6 className="font-semibold mb-3">Commune</h6>
-            <ul className="space-y-3 text-sm text-gray-700">
-              <li><Link to="/wo-commune" className="hover:underline">Know Commune</Link></li>
-              <li><Link to="/wo-commune" className="hover:underline">Join Commune</Link></li>
-              <li><Link to="/helpanions" className="hover:underline">Become a Helpanion</Link></li>
-              <li><Link to="#" className="hover:underline">Community Guidelines</Link></li>
-            </ul>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h6 className="font-semibold text-sm">Commune:</h6>
+            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Know Commune</Link>
+            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Join Commune</Link>
+            <Link to="/helpanions" className="text-sm text-gray-700 hover:underline">Become a Helpanion</Link>
+            <Link to="#" className="text-sm text-gray-700 hover:underline">Community Guidelines</Link>
           </div>
 
           {/* Get in touch */}
-          <div>
-            <h6 className="font-semibold mb-3">Get in touch</h6>
-            <ul className="space-y-3 text-sm text-gray-700">
-              <li>
-                <ContactModal>
-                  <button className="hover:underline cursor-pointer">Contact Us</button>
-                </ContactModal>
-              </li>
-              <li><a href="mailto:commune@walkersodyssey.com" className="hover:underline">Write Us</a></li>
-            </ul>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h6 className="font-semibold text-sm">Get in touch:</h6>
+            <ContactModal>
+              <button className="text-sm text-gray-700 hover:underline cursor-pointer">Contact Us</button>
+            </ContactModal>
+            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline">Write Us</a>
           </div>
         </div>
 

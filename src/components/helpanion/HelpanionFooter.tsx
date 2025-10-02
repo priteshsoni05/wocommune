@@ -7,44 +7,39 @@ export function HelpanionFooter() {
   return (
     <footer className="bg-muted/20 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Brand block */}
-          <div className="space-y-3">
-            <h3 className="text-2xl font-brand text-foreground">WALKER'S ODYSSEY</h3>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              Your trusted companion for every step - connecting you with guidance, community, and
-              inspiration to walk your path with purpose.
-            </p>
-          </div>
+        {/* Brand block */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-brand text-foreground mb-3">WALKER'S ODYSSEY</h3>
+          <p className="text-sm text-muted-foreground max-w-[600px]">
+            Your trusted companion for every step - connecting you with guidance, community, and
+            inspiration to walk your path with purpose.
+          </p>
+        </div>
 
+        {/* Navigation rows */}
+        <div className="space-y-6">
           {/* Brand links */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Brand</h4>
-            <nav className="space-y-2 text-sm">
-              <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">About</Link>
-            </nav>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h4 className="font-semibold text-sm text-foreground">Brand:</h4>
+            <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link>
           </div>
 
           {/* Commune links */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Commune</h4>
-            <nav className="space-y-2 text-sm">
-              <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">Know Commune</Link>
-              <Link to="/auth?mode=signup&role=walker" className="block text-muted-foreground hover:text-foreground transition-colors">Join Commune</Link>
-              <Link to="/auth?mode=signup&role=helpanion" className="block text-muted-foreground hover:text-foreground transition-colors">Become a Helpanion</Link>
-              <Link to="/guidelines" className="block text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</Link>
-            </nav>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h4 className="font-semibold text-sm text-foreground">Commune:</h4>
+            <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Know Commune</Link>
+            <Link to="/auth?mode=signup&role=walker" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Join Commune</Link>
+            <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Become a Helpanion</Link>
+            <Link to="/guidelines" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</Link>
           </div>
 
           {/* Get in touch */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Get in touch</h4>
-            <nav className="space-y-2 text-sm">
-              <a href="mailto:commune@walkersodyssey.com" className="block text-muted-foreground hover:text-foreground transition-colors">commune@walkersodyssey.com</a>
-              <Link to="/contact" className="block text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link>
-              <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors" target="_blank" rel="noreferrer">LinkedIn</a>
-              <a href="#" className="block text-muted-foreground hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Instagram</a>
-            </nav>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <h4 className="font-semibold text-sm text-foreground">Get in touch:</h4>
+            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">commune@walkersodyssey.com</a>
+            <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link>
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors" target="_blank" rel="noreferrer">Instagram</a>
           </div>
         </div>
 
