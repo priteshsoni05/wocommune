@@ -71,12 +71,12 @@ export default function BurgerMenu({
         <>
           {/* Backdrop - covers entire screen and closes menu on click */}
           <div 
-            className="fixed inset-0 bg-black/30 z-40" 
+            className="fixed inset-0 bg-black/30 z-40 animate-fade-in" 
             onClick={() => setIsOpen(false)}
           />
           
           {/* Menu Panel */}
-          <div className="fixed top-0 right-4 w-48 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 safe-area-top safe-area-right" style={{ backgroundColor: '#ffffff', opacity: 1 }}>
+          <div className="fixed top-[36px] md:top-[44px] right-0 w-64 max-w-[85vw] sm:max-w-[80vw] shadow-xl z-50 animate-slide-in-right" style={{ backgroundColor: '#ffffff' }}>
             {/* Navigation Items */}
             <nav className="p-4 pt-6" style={{ backgroundColor: '#ffffff' }}>
               <ul className="space-y-1">
