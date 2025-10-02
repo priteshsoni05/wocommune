@@ -20,26 +20,32 @@ export function Footer() {
         </div>
 
         {/* Navigation rows */}
-        <div className="space-y-3">
+        <div className="space-y-6 md:space-y-3">
           {/* Brand links */}
-          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
             <h6 className="font-semibold text-sm">BRAND:</h6>
-            <Link to="/about" className="text-sm text-gray-700 hover:underline">ABOUT</Link>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-x-4 pl-4 md:pl-0">
+              <Link to="/about" className="text-sm text-gray-700 hover:underline">ABOUT</Link>
+            </div>
           </div>
 
           {/* Commune links */}
-          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
             <h6 className="font-semibold text-sm">COMMUNE:</h6>
-            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">KNOW COMMUNE</Link>
-            <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</a>
-            <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
-            <Link to="/guidelines" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-x-4 pl-4 md:pl-0">
+              <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">KNOW COMMUNE</Link>
+              <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline">JOIN COMMUNE</a>
+              <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline">BECOME A HELPANION</Link>
+              <Link to="/guidelines" className="text-sm text-gray-700 hover:underline">COMMUNITY GUIDELINES</Link>
+            </div>
           </div>
 
           {/* Get in touch */}
-          <div className="flex items-center gap-x-4 whitespace-nowrap overflow-x-auto">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
             <h6 className="font-semibold text-sm">GET IN TOUCH:</h6>
-            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline">WRITE US</a>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-x-4 pl-4 md:pl-0">
+              <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline">WRITE US</a>
+            </div>
           </div>
         </div>
 
