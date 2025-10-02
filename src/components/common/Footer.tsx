@@ -26,8 +26,6 @@ export function Footer() {
             <h6 className="font-semibold mb-3">Brand</h6>
             <ul className="space-y-3 text-sm text-gray-700">
               <li><Link to="/about" className="hover:underline">About</Link></li>
-              <li><Link to="/about#brand-story" className="hover:underline">Brand Story</Link></li>
-              <li><Link to="/about#vision" className="hover:underline">Vision</Link></li>
             </ul>
           </div>
 

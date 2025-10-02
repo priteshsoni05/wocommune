@@ -22,9 +22,6 @@ export function HelpanionFooter() {
             <h4 className="font-semibold text-foreground">Brand</h4>
             <nav className="space-y-2 text-sm">
               <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">About</Link>
-              <Link to="/about#brand-story" className="block text-muted-foreground hover:text-foreground transition-colors">Brand Story</Link>
-              <Link to="/about#vision" className="block text-muted-foreground hover:text-foreground transition-colors">Vision</Link>
-              <Link to="/about" className="block text-muted-foreground hover:text-foreground transition-colors">About</Link>
             </nav>
           </div>
 
