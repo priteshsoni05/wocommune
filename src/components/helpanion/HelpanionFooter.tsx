@@ -10,9 +10,8 @@ export function HelpanionFooter() {
         {/* Brand block */}
         <div className="mb-8">
           <h3 className="text-2xl font-brand text-foreground mb-3">WALKER'S ODYSSEY</h3>
-          <p className="text-sm text-muted-foreground max-w-[600px]">
-            Your trusted companion for every step - connecting you with guidance, community, and
-            inspiration to walk your path with purpose.
+          <p className="text-sm text-muted-foreground whitespace-nowrap overflow-x-auto">
+            Your trusted companion for every step - connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
         </div>
 
