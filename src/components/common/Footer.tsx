@@ -23,13 +23,13 @@ export function Footer() {
         {/* Navigation rows */}
         <div className="space-y-6">
           {/* Brand links */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h6 className="font-semibold text-sm">Brand:</h6>
             <Link to="/about" className="text-sm text-gray-700 hover:underline">About</Link>
           </div>
 
           {/* Commune links */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h6 className="font-semibold text-sm">Commune:</h6>
             <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Know Commune</Link>
             <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline">Join Commune</Link>
@@ -38,7 +38,7 @@ export function Footer() {
           </div>
 
           {/* Get in touch */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h6 className="font-semibold text-sm">Get in touch:</h6>
             <ContactModal>
               <button className="text-sm text-gray-700 hover:underline cursor-pointer">Contact Us</button>

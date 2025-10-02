@@ -19,13 +19,13 @@ export function HelpanionFooter() {
         {/* Navigation rows */}
         <div className="space-y-6">
           {/* Brand links */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h4 className="font-semibold text-sm text-foreground">Brand:</h4>
             <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link>
           </div>
 
           {/* Commune links */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h4 className="font-semibold text-sm text-foreground">Commune:</h4>
             <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Know Commune</Link>
             <Link to="/auth?mode=signup&role=walker" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Join Commune</Link>
@@ -34,7 +34,7 @@ export function HelpanionFooter() {
           </div>
 
           {/* Get in touch */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <div className="flex items-center gap-x-6 whitespace-nowrap overflow-x-auto">
             <h4 className="font-semibold text-sm text-foreground">Get in touch:</h4>
             <a href="mailto:commune@walkersodyssey.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">commune@walkersodyssey.com</a>
             <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact Us</Link>
