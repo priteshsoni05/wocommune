@@ -168,20 +168,14 @@ const HomePage: React.FC = () => {
             connecting you with guidance, community, and inspiration to walk your path with purpose.
           </p>
 
-          {/* CTA buttons */}
-          <div className="mt-6 flex gap-3">
+          {/* CTA button */}
+          <div className="mt-6">
             <Link
-              to="/wo-commune"
+              to="/auth?mode=signup"
               className="inline-block px-5 py-2 rounded-md font-semibold"
               style={{ backgroundColor: PINE, color: "white" }}
             >
               Start Your Journey
-            </Link>
-            <Link
-              to="/wo-commune"
-              className="inline-block px-5 py-2 rounded-md font-medium border border-white/60 text-white bg-white/10 hover:bg-white/20"
-            >
-              Join the Community
             </Link>
           </div>
         </div>
