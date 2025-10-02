@@ -150,7 +150,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <Button
           type="submit"
           disabled={loading}
-          className="w-full h-12 bg-role-button hover:bg-role-button/90 text-white font-semibold text-base rounded-lg transition-all duration-200"
+          size="lg"
+          className="w-full bg-role-button hover:bg-role-button/90 text-white"
         >
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign in

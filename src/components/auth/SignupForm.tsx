@@ -433,7 +433,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
           <Button
             type="submit"
             disabled={loading || usernameLoading || (selectedRole === 'helpanion' && !!usernameError) || !agreedToGuidelines}
-            className={`flex-1 h-12 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} font-semibold text-base rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+            size="lg"
+            className={`flex-1 ${selectedRole === 'helpanion' || selectedRole === 'walker' ? 'bg-role-button hover:bg-role-button/90 text-white' : 'bg-primary hover:bg-primary/90 text-primary-foreground'} disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create account

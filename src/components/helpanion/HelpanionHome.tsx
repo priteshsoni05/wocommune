@@ -115,7 +115,7 @@ export const HelpanionHome = ({ profile, profileProgress, onNavigateToProfile, o
               <p className="text-xs lg:text-sm text-muted-foreground">
                 Complete your profile to start offering help to the community
               </p>
-              <Button onClick={onNavigateToProfile} size="sm" className="w-full sm:w-auto text-xs h-8">
+              <Button onClick={onNavigateToProfile} size="sm" className="w-full sm:w-auto">
                 Complete Profile
                 <ArrowRight className="ml-2 h-3 w-3" />
               </Button>

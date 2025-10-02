@@ -147,13 +147,13 @@ function SubHeader() {
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
           </div>
         </div>
-        <button
+        <Button
           onClick={() => navigate('/auth?mode=login&role=walker')}
-          className="inline-block px-5 py-2 rounded-md font-semibold"
-          style={{ backgroundColor: PINE, color: "#fff" }}
+          className="text-white"
+          style={{ backgroundColor: PINE }}
         >
           Login / Sign Up
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -181,12 +181,12 @@ function Hero() {
                 placeholder="Search 'career advice', 'run club', 'networking'..."
                 className="flex-1 text-sm outline-none"
               />
-              <button
-                className="px-4 py-2 rounded-md"
-                style={{ backgroundColor: PINE, color: "#fff" }}
+              <Button
+                className="text-white"
+                style={{ backgroundColor: PINE }}
               >
                 Search
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -236,21 +236,30 @@ function FeaturedHelpanionsList({ helpanions, loading }: { helpanions: any[]; lo
                       )}
                     </div>
                     <div className="mt-auto flex gap-2 pt-4">
-                      <Link
-                        className="flex-1 px-4 py-2 rounded-md bg-black text-white text-sm text-center"
-                        to={profileUrl}
-                        aria-label={`View ${name} profile`}
+                      <Button
+                        variant="secondary"
+                        className="flex-1"
+                        asChild
                       >
-                        View Profile
-                      </Link>
-                      <Link
-                        className="flex-1 px-4 py-2 rounded-md text-sm text-center"
-                        style={{ backgroundColor: PINE, color: "#fff" }}
-                        to={profileUrl}
-                        aria-label={`Book a session with ${name}`}
+                        <Link
+                          to={profileUrl}
+                          aria-label={`View ${name} profile`}
+                        >
+                          View Profile
+                        </Link>
+                      </Button>
+                      <Button
+                        className="flex-1 text-white"
+                        style={{ backgroundColor: PINE }}
+                        asChild
                       >
-                        Book Session →
-                      </Link>
+                        <Link
+                          to={profileUrl}
+                          aria-label={`Book a session with ${name}`}
+                        >
+                          Book Session →
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 );
@@ -271,9 +280,9 @@ function FeaturedHelpanionsList({ helpanions, loading }: { helpanions: any[]; lo
 /* --- Reusable UI elements --- */
 function TabButton({ children }: { children: React.ReactNode }) {
   return (
-    <button className="px-3 py-1 text-sm rounded-md bg-white border border-gray-200 shadow-sm">
+    <Button variant="outline" size="sm">
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -315,15 +324,15 @@ function Card({
         {secondary ? (
           <div className="mt-4 flex items-center justify-between">
             <div className="text-xs text-gray-500">{footerNote}</div>
-            <button className="px-3 py-1 rounded-md border border-gray-300">{btnText}</button>
+            <Button variant="outline" size="sm">{btnText}</Button>
           </div>
         ) : (
-          <button
-            className="px-4 py-2 rounded-md mt-3"
-            style={{ backgroundColor: primary ? PINE : "#333", color: "#fff" }}
+          <Button
+            className="mt-3 text-white"
+            style={{ backgroundColor: primary ? PINE : "#333" }}
           >
             {btnText}
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -195,7 +195,8 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
     return (
       <>
         <Button 
-          className="w-full h-12 text-base font-semibold text-white transition-colors hover:opacity-90"
+          size="lg"
+          className="w-full text-white transition-colors hover:opacity-90"
           style={{ backgroundColor: "#193232" }}
           onClick={() => setShowCreateRoleModal(true)}
         >
@@ -208,7 +209,8 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
             <div className="flex gap-2 pt-4">
               <Button
                 onClick={handleCreateRole}
-                className="flex-1 h-12 text-white font-semibold"
+                size="lg"
+                className="flex-1 text-white"
                 style={{ backgroundColor: "#193232" }}
                 disabled={targetRole === 'helpanion' && !formData.username}
               >
@@ -216,8 +218,9 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
               </Button>
               <Button
                 variant="outline"
+                size="lg"
                 onClick={() => setShowCreateRoleModal(false)}
-                className="flex-1 h-12 font-semibold"
+                className="flex-1"
               >
                 Not now
               </Button>
@@ -250,7 +253,8 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
           <div className="flex gap-2 pt-4">
             <Button
               onClick={handleCreateRole}
-              className="flex-1 h-12 text-white font-semibold"
+              size="lg"
+              className="flex-1 text-white"
               style={{ backgroundColor: "#193232" }}
               disabled={targetRole === 'helpanion' && !formData.username}
             >
@@ -258,8 +262,9 @@ export const RoleSwitchToggle: React.FC<RoleSwitchToggleProps> = ({
             </Button>
             <Button
               variant="outline"
+              size="lg"
               onClick={() => setShowCreateRoleModal(false)}
-              className="flex-1 h-12 font-semibold"
+              className="flex-1"
             >
               Not now
             </Button>

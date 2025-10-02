@@ -192,19 +192,6 @@ All colors MUST be HSL.
     @apply text-xl md:text-3xl font-bold leading-tight tracking-tight;
   }
 
-  /* Refined button sizing */
-  .btn-sm {
-    @apply px-3 py-1.5 text-xs;
-  }
-
-  .btn-md {
-    @apply px-4 py-2 text-sm;
-  }
-
-  .btn-lg {
-    @apply px-6 py-2.5 text-sm;
-  }
-
   /* Safe area utilities for mobile devices */
   .safe-area-top {
     padding-top: env(safe-area-inset-top);
