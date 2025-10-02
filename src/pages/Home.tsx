@@ -233,7 +233,7 @@ const HomePage: React.FC = () => {
       {/* ------------------------ WO Commune: Helpanion Section (3 steps) ------------------------ */}
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: PINE }}>WO COMMUNE</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">WO COMMUNE</h2>
           <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
             <div className="text-center mb-8">
               <h3 className="text-xl font-bold mb-2">Find your helpanion in 3 steps</h3>
@@ -284,7 +284,7 @@ const HomePage: React.FC = () => {
       {/* ------------------------ WO Experiences: Upcoming Event ------------------------ */}
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: PINE }}>WO EXPERIENCES</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">WO EXPERIENCES</h2>
           <div className="bg-gray-50 rounded-2xl overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-0">
               {/* Event Image - smaller ratio */}
@@ -328,7 +328,7 @@ const HomePage: React.FC = () => {
       {/* ------------------------ WO Essentials ------------------------ */}
       <section className="py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: PINE }}>WO ESSENTIALS</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">WO ESSENTIALS</h2>
           <div className="bg-gray-50 rounded-2xl p-8 md:p-12 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Coming Soon</h3>
             <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
