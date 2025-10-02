@@ -134,7 +134,7 @@ export default function HelpanionsDirectory() {
       <WOCommuneSlate />
 
       {/* ===== Hero Section ===== */}
-      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16 mt-[84px] md:mt-[92px]">
+      <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-16 py-16 mt-[92px] md:mt-[100px]">
         <div className="max-w-3xl mx-auto text-center">
           <h1 
             className="text-3xl md:text-5xl font-semibold leading-tight"
