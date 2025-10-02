@@ -15,6 +15,7 @@ import HelpanionDashboard from "./pages/HelpanionDashboard";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import CommunityGuidelines from "./pages/CommunityGuidelines";
 import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
@@ -72,6 +73,7 @@ const App = () => (
             {/* Static routes first */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
+            <Route path="/guidelines" element={<CommunityGuidelines />} />
             
             <Route path="/wo-commune" element={<WOCommune />} />
             <Route path="/auth" element={<Auth />} />
