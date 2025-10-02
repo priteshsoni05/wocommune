@@ -263,11 +263,6 @@ export default function WOCommune(): JSX.Element {
         
         {/* ===== Hero Section ===== */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600 mb-6">
-            <span>💡</span>
-            <span>Our Community</span>
-          </div>
-          
           <h1 className="text-hero font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
             Help will always be given at 
             <br />
