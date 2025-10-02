@@ -13,7 +13,7 @@ import {
   XCircle, 
   MessageSquare,
   Video,
-  MoreHorizontal
+  CalendarPlus
 } from "lucide-react";
 import { format, isAfter, parseISO, parse } from "date-fns";
 
@@ -79,6 +79,26 @@ export const HelpanionBookings = () => {
     const bookingDate = parseISO(booking.booking_date);
     const endTime = parse(booking.end_time, 'HH:mm:ss', bookingDate);
     return isAfter(now, endTime);
+  };
+
+  const handleSendInvite = (booking: any) => {
+    const bookingDate = parseISO(booking.booking_date);
+    const startDateTime = parse(booking.start_time, 'HH:mm:ss', bookingDate);
+    const endDateTime = parse(booking.end_time, 'HH:mm:ss', bookingDate);
+    
+    // Format dates for Google Calendar (yyyyMMddTHHmmss format in UTC)
+    const formatGoogleDate = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+    
+    const googleCalendarUrl = new URL('https://calendar.google.com/calendar/render');
+    googleCalendarUrl.searchParams.append('action', 'TEMPLATE');
+    googleCalendarUrl.searchParams.append('text', booking.services?.title || 'Session');
+    googleCalendarUrl.searchParams.append('dates', `${formatGoogleDate(startDateTime)}/${formatGoogleDate(endDateTime)}`);
+    googleCalendarUrl.searchParams.append('details', `Session with ${booking.seeker_name}\n\nNotes: ${booking.notes || 'No additional notes'}`);
+    googleCalendarUrl.searchParams.append('add', booking.seeker_email);
+    
+    window.open(googleCalendarUrl.toString(), '_blank');
   };
 
   const BookingCard = ({ booking }: { booking: any }) => (
@@ -165,29 +185,27 @@ export const HelpanionBookings = () => {
               </>
             )}
             
-            {booking.status === 'confirmed' && (
-              <>
-                <Button className="flex-1">
-                  <Video className="h-5 w-5 mr-2" />
-                  Join Session
-                </Button>
-                {isSessionEnded(booking) && (
-                  <Button 
-                    variant="outline"
-                    onClick={() => handleStatusUpdate(booking.id, 'completed')}
-                    className="flex-1 sm:flex-none"
-                  >
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Complete
-                  </Button>
-                )}
-              </>
+            {(booking.status === 'pending' || booking.status === 'confirmed') && (
+              <Button 
+                variant="outline"
+                onClick={() => handleSendInvite(booking)}
+                className="flex-1 sm:flex-none"
+              >
+                <CalendarPlus className="h-5 w-5 mr-2" />
+                Send Invite
+              </Button>
             )}
             
-            <Button variant="ghost" className="flex-1 sm:flex-none">
-              <MessageSquare className="h-5 w-5 mr-2" />
-              Message
-            </Button>
+            {booking.status === 'confirmed' && isSessionEnded(booking) && (
+              <Button 
+                variant="outline"
+                onClick={() => handleStatusUpdate(booking.id, 'completed')}
+                className="flex-1 sm:flex-none"
+              >
+                <CheckCircle className="h-5 w-5 mr-2" />
+                Complete
+              </Button>
+            )}
           </div>
         </div>
       </CardContent>

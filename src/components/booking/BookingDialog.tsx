@@ -108,11 +108,7 @@ export const BookingDialog = ({
 
       console.log('Booking data to insert:', bookingData);
 
-      // Create Zoho meeting link
-      let meetingLink: string | null = null;
-      console.log('Creating Zoho meeting link...');
-
-      // Resolve helper profile for accurate calendar + email context
+      // Resolve helper profile for email context
       const { data: helperProfile } = await supabase
         .from('profiles')
         .select('display_name, email')
@@ -121,49 +117,13 @@ export const BookingDialog = ({
 
       const helperDisplayName = helperProfile?.display_name || 'Helper';
       const helperEmail = helperProfile?.email || 'helper@example.com';
-      
-      const startDateTime = new Date(selectedDate);
-      startDateTime.setHours(parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]), 0, 0);
-      const endDateTime = new Date(startDateTime.getTime() + (service.duration_minutes || 60) * 60000);
-
-      const meetingData = {
-        service_name: service.title,
-        start_time: startDateTime.toISOString(),
-        end_time: endDateTime.toISOString(),
-        seeker_name: formData.fullName,
-        seeker_email: formData.email,
-        helper_name: helperDisplayName,
-        helper_email: helperEmail,
-        helper_id: helperId,
-      };
-
-      try {
-        const meetResponse = await supabase.functions.invoke('create-zoho-meeting', {
-          body: meetingData
-        });
-
-        if (meetResponse.data?.meeting_link) {
-          meetingLink = meetResponse.data.meeting_link as string;
-          console.log('Zoho meeting link created successfully:', meetingLink);
-        } else {
-          console.warn('No Zoho meeting link returned. Proceeding without one.', meetResponse.error || meetResponse.data);
-        }
-      } catch (meetErr) {
-        console.error('Zoho meeting creation error. Proceeding without meeting link.', meetErr);
-      }
-
-      // Now create booking with optional meeting link
-      const bookingDataWithMeeting = {
-        ...bookingData,
-        meeting_link: meetingLink
-      };
 
       let data, error;
       
-      // Authenticated user - can select the booking back
+      // Create booking without meeting link (helper will send invite manually)
       const result = await supabase
         .from('bookings')
-        .insert(bookingDataWithMeeting)
+        .insert(bookingData)
         .select()
         .single();
       data = result.data;
@@ -185,9 +145,10 @@ export const BookingDialog = ({
       try {
         await supabase.functions.invoke('send-booking-confirmation', {
           body: {
-            booking: { ...data, meeting_link: meetingLink },
+            booking: data,
             service: service,
-            helperEmail: helperId
+            helperEmail: helperEmail,
+            helperName: helperDisplayName
           }
         });
       } catch (emailError) {
