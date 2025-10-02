@@ -262,9 +262,7 @@ export default function WOCommune(): JSX.Element {
         {/* ===== Hero Section ===== */}
         <div className="text-center mb-10">
           <h1 className="text-hero font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
-            Help will always be given at 
-            <br />
-            <span className="text-[#193232]">WO COMMUNE</span>
+            Help will always be given at <span className="text-[#193232]">WO COMMUNE</span>
             <br />
             <span className="text-lg md:text-xl">to those who ask for it</span>
           </h1>
