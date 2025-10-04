@@ -265,7 +265,7 @@ export default function WOCommune(): JSX.Element {
         
         {/* ===== Hero Section ===== */}
         <div className="text-center mb-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
+          <h1 className="text-justify sm:text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
             Help will always be given at <span className="text-[#193232]">WO COMMUNE</span>
             <br />
             <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">to those who ask for it</span>
