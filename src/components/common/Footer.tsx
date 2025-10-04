@@ -23,23 +23,23 @@ export function Footer() {
         <div className="space-y-3">
           {/* Brand links */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
-            <h6 className="font-semibold text-sm">BRAND:</h6>
-            <Link to="/about" className="text-sm text-gray-700 hover:underline md:inline">ABOUT</Link>
+            <h6 className="font-semibold text-sm">Brand:</h6>
+            <Link to="/about" className="text-sm text-gray-700 hover:underline md:inline">About</Link>
           </div>
 
           {/* Commune links */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
-            <h6 className="font-semibold text-sm">COMMUNE:</h6>
-            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline md:inline">KNOW COMMUNE</Link>
-            <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline md:inline">JOIN COMMUNE</a>
-            <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline md:inline">BECOME A HELPANION</Link>
-            <Link to="/guidelines" className="text-sm text-gray-700 hover:underline md:inline">COMMUNITY GUIDELINES</Link>
+            <h6 className="font-semibold text-sm">Commune:</h6>
+            <Link to="/wo-commune" className="text-sm text-gray-700 hover:underline md:inline">Know Commune</Link>
+            <a href="https://wocommune.substack.com/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-700 hover:underline md:inline">Join Commune</a>
+            <Link to="/auth?mode=signup&role=helpanion" className="text-sm text-gray-700 hover:underline md:inline">Become a Helpanion</Link>
+            <Link to="/guidelines" className="text-sm text-gray-700 hover:underline md:inline">Community Guidelines</Link>
           </div>
 
           {/* Get in touch */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-x-4">
-            <h6 className="font-semibold text-sm">GET IN TOUCH:</h6>
-            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline md:inline">WRITE US</a>
+            <h6 className="font-semibold text-sm">Get in Touch:</h6>
+            <a href="mailto:commune@walkersodyssey.com" className="text-sm text-gray-700 hover:underline md:inline">Write Us</a>
           </div>
         </div>
 
