@@ -265,13 +265,13 @@ export default function WOCommune(): JSX.Element {
         
         {/* ===== Hero Section ===== */}
         <div className="text-center mb-10">
-          <h1 className="text-hero font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight max-w-3xl mx-auto">
             Help will always be given at <span className="text-[#193232]">WO COMMUNE</span>
             <br />
-            <span className="text-lg md:text-xl">to those who ask for it</span>
+            <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">to those who ask for it</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Connect with our community of helpers for expert insights, support, and guidance to elevate your journey.
           </p>
           
