@@ -271,7 +271,7 @@ export default function WOCommune(): JSX.Element {
             <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl">to those who ask for it</span>
           </h1>
           
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-justify sm:text-center text-base sm:text-lg md:text-xl text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
             Connect with our community of helpers for expert insights, support, and guidance to elevate your journey.
           </p>
           
