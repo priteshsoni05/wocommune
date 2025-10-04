@@ -83,7 +83,11 @@ export default function WOCommune(): JSX.Element {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = searchQuery.trim();
-    navigate(`/wo-commune?query=${encodeURIComponent(q)}`);
+    if (q) {
+      navigate(`/helpanions?search=${encodeURIComponent(q)}`);
+    } else {
+      navigate('/helpanions');
+    }
   };
 
   // Fetch active helpanions for "Featured Helpanions"
