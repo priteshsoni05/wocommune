@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
       >
         {/* Background image */}
         <div
-          className="absolute inset-0 bg-center bg-no-repeat bg-cover"
+          className="absolute inset-0 bg-left md:bg-center bg-no-repeat bg-cover"
           style={{
             backgroundImage: `url(${HERO_IMG})`,
           }}
