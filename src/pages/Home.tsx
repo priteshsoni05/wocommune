@@ -235,7 +235,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: PINE }}>WO COMMUNE</h2>
           <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
-            <div className="text-center mb-8">
+            <div className="text-left md:text-center mb-8">
               <h3 className="text-xl font-bold mb-2">Find your helpanion in 3 steps</h3>
               <p className="text-white/80">Connect with guidance that understands your journey</p>
             </div>
