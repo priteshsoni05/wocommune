@@ -271,7 +271,7 @@ export default function WOCommune(): JSX.Element {
           
           <div className="w-12 border-t-2 border-gray-400 my-4 md:mx-auto" />
           
-          <p className="text-lg md:text-xl text-gray-600 mb-12 max-w-2xl md:mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-gray-600 mb-12 max-w-2xl md:mx-auto leading-relaxed">
             Connect with our community of helpers for expert insights, support, and guidance to elevate your journey.
           </p>
           
