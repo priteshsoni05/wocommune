@@ -172,8 +172,7 @@ const HomePage: React.FC = () => {
           <div className="mt-6">
             <Link
               to="/auth?mode=signup"
-              className="inline-block px-5 py-2 rounded-md font-semibold"
-              style={{ backgroundColor: PINE, color: "white" }}
+              className="inline-block px-5 py-2 rounded-md font-semibold bg-transparent border-2 border-white text-white hover:bg-white/10 transition-colors"
             >
               Start Your Journey
             </Link>
