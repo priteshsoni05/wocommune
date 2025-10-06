@@ -20,10 +20,11 @@ const AboutPage: React.FC = () => {
 
       {/* ------------------------ Hero / Intro ------------------------ */}
       <section className="pt-20 pb-16 text-center max-w-[900px] mx-auto px-4">
-        <h1 className="font-logo mb-6">
+        <h1 className="text-hero font-bold mb-6" style={{ color: PINE }}>
           About Us
         </h1>
-        <p className="leading-relaxed">
+        <div className="w-12 border-t-2 border-[#193232] mx-auto my-4" />
+        <p className="text-base md:text-lg leading-relaxed">
           Walker's Odyssey helps each walker and explorer find a sense of fulfilment in their path,
           whether chosen or still being discovered.
         </p>
