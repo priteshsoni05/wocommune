@@ -3,9 +3,6 @@ import { Linkedin, Instagram } from 'lucide-react';
 import { ContactModal } from './ContactModal';
 
 export function Footer() {
-  const pipeline =
-    (import.meta.env.VITE_PIPELINE_MARKER as string | undefined) ?? 'main';
-
   return (
     <footer className="bg-white text-[#2B2B2B] border-t border-gray-200">
       <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-12">
@@ -48,13 +45,6 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
             <div className="flex flex-col md:flex-row items-center gap-4">
               <p>© {new Date().getFullYear()} Walker's Odyssey. All rights reserved.</p>
-              <span>
-                Pipeline:
-                <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-0.5 font-mono text-[10px] text-gray-700">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                  {pipeline}
-                </span>
-              </span>
             </div>
             
             {/* Social icons on the right */}

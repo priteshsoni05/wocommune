@@ -1,9 +1,6 @@
 import { Link } from 'react-router-dom';
 
 export function HelpanionFooter() {
-  const pipeline =
-    (import.meta.env.VITE_PIPELINE_MARKER as string | undefined) ?? 'main';
-
   return (
     <footer className="bg-muted/20 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -41,18 +38,6 @@ export function HelpanionFooter() {
           </div>
         </div>
 
-        {/* Pipeline marker */}
-        <div className="mt-8 pt-4 border-t border-border">
-          <div className="flex justify-end">
-            <span className="text-xs text-muted-foreground">
-              Pipeline:
-              <span className="ml-1 inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                {pipeline}
-              </span>
-            </span>
-          </div>
-        </div>
       </div>
     </footer>
   );
