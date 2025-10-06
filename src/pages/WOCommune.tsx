@@ -311,7 +311,7 @@ export default function WOCommune(): JSX.Element {
         {/* ===== Featured Helpanions Grid ===== */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-wide">Featured Helpanions</h2>
+            <h2 className="text-sm font-semibold tracking-widest text-gray-900 uppercase">Featured Helpanions</h2>
             <Link
               to="/helpanions"
               className="inline-flex items-center text-[#193232] font-medium hover:underline"
@@ -336,7 +336,7 @@ export default function WOCommune(): JSX.Element {
         {/* ===== Community Activities ===== */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-wide">WO Experiences</h2>
+            <h2 className="text-sm font-semibold tracking-widest text-gray-900 uppercase">WO Experiences</h2>
             <div className="flex gap-2">
               <CategoryTag active>Events</CategoryTag>
               <CategoryTag>Conversations</CategoryTag>
