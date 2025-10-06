@@ -381,7 +381,7 @@ export default function WOCommune(): JSX.Element {
 // Category Tag Component
 function CategoryTag({ children, active = false }: { children: React.ReactNode; active?: boolean }) {
   return (
-    <button className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+    <button className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
       active 
         ? 'bg-[#193232] text-white' 
         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
