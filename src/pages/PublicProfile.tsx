@@ -373,7 +373,7 @@ const OptimizedPublicProfile = () => {
                     {data.services.map((service) => (
                       <div
                         key={service.id}
-                        className="bg-card border border-border rounded-lg p-6 hover:shadow-sm transition-all duration-300 hover:border-primary/20"
+                        className="bg-gray-50 border border-border rounded-lg p-6 hover:shadow-sm transition-all duration-300 hover:border-primary/20"
                       >
                         <div className="space-y-4">
                           <div className="space-y-3">
