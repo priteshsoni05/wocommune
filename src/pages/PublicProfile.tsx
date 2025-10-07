@@ -420,7 +420,7 @@ const OptimizedPublicProfile = () => {
       <Dialog open={showBioModal} onOpenChange={setShowBioModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Short Bio</DialogTitle>
+            <DialogTitle>About Me</DialogTitle>
           </DialogHeader>
           <div className="mt-4">
             <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap text-justify sm:text-left">
