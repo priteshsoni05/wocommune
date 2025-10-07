@@ -103,7 +103,7 @@ const HelpanionCard: React.FC<{ helpanion: HelpanionProfile }> = ({ helpanion })
               <Badge 
                 key={index} 
                 variant="secondary" 
-                className="text-xs px-3 py-1 bg-primary/10 text-primary border-primary/20"
+                className="text-xs px-3 py-1 bg-[#193232] text-white"
               >
                 {skill}
               </Badge>
