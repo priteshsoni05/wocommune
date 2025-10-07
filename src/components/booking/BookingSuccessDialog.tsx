@@ -87,8 +87,9 @@ export const BookingSuccessDialog = ({
           <div className="space-y-3">
             <Button
               onClick={addToCalendar}
-              className="w-full"
+              className="w-full font-semibold"
               variant="outline"
+              style={{ borderColor: '#193232', color: '#193232' }}
             >
               <Calendar className="w-4 h-4 mr-2" />
               Add to Calendar
@@ -96,7 +97,8 @@ export const BookingSuccessDialog = ({
             
             <Button
               onClick={() => onOpenChange(false)}
-              className="w-full"
+              className="w-full text-white font-semibold hover:opacity-90"
+              style={{ backgroundColor: '#193232' }}
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               Continue Browsing

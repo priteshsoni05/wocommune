@@ -189,38 +189,38 @@ export const BookingDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
+          <DialogTitle className="flex items-center space-x-2 font-semibold" style={{ color: '#193232' }}>
             <Calendar className="w-5 h-5" />
             <span>Book Session</span>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-gray-600">
             Complete your booking details below
           </DialogDescription>
         </DialogHeader>
 
         {/* Booking Summary */}
-        <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-          <h4 className="font-medium text-sm">Booking Summary</h4>
-          <div className="space-y-1 text-sm text-muted-foreground">
+        <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
+          <h4 className="font-semibold text-sm" style={{ color: '#193232' }}>Booking Summary</h4>
+          <div className="space-y-1 text-sm text-gray-600">
             <div className="flex justify-between">
               <span>Service:</span>
-              <span className="font-medium text-foreground">{service.title}</span>
+              <span className="font-medium text-gray-900">{service.title}</span>
             </div>
             <div className="flex justify-between">
               <span>Date:</span>
-              <span className="font-medium text-foreground">{format(selectedDate, 'EEEE, MMMM do, yyyy')}</span>
+              <span className="font-medium text-gray-900">{format(selectedDate, 'EEEE, MMMM do, yyyy')}</span>
             </div>
             <div className="flex justify-between">
               <span>Time:</span>
-              <span className="font-medium text-foreground">{startTime} - {sessionEndTime}</span>
+              <span className="font-medium text-gray-900">{startTime} - {sessionEndTime}</span>
             </div>
             <div className="flex justify-between">
               <span>Duration:</span>
-              <span className="font-medium text-foreground">{service.duration_minutes || 60} minutes</span>
+              <span className="font-medium text-gray-900">{service.duration_minutes || 60} minutes</span>
             </div>
-            <div className="flex justify-between border-t pt-1">
-              <span>Total:</span>
-              <span className="font-bold text-foreground">₹{calculateSessionPrice().toFixed(0)}</span>
+            <div className="flex justify-between border-t border-gray-200 pt-1">
+              <span className="font-semibold">Total:</span>
+              <span className="font-bold" style={{ color: '#193232' }}>₹{calculateSessionPrice().toFixed(0)}</span>
             </div>
           </div>
         </div>
@@ -273,15 +273,16 @@ export const BookingDialog = ({
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
+              className="flex-1 font-semibold"
               onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1"
+              className="flex-1 text-white font-semibold hover:opacity-90"
               disabled={loading}
+              style={{ backgroundColor: '#193232' }}
             >
               {loading ? "Booking..." : "Confirm Booking"}
             </Button>

@@ -96,8 +96,8 @@ export const ServiceBookingDialog = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="inset-0 w-screen h-[100dvh] max-w-none max-h-none sm:inset-0 sm:w-screen sm:h-[100dvh] sm:max-w-none sm:max-h-none sm:rounded-none sm:translate-x-0 sm:translate-y-0 sm:left-0 sm:top-0 overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Book: {service.title}</DialogTitle>
-            <DialogDescription className="text-base">
+            <DialogTitle className="text-2xl font-semibold" style={{ color: '#193232' }}>Book: {service.title}</DialogTitle>
+            <DialogDescription className="text-base text-gray-600">
               Select your preferred date and time slot
             </DialogDescription>
           </DialogHeader>
@@ -106,8 +106,8 @@ export const ServiceBookingDialog = ({
             {/* Calendar Section */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2 mb-4">
-                <CalendarIcon className="w-5 h-5" />
-                <h3 className="text-lg font-semibold">Select a Date</h3>
+                <CalendarIcon className="w-5 h-5" style={{ color: '#193232' }} />
+                <h3 className="text-lg font-semibold" style={{ color: '#193232' }}>Select a Date</h3>
               </div>
               
               <Calendar
@@ -133,8 +133,8 @@ export const ServiceBookingDialog = ({
             {/* Time Slots Section */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2 mb-4">
-                <Clock className="w-5 h-5" />
-                <h3 className="text-lg font-semibold">Available Times</h3>
+                <Clock className="w-5 h-5" style={{ color: '#193232' }} />
+                <h3 className="text-lg font-semibold" style={{ color: '#193232' }}>Available Times</h3>
               </div>
               
               <p className="text-sm text-muted-foreground mb-4">
@@ -181,9 +181,10 @@ export const ServiceBookingDialog = ({
                             <p className="text-sm text-muted-foreground">Duration: {service.duration_minutes || 60} minutes</p>
                           </div>
                           <Button 
-                            className="w-full" 
+                            className="w-full text-white font-semibold hover:opacity-90" 
                             size="lg"
                             onClick={handleBookSlot}
+                            style={{ backgroundColor: '#193232' }}
                           >
                             Continue to Booking Details
                           </Button>
