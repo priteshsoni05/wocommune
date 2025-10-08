@@ -49,7 +49,12 @@ export const ServiceBookingDialog = ({
   const disabledDays = (date: Date) => {
     const dayOfWeek = date.getDay();
     const availableDays = getAvailableDays();
-    return !availableDays.includes(dayOfWeek) || date < new Date();
+    // Compare by date only (avoid disabling today)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const compareDate = new Date(date);
+    compareDate.setHours(0, 0, 0, 0);
+    return !availableDays.includes(dayOfWeek) || compareDate < today;
   };
 
   const handleSlotSelect = (timeSlot: string) => {

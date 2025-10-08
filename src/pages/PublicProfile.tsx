@@ -144,10 +144,25 @@ const OptimizedPublicProfile = () => {
     fetchPublicProfile();
   }, [fetchPublicProfile]);
 
-  const handleServiceBook = useCallback((service: Service) => {
+  const handleServiceBook = useCallback(async (service: Service) => {
     setSelectedService(service);
-    setShowBookingDialog(true);
-  }, []);
+    try {
+      // Refresh availability on open to avoid stale cache
+      const { data: freshAvailability, error } = await supabase
+        .from("availability_slots")
+        .select("*")
+        .eq("helper_id", data?.profile.user_id)
+        .eq("is_available", true);
+
+      if (!error && freshAvailability) {
+        setData((prev) => (prev ? { ...prev, availability: freshAvailability } : prev));
+      }
+    } catch (e) {
+      console.error("Error refreshing availability:", e);
+    } finally {
+      setShowBookingDialog(true);
+    }
+  }, [data?.profile.user_id]);
 
   const scrollToServices = useCallback(() => {
     servicesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
