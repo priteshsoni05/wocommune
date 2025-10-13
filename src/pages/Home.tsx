@@ -268,7 +268,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="text-left">
+            <div className="text-right">
               <Link
                 to="/wo-commune"
                 className="inline-flex items-center px-6 py-3 rounded-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
