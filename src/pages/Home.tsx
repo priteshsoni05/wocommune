@@ -234,15 +234,15 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: PINE }}>WO COMMUNE</h2>
           <div className="rounded-2xl p-6 md:p-8 text-white" style={{ backgroundColor: "#193232" }}>
-            <div className="text-left md:text-center mb-8">
+            <div className="text-left mb-8">
               <h3 className="text-xl font-bold mb-2">Find your helpanion in 3 steps</h3>
               <p className="text-white/80">Connect with guidance that understands your journey</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {/* Step 1 */}
-              <div className="text-left md:text-center">
-                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 md:mx-auto">
+              <div className="text-left">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3">
                   1
                 </div>
                 <h4 className="font-semibold text-base mb-2">Discover Your Helpanion</h4>
@@ -250,8 +250,8 @@ const HomePage: React.FC = () => {
               </div>
               
               {/* Step 2 */}
-              <div className="text-left md:text-center">
-                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 md:mx-auto">
+              <div className="text-left">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3">
                   2
                 </div>
                 <h4 className="font-semibold text-base mb-2">Schedule the Meeting</h4>
@@ -259,8 +259,8 @@ const HomePage: React.FC = () => {
               </div>
               
               {/* Step 3 */}
-              <div className="text-left md:text-center">
-                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3 md:mx-auto">
+              <div className="text-left">
+                <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-lg font-bold mb-3">
                   3
                 </div>
                 <h4 className="font-semibold text-base mb-2">Connect & Converse</h4>
@@ -268,7 +268,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="text-left md:text-center">
+            <div className="text-left">
               <Link
                 to="/wo-commune"
                 className="inline-flex items-center px-6 py-3 rounded-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
