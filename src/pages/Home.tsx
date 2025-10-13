@@ -154,14 +154,14 @@ const HomePage: React.FC = () => {
         <div className="absolute inset-0 bg-black/45" />
 
         {/* Hero content (centered) */}
-        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-start md:items-center justify-center text-left md:text-center">
+        <div className="relative z-10 max-w-[1140px] mx-auto px-4 md:px-8 h-full flex flex-col items-start justify-center text-left">
           {/* Headline */}
           <h1 className="text-white text-hero font-bold max-w-3xl">
             Your trusted companion for every step
           </h1>
 
           {/* small divider */}
-          <div className="w-12 border-t-2 border-white my-4 md:mx-auto" />
+          <div className="w-12 border-t-2 border-white my-4" />
 
           {/* Subtext */}
           <p className="text-white max-w-2xl text-base md:text-lg leading-relaxed">
