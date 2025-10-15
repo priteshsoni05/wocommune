@@ -172,7 +172,7 @@ const HomePage: React.FC = () => {
           <div className="mt-6">
             <Link
               to="/auth?mode=signup"
-              className="inline-block px-6 py-3 rounded-md font-semibold bg-transparent border-2 border-white text-white hover:bg-white/10 transition-colors"
+              className="inline-block px-6 py-2 rounded-md font-semibold bg-transparent border-2 border-white text-white hover:bg-white/10 transition-colors"
             >
               Start Your Journey
             </Link>
@@ -271,7 +271,7 @@ const HomePage: React.FC = () => {
             <div className="text-right">
               <Link
                 to="/wo-commune"
-                className="inline-flex items-center px-6 py-3 rounded-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
+                className="inline-flex items-center px-6 py-2 rounded-lg font-semibold bg-transparent border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-200"
               >
                 Find your helpanion →
               </Link>
