@@ -114,7 +114,7 @@ const AboutPage: React.FC = () => {
             </CardHeader>
             <CardContent>
               <p className="leading-relaxed">
-                Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging. Carry a piece of the Odyssey with you, wherever you go.
+                Everyday companions (products) designed to inspire belief and action. Carry a piece of the Odyssey with you, wherever you go.
               </p>
             </CardContent>
           </Card>

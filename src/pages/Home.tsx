@@ -331,7 +331,7 @@ const HomePage: React.FC = () => {
           <div className="bg-gray-50 rounded-2xl p-8 md:p-12 text-left">
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Coming Soon</h3>
             <p className="text-gray-600 leading-relaxed max-w-2xl">
-              Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging. Stay tuned for updates.
+              Everyday companions (products) designed to inspire belief and action. Stay tuned for updates.
             </p>
           </div>
         </div>
