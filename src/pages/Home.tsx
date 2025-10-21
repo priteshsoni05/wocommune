@@ -198,7 +198,7 @@ const HomePage: React.FC = () => {
               {/* WO Commune */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Commune</h3>
-                <p className="text-gray-700 text-sm leading-relaxed text-justify">
+                <p className="text-gray-700 text-sm leading-relaxed text-left md:text-justify">
                   One-to-one connections that go beyond small talk. A living platform where people share experiences, stories, and wisdom through real conversations.
                 </p>
               </div>
@@ -206,7 +206,7 @@ const HomePage: React.FC = () => {
               {/* WO Experiences */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Experiences</h3>
-                <p className="text-gray-700 text-sm leading-relaxed text-justify">
+                <p className="text-gray-700 text-sm leading-relaxed text-left md:text-justify">
                   From networking dinners to run clubs. Experiences designed to help people connect offline, move their bodies, and nurture their minds.
                 </p>
               </div>
@@ -214,7 +214,7 @@ const HomePage: React.FC = () => {
               {/* WO Essentials */}
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Essentials</h3>
-                <p className="text-gray-700 text-sm leading-relaxed text-justify">
+                <p className="text-gray-700 text-sm leading-relaxed text-left md:text-justify">
                   Everyday companions (products) designed to inspire belief and action.
                 </p>
               </div>
