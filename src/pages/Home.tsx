@@ -215,7 +215,7 @@ const HomePage: React.FC = () => {
               <div className="bg-white rounded-lg p-5">
                 <h3 className="font-semibold text-lg mb-2" style={{ color: PINE }}>WO Essentials</h3>
                 <p className="text-gray-700 text-sm leading-relaxed text-justify">
-                  Everyday companions — journals, wearables, lifestyle tools — created to remind us of gratitude, action, and belonging.
+                  Everyday companions (products) designed to inspire belief and action.
                 </p>
               </div>
             </div>
