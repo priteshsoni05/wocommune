@@ -220,7 +220,7 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="text-left md:text-center">
               <Link to="/about" className="inline-flex items-center gap-2 font-medium hover:underline" style={{ color: "#193232" }}>
                 Our Story →
               </Link>
