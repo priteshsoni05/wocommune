@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useRolePersistence } from '@/hooks/useRolePersistence';
+import { useFormPersistence } from '@/hooks/useFormPersistence';
 import { Link } from 'react-router-dom';
 
 export type UserRole = 'walker' | 'helpanion';
@@ -30,13 +31,21 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   onSuccess,
   onCancel
 }) => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    username: ''
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData 
+  } = useFormPersistence({
+    key: `signup_${selectedRole}`,
+    initialValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      username: ''
+    }
   });
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [usernameLoading, setUsernameLoading] = useState(false);
@@ -242,6 +251,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
 
         // Set the active role immediately after successful signup
         setActiveRole(selectedRole);
+        // Clear persisted form data after successful signup
+        resetFormData();
         onSuccess(selectedRole);
       }
     } catch (error: any) {
@@ -253,7 +264,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   };
 
   const handleUsernameChange = (value: string) => {
-    setFormData(prev => ({ ...prev, username: value }));
+    updateFormData({ username: value });
     setUsernameError('');
   };
 
@@ -291,7 +302,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               id="name"
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) => updateFormData({ name: e.target.value })}
               required
               placeholder="Enter your full name"
               className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
@@ -310,7 +321,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              onChange={(e) => updateFormData({ email: e.target.value })}
               required
               placeholder="Enter your email"
               className="h-12 px-4 border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all duration-200"
@@ -365,7 +376,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                onChange={(e) => updateFormData({ password: e.target.value })}
                 required
                 placeholder="Create password"
                 minLength={6}
@@ -383,7 +394,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
-                onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
                 required
                 placeholder="Confirm password"
                 minLength={6}
