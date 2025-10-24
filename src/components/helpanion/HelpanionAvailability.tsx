@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAvailabilitySlots } from "@/hooks/useAvailabilitySlots";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -43,11 +44,19 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
   const { toast } = useToast();
   
   const [showAddForm, setShowAddForm] = useState(false);
-  const [formData, setFormData] = useState({
-    day_of_week: 1,
-    start_time: "09:00",
-    end_time: "17:00",
-    is_available: true
+  
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData 
+  } = useFormPersistence({
+    key: "helpanion_availability",
+    initialValues: {
+      day_of_week: 1,
+      start_time: "09:00",
+      end_time: "17:00",
+      is_available: true
+    }
   });
 
   const isProfileIncomplete = !isProfileComplete;
@@ -77,12 +86,7 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
         title: "Success",
         description: "Availability slot added successfully!",
       });
-      setFormData({
-        day_of_week: 1,
-        start_time: "09:00",
-        end_time: "17:00",
-        is_available: true
-      });
+      resetFormData();
       setShowAddForm(false);
     }
   };
@@ -164,7 +168,7 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
                   <Label htmlFor="day_of_week">Day of Week</Label>
                   <Select 
                     value={formData.day_of_week.toString()} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, day_of_week: Number(value) }))}
+                    onValueChange={(value) => updateFormData({ day_of_week: Number(value) })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select day" />
@@ -183,7 +187,7 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
                   <Label htmlFor="start_time">Start Time</Label>
                   <Select 
                     value={formData.start_time} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, start_time: value }))}
+                    onValueChange={(value) => updateFormData({ start_time: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select start time" />
@@ -202,7 +206,7 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
                   <Label htmlFor="end_time">End Time</Label>
                   <Select 
                     value={formData.end_time} 
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, end_time: value }))}
+                    onValueChange={(value) => updateFormData({ end_time: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select end time" />
@@ -222,7 +226,7 @@ export const HelpanionAvailability = ({ profileProgress, isProfileComplete }: He
                 <Switch
                   id="is_available"
                   checked={formData.is_available}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_available: checked }))}
+                  onCheckedChange={(checked) => updateFormData({ is_available: checked })}
                 />
                 <Label htmlFor="is_available">Available for booking</Label>
               </div>

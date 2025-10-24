@@ -8,13 +8,24 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle, AlertCircle, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 
 export const CalendarIntegrationSettings = () => {
-  const [calendarId, setCalendarId] = useState("");
   const [status, setStatus] = useState<"not_configured" | "connected" | "error">("not_configured");
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData 
+  } = useFormPersistence({
+    key: "calendar_integration",
+    initialValues: {
+      calendarId: ""
+    }
+  });
 
   useEffect(() => {
     fetchCalendarSettings();
@@ -32,7 +43,7 @@ export const CalendarIntegrationSettings = () => {
         .maybeSingle();
 
       if (profile) {
-        setCalendarId(profile.google_calendar_id || "");
+        updateFormData({ calendarId: profile.google_calendar_id || "" });
         setStatus((profile.calendar_integration_status as "not_configured" | "connected" | "error") || "not_configured");
       }
     } catch (error) {
@@ -43,7 +54,7 @@ export const CalendarIntegrationSettings = () => {
   };
 
   const handleSaveCalendar = async () => {
-    if (!calendarId.trim()) {
+    if (!formData.calendarId.trim()) {
       toast({
         title: "Error",
         description: "Please enter a valid calendar ID",
@@ -60,7 +71,7 @@ export const CalendarIntegrationSettings = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          google_calendar_id: calendarId,
+          google_calendar_id: formData.calendarId,
           calendar_integration_status: 'connected'
         })
         .eq('user_id', user.id);
@@ -101,7 +112,7 @@ export const CalendarIntegrationSettings = () => {
 
       if (error) throw error;
 
-      setCalendarId("");
+      resetFormData();
       setStatus('not_configured');
       toast({
         title: "Calendar Disconnected",
@@ -182,8 +193,8 @@ export const CalendarIntegrationSettings = () => {
           <Input
             id="calendar-id"
             placeholder="your-calendar-id@group.calendar.google.com"
-            value={calendarId}
-            onChange={(e) => setCalendarId(e.target.value)}
+            value={formData.calendarId}
+            onChange={(e) => updateFormData({ calendarId: e.target.value })}
             disabled={loading}
           />
           <p className="text-xs text-muted-foreground">
@@ -193,7 +204,7 @@ export const CalendarIntegrationSettings = () => {
 
         <div className="flex gap-2">
           {status === 'not_configured' || status === 'error' ? (
-            <Button onClick={handleSaveCalendar} disabled={loading || !calendarId.trim()}>
+            <Button onClick={handleSaveCalendar} disabled={loading || !formData.calendarId.trim()}>
               {loading ? "Connecting..." : "Connect Calendar"}
             </Button>
           ) : (

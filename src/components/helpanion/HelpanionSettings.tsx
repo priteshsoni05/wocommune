@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Profile } from "@/hooks/useOptimizedProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,17 +35,32 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
   
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [formData, setFormData] = useState({
-    display_name: profile.display_name || "",
-    email: profile.email || "",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-    profileVisible: true,
-    emailNotifications: true,
-    bookingNotifications: true,
-    reviewNotifications: true
+  
+  const { 
+    formData, 
+    updateFormData, 
+    resetFormData 
+  } = useFormPersistence({
+    key: "helpanion_settings",
+    initialValues: {
+      display_name: profile.display_name || "",
+      email: profile.email || "",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      profileVisible: true,
+      emailNotifications: true,
+      bookingNotifications: true,
+      reviewNotifications: true
+    }
   });
+
+  useEffect(() => {
+    updateFormData({
+      display_name: profile.display_name || "",
+      email: profile.email || ""
+    });
+  }, [profile.display_name, profile.email]);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,12 +136,11 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
           description: "Password updated successfully!",
         });
         
-        setFormData(prev => ({
-          ...prev,
+        updateFormData({
           currentPassword: "",
           newPassword: "",
           confirmPassword: ""
-        }));
+        });
       }
     } catch (error) {
       toast({
@@ -178,7 +193,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                 <Input
                   id="display_name"
                   value={formData.display_name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, display_name: e.target.value }))}
+                  onChange={(e) => updateFormData({ display_name: e.target.value })}
                   placeholder="Your full name"
                 />
               </div>
@@ -188,7 +203,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => updateFormData({ email: e.target.value })}
                   placeholder="your@email.com"
                 />
               </div>
@@ -220,7 +235,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                 id="currentPassword"
                 type="password"
                 value={formData.currentPassword}
-                onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                onChange={(e) => updateFormData({ currentPassword: e.target.value })}
                 placeholder="Enter current password"
               />
             </div>
@@ -231,7 +246,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                   id="newPassword"
                   type="password"
                   value={formData.newPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
+                  onChange={(e) => updateFormData({ newPassword: e.target.value })}
                   placeholder="Enter new password"
                 />
               </div>
@@ -241,7 +256,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
                   id="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
                   placeholder="Confirm new password"
                 />
               </div>
@@ -276,7 +291,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
             <Switch
               id="profileVisible"
               checked={formData.profileVisible}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, profileVisible: checked }))}
+              onCheckedChange={(checked) => updateFormData({ profileVisible: checked })}
             />
           </div>
         </CardContent>
@@ -307,7 +322,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
             <Switch
               id="emailNotifications"
               checked={formData.emailNotifications}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, emailNotifications: checked }))}
+              onCheckedChange={(checked) => updateFormData({ emailNotifications: checked })}
             />
           </div>
           
@@ -323,7 +338,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
             <Switch
               id="bookingNotifications"
               checked={formData.bookingNotifications}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, bookingNotifications: checked }))}
+              onCheckedChange={(checked) => updateFormData({ bookingNotifications: checked })}
             />
           </div>
           
@@ -337,7 +352,7 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
             <Switch
               id="reviewNotifications"
               checked={formData.reviewNotifications}
-              onCheckedChange={(checked) => setFormData(prev => ({ ...prev, reviewNotifications: checked }))}
+              onCheckedChange={(checked) => updateFormData({ reviewNotifications: checked })}
             />
           </div>
         </CardContent>
