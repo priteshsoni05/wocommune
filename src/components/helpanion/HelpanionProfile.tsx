@@ -338,8 +338,27 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
           title: "Success",
           description: "Profile updated successfully!",
         });
-        // Clear persisted form data since profile was successfully saved
-        resetFormData();
+        // Sync persisted form data with the latest saved profile values
+        if (result?.data) {
+          const p = result.data as Profile;
+          updateFormData({
+            display_name: p.display_name || "",
+            username: p.username || "",
+            bio: p.bio || "",
+            short_bio: p.short_bio || "",
+            email: p.email || "",
+            phone: p.phone || "",
+            avatar_url: p.avatar_url || "",
+            school: p.school || "",
+            role: p.profession || "",
+            use_case: p.use_case || "",
+            skills: p.skills ? p.skills.join(', ') : "",
+            linkedin_url: p.linkedin_url || "",
+            instagram_url: p.instagram_url || "",
+            portfolio_url: p.portfolio_url || "",
+            website_url: p.website_url || ""
+          });
+        }
       }
     } catch (error) {
       console.error('Unexpected error during profile update:', error);
