@@ -43,7 +43,18 @@ export const CalendarIntegrationSettings = () => {
         .maybeSingle();
 
       if (profile) {
-        updateFormData({ calendarId: profile.google_calendar_id || "" });
+        const storageKey = `form_calendar_integration_${user.id}`;
+        let hasDraft = false;
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            hasDraft = parsed && Object.keys(parsed).length > 0;
+          }
+        } catch {}
+        if (!hasDraft) {
+          updateFormData({ calendarId: profile.google_calendar_id || "" });
+        }
         setStatus((profile.calendar_integration_status as "not_configured" | "connected" | "error") || "not_configured");
       }
     } catch (error) {

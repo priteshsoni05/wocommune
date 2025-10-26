@@ -92,31 +92,42 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
     }
   });
 
-  // Initialize form data with profile data when loaded
+  // Initialize form data with profile only if there is no saved draft
   useEffect(() => {
-    if (profile && isLoaded) {
-      const profileData = {
-        display_name: profile.display_name || "",
-        username: profile.username || "",
-        bio: profile.bio || "",
-        short_bio: profile.short_bio || "",
-        email: profile.email || "",
-        phone: profile.phone || "",
-        avatar_url: profile.avatar_url || "",
-        school: profile.school || "",
-        role: profile.profession || "",
-        use_case: profile.use_case || "",
-        skills: Array.isArray(profile.skills) ? profile.skills.join(', ') : profile.skills || "",
-        linkedin_url: profile.linkedin_url || "",
-        instagram_url: profile.instagram_url || "",
-        portfolio_url: profile.portfolio_url || "",
-        website_url: profile.website_url || ""
-      };
-      
-      // Always sync with the latest profile data from database
-      updateFormData(profileData);
-    }
-  }, [profile, isLoaded]);
+    if (!isLoaded) return;
+    if (!profile) return;
+
+    const key = user ? `form_helpanion_profile_${user.id}` : `form_helpanion_profile`;
+    let hasDraft = false;
+    try {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        hasDraft = parsed && Object.keys(parsed).length > 0;
+      }
+    } catch {}
+    if (hasDraft) return;
+
+    const profileData = {
+      display_name: profile.display_name || "",
+      username: profile.username || "",
+      bio: profile.bio || "",
+      short_bio: profile.short_bio || "",
+      email: profile.email || "",
+      phone: profile.phone || "",
+      avatar_url: profile.avatar_url || "",
+      school: profile.school || "",
+      role: profile.profession || "",
+      use_case: profile.use_case || "",
+      skills: Array.isArray(profile.skills) ? profile.skills.join(', ') : profile.skills || "",
+      linkedin_url: profile.linkedin_url || "",
+      instagram_url: profile.instagram_url || "",
+      portfolio_url: profile.portfolio_url || "",
+      website_url: profile.website_url || ""
+    };
+
+    updateFormData(profileData);
+  }, [profile, isLoaded, user?.id]);
 
   // --- Enhancement: Profile completion calculation ---
   const completion = Math.round(

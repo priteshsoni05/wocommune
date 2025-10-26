@@ -56,11 +56,23 @@ export const HelpanionSettings = ({ profile, updateProfile }: HelpanionSettingsP
   });
 
   useEffect(() => {
+    // Initialize from profile only if there's no saved draft
+    const storageKey = `form_helpanion_settings_${profile.user_id}`;
+    let hasDraft = false;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        hasDraft = parsed && Object.keys(parsed).length > 0;
+      }
+    } catch {}
+    if (hasDraft) return;
+
     updateFormData({
       display_name: profile.display_name || "",
       email: profile.email || ""
     });
-  }, [profile.display_name, profile.email]);
+  }, [profile.user_id, profile.display_name, profile.email]);
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
