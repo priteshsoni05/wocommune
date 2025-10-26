@@ -16,13 +16,28 @@ export function useFormPersistence<T extends Record<string, any>>({
   const [formData, setFormData] = useState<T>(initialValues);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Create a unique storage key for the user
-  const storageKey = user ? `form_${key}_${user.id}` : `form_${key}`;
+  // Create storage keys (user-specific and generic)
+  const baseKey = `form_${key}`;
+  const storageKey = user ? `${baseKey}_${user.id}` : baseKey;
 
   // Load persisted data on mount
   useEffect(() => {
     try {
-      const savedData = localStorage.getItem(storageKey);
+      // Try user-specific key first, then fallback to generic key and migrate
+      let savedData = localStorage.getItem(storageKey);
+      if (!savedData) {
+        const genericData = localStorage.getItem(baseKey);
+        if (genericData) {
+          savedData = genericData;
+          // Migrate generic draft to user-specific key
+          if (user) {
+            try {
+              localStorage.setItem(storageKey, genericData);
+              localStorage.removeItem(baseKey);
+            } catch {}
+          }
+        }
+      }
       if (savedData) {
         const parsedData = JSON.parse(savedData);
         setFormData({ ...initialValues, ...parsedData });
@@ -77,10 +92,12 @@ export function useFormPersistence<T extends Record<string, any>>({
   const resetFormData = useCallback(() => {
     setFormData(initialValues);
     localStorage.removeItem(storageKey);
+    localStorage.removeItem(baseKey);
   }, [initialValues, storageKey]);
 
   const clearPersistedData = useCallback(() => {
     localStorage.removeItem(storageKey);
+    localStorage.removeItem(baseKey);
   }, [storageKey]);
 
   const clearAllUserFormData = useCallback(() => {
