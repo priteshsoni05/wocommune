@@ -309,27 +309,32 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         setShowCustomUseCase(false);
         setCustomUseCase("");
       }
-      // Create update data, filtering out any empty/null role values that could cause enum errors
+      // Create update data, sanitizing empty values to avoid update errors
+      const normalizedSkills = Array.isArray(formData.skills)
+        ? formData.skills.filter(s => typeof s === 'string' && s.trim().length > 0)
+        : (typeof formData.skills === 'string'
+           ? formData.skills.split(',').map(s => s.trim()).filter(s => s.length > 0)
+           : null);
       const updateData: any = {
-        display_name: formData.display_name,
-        username: formData.username,
-        bio: formData.bio,
-        short_bio: formData.short_bio,
-        email: formData.email,
-        phone: formData.phone,
-        avatar_url: formData.avatar_url,
-        school: schoolValue,
-        use_case: useCaseValue,
-        skills: typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()) : formData.skills,
-        linkedin_url: formData.linkedin_url,
-        instagram_url: formData.instagram_url,
-        portfolio_url: formData.portfolio_url,
-        website_url: formData.website_url,
+        display_name: formData.display_name?.trim() || null,
+        username: formData.username?.trim() || null,
+        bio: formData.bio?.trim() || null,
+        short_bio: formData.short_bio?.trim() || null,
+        email: formData.email?.trim() || null,
+        phone: formData.phone?.trim() || null,
+        avatar_url: formData.avatar_url?.trim() || null,
+        school: (schoolValue || "").trim() || null,
+        use_case: (useCaseValue || "").trim() || null,
+        skills: normalizedSkills && normalizedSkills.length > 0 ? normalizedSkills : null,
+        linkedin_url: formData.linkedin_url?.trim() || null,
+        instagram_url: formData.instagram_url?.trim() || null,
+        portfolio_url: formData.portfolio_url?.trim() || null,
+        website_url: formData.website_url?.trim() || null,
       };
 
       // Include profession field
-      if (roleValue) {
-        updateData.profession = roleValue;
+      if (roleValue && roleValue.trim()) {
+        updateData.profession = roleValue.trim();
       }
       
       console.log('Attempting to update profile with data:', updateData);
