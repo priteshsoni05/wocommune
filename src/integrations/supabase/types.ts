@@ -193,7 +193,7 @@ export type Database = {
           skills: string[] | null
           status: string | null
           updated_at: string
-          use_case: string | null
+          use_case: string[] | null
           user_id: string
           username: string | null
           website_url: string | null
@@ -219,7 +219,7 @@ export type Database = {
           skills?: string[] | null
           status?: string | null
           updated_at?: string
-          use_case?: string | null
+          use_case?: string[] | null
           user_id: string
           username?: string | null
           website_url?: string | null
@@ -245,7 +245,7 @@ export type Database = {
           skills?: string[] | null
           status?: string | null
           updated_at?: string
-          use_case?: string | null
+          use_case?: string[] | null
           user_id?: string
           username?: string | null
           website_url?: string | null
@@ -384,10 +384,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_username_available: {
-        Args: { _username: string }
-        Returns: boolean
-      }
+      is_username_available: { Args: { _username: string }; Returns: boolean }
       user_has_role: {
         Args: { _email: string; _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean

@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Save, CheckCircle, Plus } from "lucide-react";
+import { Upload, Save, CheckCircle, Plus, X } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCustomOptions } from "@/hooks/useCustomOptions";
@@ -84,7 +85,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       avatar_url: "",
       school: "",
       role: "",
-      use_case: "",
+      use_case: [] as string[],
       skills: "",
       linkedin_url: "",
       instagram_url: "",
@@ -133,7 +134,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       avatar_url: profile.avatar_url || "",
       school: profile.school || "",
       role: profile.profession || "",
-      use_case: profile.use_case || "",
+      use_case: Array.isArray(profile.use_case) ? profile.use_case : (profile.use_case ? [profile.use_case] : []),
       skills: Array.isArray(profile.skills) ? profile.skills.join(', ') : profile.skills || "",
       linkedin_url: profile.linkedin_url || "",
       instagram_url: profile.instagram_url || "",
@@ -308,28 +309,19 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         setShowCustomRole(false);
         setCustomRole("");
       }
-      // Custom use case value
-      let useCaseValue = formData.use_case;
-      if (showCustomUseCase && customUseCase.trim()) {
-        const useCaseResult = await addCustomUseCase(customUseCase);
-        if (useCaseResult.error) {
-          toast({
-            title: "Error",
-            description: "Failed to save custom expertise area.",
-            variant: "destructive",
-          });
-          return;
-        }
-        useCaseValue = customUseCase;
-        setShowCustomUseCase(false);
-        setCustomUseCase("");
-      }
+      // Note: Custom use case is now handled inline in the form, not in submit handler
       // Create update data, sanitizing empty values to avoid update errors
       const normalizedSkills = Array.isArray(formData.skills)
         ? formData.skills.filter(s => typeof s === 'string' && s.trim().length > 0)
         : (typeof formData.skills === 'string'
            ? formData.skills.split(',').map(s => s.trim()).filter(s => s.length > 0)
            : null);
+      
+      // Handle use_case as array
+      const normalizedUseCase = Array.isArray(formData.use_case) 
+        ? formData.use_case.filter(uc => uc && uc.trim().length > 0)
+        : [];
+      
       const updateData: any = {
         display_name: formData.display_name?.trim() || null,
         username: formData.username?.trim() || null,
@@ -339,7 +331,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         phone: formData.phone?.trim() || null,
         avatar_url: formData.avatar_url?.trim() || null,
         school: (schoolValue || "").trim() || null,
-        use_case: (useCaseValue || "").trim() || null,
+        use_case: normalizedUseCase.length > 0 ? normalizedUseCase : null,
         skills: normalizedSkills && normalizedSkills.length > 0 ? normalizedSkills : null,
         linkedin_url: formData.linkedin_url?.trim() || null,
         instagram_url: formData.instagram_url?.trim() || null,
@@ -382,7 +374,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
             avatar_url: p.avatar_url || "",
             school: p.school || "",
             role: p.profession || "",
-            use_case: p.use_case || "",
+            use_case: Array.isArray(p.use_case) ? p.use_case : (p.use_case ? [p.use_case] : []),
             skills: p.skills ? p.skills.join(', ') : "",
             linkedin_url: p.linkedin_url || "",
             instagram_url: p.instagram_url || "",
@@ -656,9 +648,28 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
               </div>
             </div>
 
-            {/* Use Case / Expertise Area */}
+            {/* Use Case / Expertise Area - Multiple Selection */}
             <div className="space-y-2">
-              <Label htmlFor="use_case">Use Case / Expertise Area</Label>
+              <Label htmlFor="use_case">Use Case / Expertise Area (Select Multiple)</Label>
+              
+              {/* Selected Use Cases */}
+              {Array.isArray(formData.use_case) && formData.use_case.length > 0 && (
+                <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-muted/50">
+                  {formData.use_case.map((useCase) => (
+                    <Badge key={useCase} variant="secondary" className="gap-1">
+                      {useCase}
+                      <X
+                        className="h-3 w-3 cursor-pointer hover:text-destructive"
+                        onClick={() => {
+                          const updated = formData.use_case.filter((uc: string) => uc !== useCase);
+                          updateFormData({ use_case: updated });
+                        }}
+                      />
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
               {showCustomUseCase ? (
                 <div className="flex gap-2">
                   <Input
@@ -684,7 +695,10 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                       }
                       const result = await addCustomUseCase(customUseCase);
                       if (result.data) {
-                        handleInputChange("use_case", customUseCase.trim());
+                        const currentUseCases = Array.isArray(formData.use_case) ? formData.use_case : [];
+                        if (!currentUseCases.includes(customUseCase.trim())) {
+                          updateFormData({ use_case: [...currentUseCases, customUseCase.trim()] });
+                        }
                         setShowCustomUseCase(false);
                         setCustomUseCase("");
                       }
@@ -706,12 +720,14 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                 </div>
               ) : (
                 <Select
-                  value={formData.use_case}
                   onValueChange={(value) => {
                     if (value === "add-new") {
                       setShowCustomUseCase(true);
                     } else {
-                      handleInputChange("use_case", value);
+                      const currentUseCases = Array.isArray(formData.use_case) ? formData.use_case : [];
+                      if (!currentUseCases.includes(value)) {
+                        updateFormData({ use_case: [...currentUseCases, value] });
+                      }
                     }
                   }}
                 >

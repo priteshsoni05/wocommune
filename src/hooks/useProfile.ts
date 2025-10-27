@@ -15,7 +15,7 @@ export interface Profile {
   status: 'pending' | 'active' | 'in_review';
   school: string | null;
   profession: string | null;
-  use_case: string | null;
+  use_case: string[] | null;
   skills: string[] | null;
   linkedin_url: string | null;
   instagram_url: string | null;

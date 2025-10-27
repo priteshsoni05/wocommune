@@ -156,17 +156,19 @@ export const useSmartSearch = () => {
           }
 
           // Add use case suggestions
-          if (profile.use_case) {
-            const useCaseKey = `usecase-${profile.use_case.toLowerCase()}`;
-            if (!seen.has(useCaseKey)) {
-              seen.add(useCaseKey);
-              suggestionsList.push({
-                id: useCaseKey,
-                type: 'tag',
-                text: profile.use_case,
-                subtext: 'Help Area'
-              });
-            }
+          if (profile.use_case && Array.isArray(profile.use_case)) {
+            profile.use_case.forEach((useCase) => {
+              const useCaseKey = `usecase-${useCase.toLowerCase()}`;
+              if (!seen.has(useCaseKey)) {
+                seen.add(useCaseKey);
+                suggestionsList.push({
+                  id: useCaseKey,
+                  type: 'tag',
+                  text: useCase,
+                  subtext: 'Help Area'
+                });
+              }
+            });
           }
         });
 

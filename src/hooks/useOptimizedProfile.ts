@@ -21,7 +21,7 @@ export interface Profile {
   website_url: string | null;
   portfolio_url: string | null;
   school: string | null;
-  use_case: string | null;
+  use_case: string[] | null;
   username: string | null;
   skills: string[] | null;
 }
