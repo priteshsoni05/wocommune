@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Profile } from "@/hooks/useOptimizedProfile";
 import { useFormPersistence } from "@/hooks/useFormPersistence";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,6 +65,7 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
   const [customUseCases, setCustomUseCases] = useState<string[]>([]);
   const [useCaseLoading, setUseCaseLoading] = useState(false);
 
+
   // Use form persistence hook for profile form data
   const { 
     formData, 
@@ -91,6 +92,20 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       website_url: ""
     }
   });
+  
+  // Ensure saved school value is always present in the dropdown even if not in predefined/custom lists
+  const mergedSchoolOptions = useMemo(() => {
+    const set = new Set<string>();
+    schoolOptions.forEach((s) => set.add(s));
+    customSchools.forEach((s) => set.add(s));
+    if (formData.school) set.add(formData.school);
+    if (profile?.school) set.add(profile.school);
+    // Keep "Other" at the end for better UX
+    const items = Array.from(set).filter((s) => s !== 'Other');
+    items.sort((a, b) => a.localeCompare(b));
+    if (set.has('Other')) items.push('Other');
+    return items;
+  }, [customSchools, formData.school, profile?.school]);
 
   // Initialize form data with profile only if there is no saved draft
   useEffect(() => {
@@ -563,11 +578,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                       <SelectValue placeholder="Select your school/college" />
                     </SelectTrigger>
                     <SelectContent>
-                      {schoolOptions.map((school) => (
+                      {mergedSchoolOptions.map((school) => (
                         <SelectItem key={school} value={school}>{school}</SelectItem>
-                      ))}
-                      {customSchools.map((school) => (
-                        <SelectItem key={`custom-${school}`} value={school}>{school}</SelectItem>
                       ))}
                       <SelectItem value="add-new">
                         <div className="flex items-center gap-2">
