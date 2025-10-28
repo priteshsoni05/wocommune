@@ -180,6 +180,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           email: string | null
+          employed_at: string | null
           google_calendar_id: string | null
           id: string
           instagram_url: string | null
@@ -190,6 +191,7 @@ export type Database = {
           profession: string | null
           school: string | null
           short_bio: string | null
+          show_employed_at: boolean | null
           skills: string[] | null
           status: string | null
           updated_at: string
@@ -206,6 +208,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          employed_at?: string | null
           google_calendar_id?: string | null
           id?: string
           instagram_url?: string | null
@@ -216,6 +219,7 @@ export type Database = {
           profession?: string | null
           school?: string | null
           short_bio?: string | null
+          show_employed_at?: boolean | null
           skills?: string[] | null
           status?: string | null
           updated_at?: string
@@ -232,6 +236,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          employed_at?: string | null
           google_calendar_id?: string | null
           id?: string
           instagram_url?: string | null
@@ -242,6 +247,7 @@ export type Database = {
           profession?: string | null
           school?: string | null
           short_bio?: string | null
+          show_employed_at?: boolean | null
           skills?: string[] | null
           status?: string | null
           updated_at?: string

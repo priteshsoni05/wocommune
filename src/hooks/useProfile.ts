@@ -21,6 +21,8 @@ export interface Profile {
   instagram_url: string | null;
   portfolio_url: string | null;
   website_url: string | null;
+  employed_at: string | null;
+  show_employed_at: boolean | null;
   created_at: string;
   updated_at: string;
 }

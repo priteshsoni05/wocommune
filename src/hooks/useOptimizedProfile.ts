@@ -24,6 +24,8 @@ export interface Profile {
   use_case: string[] | null;
   username: string | null;
   skills: string[] | null;
+  employed_at: string | null;
+  show_employed_at: boolean | null;
 }
 
 let profileCache: Profile | null = null;

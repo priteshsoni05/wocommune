@@ -118,7 +118,9 @@ const OptimizedPublicProfile = () => {
         last_active_role: profile.last_active_role,
         short_bio: profile.short_bio,
         school: profile.school,
-        use_case: profile.use_case
+        use_case: profile.use_case,
+        employed_at: profile.employed_at,
+        show_employed_at: profile.show_employed_at
       };
 
       const result: PublicProfileData = {

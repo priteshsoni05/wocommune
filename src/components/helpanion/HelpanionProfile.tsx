@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Save, CheckCircle, Plus, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCustomOptions } from "@/hooks/useCustomOptions";
@@ -90,7 +91,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       linkedin_url: "",
       instagram_url: "",
       portfolio_url: "",
-      website_url: ""
+      website_url: "",
+      employed_at: "",
+      show_employed_at: true
     }
   });
   
@@ -139,7 +142,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
       linkedin_url: profile.linkedin_url || "",
       instagram_url: profile.instagram_url || "",
       portfolio_url: profile.portfolio_url || "",
-      website_url: profile.website_url || ""
+      website_url: profile.website_url || "",
+      employed_at: profile.employed_at || "",
+      show_employed_at: profile.show_employed_at ?? true
     };
 
     updateFormData(profileData);
@@ -337,6 +342,8 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
         instagram_url: formData.instagram_url?.trim() || null,
         portfolio_url: formData.portfolio_url?.trim() || null,
         website_url: formData.website_url?.trim() || null,
+        employed_at: formData.employed_at?.trim() || null,
+        show_employed_at: formData.show_employed_at ?? true,
       };
 
       // Include profession field
@@ -379,7 +386,9 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
             linkedin_url: p.linkedin_url || "",
             instagram_url: p.instagram_url || "",
             portfolio_url: p.portfolio_url || "",
-            website_url: p.website_url || ""
+            website_url: p.website_url || "",
+            employed_at: p.employed_at || "",
+            show_employed_at: p.show_employed_at ?? true
           });
         }
       }
@@ -645,6 +654,27 @@ export const HelpanionProfile = ({ profile, updateProfile }: HelpanionProfilePro
                     </SelectContent>
                   </Select>
                 )}
+              </div>
+
+              {/* Employed At */}
+              <div className="space-y-2">
+                <Label htmlFor="employed_at">Employed at</Label>
+                <Input
+                  id="employed_at"
+                  value={formData.employed_at}
+                  onChange={(e) => handleInputChange('employed_at', e.target.value)}
+                  placeholder="e.g., Google, Microsoft, Freelance"
+                />
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="show_employed_at"
+                    checked={formData.show_employed_at}
+                    onCheckedChange={(checked) => updateFormData({ show_employed_at: checked })}
+                  />
+                  <Label htmlFor="show_employed_at" className="text-sm text-muted-foreground cursor-pointer">
+                    Show on public profile
+                  </Label>
+                </div>
               </div>
             </div>
 

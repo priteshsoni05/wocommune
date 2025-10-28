@@ -44,6 +44,11 @@ export const ProfileHero = ({ profile }: ProfileHeroProps) => {
           <h1 className="text-4xl font-bold text-foreground">
             {profile.display_name || 'Helpanion'}
           </h1>
+          {profile.show_employed_at && profile.employed_at && (
+            <p className="text-lg text-muted-foreground">
+              {profile.employed_at}
+            </p>
+          )}
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             {profile.bio || 'Experienced professional ready to help you achieve your goals'}
           </p>
